@@ -14,6 +14,6 @@ module "fabws_test41_i1_er" {
   git_provider_details        = null
   timeouts                    = {}
   timeouts_git                = {}
-  owners                      = ["4252e715-8be7-4d78-bfd7-6ec61a981444"]
+  owners                      = ["abigail.michel@gov.bc.ca","sebastian.hansen@gov.bc.ca"]
 }
 
