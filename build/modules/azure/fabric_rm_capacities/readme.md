@@ -37,7 +37,7 @@ No modules.
 | <a name="input_project"></a> [project](#input\_project) | Name of the project | `string` | n/a | yes |
 | <a name="input_resource_group_name"></a> [resource\_group\_name](#input\_resource\_group\_name) | To overwride the naming formula for resource group pass a value here | `string` | `null` | no |
 | <a name="input_suffix"></a> [suffix](#input\_suffix) | Default resource type acronym ie: fabric capacity is fabcp | `string` | n/a | yes |
-| <a name="input_tags"></a> [tags](#input\_tags) | Tags to apply to the Azure Resource Group | `map(string)` | <pre>{<br>  "application_environment": "npd",<br>  "business_application-name": "Fabric",<br>  "business_cost-center": "",<br>  "business_department": "DAIM",<br>  "business_project-name": "DAIM",<br>  "deployment_automation": "Terraform",<br>  "deployment_automation_version": "v1.0",<br>  "security_compliance": "PII"<br>}</pre> | no |
+| <a name="input_tags"></a> [tags](#input\_tags) | Tags to apply to the Azure Resource Group | `map(string)` | <pre>{<br>  "application_environment": "npd",<br>  "business_application-name": "Fabric",<br>  "business_cost-center": "",<br>  "business_department": "dap",<br>  "business_project-name": "dap",<br>  "deployment_automation": "Terraform",<br>  "deployment_automation_version": "v1.0",<br>  "security_compliance": "PII"<br>}</pre> | no |
 
 ## Outputs
 

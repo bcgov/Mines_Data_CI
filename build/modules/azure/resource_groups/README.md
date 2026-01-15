@@ -33,7 +33,7 @@ No modules.
 | <a name="input_project"></a> [project](#input\_project) | Project name | `string` | `"sedw"` | no |
 | <a name="input_region"></a> [region](#input\_region) | Azure region where the Virtual Network should be created | `string` | `"eastus2"` | no |
 | <a name="input_suffix"></a> [suffix](#input\_suffix) | Resource name suffix | `string` | `"rg"` | no |
-| <a name="input_tags"></a> [tags](#input\_tags) | Tags to apply to the Azure Resource Group | `map(string)` | <pre>{<br>  "lll_application_environment": "Dev",<br>  "lll_business_application-name": "sedw",<br>  "lll_business_cost-center": "0192",<br>  "lll_business_department": "DAIM",<br>  "lll_business_project-name": "Global Data Analytics Platform",<br>  "lll_deployment_automation": "Terraforge",<br>  "lll_deployment_automation_version": "v1.0",<br>  "lll_security_compliance": ""<br>}</pre> | no |
+| <a name="input_tags"></a> [tags](#input\_tags) | Tags to apply to the Azure Resource Group | `map(string)` | <pre>{<br>  "_application_environment": "Dev",<br>  "_business_application-name": "sedw",<br>  "_business_cost-center": "0000",<br>  "_business_department": "dap",<br>  "_business_project-name": "Global Data Analytics Platform",<br>  "_deployment_automation": "Terraforge",<br>  "_deployment_automation_version": "v1.0",<br>  "_security_compliance": ""<br>}</pre> | no |
 
 ## Outputs
 
