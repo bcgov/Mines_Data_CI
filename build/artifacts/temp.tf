@@ -4,7 +4,7 @@ module "fabric_capacity_example" {
   capacity_name         = null
   resource_group_name   = null
   location              = "canadacentral"
-  fabric_capacity_sku   = "F2"
+  fabric_capacity_sku   = "F4"
   prefix                = "nr"
   suffix                = "tools"
   Instance_Number       = "1"
