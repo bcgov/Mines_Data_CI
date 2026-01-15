@@ -17,7 +17,7 @@ module "fabws_test41_i1_er" {
   owners                      = ["354120dd-2d06-4709-812a-0aca57f5f9fe"]
 }
 
-module "fabws_test41_i1_er" {
+module "fabws_test2_i1_er" {
   source = "../modules/azure/fabric_workspace/"
   providers = {
     fabric.auth = fabric.auth
