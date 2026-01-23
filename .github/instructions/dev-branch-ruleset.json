@@ -2,6 +2,7 @@
   "name": "dev-branch-protection",
   "target": "branch",
   "source_type": "Repository",
+  "source": "bcgov/nr-dap-fabric-ci",
   "enforcement": "active",
   "conditions": {
     "ref_name": {
@@ -40,11 +41,11 @@
         "strict_required_status_checks_policy": false,
         "required_status_checks": [
           {
-            "context": "terraform-validate",
+            "context": "Validate Branch Strategy",
             "integration_id": null
           },
           {
-            "context": "terraform-plan-dev",
+            "context": "Terraform Quality Checks",
             "integration_id": null
           }
         ]
