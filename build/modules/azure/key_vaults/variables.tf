@@ -149,13 +149,10 @@ variable "ip_rules" {
 # Additional KV access policies (users/groups/SPs)
 ###############################################################################
 variable "additional_access_policies" {
-  description = "Extra KV access policies. object_id can be a user, group, or service principal object id."
+  description = "List of additional RBAC role assignments. role_definition_name should be a built-in KV role e.g. 'Key Vault Secrets User', 'Key Vault Secrets Officer', 'Key Vault Crypto Officer', 'Key Vault Administrator'."
   type = list(object({
-    object_id               = string
-    certificate_permissions = optional(list(string), [])
-    key_permissions         = optional(list(string), [])
-    secret_permissions      = optional(list(string), [])
-    storage_permissions     = optional(list(string), [])
+    object_id            = string
+    role_definition_name = string
   }))
   default = []
 }
