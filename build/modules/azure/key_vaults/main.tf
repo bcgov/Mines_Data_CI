@@ -53,7 +53,7 @@ resource "azurerm_role_assignment" "app" {
 ###############################################################################
 
 resource "azurerm_role_assignment" "additional" {
-  for_each = { for policy in var.additional_access_policies : policy.object_id => policy }
+  for_each = { for policy in var.additional_access_policies : "${policy.object_id}-${policy.role_definition_name}" => policy }
 
   scope                = azurerm_key_vault.kv.id
   role_definition_name = each.value.role_definition_name
