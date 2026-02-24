@@ -39,5 +39,5 @@ module "key_vault" {
     }
   ]
 
-  depends_on = [module.vnet]
+  # depends_on = [module.vnet]
 }
