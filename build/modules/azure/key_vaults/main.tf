@@ -71,12 +71,12 @@ resource "azurerm_key_vault_access_policy" "additional" {
 ###############################################################################
 
 resource "azurerm_private_endpoint" "kv" {
-  for_each = var.private_endpoint_enabled && var.private_endpoint_subnet_id != null ? toset(["kv"]) : toset([])
+  for_each = var.private_endpoint_enabled ? { "kv" = var.private_endpoint_subnet_id } : {}
 
   name                = local.private_endpoint_name
   resource_group_name = var.resource_group_name
   location            = var.location
-  subnet_id           = var.private_endpoint_subnet_id
+  subnet_id           = each.value
 
   private_service_connection {
     name                           = local.private_service_connection_name
