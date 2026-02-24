@@ -1,5 +1,5 @@
 module "key_vault" {
-  source = "./modules/key_vaults"
+  source = "../modules/azure/key_vaults"
 
   prefix              = "nr"
   suffix              = "tools"

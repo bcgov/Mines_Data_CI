@@ -1,5 +1,5 @@
 module "vnet" {
-  source = "./modules/vnet"
+  source = "../modules/azure/vnet"
 
   prefix          = "nr"
   suffix          = "tools"
