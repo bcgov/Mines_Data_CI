@@ -1,19 +1,14 @@
-output "vnet_id" {
-  description = "The ID of the virtual network"
-  value       = azurerm_virtual_network.vnet.id
+output "kv_id" {
+  description = "The ID of the created Azure Key Vault"
+  value       = azurerm_key_vault.kv.id
 }
 
-output "vnet_name" {
-  description = "The name of the virtual network"
-  value       = azurerm_virtual_network.vnet.name
+output "kv_name" {
+  description = "The name of the created Azure Key Vault"
+  value       = azurerm_key_vault.kv.name
 }
 
-output "subnet_ids" {
-  description = "Map of subnet name to subnet ID"
-  value       = { for k, v in azurerm_subnet.subnets : k => v.id }
-}
-
-output "kv_private_dns_zone_id" {
-  description = "The ID of the Key Vault private DNS zone"
-  value       = azurerm_private_dns_zone.kv.id
+output "kv_dns_uri" {
+  description = "URI for KV required to tie resources to several objects"
+  value       = azurerm_key_vault.kv.vault_uri
 }

@@ -14,6 +14,6 @@ output "subnet_ids" {
 }
 
 output "kv_private_dns_zone_id" {
-  description = "The ID of the Key Vault private DNS zone"
+  description = "The ID of the Key Vault private DNS zone (privatelink.vaultcore.azure.net)"
   value       = azurerm_private_dns_zone.kv.id
 }
