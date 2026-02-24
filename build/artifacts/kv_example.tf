@@ -6,7 +6,7 @@ module "key_vault" {
   project             = "fabric"
   env                 = "dev"
   Instance_Number     = "01"
-  resource_group_name = "rg-nr-tools-dev-01"
+  resource_group_name = "nrfabric-rg1"
   location            = "canadacentral"
 
   public_network_access_enabled = false
