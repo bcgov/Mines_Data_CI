@@ -51,7 +51,6 @@ resource "azurerm_role_assignment" "app" {
 ###############################################################################
 # RBAC — additional users / groups / service principals
 ###############################################################################
-data "azurerm_client_config" "current" {}
 
 resource "azurerm_role_assignment" "self_user_access_admin_kv" {
   scope                = azurerm_key_vault.kv.id
