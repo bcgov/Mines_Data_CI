@@ -51,13 +51,25 @@ resource "azurerm_role_assignment" "app" {
 ###############################################################################
 # RBAC — additional users / groups / service principals
 ###############################################################################
+data "azurerm_client_config" "current" {}
 
+resource "azurerm_role_assignment" "self_user_access_admin_kv" {
+  scope                = azurerm_key_vault.kv.id
+  role_definition_name = "User Access Administrator"
+  principal_id         = data.azurerm_client_config.current.object_id
+
+  # Avoid AAD replication timing issues on first apply
+  depends_on = [
+    azurerm_key_vault.kv
+  ]
+}
 resource "azurerm_role_assignment" "additional" {
   for_each = { for policy in var.additional_access_policies : "${policy.object_id}-${policy.role_definition_name}" => policy }
 
   scope                = azurerm_key_vault.kv.id
   role_definition_name = each.value.role_definition_name
   principal_id         = each.value.object_id
+  depends_on = [ azurerm_role_assignment.self_user_access_admin_kv ]
 }
 
 ###############################################################################
@@ -89,3 +101,4 @@ resource "azurerm_private_endpoint" "kv" {
 
   tags = var.tags
 }
+
