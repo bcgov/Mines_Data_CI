@@ -1,0 +1,32 @@
+# Local environment variables - never commit
+.env
+*.env
+.env.*
+
+# Terraform state files
+*.tfstate.backup
+
+# Terraform directories
+**/.terraform/
+.terraform/
+
+# Terraform lock file (optional: some teams commit this)
+# .terraform.lock.hcl
+
+# Terraform plan output
+tfplan
+*.tfplan
+
+# Terraform crash logs
+crash.log
+crash.*.log
+
+# Terraform variable files with sensitive values
+*.tfvars.local
+secrets.tfvars
+
+# Override files
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
