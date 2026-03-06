@@ -16,7 +16,7 @@ module "key_vault" {
   additional_access_policies = [
     {
       object_id            = "6f523291-c78a-4e05-aae1-de6b07a07a11"
-      role_definition_name = "Key Vault Secrets Officer"  # manage secrets
+      role_definition_name = "Key Vault Secrets Officer" # manage secrets
     },
     {
       object_id            = "6f523291-c78a-4e05-aae1-de6b07a07a11"
