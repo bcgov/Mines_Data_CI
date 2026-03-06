@@ -3,19 +3,19 @@
 variable "Instance_Number" {
   type        = string
   description = "Project name"
-  default = "00"
+  default     = "00"
 }
 
 variable "project" {
   type        = string
   description = "Project name"
-  default = "fabric"
+  default     = "fabric"
 }
 
 variable "env" {
   type        = string
   description = "Environment name"
-  default = "-"
+  default     = "-"
 }
 
 variable "prefix" {
@@ -129,10 +129,10 @@ variable "managed_identity_delegate" {
 }
 
 
-variable  "public_network_access_enabled" {
+variable "public_network_access_enabled" {
   description = "specifies if the kv should be publicly available on network"
-  type = bool
-  default = false
+  type        = bool
+  default     = false
 }
 variable "virtual_network_subnet_ids" {
   description = "One or more Subnet IDs which should be able to access this Key Vault."
@@ -195,16 +195,16 @@ variable "tags" {
   description = "Tags to apply to the Azure Resource Group"
   type        = map(string)
   default = {
-    "ministry_name_prefix"                          = "citz"
-    "program_area"                                  = "permitting"
-    "client_code"                                   = ""
-    "responsibility_centre"                         = ""
-    "service_line"                                  = ""
-    "project_number"                                = ""
-    "expense_authority"                             = ""
-    "deployment_automation"                         = "Terraform"
-    "deployment_automation_version"                 = "v0.1"
-    "application_environment"                       = "dev"
-    "information_security_classification"           = "protected_e"
+    "ministry_name_prefix"                = "citz"
+    "program_area"                        = "permitting"
+    "client_code"                         = ""
+    "responsibility_centre"               = ""
+    "service_line"                        = ""
+    "project_number"                      = ""
+    "expense_authority"                   = ""
+    "deployment_automation"               = "Terraform"
+    "deployment_automation_version"       = "v0.1"
+    "application_environment"             = "dev"
+    "information_security_classification" = "protected_e"
   }
 }
