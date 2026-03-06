@@ -20,7 +20,7 @@ module "key_vault" {
     },
     {
       object_id            = "6f523291-c78a-4e05-aae1-de6b07a07a11"
-      role_definition_name = "Key Vault Crypto Officer"   # manage keys
+      role_definition_name = "Key Vault Crypto Officer"
     }
   ]
 
