@@ -9,6 +9,7 @@ on:
     paths:
       - '**.tf'
       - '**.tfvars'
+      - '**.tpl'
       - '.github/workflows/ci.yml'
   push:
     branches:
@@ -18,7 +19,25 @@ on:
     paths:
       - '**.tf'
       - '**.tfvars'
+      - '**.tpl'
   workflow_dispatch:
+    inputs:
+      backend:
+        description: 'Terraform backend to use'
+        required: true
+        default: 'cloud'
+        type: choice
+        options:
+          - local
+          - cloud
+      action:
+        description: 'Terraform action to run'
+        required: true
+        default: 'plan'
+        type: choice
+        options:
+          - plan
+          - apply
 
 permissions:
   contents: write
@@ -29,99 +48,152 @@ jobs:
     name: Validate Branch Strategy
     runs-on: ubuntu-latest
     if: github.event_name == 'pull_request'
-    
+
     steps:
       - name: Check branch merge rules
         run: |
           SOURCE="${{ github.head_ref }}"
           TARGET="${{ github.base_ref }}"
-          
+
           echo "Source branch: $SOURCE"
           echo "Target branch: $TARGET"
-          
+
           # Block dev -> test merges
           if [[ "$SOURCE" == "dev" && "$TARGET" == "test" ]]; then
             echo "❌ ERROR: Cannot merge dev into test"
             echo "Each environment is independent. Create a new feature branch from test."
             exit 1
           fi
-          
+
           # Block test -> main merges
           if [[ "$SOURCE" == "test" && "$TARGET" == "main" ]]; then
             echo "❌ ERROR: Cannot merge test into main"
             echo "Each environment is independent. Create a new feature branch from main."
             exit 1
           fi
-          
+
           # Block dev -> main merges
           if [[ "$SOURCE" == "dev" && "$TARGET" == "main" ]]; then
             echo "❌ ERROR: Cannot merge dev into main"
             echo "Each environment is independent. Create a new feature branch from main."
             exit 1
           fi
-          
+
           # Block test -> dev (backwards flow)
           if [[ "$SOURCE" == "test" && "$TARGET" == "dev" ]]; then
             echo "❌ ERROR: Cannot merge test into dev (backwards promotion)"
             exit 1
           fi
-          
+
           # Block main -> test (backwards flow)
           if [[ "$SOURCE" == "main" && "$TARGET" == "test" ]]; then
             echo "❌ ERROR: Cannot merge main into test (backwards promotion)"
             exit 1
           fi
-          
+
           # Block main -> dev (backwards flow)
           if [[ "$SOURCE" == "main" && "$TARGET" == "dev" ]]; then
             echo "❌ ERROR: Cannot merge main into dev (backwards promotion)"
             exit 1
           fi
-          
+
           # Block feature branches with wrong environment suffix
           if [[ "$SOURCE" =~ -dev$ && "$TARGET" != "dev" ]]; then
             echo "❌ ERROR: Feature branch '$SOURCE' is for dev environment"
             echo "It can only merge to 'dev', not '$TARGET'"
             exit 1
           fi
-          
+
           if [[ "$SOURCE" =~ -test$ && "$TARGET" != "test" ]]; then
             echo "❌ ERROR: Feature branch '$SOURCE' is for test environment"
             echo "It can only merge to 'test', not '$TARGET'"
             exit 1
           fi
-          
+
           if [[ "$SOURCE" =~ -prod$ && "$TARGET" != "main" ]]; then
             echo "❌ ERROR: Feature branch '$SOURCE' is for prod environment"
             echo "It can only merge to 'main', not '$TARGET'"
             exit 1
           fi
-          
+
           echo "✅ Branch strategy validation passed"
 
-  terraform-quality:
-    name: Terraform Quality Checks
+  resolve-environment:
+    name: Resolve Environment
     runs-on: ubuntu-latest
     needs: [validate-branch-strategy]
     if: always() && (needs.validate-branch-strategy.result == 'success' || github.event_name != 'pull_request')
-    
+    outputs:
+      env_name: ${{ steps.set-env.outputs.env_name }}
+      backend: ${{ steps.set-backend.outputs.backend }}
+      action: ${{ steps.set-action.outputs.action }}
+
+    steps:
+      - name: Set environment name
+        id: set-env
+        run: |
+          BRANCH="${{ github.ref_name }}"
+          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+            BRANCH="${{ github.base_ref }}"
+          fi
+
+          if [[ "$BRANCH" == "main" ]]; then
+            echo "env_name=prod" >> $GITHUB_OUTPUT
+          elif [[ "$BRANCH" == "test" ]]; then
+            echo "env_name=test" >> $GITHUB_OUTPUT
+          else
+            echo "env_name=dev" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Set backend
+        id: set-backend
+        run: |
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            echo "backend=${{ github.event.inputs.backend }}" >> $GITHUB_OUTPUT
+          else
+            echo "backend=local" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Set action
+        id: set-action
+        run: |
+          # Only allow apply when explicitly selected via workflow_dispatch
+          # All other triggers (push, pull_request) default to plan only
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" && "${{ github.event.inputs.action }}" == "apply" ]]; then
+            echo "action=apply" >> $GITHUB_OUTPUT
+          else
+            echo "action=plan" >> $GITHUB_OUTPUT
+          fi
+
+  terraform-quality:
+    name: Terraform Quality Checks (${{ needs.resolve-environment.outputs.env_name }} / ${{ needs.resolve-environment.outputs.backend }} / ${{ needs.resolve-environment.outputs.action }})
+    runs-on: ubuntu-latest
+    needs: [resolve-environment]
+    environment: ${{ needs.resolve-environment.outputs.env_name }}
+
+    env:
+      TF_VAR_ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
+      TF_VAR_ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
+      TF_VAR_ARM_SUBSCRIPTION_ID: ${{ vars.ARM_SUBSCRIPTION_ID }}
+      TF_VAR_ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.ref }}
           token: ${{ secrets.GITHUB_TOKEN }}
-      
+
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: 1.9.0
-      
+
       - name: Install TFLint
         uses: terraform-linters/setup-tflint@v4
         with:
           tflint_version: v0.50.3
-      
+
       - name: Install terraform-docs
         run: |
           wget -q https://github.com/terraform-docs/terraform-docs/releases/download/v0.17.0/terraform-docs-v0.17.0-linux-amd64.tar.gz
@@ -129,20 +201,86 @@ jobs:
           chmod +x terraform-docs
           sudo mv terraform-docs /usr/local/bin/
           terraform-docs --version
-      
+
+      - name: Select providers file
+        working-directory: build/artifacts
+        run: |
+          BACKEND="${{ needs.resolve-environment.outputs.backend }}"
+          if [[ "$BACKEND" == "cloud" ]]; then
+            echo "Using Terraform Cloud backend..."
+            cp providers_cloud.tf.tpl providers.tf
+          else
+            echo "Using local backend..."
+            cp providers_local.tf.tpl providers.tf
+          fi
+          echo "✅ providers.tf generated from $BACKEND template"
+
       - name: Run Terraform Format Check
         run: |
           echo "Running terraform fmt check..."
           set -xe
           terraform fmt -check -recursive
-      
+
       - name: Run TFLint
         run: |
           echo "Running tflint..."
           set -xe
           tflint --init
           tflint --format compact --recursive --minimum-failure-severity=error
-      
+
+      - name: Terraform Init (artifacts)
+        working-directory: build/artifacts
+        run: |
+          echo "Initialising Terraform (artifacts) with ${{ needs.resolve-environment.outputs.backend }} backend..."
+          terraform init
+
+      - name: Terraform Init (modules)
+        working-directory: build/modules
+        run: |
+          echo "Initialising Terraform (modules)..."
+          terraform init -backend=false
+
+      - name: Terraform Validate (artifacts)
+        working-directory: build/artifacts
+        run: terraform validate
+
+      - name: Terraform Validate (modules)
+        working-directory: build/modules
+        run: terraform validate
+
+      - name: Terraform Plan
+        working-directory: build/artifacts
+        run: |
+          echo "Running terraform plan for environment: ${{ needs.resolve-environment.outputs.env_name }}..."
+          terraform plan \
+            -var-file="environments/${{ needs.resolve-environment.outputs.env_name }}.tfvars" \
+            -out=tfplan \
+            -input=false
+
+      - name: Terraform Apply
+        if: needs.resolve-environment.outputs.action == 'apply'
+        working-directory: build/artifacts
+        run: |
+          echo "🚀 Applying Terraform changes for environment: ${{ needs.resolve-environment.outputs.env_name }}..."
+          terraform apply -input=false tfplan
+
+      - name: Commit state file
+        if: needs.resolve-environment.outputs.action == 'apply'
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add build/artifacts/terraform.tfstate
+          git add build/artifacts/terraform.tfstate.backup
+          if [[ -n $(git status --porcelain) ]]; then
+            git commit -m "chore: update terraform state [${{ needs.resolve-environment.outputs.env_name }}] [skip ci]"
+          fi
+      - name: Push state file
+        if: needs.resolve-environment.outputs.action == 'apply'
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ github.ref_name }}
+
       - name: Generate Terraform Documentation
         run: |
           echo "Generating Terraform documentation..."
@@ -153,7 +291,7 @@ jobs:
               terraform-docs markdown table --output-file README.md --output-mode inject "$dir"
             fi
           done
-      
+
       - name: Check for documentation changes
         id: docs-changed
         run: |
@@ -165,21 +303,21 @@ jobs:
             echo "changed=false" >> $GITHUB_OUTPUT
             echo "✅ Documentation is up to date"
           fi
-      
+
       - name: Commit documentation changes
         if: steps.docs-changed.outputs.changed == 'true' && github.event_name == 'pull_request'
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
           git commit -m "docs: auto-update Terraform documentation [skip ci]"
-      
+
       - name: Push documentation changes
         if: steps.docs-changed.outputs.changed == 'true' && github.event_name == 'pull_request'
         uses: ad-m/github-push-action@master
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           branch: ${{ github.event.pull_request.head.ref }}
-      
+
       - name: Comment on PR
         if: steps.docs-changed.outputs.changed == 'true' && github.event_name == 'pull_request'
         uses: actions/github-script@v7
@@ -191,7 +329,18 @@ jobs:
               repo: context.repo.repo,
               body: '📝 Terraform documentation has been automatically updated.'
             })
-      
+
+      - name: Cleanup generated providers.tf
+        if: always()
+        working-directory: build/artifacts
+        run: |
+          rm -f providers.tf
+          echo "✅ Cleaned up generated providers.tf"
+
       - name: Quality Checks Summary
         if: success()
-        run: echo "✅ All Terraform quality checks passed"
+        run: |
+          echo "✅ All Terraform quality checks passed"
+          echo "Environment : ${{ needs.resolve-environment.outputs.env_name }}"
+          echo "Backend     : ${{ needs.resolve-environment.outputs.backend }}"
+          echo "Action      : ${{ needs.resolve-environment.outputs.action }}"
