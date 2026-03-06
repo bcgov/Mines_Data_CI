@@ -87,7 +87,7 @@ jobs:
         id: set-backend
         run: |
           BACKEND="${{ vars.TF_DEFAULT_BACKEND }}"
-          echo "backend=${BACKEND:-local}" >> $GITHUB_OUTPUT
+          echo "backend=${BACKEND:-cloud}" >> $GITHUB_OUTPUT
 
       - name: Set action
         id: set-action
@@ -111,6 +111,7 @@ jobs:
       TF_ENV:     ${{ needs.resolve-environment.outputs.env_name }}
       TF_BACKEND: ${{ needs.resolve-environment.outputs.backend }}
       TF_ACTION:  ${{ needs.resolve-environment.outputs.action }}
+      TF_TOKEN_app_terraform_io: ${{ secrets.TF_CLOUD_TOKEN }}
 
     steps:
       - name: Checkout code
