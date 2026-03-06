@@ -60,7 +60,7 @@ jobs:
           echo "Branch strategy validation passed"
 
   # ─────────────────────────────────────────────────────────────────────────────
-  # JOB 2: Resolve environment, backend, action
+  # JOB 2: Resolve environment and backend
   # ─────────────────────────────────────────────────────────────────────────────
   resolve-environment:
     name: Resolve Environment
@@ -98,11 +98,11 @@ jobs:
     environment: ${{ needs.resolve-environment.outputs.env_name }}
 
     env:
-      ARM_CLIENT_ID:              ${{ secrets.ARM_CLIENT_ID }}
-      ARM_CLIENT_SECRET:          ${{ secrets.ARM_CLIENT_SECRET }}
-      ARM_SUBSCRIPTION_ID:        ${{ vars.ARM_SUBSCRIPTION_ID }}
-      ARM_TENANT_ID:              ${{ secrets.ARM_TENANT_ID }}
-      TF_TOKEN_app_terraform_io:  ${{ secrets.TF_CLOUD_TOKEN }}
+      ARM_CLIENT_ID:             ${{ secrets.ARM_CLIENT_ID }}
+      ARM_CLIENT_SECRET:         ${{ secrets.ARM_CLIENT_SECRET }}
+      ARM_SUBSCRIPTION_ID:       ${{ vars.ARM_SUBSCRIPTION_ID }}
+      ARM_TENANT_ID:             ${{ secrets.ARM_TENANT_ID }}
+      TF_TOKEN_app_terraform_io: ${{ secrets.TF_CLOUD_TOKEN }}
       TF_ENV:     ${{ needs.resolve-environment.outputs.env_name }}
       TF_BACKEND: ${{ needs.resolve-environment.outputs.backend }}
 
@@ -116,6 +116,7 @@ jobs:
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
         with:
+          # Set TF_VERSION repo variable to override, falls back to 1.9.0
           terraform_version: ${{ vars.TF_VERSION || '1.9.0' }}
 
       - name: Install TFLint
@@ -144,7 +145,9 @@ jobs:
             echo "Using local backend..."
             cp providers_local.tf.tpl providers.tf
           fi
-          echo "providers.tf generated from $TF_BACKEND template"
+          # Format immediately after copy to prevent fmt check failures
+          terraform fmt providers.tf
+          echo "providers.tf generated and formatted from $TF_BACKEND template"
 
       # ── Static analysis ───────────────────────────────────────────────────────
 
@@ -181,22 +184,22 @@ jobs:
       - name: Generate tfvars
         working-directory: build/artifacts
         run: |
-          cat > ci.tfvars << EOF
+          # remote backend requires *.auto.tfvars — -var-file is not supported
+          cat > ci.auto.tfvars << EOF
           ARM_SUBSCRIPTION_ID = "${{ vars.ARM_SUBSCRIPTION_ID }}"
           ARM_TENANT_ID       = "${{ secrets.ARM_TENANT_ID }}"
           ARM_CLIENT_ID       = "${{ secrets.ARM_CLIENT_ID }}"
           ARM_CLIENT_SECRET   = "${{ secrets.ARM_CLIENT_SECRET }}"
           EOF
-          echo "ci.tfvars generated"
+          echo "ci.auto.tfvars generated"
 
       - name: Terraform Plan
         working-directory: build/artifacts
         run: |
           echo "Planning for environment: $TF_ENV..."
-          terraform plan \
-            -var-file="ci.tfvars" \
-            -out=tfplan \
-            -input=false
+          # -out and -var-file are not supported by the remote backend
+          # variables are loaded automatically from ci.auto.tfvars
+          terraform plan -input=false
 
       # ── Documentation ─────────────────────────────────────────────────────────
 
@@ -217,7 +220,8 @@ jobs:
       - name: Check for documentation changes
         id: docs-changed
         run: |
-          git add .
+          # Only stage markdown files — avoids accidentally staging generated/temp files
+          git add '**.md'
           if git diff --staged --quiet; then
             echo "changed=false" >> $GITHUB_OUTPUT
             echo "Documentation is up to date"
@@ -252,7 +256,7 @@ jobs:
         if: always()
         run: |
           rm -f build/artifacts/providers.tf
-          rm -f build/artifacts/ci.tfvars
+          rm -f build/artifacts/ci.auto.tfvars
           echo "Cleaned up generated files"
 
       # ── Summary ───────────────────────────────────────────────────────────────
