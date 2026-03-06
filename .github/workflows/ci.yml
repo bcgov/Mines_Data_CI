@@ -126,10 +126,10 @@ jobs:
       - name: Install terraform-docs
         run: |
           VERSION="v0.17.0"
-          wget -q "https://github.com/terraform-docs/terraform-docs/releases/download/${VERSION}/terraform-docs-${VERSION}-linux-amd64.tar.gz"
-          tar -xzf "terraform-docs-${VERSION}-linux-amd64.tar.gz"
-          chmod +x terraform-docs
-          sudo mv terraform-docs /usr/local/bin/
+          wget -q -P /tmp "https://github.com/terraform-docs/terraform-docs/releases/download/${VERSION}/terraform-docs-${VERSION}-linux-amd64.tar.gz"
+          tar -xzf "/tmp/terraform-docs-${VERSION}-linux-amd64.tar.gz" -C /tmp
+          chmod +x /tmp/terraform-docs
+          sudo mv /tmp/terraform-docs /usr/local/bin/
           terraform-docs --version
 
       # ── Provider setup ────────────────────────────────────────────────────────
