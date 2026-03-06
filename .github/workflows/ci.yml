@@ -23,7 +23,7 @@ on:
   workflow_dispatch:
     inputs:
       backend:
-        description: 'Terraform backend to use'
+        description: 'Terraform backend to use (defaults to TF_DEFAULT_BACKEND repo variable)'
         required: true
         default: 'cloud'
         type: choice
@@ -149,9 +149,12 @@ jobs:
         id: set-backend
         run: |
           if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            # Manual trigger - use whatever the user selected in the UI
             echo "backend=${{ github.event.inputs.backend }}" >> $GITHUB_OUTPUT
           else
-            echo "backend=local" >> $GITHUB_OUTPUT
+            # Push and PR events fall back to the repo-level default variable
+            # Set TF_DEFAULT_BACKEND in: Settings → Secrets and variables → Actions → Variables
+            echo "backend=${{ vars.TF_DEFAULT_BACKEND }}" >> $GITHUB_OUTPUT
           fi
 
       - name: Set action
@@ -274,6 +277,7 @@ jobs:
           if [[ -n $(git status --porcelain) ]]; then
             git commit -m "chore: update terraform state [${{ needs.resolve-environment.outputs.env_name }}] [skip ci]"
           fi
+
       - name: Push state file
         if: needs.resolve-environment.outputs.action == 'apply'
         uses: ad-m/github-push-action@master
