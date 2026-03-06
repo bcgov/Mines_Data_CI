@@ -125,11 +125,11 @@ jobs:
       - name: Set backend
         id: set-backend
         run: |
-          # Manual trigger: use the UI selection; all other triggers: use the repo variable
           if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
             echo "backend=${{ github.event.inputs.backend }}" >> $GITHUB_OUTPUT
           else
-            echo "backend=${{ vars.TF_DEFAULT_BACKEND }}" >> $GITHUB_OUTPUT
+            BACKEND="${{ vars.TF_DEFAULT_BACKEND }}"
+            echo "backend=${BACKEND:-cloud}" >> $GITHUB_OUTPUT  # fallback to 'cloud'
           fi
 
       - name: Set action
