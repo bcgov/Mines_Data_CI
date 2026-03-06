@@ -69,7 +69,6 @@ jobs:
     outputs:
       env_name: ${{ steps.set-env.outputs.env_name }}
       backend:  ${{ steps.set-backend.outputs.backend }}
-      action:   ${{ steps.set-action.outputs.action }}
 
     steps:
       - name: Set environment name
@@ -89,29 +88,23 @@ jobs:
           BACKEND="${{ vars.TF_DEFAULT_BACKEND }}"
           echo "backend=${BACKEND:-cloud}" >> $GITHUB_OUTPUT
 
-      - name: Set action
-        id: set-action
-        run: |
-          echo "action=plan" >> $GITHUB_OUTPUT
-
   # ─────────────────────────────────────────────────────────────────────────────
   # JOB 3: Terraform quality checks
   # ─────────────────────────────────────────────────────────────────────────────
   terraform-quality:
-    name: Terraform Quality Checks (${{ needs.resolve-environment.outputs.env_name }} / ${{ needs.resolve-environment.outputs.backend }} / ${{ needs.resolve-environment.outputs.action }})
+    name: Terraform Quality Checks (${{ needs.resolve-environment.outputs.env_name }} / ${{ needs.resolve-environment.outputs.backend }})
     runs-on: ubuntu-latest
     needs: [resolve-environment]
     environment: ${{ needs.resolve-environment.outputs.env_name }}
 
     env:
-      ARM_CLIENT_ID:       ${{ secrets.ARM_CLIENT_ID }}
-      ARM_CLIENT_SECRET:   ${{ secrets.ARM_CLIENT_SECRET }}
-      ARM_SUBSCRIPTION_ID: ${{ vars.ARM_SUBSCRIPTION_ID }}
-      ARM_TENANT_ID:       ${{ secrets.ARM_TENANT_ID }}
+      ARM_CLIENT_ID:              ${{ secrets.ARM_CLIENT_ID }}
+      ARM_CLIENT_SECRET:          ${{ secrets.ARM_CLIENT_SECRET }}
+      ARM_SUBSCRIPTION_ID:        ${{ vars.ARM_SUBSCRIPTION_ID }}
+      ARM_TENANT_ID:              ${{ secrets.ARM_TENANT_ID }}
+      TF_TOKEN_app_terraform_io:  ${{ secrets.TF_CLOUD_TOKEN }}
       TF_ENV:     ${{ needs.resolve-environment.outputs.env_name }}
       TF_BACKEND: ${{ needs.resolve-environment.outputs.backend }}
-      TF_ACTION:  ${{ needs.resolve-environment.outputs.action }}
-      TF_TOKEN_app_terraform_io: ${{ secrets.TF_CLOUD_TOKEN }}
 
     steps:
       - name: Checkout code
@@ -155,18 +148,8 @@ jobs:
 
       # ── Static analysis ───────────────────────────────────────────────────────
 
-      - name: Terraform Format
-        run: |
-          terraform fmt -recursive
-          git add .
-          if git diff --staged --quiet; then
-            echo "No formatting changes needed"
-          else
-            git config --local user.email "github-actions[bot]@users.noreply.github.com"
-            git config --local user.name "github-actions[bot]"
-            git commit -m "style: auto-format Terraform files [skip ci]"
-            git push
-          fi
+      - name: Terraform Format Check
+        run: terraform fmt -check -recursive
 
       - name: TFLint
         run: |
@@ -195,12 +178,23 @@ jobs:
 
       # ── Plan ──────────────────────────────────────────────────────────────────
 
+      - name: Generate tfvars
+        working-directory: build/artifacts
+        run: |
+          cat > ci.tfvars << EOF
+          ARM_SUBSCRIPTION_ID = "${{ vars.ARM_SUBSCRIPTION_ID }}"
+          ARM_TENANT_ID       = "${{ secrets.ARM_TENANT_ID }}"
+          ARM_CLIENT_ID       = "${{ secrets.ARM_CLIENT_ID }}"
+          ARM_CLIENT_SECRET   = "${{ secrets.ARM_CLIENT_SECRET }}"
+          EOF
+          echo "ci.tfvars generated"
+
       - name: Terraform Plan
         working-directory: build/artifacts
         run: |
           echo "Planning for environment: $TF_ENV..."
           terraform plan \
-            -var-file="environments/$TF_ENV.tfvars" \
+            -var-file="ci.tfvars" \
             -out=tfplan \
             -input=false
 
@@ -254,9 +248,12 @@ jobs:
 
       # ── Cleanup ───────────────────────────────────────────────────────────────
 
-      - name: Cleanup generated providers.tf
+      - name: Cleanup generated files
         if: always()
-        run: rm -f build/artifacts/providers.tf && echo "Cleaned up providers.tf"
+        run: |
+          rm -f build/artifacts/providers.tf
+          rm -f build/artifacts/ci.tfvars
+          echo "Cleaned up generated files"
 
       # ── Summary ───────────────────────────────────────────────────────────────
 
@@ -266,4 +263,3 @@ jobs:
           echo "All Terraform quality checks passed"
           echo "Environment : $TF_ENV"
           echo "Backend     : $TF_BACKEND"
-          echo "Action      : $TF_ACTION"
