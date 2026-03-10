@@ -21,4 +21,10 @@ variable "ARM_SUBSCRIPTION_ID" {
   default     = null
 }
 
+variable "ENVIRONMENT" {
+  description = "Environment name"
+  type        = string
+  default     = "dev"
+}
+
 
