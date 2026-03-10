@@ -28,10 +28,6 @@ jobs:
     environment: ${{ github.base_ref == 'main' && 'prod' || github.base_ref == 'test' && 'test' || 'dev' }}
 
     env:
-      ARM_CLIENT_ID:       ${{ secrets.ARM_CLIENT_ID }}
-      ARM_CLIENT_SECRET:   ${{ secrets.ARM_CLIENT_SECRET }}
-      ARM_SUBSCRIPTION_ID: ${{ vars.ARM_SUBSCRIPTION_ID }}
-      ARM_TENANT_ID:       ${{ secrets.ARM_TENANT_ID }}
       TF_ENV: ${{ github.base_ref == 'main' && 'prod' || github.base_ref == 'test' && 'test' || 'dev' }}
 
     steps:
@@ -62,6 +58,12 @@ jobs:
       - name: Terraform Apply
         working-directory: build/artifacts
         env:
+          # Provider authentication — consumed directly by azurerm, azapi, and fabric providers
+          ARM_SUBSCRIPTION_ID: ${{ vars.ARM_SUBSCRIPTION_ID }}
+          ARM_TENANT_ID:       ${{ secrets.ARM_TENANT_ID }}
+          ARM_CLIENT_ID:       ${{ secrets.ARM_CLIENT_ID }}
+          ARM_CLIENT_SECRET:   ${{ secrets.ARM_CLIENT_SECRET }}
+          # Terraform input variables — populate var.* declarations in variables.tf
           TF_VAR_ARM_SUBSCRIPTION_ID: ${{ vars.ARM_SUBSCRIPTION_ID }}
           TF_VAR_ARM_TENANT_ID:       ${{ secrets.ARM_TENANT_ID }}
           TF_VAR_ARM_CLIENT_ID:       ${{ secrets.ARM_CLIENT_ID }}

@@ -98,10 +98,6 @@ jobs:
     environment: ${{ needs.resolve-environment.outputs.env_name }}
 
     env:
-      ARM_CLIENT_ID:             ${{ secrets.ARM_CLIENT_ID }}
-      ARM_CLIENT_SECRET:         ${{ secrets.ARM_CLIENT_SECRET }}
-      ARM_SUBSCRIPTION_ID:       ${{ vars.ARM_SUBSCRIPTION_ID }}
-      ARM_TENANT_ID:             ${{ secrets.ARM_TENANT_ID }}
       TF_TOKEN_app_terraform_io: ${{ secrets.TF_CLOUD_TOKEN }}
       TF_ENV:     ${{ needs.resolve-environment.outputs.env_name }}
       TF_BACKEND: ${{ needs.resolve-environment.outputs.backend }}
@@ -216,6 +212,12 @@ jobs:
       - name: Terraform Plan
         working-directory: build/artifacts
         env:
+          # Provider authentication — consumed directly by azurerm, azapi, and fabric providers
+          ARM_SUBSCRIPTION_ID: ${{ vars.ARM_SUBSCRIPTION_ID }}
+          ARM_TENANT_ID:       ${{ secrets.ARM_TENANT_ID }}
+          ARM_CLIENT_ID:       ${{ secrets.ARM_CLIENT_ID }}
+          ARM_CLIENT_SECRET:   ${{ secrets.ARM_CLIENT_SECRET }}
+          # Terraform input variables — populate var.* declarations in variables.tf
           TF_VAR_ARM_SUBSCRIPTION_ID: ${{ vars.ARM_SUBSCRIPTION_ID }}
           TF_VAR_ARM_TENANT_ID:       ${{ secrets.ARM_TENANT_ID }}
           TF_VAR_ARM_CLIENT_ID:       ${{ secrets.ARM_CLIENT_ID }}
