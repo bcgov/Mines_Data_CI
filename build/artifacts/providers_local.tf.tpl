@@ -21,6 +21,8 @@ terraform {
 
 provider "azurerm" {
   skip_provider_registration = true
+  use_cli                         = false    # ← force SP auth, disable CLI fallback
+  features {}
   features {}
 }
 
