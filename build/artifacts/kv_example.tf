@@ -4,7 +4,7 @@ module "key_vault" {
   suffix                        = "tools"
   project                       = "fabric"
   env                           = var.ENVIRONMENT
-  Instance_Number               = "01"
+  Instance_Number               = "02"
   resource_group_name           = "nrfabric-rg1"
   location                      = "canadacentral"
   public_network_access_enabled = false
@@ -21,5 +21,4 @@ module "key_vault" {
       role_definition_name = "Key Vault Crypto Officer"
     }
   ]
-  # depends_on = [module.vnet]
 }
