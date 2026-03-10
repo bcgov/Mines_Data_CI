@@ -13,7 +13,7 @@ on:
       - '**.tpl'
 
 permissions:
-  contents: read
+  contents: write
   pull-requests: write
 
 concurrency:
@@ -24,49 +24,36 @@ jobs:
   terraform-apply:
     name: Terraform Apply (${{ github.base_ref == 'main' && 'prod' || github.base_ref }})
     runs-on: ubuntu-latest
-    if: github.event.pull_request.merged == true
+    if: github.event.pull_request.merged == true && vars.TF_DEFAULT_BACKEND == 'local'
     environment: ${{ github.base_ref == 'main' && 'prod' || github.base_ref == 'test' && 'test' || 'dev' }}
 
     env:
-      ARM_CLIENT_ID:             ${{ secrets.ARM_CLIENT_ID }}
-      ARM_CLIENT_SECRET:         ${{ secrets.ARM_CLIENT_SECRET }}
-      ARM_SUBSCRIPTION_ID:       ${{ vars.ARM_SUBSCRIPTION_ID }}
-      ARM_TENANT_ID:             ${{ secrets.ARM_TENANT_ID }}
-      TF_TOKEN_app_terraform_io: ${{ secrets.TF_CLOUD_TOKEN }}
-      TF_ENV:     ${{ github.base_ref == 'main' && 'prod' || github.base_ref == 'test' && 'test' || 'dev' }}
-      TF_BACKEND: ${{ vars.TF_DEFAULT_BACKEND != '' && vars.TF_DEFAULT_BACKEND || 'cloud' }}
+      ARM_CLIENT_ID:       ${{ secrets.ARM_CLIENT_ID }}
+      ARM_CLIENT_SECRET:   ${{ secrets.ARM_CLIENT_SECRET }}
+      ARM_SUBSCRIPTION_ID: ${{ vars.ARM_SUBSCRIPTION_ID }}
+      ARM_TENANT_ID:       ${{ secrets.ARM_TENANT_ID }}
+      TF_ENV: ${{ github.base_ref == 'main' && 'prod' || github.base_ref == 'test' && 'test' || 'dev' }}
 
     steps:
-      - name: Check backend
-        run: |
-          if [[ "$TF_BACKEND" != "local" ]]; then
-            echo "Backend is '$TF_BACKEND' — apply is managed by Terraform Cloud, skipping."
-            exit 0
-          fi
-          echo "Backend is local — proceeding with apply"
-
       - name: Checkout code
-        if: env.TF_BACKEND == 'local'
         uses: actions/checkout@v4
         with:
           ref: ${{ github.base_ref }}
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Setup Terraform
-        if: env.TF_BACKEND == 'local'
         uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: ${{ vars.TF_VERSION || '1.9.0' }}
 
       - name: Select providers file
-        if: env.TF_BACKEND == 'local'
         working-directory: build/artifacts
         run: |
           cp providers_local.tf.tpl providers.tf
-          echo "providers.tf generated"
+          terraform fmt providers.tf
+          echo "providers.tf generated from local template"
 
       - name: Generate tfvars
-        if: env.TF_BACKEND == 'local'
         working-directory: build/artifacts
         run: |
           cat > ci.auto.tfvars << EOF
@@ -74,28 +61,45 @@ jobs:
           ARM_TENANT_ID       = "${{ secrets.ARM_TENANT_ID }}"
           ARM_CLIENT_ID       = "${{ secrets.ARM_CLIENT_ID }}"
           ARM_CLIENT_SECRET   = "${{ secrets.ARM_CLIENT_SECRET }}"
+          ENVIRONMENT         = "${{ env.TF_ENV }}"
           EOF
+          echo "ci.auto.tfvars generated for environment: $TF_ENV"
 
       - name: Terraform Init
-        if: env.TF_BACKEND == 'local'
         working-directory: build/artifacts
-        run: terraform init
+        run: |
+          echo "Initialising Terraform with local backend..."
+          terraform init
 
       - name: Terraform Apply
-        if: env.TF_BACKEND == 'local'
         working-directory: build/artifacts
         run: |
           echo "Applying for environment: $TF_ENV..."
           terraform apply -input=false -auto-approve
 
+      - name: Commit state file
+        if: success()
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add build/artifacts/terraform.tfstate
+          git add build/artifacts/terraform.tfstate.backup || true
+          if git diff --staged --quiet; then
+            echo "No state changes to commit"
+          else
+            git commit -m "state: update ${{ env.TF_ENV }} state after apply [skip ci]"
+            git push
+          fi
+
       - name: Cleanup generated files
-        if: env.TF_BACKEND == 'local' && always()
+        if: always()
         run: |
           rm -f build/artifacts/providers.tf
           rm -f build/artifacts/ci.auto.tfvars
+          echo "Cleaned up generated files"
 
       - name: Comment on PR
-        if: env.TF_BACKEND == 'local' && success()
+        if: success()
         uses: actions/github-script@v7
         with:
           script: |
