@@ -213,25 +213,16 @@ jobs:
 
       # ── Plan ──────────────────────────────────────────────────────────────────
 
-      - name: Generate tfvars
-        working-directory: build/artifacts
-        run: |
-          # remote backend requires *.auto.tfvars — -var-file is not supported
-          cat > ci.auto.tfvars << EOF
-          ARM_SUBSCRIPTION_ID = "${{ vars.ARM_SUBSCRIPTION_ID }}"
-          ARM_TENANT_ID       = "${{ secrets.ARM_TENANT_ID }}"
-          ARM_CLIENT_ID       = "${{ secrets.ARM_CLIENT_ID }}"
-          ARM_CLIENT_SECRET   = "${{ secrets.ARM_CLIENT_SECRET }}"
-          ENVIRONMENT         = "$TF_ENV"
-          EOF
-          echo "ci.auto.tfvars generated"
-
       - name: Terraform Plan
         working-directory: build/artifacts
+        env:
+          TF_VAR_ARM_SUBSCRIPTION_ID: ${{ vars.ARM_SUBSCRIPTION_ID }}
+          TF_VAR_ARM_TENANT_ID:       ${{ secrets.ARM_TENANT_ID }}
+          TF_VAR_ARM_CLIENT_ID:       ${{ secrets.ARM_CLIENT_ID }}
+          TF_VAR_ARM_CLIENT_SECRET:   ${{ secrets.ARM_CLIENT_SECRET }}
+          TF_VAR_ENVIRONMENT:         ${{ env.TF_ENV }}
         run: |
           echo "Planning for environment: $TF_ENV..."
-          # -out and -var-file are not supported by the remote backend
-          # variables are loaded automatically from ci.auto.tfvars
           terraform plan -input=false
 
       # ── Documentation ─────────────────────────────────────────────────────────
@@ -289,7 +280,6 @@ jobs:
         if: always()
         run: |
           rm -f build/artifacts/providers.tf
-          rm -f build/artifacts/ci.auto.tfvars
           echo "Cleaned up generated files"
 
       # ── Summary ───────────────────────────────────────────────────────────────
