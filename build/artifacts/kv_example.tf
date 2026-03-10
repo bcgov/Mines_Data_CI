@@ -4,7 +4,7 @@ module "key_vault" {
   prefix              = "nr"
   suffix              = "tools"
   project             = "fabric"
-  env                 = "dev"
+  env                 = var.ENVIRONMENT 
   Instance_Number     = "01"
   resource_group_name = "nrfabric-rg1"
   location            = "canadacentral"
