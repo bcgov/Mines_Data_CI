@@ -53,18 +53,6 @@ jobs:
           terraform fmt providers.tf
           echo "providers.tf generated from local template"
 
-      - name: Generate tfvars
-        working-directory: build/artifacts
-        run: |
-          cat > ci.auto.tfvars << EOF
-          ARM_SUBSCRIPTION_ID = "${{ vars.ARM_SUBSCRIPTION_ID }}"
-          ARM_TENANT_ID       = "${{ secrets.ARM_TENANT_ID }}"
-          ARM_CLIENT_ID       = "${{ secrets.ARM_CLIENT_ID }}"
-          ARM_CLIENT_SECRET   = "${{ secrets.ARM_CLIENT_SECRET }}"
-          ENVIRONMENT         = "${{ env.TF_ENV }}"
-          EOF
-          echo "ci.auto.tfvars generated for environment: $TF_ENV"
-
       - name: Terraform Init
         working-directory: build/artifacts
         run: |
@@ -73,6 +61,12 @@ jobs:
 
       - name: Terraform Apply
         working-directory: build/artifacts
+        env:
+          TF_VAR_ARM_SUBSCRIPTION_ID: ${{ vars.ARM_SUBSCRIPTION_ID }}
+          TF_VAR_ARM_TENANT_ID:       ${{ secrets.ARM_TENANT_ID }}
+          TF_VAR_ARM_CLIENT_ID:       ${{ secrets.ARM_CLIENT_ID }}
+          TF_VAR_ARM_CLIENT_SECRET:   ${{ secrets.ARM_CLIENT_SECRET }}
+          TF_VAR_ENVIRONMENT:         ${{ env.TF_ENV }}
         run: |
           echo "Applying for environment: $TF_ENV..."
           terraform apply -input=false -auto-approve
@@ -95,7 +89,6 @@ jobs:
         if: always()
         run: |
           rm -f build/artifacts/providers.tf
-          rm -f build/artifacts/ci.auto.tfvars
           echo "Cleaned up generated files"
 
       - name: Comment on PR
