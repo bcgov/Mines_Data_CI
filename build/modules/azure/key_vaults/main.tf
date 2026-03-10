@@ -68,7 +68,7 @@ resource "azurerm_role_assignment" "additional" {
   scope                = azurerm_key_vault.kv.id
   role_definition_name = each.value.role_definition_name
   principal_id         = each.value.object_id
-  depends_on = [ azurerm_role_assignment.self_user_access_admin_kv ]
+  depends_on           = [azurerm_role_assignment.self_user_access_admin_kv]
 }
 
 ###############################################################################

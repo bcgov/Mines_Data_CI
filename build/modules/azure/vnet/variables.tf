@@ -63,16 +63,16 @@ variable "tags" {
   description = "Tags to apply to the Azure Resource Group"
   type        = map(string)
   default = {
-    "ministry_name_prefix"                          = "citz"
-    "program_area"                                  = "permitting"
-    "client_code"                                   = ""
-    "responsibility_centre"                         = ""
-    "service_line"                                  = ""
-    "project_number"                                = ""
-    "expense_authority"                             = ""
-    "deployment_automation"                         = "Terraform"
-    "deployment_automation_version"                 = "v0.1"
-    "application_environment"                       = "dev"
-    "information_security_classification"           = "protected_e"
+    "ministry_name_prefix"                = "citz"
+    "program_area"                        = "permitting"
+    "client_code"                         = ""
+    "responsibility_centre"               = ""
+    "service_line"                        = ""
+    "project_number"                      = ""
+    "expense_authority"                   = ""
+    "deployment_automation"               = "Terraform"
+    "deployment_automation_version"       = "v0.1"
+    "application_environment"             = "dev"
+    "information_security_classification" = "protected_e"
   }
 }

@@ -30,3 +30,6 @@ override.tf
 override.tf.json
 *_override.tf
 *_override.tf.json
+
+terraform-docs-v0.17.0-linux-amd64.tar.gz
+terraform-docs-v0.17.0-linux-amd64.tar.gz.1

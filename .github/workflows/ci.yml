@@ -11,34 +11,6 @@ on:
       - '**.tfvars'
       - '**.tpl'
       - '.github/workflows/ci.yml'
-  push:
-    branches:
-      - dev
-      - test
-      - main
-    paths:
-      - '**.tf'
-      - '**.tfvars'
-      - '**.tpl'
-      - '.github/workflows/ci.yml'
-  workflow_dispatch:
-    inputs:
-      backend:
-        description: 'Terraform backend to use (defaults to TF_DEFAULT_BACKEND repo variable)'
-        required: true
-        default: 'cloud'
-        type: choice
-        options:
-          - local
-          - cloud
-      action:
-        description: 'Terraform action to run'
-        required: true
-        default: 'plan'
-        type: choice
-        options:
-          - plan
-          - apply
 
 permissions:
   contents: write
@@ -50,13 +22,12 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  # ─────────────────────────────────────────────
-  # JOB 1: Validate branch merge rules (PR only)
-  # ─────────────────────────────────────────────
+  # ─────────────────────────────────────────────────────────────────────────────
+  # JOB 1: Validate branch merge rules
+  # ─────────────────────────────────────────────────────────────────────────────
   validate-branch-strategy:
     name: Validate Branch Strategy
     runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request'
 
     steps:
       - name: Check branch merge rules
@@ -67,54 +38,43 @@ jobs:
           echo "Source branch: $SOURCE"
           echo "Target branch: $TARGET"
 
-          # Block direct environment-to-environment merges
           INVALID_PAIRS=("dev:test" "dev:main" "test:main" "test:dev" "main:test" "main:dev")
           PAIR="$SOURCE:$TARGET"
 
           for invalid in "${INVALID_PAIRS[@]}"; do
             if [[ "$PAIR" == "$invalid" ]]; then
-              echo "❌ ERROR: Cannot merge '$SOURCE' into '$TARGET'"
-              echo "Each environment is independent. Create a new feature branch from the target."
+              echo "ERROR: Cannot merge '$SOURCE' into '$TARGET'. Each environment is independent."
               exit 1
             fi
           done
 
-          # Block feature branches targeting the wrong environment
           declare -A ENV_TARGETS=(["-dev"]="dev" ["-test"]="test" ["-prod"]="main")
           for suffix in "${!ENV_TARGETS[@]}"; do
             expected="${ENV_TARGETS[$suffix]}"
             if [[ "$SOURCE" =~ $suffix$ && "$TARGET" != "$expected" ]]; then
-              echo "❌ ERROR: Feature branch '$SOURCE' (suffix '$suffix') must target '$expected', not '$TARGET'"
+              echo "ERROR: Branch '$SOURCE' (suffix '$suffix') must target '$expected', not '$TARGET'"
               exit 1
             fi
           done
 
-          echo "✅ Branch strategy validation passed"
+          echo "Branch strategy validation passed"
 
-  # ─────────────────────────────────────────────
-  # JOB 2: Resolve environment, backend, action
-  # ─────────────────────────────────────────────
+  # ─────────────────────────────────────────────────────────────────────────────
+  # JOB 2: Resolve environment and backend
+  # ─────────────────────────────────────────────────────────────────────────────
   resolve-environment:
     name: Resolve Environment
     runs-on: ubuntu-latest
     needs: [validate-branch-strategy]
-    # Run if branch validation passed, or if it was skipped (push / workflow_dispatch)
-    if: |
-      always() && (
-        needs.validate-branch-strategy.result == 'success' ||
-        needs.validate-branch-strategy.result == 'skipped'
-      )
     outputs:
       env_name: ${{ steps.set-env.outputs.env_name }}
       backend:  ${{ steps.set-backend.outputs.backend }}
-      action:   ${{ steps.set-action.outputs.action }}
 
     steps:
       - name: Set environment name
         id: set-env
         run: |
-          # For PRs use the target branch; otherwise use the branch being pushed to
-          BRANCH="${{ github.event_name == 'pull_request' && github.base_ref || github.ref_name }}"
+          BRANCH="${{ github.base_ref }}"
 
           case "$BRANCH" in
             main) echo "env_name=prod" >> $GITHUB_OUTPUT ;;
@@ -125,54 +85,38 @@ jobs:
       - name: Set backend
         id: set-backend
         run: |
-          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
-            echo "backend=${{ github.event.inputs.backend }}" >> $GITHUB_OUTPUT
-          else
-            BACKEND="${{ vars.TF_DEFAULT_BACKEND }}"
-            echo "backend=${BACKEND:-cloud}" >> $GITHUB_OUTPUT  # fallback to 'cloud'
-          fi
+          BACKEND="${{ vars.TF_DEFAULT_BACKEND }}"
+          echo "backend=${BACKEND:-cloud}" >> $GITHUB_OUTPUT
 
-      - name: Set action
-        id: set-action
-        run: |
-          # Apply only when explicitly selected via workflow_dispatch
-          if [[ "${{ github.event_name }}" == "workflow_dispatch" && "${{ github.event.inputs.action }}" == "apply" ]]; then
-            echo "action=apply" >> $GITHUB_OUTPUT
-          else
-            echo "action=plan" >> $GITHUB_OUTPUT
-          fi
-
-  # ─────────────────────────────────────────────
+  # ─────────────────────────────────────────────────────────────────────────────
   # JOB 3: Terraform quality checks
-  # ─────────────────────────────────────────────
+  # ─────────────────────────────────────────────────────────────────────────────
   terraform-quality:
-    name: Terraform Quality Checks (${{ needs.resolve-environment.outputs.env_name }} / ${{ needs.resolve-environment.outputs.backend }} / ${{ needs.resolve-environment.outputs.action }})
+    name: Terraform Quality Checks (${{ needs.resolve-environment.outputs.env_name }} / ${{ needs.resolve-environment.outputs.backend }})
     runs-on: ubuntu-latest
     needs: [resolve-environment]
     environment: ${{ needs.resolve-environment.outputs.env_name }}
 
     env:
-      # ARM provider authentication — these must be ARM_* not TF_VAR_ARM_* for the azurerm provider
-      ARM_CLIENT_ID:       ${{ secrets.ARM_CLIENT_ID }}
-      ARM_CLIENT_SECRET:   ${{ secrets.ARM_CLIENT_SECRET }}
-      ARM_SUBSCRIPTION_ID: ${{ vars.ARM_SUBSCRIPTION_ID }}
-      ARM_TENANT_ID:       ${{ secrets.ARM_TENANT_ID }}
-      # Convenience shorthand used throughout steps
-      TF_ENV: ${{ needs.resolve-environment.outputs.env_name }}
+      ARM_CLIENT_ID:             ${{ secrets.ARM_CLIENT_ID }}
+      ARM_CLIENT_SECRET:         ${{ secrets.ARM_CLIENT_SECRET }}
+      ARM_SUBSCRIPTION_ID:       ${{ vars.ARM_SUBSCRIPTION_ID }}
+      ARM_TENANT_ID:             ${{ secrets.ARM_TENANT_ID }}
+      TF_TOKEN_app_terraform_io: ${{ secrets.TF_CLOUD_TOKEN }}
+      TF_ENV:     ${{ needs.resolve-environment.outputs.env_name }}
       TF_BACKEND: ${{ needs.resolve-environment.outputs.backend }}
-      TF_ACTION: ${{ needs.resolve-environment.outputs.action }}
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          # On PRs check out the head so fmt/docs commits go to the right branch
-          ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.ref || github.ref }}
+          ref: ${{ github.event.pull_request.head.ref }}
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
         with:
+          # Set TF_VERSION repo variable to override, falls back to 1.9.0
           terraform_version: ${{ vars.TF_VERSION || '1.9.0' }}
 
       - name: Install TFLint
@@ -183,13 +127,13 @@ jobs:
       - name: Install terraform-docs
         run: |
           VERSION="v0.17.0"
-          wget -q "https://github.com/terraform-docs/terraform-docs/releases/download/${VERSION}/terraform-docs-${VERSION}-linux-amd64.tar.gz"
-          tar -xzf "terraform-docs-${VERSION}-linux-amd64.tar.gz"
-          chmod +x terraform-docs
-          sudo mv terraform-docs /usr/local/bin/
+          wget -q -P /tmp "https://github.com/terraform-docs/terraform-docs/releases/download/${VERSION}/terraform-docs-${VERSION}-linux-amd64.tar.gz"
+          tar -xzf "/tmp/terraform-docs-${VERSION}-linux-amd64.tar.gz" -C /tmp
+          chmod +x /tmp/terraform-docs
+          sudo mv /tmp/terraform-docs /usr/local/bin/
           terraform-docs --version
 
-      # ── Provider setup ──────────────────────────────────────────────────────
+      # ── Provider setup ────────────────────────────────────────────────────────
 
       - name: Select providers file
         working-directory: build/artifacts
@@ -201,22 +145,53 @@ jobs:
             echo "Using local backend..."
             cp providers_local.tf.tpl providers.tf
           fi
-          echo "✅ providers.tf generated from $TF_BACKEND template"
+          # Format immediately after copy to prevent fmt failures
+          terraform fmt providers.tf
+          echo "providers.tf generated and formatted from $TF_BACKEND template"
 
-      # ── Static analysis ─────────────────────────────────────────────────────
+      # ── Static analysis ───────────────────────────────────────────────────────
 
-      - name: Terraform Format Check
+      - name: Terraform Format
+        run: terraform fmt -recursive
+
+      - name: Check for format changes
+        id: fmt-changed
         run: |
-          echo "Running terraform fmt check..."
-          terraform fmt -check -recursive
+          git add '**.tf'
+          if git diff --staged --quiet; then
+            echo "changed=false" >> $GITHUB_OUTPUT
+            echo "Formatting is up to date"
+          else
+            echo "changed=true" >> $GITHUB_OUTPUT
+            echo "Formatting changes detected"
+          fi
+
+      - name: Commit and push format changes
+        if: steps.fmt-changed.outputs.changed == 'true'
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git commit -m "fmt: auto-format Terraform files [skip ci]"
+          git push
+
+      - name: Comment on PR (format)
+        if: steps.fmt-changed.outputs.changed == 'true'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: 'Terraform files have been automatically formatted.'
+            })
 
       - name: TFLint
         run: |
-          echo "Running tflint..."
           tflint --init
           tflint --format compact --recursive --minimum-failure-severity=error
 
-      # ── Init & validate ─────────────────────────────────────────────────────
+      # ── Init & validate ───────────────────────────────────────────────────────
 
       - name: Terraform Init (artifacts)
         working-directory: build/artifacts
@@ -236,38 +211,30 @@ jobs:
         working-directory: build/modules
         run: terraform validate
 
-      # ── Plan & apply ────────────────────────────────────────────────────────
+      # ── Plan ──────────────────────────────────────────────────────────────────
+
+      - name: Generate tfvars
+        working-directory: build/artifacts
+        run: |
+          # remote backend requires *.auto.tfvars — -var-file is not supported
+          cat > ci.auto.tfvars << EOF
+          ARM_SUBSCRIPTION_ID = "${{ vars.ARM_SUBSCRIPTION_ID }}"
+          ARM_TENANT_ID       = "${{ secrets.ARM_TENANT_ID }}"
+          ARM_CLIENT_ID       = "${{ secrets.ARM_CLIENT_ID }}"
+          ARM_CLIENT_SECRET   = "${{ secrets.ARM_CLIENT_SECRET }}"
+          ENVIRONMENT         = "$TF_ENV"
+          EOF
+          echo "ci.auto.tfvars generated"
 
       - name: Terraform Plan
         working-directory: build/artifacts
         run: |
           echo "Planning for environment: $TF_ENV..."
-          terraform plan \
-            -var-file="environments/$TF_ENV.tfvars" \
-            -out=tfplan \
-            -input=false
+          # -out and -var-file are not supported by the remote backend
+          # variables are loaded automatically from ci.auto.tfvars
+          terraform plan -input=false
 
-      - name: Terraform Apply
-        if: env.TF_ACTION == 'apply'
-        working-directory: build/artifacts
-        run: |
-          echo "🚀 Applying Terraform changes for environment: $TF_ENV..."
-          terraform apply -input=false tfplan
-
-      - name: Commit and push state file
-        if: env.TF_ACTION == 'apply'
-        run: |
-          git config --local user.email "github-actions[bot]@users.noreply.github.com"
-          git config --local user.name "github-actions[bot]"
-          git add build/artifacts/terraform.tfstate build/artifacts/terraform.tfstate.backup
-          if git diff --staged --quiet; then
-            echo "No state changes to commit"
-          else
-            git commit -m "chore: update terraform state [$TF_ENV] [skip ci]"
-            git push
-          fi
-
-      # ── Documentation ────────────────────────────────────────────────────────
+      # ── Documentation ─────────────────────────────────────────────────────────
 
       - name: Generate Terraform documentation
         run: |
@@ -286,25 +253,26 @@ jobs:
       - name: Check for documentation changes
         id: docs-changed
         run: |
-          git add .
+          # Only stage markdown files — avoids accidentally staging generated/temp files
+          git add '**.md'
           if git diff --staged --quiet; then
             echo "changed=false" >> $GITHUB_OUTPUT
-            echo "✅ Documentation is up to date"
+            echo "Documentation is up to date"
           else
             echo "changed=true" >> $GITHUB_OUTPUT
             echo "Documentation updates detected"
           fi
 
       - name: Commit and push documentation changes
-        if: steps.docs-changed.outputs.changed == 'true' && github.event_name == 'pull_request'
+        if: steps.docs-changed.outputs.changed == 'true'
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
           git commit -m "docs: auto-update Terraform documentation [skip ci]"
           git push
 
-      - name: Comment on PR
-        if: steps.docs-changed.outputs.changed == 'true' && github.event_name == 'pull_request'
+      - name: Comment on PR (docs)
+        if: steps.docs-changed.outputs.changed == 'true'
         uses: actions/github-script@v7
         with:
           script: |
@@ -312,21 +280,23 @@ jobs:
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: '📝 Terraform documentation has been automatically updated.'
+              body: 'Terraform documentation has been automatically updated.'
             })
 
-      # ── Cleanup ──────────────────────────────────────────────────────────────
+      # ── Cleanup ───────────────────────────────────────────────────────────────
 
-      - name: Cleanup generated providers.tf
+      - name: Cleanup generated files
         if: always()
-        run: rm -f build/artifacts/providers.tf && echo "✅ Cleaned up providers.tf"
+        run: |
+          rm -f build/artifacts/providers.tf
+          rm -f build/artifacts/ci.auto.tfvars
+          echo "Cleaned up generated files"
 
-      # ── Summary ──────────────────────────────────────────────────────────────
+      # ── Summary ───────────────────────────────────────────────────────────────
 
       - name: Quality Checks Summary
         if: success()
         run: |
-          echo "✅ All Terraform quality checks passed"
+          echo "All Terraform quality checks passed"
           echo "Environment : $TF_ENV"
           echo "Backend     : $TF_BACKEND"
-          echo "Action      : $TF_ACTION"

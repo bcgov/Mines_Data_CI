@@ -1,0 +1,111 @@
+name: Terraform Apply
+
+on:
+  pull_request:
+    types: [closed]
+    branches:
+      - dev
+      - test
+      - main
+    paths:
+      - '**.tf'
+      - '**.tfvars'
+      - '**.tpl'
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: terraform-apply-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  terraform-apply:
+    name: Terraform Apply (${{ github.base_ref == 'main' && 'prod' || github.base_ref }})
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.merged == true && vars.TF_DEFAULT_BACKEND == 'local'
+    environment: ${{ github.base_ref == 'main' && 'prod' || github.base_ref == 'test' && 'test' || 'dev' }}
+
+    env:
+      ARM_CLIENT_ID:       ${{ secrets.ARM_CLIENT_ID }}
+      ARM_CLIENT_SECRET:   ${{ secrets.ARM_CLIENT_SECRET }}
+      ARM_SUBSCRIPTION_ID: ${{ vars.ARM_SUBSCRIPTION_ID }}
+      ARM_TENANT_ID:       ${{ secrets.ARM_TENANT_ID }}
+      TF_ENV: ${{ github.base_ref == 'main' && 'prod' || github.base_ref == 'test' && 'test' || 'dev' }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.base_ref }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: ${{ vars.TF_VERSION || '1.9.0' }}
+
+      - name: Select providers file
+        working-directory: build/artifacts
+        run: |
+          cp providers_local.tf.tpl providers.tf
+          terraform fmt providers.tf
+          echo "providers.tf generated from local template"
+
+      - name: Generate tfvars
+        working-directory: build/artifacts
+        run: |
+          cat > ci.auto.tfvars << EOF
+          ARM_SUBSCRIPTION_ID = "${{ vars.ARM_SUBSCRIPTION_ID }}"
+          ARM_TENANT_ID       = "${{ secrets.ARM_TENANT_ID }}"
+          ARM_CLIENT_ID       = "${{ secrets.ARM_CLIENT_ID }}"
+          ARM_CLIENT_SECRET   = "${{ secrets.ARM_CLIENT_SECRET }}"
+          ENVIRONMENT         = "${{ env.TF_ENV }}"
+          EOF
+          echo "ci.auto.tfvars generated for environment: $TF_ENV"
+
+      - name: Terraform Init
+        working-directory: build/artifacts
+        run: |
+          echo "Initialising Terraform with local backend..."
+          terraform init
+
+      - name: Terraform Apply
+        working-directory: build/artifacts
+        run: |
+          echo "Applying for environment: $TF_ENV..."
+          terraform apply -input=false -auto-approve
+
+      - name: Commit state file
+        if: success()
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add build/artifacts/terraform.tfstate
+          git add build/artifacts/terraform.tfstate.backup || true
+          if git diff --staged --quiet; then
+            echo "No state changes to commit"
+          else
+            git commit -m "state: update ${{ env.TF_ENV }} state after apply [skip ci]"
+            git push
+          fi
+
+      - name: Cleanup generated files
+        if: always()
+        run: |
+          rm -f build/artifacts/providers.tf
+          rm -f build/artifacts/ci.auto.tfvars
+          echo "Cleaned up generated files"
+
+      - name: Comment on PR
+        if: success()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `Terraform apply completed successfully for environment **${{ env.TF_ENV }}**.`
+            })
