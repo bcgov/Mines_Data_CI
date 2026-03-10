@@ -21,6 +21,5 @@ module "key_vault" {
       role_definition_name = "Key Vault Crypto Officer"
     }
   ]
-
   # depends_on = [module.vnet]
 }
