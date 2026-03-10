@@ -145,14 +145,46 @@ jobs:
             echo "Using local backend..."
             cp providers_local.tf.tpl providers.tf
           fi
-          # Format immediately after copy to prevent fmt check failures
+          # Format immediately after copy to prevent fmt failures
           terraform fmt providers.tf
           echo "providers.tf generated and formatted from $TF_BACKEND template"
 
       # ── Static analysis ───────────────────────────────────────────────────────
 
-      - name: Terraform Format Check
-        run: terraform fmt -check -recursive
+      - name: Terraform Format
+        run: terraform fmt -recursive
+
+      - name: Check for format changes
+        id: fmt-changed
+        run: |
+          git add '**.tf'
+          if git diff --staged --quiet; then
+            echo "changed=false" >> $GITHUB_OUTPUT
+            echo "Formatting is up to date"
+          else
+            echo "changed=true" >> $GITHUB_OUTPUT
+            echo "Formatting changes detected"
+          fi
+
+      - name: Commit and push format changes
+        if: steps.fmt-changed.outputs.changed == 'true'
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git commit -m "fmt: auto-format Terraform files [skip ci]"
+          git push
+
+      - name: Comment on PR (format)
+        if: steps.fmt-changed.outputs.changed == 'true'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: 'Terraform files have been automatically formatted.'
+            })
 
       - name: TFLint
         run: |
@@ -239,7 +271,7 @@ jobs:
           git commit -m "docs: auto-update Terraform documentation [skip ci]"
           git push
 
-      - name: Comment on PR
+      - name: Comment on PR (docs)
         if: steps.docs-changed.outputs.changed == 'true'
         uses: actions/github-script@v7
         with:
