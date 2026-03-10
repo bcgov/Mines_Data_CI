@@ -2,6 +2,7 @@
 ![alt text](<documentation/Terraform Submodules Fabric.drawio (1).svg>)
 > Automated infrastructure-as-code pipeline for Azure resources using Terraform, with CI/CD via GitHub Actions.
 
+
 ---
 
 ## Table of Contents
