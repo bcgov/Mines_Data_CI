@@ -13,7 +13,6 @@ module "key_vault" {
   private_dns_zone_ids          = []
   additional_access_policies = [
 
-
     {
       object_id            = "6f523291-c78a-4e05-aae1-de6b07a07a11"
       role_definition_name = "Key Vault Secrets Officer" # manage secrets
