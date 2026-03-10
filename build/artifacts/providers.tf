@@ -1,11 +1,8 @@
 terraform {
-  backend "remote" {
-    organization = "bcgov-tfc"
-
-    workspaces {
-      name = "nr-dap-fabric-ci-dev"
-    }
+  backend "local" {
+    path = "terraform.tfstate"
   }
+
   required_providers {
     azurerm = {
       source  = "hashicorp/azurerm"
@@ -21,14 +18,17 @@ terraform {
     }
   }
 }
+
 provider "azurerm" {
   skip_provider_registration = true
   features {}
 }
+
 provider "azapi" {
   subscription_id = var.ARM_SUBSCRIPTION_ID
   tenant_id       = var.ARM_TENANT_ID
 }
+
 provider "fabric" {
   alias         = "auth"
   tenant_id     = var.ARM_TENANT_ID
