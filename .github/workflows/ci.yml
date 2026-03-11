@@ -95,7 +95,6 @@ jobs:
     name: Terraform Quality Checks (${{ needs.resolve-environment.outputs.env_name }} / ${{ needs.resolve-environment.outputs.backend }})
     runs-on: ubuntu-latest
     needs: [resolve-environment]
-    environment: ${{ needs.resolve-environment.outputs.env_name }}
 
     env:
       TF_TOKEN_app_terraform_io: ${{ secrets.TF_CLOUD_TOKEN }}
@@ -167,6 +166,7 @@ jobs:
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
+          git pull --rebase origin ${{ github.event.pull_request.head.ref }}
           git commit -m "fmt: auto-format Terraform files [skip ci]"
           git push
 
@@ -261,6 +261,7 @@ jobs:
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
+          git pull --rebase origin ${{ github.event.pull_request.head.ref }}
           git commit -m "docs: auto-update Terraform documentation [skip ci]"
           git push
 

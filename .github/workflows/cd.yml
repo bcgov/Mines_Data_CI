@@ -25,7 +25,6 @@ jobs:
     name: Terraform Apply (${{ github.base_ref == 'main' && 'prod' || github.base_ref }})
     runs-on: ubuntu-latest
     if: github.event.pull_request.merged == true && vars.TF_DEFAULT_BACKEND == 'local'
-    environment: ${{ github.base_ref == 'main' && 'prod' || github.base_ref == 'test' && 'test' || 'dev' }}
 
     env:
       TF_ENV: ${{ github.base_ref == 'main' && 'prod' || github.base_ref == 'test' && 'test' || 'dev' }}
