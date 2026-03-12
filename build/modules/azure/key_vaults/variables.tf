@@ -190,6 +190,12 @@ variable "private_service_connection_name" {
   default     = null
 }
 
+variable "enable_rbac_assignments" {
+  description = "Whether to create role assignments for the deploying identity and self user access admin. Disable if the Service Principal lacks Microsoft.Authorization/roleAssignments/write."
+  type        = bool
+  default     = false
+}
+
 # tagging variables #
 variable "tags" {
   description = "Tags to apply to the Azure Resource Group"

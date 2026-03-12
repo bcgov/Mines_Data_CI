@@ -23,7 +23,7 @@ resource "azurerm_key_vault" "kv" {
   soft_delete_retention_days      = var.soft_delete_retention_days
   purge_protection_enabled        = var.purge_protection_enabled
   public_network_access_enabled   = var.public_network_access_enabled
-  enable_rbac_authorization       = true # required by Landing Zone policy
+  rbac_authorization_enabled      = true # required by Landing Zone policy
 
   dynamic "network_acls" {
     for_each = length(var.ip_rules) > 0 || length(var.virtual_network_subnet_ids) > 0 ? [1] : []
@@ -43,25 +43,31 @@ resource "azurerm_key_vault" "kv" {
 ###############################################################################
 
 resource "azurerm_role_assignment" "app" {
+  for_each = var.enable_rbac_assignments ? { "app" = local.delegate_id } : {}
+
   scope                = azurerm_key_vault.kv.id
   role_definition_name = "Key Vault Administrator"
-  principal_id         = local.delegate_id
+  principal_id         = each.value
+}
+
+###############################################################################
+# RBAC — self user access admin
+###############################################################################
+
+resource "azurerm_role_assignment" "self_user_access_admin_kv" {
+  for_each = var.enable_rbac_assignments ? { "self" = data.azurerm_client_config.current.object_id } : {}
+
+  scope                = azurerm_key_vault.kv.id
+  role_definition_name = "User Access Administrator"
+  principal_id         = each.value
+
+  depends_on = [azurerm_key_vault.kv]
 }
 
 ###############################################################################
 # RBAC — additional users / groups / service principals
 ###############################################################################
 
-resource "azurerm_role_assignment" "self_user_access_admin_kv" {
-  scope                = azurerm_key_vault.kv.id
-  role_definition_name = "User Access Administrator"
-  principal_id         = data.azurerm_client_config.current.object_id
-
-  # Avoid AAD replication timing issues on first apply
-  depends_on = [
-    azurerm_key_vault.kv
-  ]
-}
 resource "azurerm_role_assignment" "additional" {
   for_each = { for policy in var.additional_access_policies : "${policy.object_id}-${policy.role_definition_name}" => policy }
 
@@ -100,4 +106,3 @@ resource "azurerm_private_endpoint" "kv" {
 
   tags = var.tags
 }
-
