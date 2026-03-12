@@ -152,7 +152,7 @@ jobs:
       - name: Check for format changes
         id: fmt-changed
         run: |
-          git add '**.tf'
+          git add -u
           if git diff --staged --quiet; then
             echo "changed=false" >> $GITHUB_OUTPUT
             echo "Formatting is up to date"
@@ -169,6 +169,7 @@ jobs:
           git stash
           git pull --rebase origin ${{ github.event.pull_request.head.ref }}
           git stash pop
+          git add -u
           git commit -m "fmt: auto-format Terraform files [skip ci]"
           git push
 
@@ -249,7 +250,7 @@ jobs:
         id: docs-changed
         run: |
           # Only stage markdown files — avoids accidentally staging generated/temp files
-          git add '**.md'
+          git add -u
           if git diff --staged --quiet; then
             echo "changed=false" >> $GITHUB_OUTPUT
             echo "Documentation is up to date"
@@ -266,6 +267,7 @@ jobs:
           git stash
           git pull --rebase origin ${{ github.event.pull_request.head.ref }}
           git stash pop
+          git add -u
           git commit -m "docs: auto-update Terraform documentation [skip ci]"
           git push
 
