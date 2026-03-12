@@ -166,7 +166,9 @@ jobs:
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
+          git stash
           git pull --rebase origin ${{ github.event.pull_request.head.ref }}
+          git stash pop
           git commit -m "fmt: auto-format Terraform files [skip ci]"
           git push
 
@@ -261,7 +263,9 @@ jobs:
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
+          git stash
           git pull --rebase origin ${{ github.event.pull_request.head.ref }}
+          git stash pop
           git commit -m "docs: auto-update Terraform documentation [skip ci]"
           git push
 
