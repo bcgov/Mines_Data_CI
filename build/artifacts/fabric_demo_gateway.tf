@@ -1,3 +1,7 @@
+data "azurerm_network_security_group" "fabric_gateway" {
+  name                = "quickstart-azure-containers-tools-apim-nsg"
+  resource_group_name = "b9cee3-tools-networking"
+}
 resource "azapi_resource" "fabric_gateway_subnet" {
   type      = "Microsoft.Network/virtualNetworks/subnets@2023-04-01"
   name      = "snet-fabric-gateway"
