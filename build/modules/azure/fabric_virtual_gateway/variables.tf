@@ -57,29 +57,6 @@ variable "virtual_network_azure_resource" {
   })
 }
 
-variable "allow_cloud_connection_refresh" {
-  description = "Allow cloud connection refresh on the gateway."
-  type        = bool
-  default     = false
-}
-
-variable "allow_custom_connectors" {
-  description = "Allow custom connectors on the gateway."
-  type        = bool
-  default     = false
-}
-
-variable "load_balancing_setting" {
-  description = "Load balancing setting for the gateway. Accepted values: DistributeEvenly, Failover."
-  type        = string
-  default     = "DistributeEvenly"
-
-  validation {
-    condition     = contains(["DistributeEvenly", "Failover"], var.load_balancing_setting)
-    error_message = "load_balancing_setting must be one of: DistributeEvenly, Failover."
-  }
-}
-
 variable "timeouts" {
   description = "Timeout settings for the Fabric Virtual Network Gateway resource."
   type = object({

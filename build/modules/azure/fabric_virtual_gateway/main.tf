@@ -35,10 +35,6 @@ resource "fabric_gateway" "this" {
     subscription_id      = var.virtual_network_azure_resource.subscription_id
   }
 
-  allow_cloud_connection_refresh = var.allow_cloud_connection_refresh
-  allow_custom_connectors        = var.allow_custom_connectors
-  load_balancing_setting         = var.load_balancing_setting
-
   timeouts = {
     create = var.timeouts.create
     read   = var.timeouts.read

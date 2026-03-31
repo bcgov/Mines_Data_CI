@@ -29,12 +29,9 @@ No modules.
 | <a name="input_prefix"></a> [prefix](#input\_prefix) | Prefix for the gateway name. | `string` | n/a | yes |
 | <a name="input_project"></a> [project](#input\_project) | Project name for the gateway. | `string` | n/a | yes |
 | <a name="input_virtual_network_azure_resource"></a> [virtual\_network\_azure\_resource](#input\_virtual\_network\_azure\_resource) | Azure Virtual Network resource details for the gateway. All fields are required. | <pre>object({<br>    resource_group_name  = string<br>    virtual_network_name = string<br>    subnet_name          = string<br>    subscription_id      = string<br>  })</pre> | n/a | yes |
-| <a name="input_allow_cloud_connection_refresh"></a> [allow\_cloud\_connection\_refresh](#input\_allow\_cloud\_connection\_refresh) | Allow cloud connection refresh on the gateway. | `bool` | `false` | no |
-| <a name="input_allow_custom_connectors"></a> [allow\_custom\_connectors](#input\_allow\_custom\_connectors) | Allow custom connectors on the gateway. | `bool` | `false` | no |
 | <a name="input_gateway_name"></a> [gateway\_name](#input\_gateway\_name) | Optional gateway name to override the default naming convention. | `string` | `null` | no |
 | <a name="input_inactivity_minutes_before_sleep"></a> [inactivity\_minutes\_before\_sleep](#input\_inactivity\_minutes\_before\_sleep) | Number of minutes of inactivity before the gateway goes to sleep. Must be between 30 and 1440. | `number` | `30` | no |
 | <a name="input_instance_number"></a> [instance\_number](#input\_instance\_number) | Instance number for the gateway. | `number` | `1` | no |
-| <a name="input_load_balancing_setting"></a> [load\_balancing\_setting](#input\_load\_balancing\_setting) | Load balancing setting for the gateway. Accepted values: DistributeEvenly, Failover. | `string` | `"DistributeEvenly"` | no |
 | <a name="input_number_of_member_gateways"></a> [number\_of\_member\_gateways](#input\_number\_of\_member\_gateways) | Number of member gateways. Must be between 1 and 7. | `number` | `1` | no |
 | <a name="input_timeouts"></a> [timeouts](#input\_timeouts) | Timeout settings for the Fabric Virtual Network Gateway resource. | <pre>object({<br>    create = optional(string, "30m")<br>    read   = optional(string, "5m")<br>    update = optional(string, "30m")<br>    delete = optional(string, "30m")<br>  })</pre> | `{}` | no |
 

@@ -15,4 +15,17 @@ module "fabric_gateway_minimal" {
     virtual_network_name = "b9cee3-tools-vwan-spoke"
     subnet_name          = "apim-subnet"
   }
+
+  # Gateway behaviour
+  inactivity_minutes_before_sleep = 60
+  number_of_member_gateways       = 3
+
+  # Timeouts
+  timeouts = {
+    create = "45m"
+    read   = "5m"
+    update = "45m"
+    delete = "30m"
+  }
 }
+
