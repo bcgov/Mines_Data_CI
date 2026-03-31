@@ -5,8 +5,8 @@ module "fabric_gateway_minimal" {
     fabric.auth = fabric.auth
   }
 
-  prefix     = "nr"
-  project    = "fabric"
+  prefix      = "nr"
+  project     = "fabric"
   capacity_id = "77e89824-a07e-42b8-b47f-2c68c13fb559"
 
   virtual_network_azure_resource = {
