@@ -1,14 +1,26 @@
-resource "azurerm_subnet" "fabric_gateway" {
-  name                 = "snet-fabric-gateway"
-  resource_group_name  = "b9cee3-tools-networking"
-  virtual_network_name = "b9cee3-tools-vwan-spoke"
-  address_prefixes     = ["10.46.10.144/24"]
+data "azurerm_network_security_group" "fabric_gateway" {
+  name                = "quickstart-azure-containers-tools-apim-nsg"
+  resource_group_name = "b9cee3-tools-networking"
+}
+resource "azapi_resource" "fabric_gateway_subnet" {
+  type      = "Microsoft.Network/virtualNetworks/subnets@2023-04-01"
+  name      = "snet-fabric-gateway"
+  parent_id = "/subscriptions/ffc5e617-7f2d-4ddb-8b57-33fc43989a8c/resourceGroups/b9cee3-tools-networking/providers/Microsoft.Network/virtualNetworks/b9cee3-tools-vwan-spoke"
 
-  delegation {
-    name = "fabric-delegation"
-    service_delegation {
-      name    = "Microsoft.PowerPlatform/vnetaccesslinks"
-      actions = ["Microsoft.Network/virtualNetworks/subnets/join/action"]
+  body = {
+    properties = {
+      addressPrefix = "10.46.10.144/28"
+      networkSecurityGroup = {
+        id = data.azurerm_network_security_group.fabric_gateway.id
+      }
+      delegations = [
+        {
+          name = "fabric-delegation"
+          properties = {
+            serviceName = "Microsoft.PowerPlatform/vnetaccesslinks"
+          }
+        }
+      ]
     }
   }
 }
@@ -43,7 +55,7 @@ module "fabric_gateway_minimal" {
     update = "45m"
     delete = "30m"
   }
-  depends_on = [resource.azurerm_subnet.fabric_gateway]
+  depends_on = [azapi_resource.fabric_gateway_subnet]
 }
 
 
