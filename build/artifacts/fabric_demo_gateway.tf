@@ -1,7 +1,7 @@
 resource "azurerm_subnet" "fabric_gateway" {
   name                 = "snet-fabric-gateway"
-  resource_group_name  = azurerm_resource_group.this.name
-  virtual_network_name = azurerm_virtual_network.this.name
+  resource_group_name  = "b9cee3-tools-networking"
+  virtual_network_name = "b9cee3-tools-vwan-spoke"
   address_prefixes     = ["10.46.10.144/24"]
 
   delegation {
