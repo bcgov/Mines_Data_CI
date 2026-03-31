@@ -25,13 +25,8 @@ jobs:
     name: Terraform Apply (${{ github.base_ref == 'main' && 'prod' || github.base_ref }})
     runs-on: ubuntu-latest
     if: github.event.pull_request.merged == true && vars.TF_DEFAULT_BACKEND == 'local'
-    environment: ${{ github.base_ref == 'main' && 'prod' || github.base_ref == 'test' && 'test' || 'dev' }}
 
     env:
-      ARM_CLIENT_ID:       ${{ secrets.ARM_CLIENT_ID }}
-      ARM_CLIENT_SECRET:   ${{ secrets.ARM_CLIENT_SECRET }}
-      ARM_SUBSCRIPTION_ID: ${{ vars.ARM_SUBSCRIPTION_ID }}
-      ARM_TENANT_ID:       ${{ secrets.ARM_TENANT_ID }}
       TF_ENV: ${{ github.base_ref == 'main' && 'prod' || github.base_ref == 'test' && 'test' || 'dev' }}
 
     steps:
@@ -62,17 +57,24 @@ jobs:
       - name: Terraform Apply
         working-directory: build/artifacts
         env:
+          # Provider authentication — consumed directly by azurerm, azapi, and fabric providers
+          ARM_SUBSCRIPTION_ID: ${{ vars.ARM_SUBSCRIPTION_ID }}
+          ARM_TENANT_ID:       ${{ vars.ARM_TENANT_ID }}
+          ARM_CLIENT_ID:       ${{ vars.ARM_CLIENT_ID }}
+          ARM_CLIENT_SECRET:   ${{ secrets.ARM_CLIENT_SECRET }}
+          # Terraform input variables — populate var.* declarations in variables.tf
           TF_VAR_ARM_SUBSCRIPTION_ID: ${{ vars.ARM_SUBSCRIPTION_ID }}
-          TF_VAR_ARM_TENANT_ID:       ${{ secrets.ARM_TENANT_ID }}
-          TF_VAR_ARM_CLIENT_ID:       ${{ secrets.ARM_CLIENT_ID }}
+          TF_VAR_ARM_TENANT_ID:       ${{ vars.ARM_TENANT_ID }}
+          TF_VAR_ARM_CLIENT_ID:       ${{ vars.ARM_CLIENT_ID }}
           TF_VAR_ARM_CLIENT_SECRET:   ${{ secrets.ARM_CLIENT_SECRET }}
           TF_VAR_ENVIRONMENT:         ${{ env.TF_ENV }}
         run: |
           echo "Applying for environment: $TF_ENV..."
           terraform apply -input=false -auto-approve
 
+      # Always commit state — even on partial failure to avoid state drift
       - name: Commit state file
-        if: success()
+        if: always()
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
@@ -101,4 +103,16 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               body: `Terraform apply completed successfully for environment **${{ env.TF_ENV }}**.`
+            })
+
+      - name: Comment on PR (partial failure)
+        if: failure()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `⚠️ Terraform apply **partially failed** for environment **${{ env.TF_ENV }}**. State file has been committed with any resources that were successfully created. Check the [workflow logs](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}) for details.`
             })

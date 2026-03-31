@@ -20,13 +20,20 @@ terraform {
 }
 
 provider "azurerm" {
-  skip_provider_registration = true
+  resource_provider_registrations = "none"
+  use_cli                         = false
+  subscription_id                 = var.ARM_SUBSCRIPTION_ID
+  tenant_id                       = var.ARM_TENANT_ID
+  client_id                       = var.ARM_CLIENT_ID
+  client_secret                   = var.ARM_CLIENT_SECRET
   features {}
 }
 
 provider "azapi" {
   subscription_id = var.ARM_SUBSCRIPTION_ID
   tenant_id       = var.ARM_TENANT_ID
+  client_id       = var.ARM_CLIENT_ID
+  client_secret   = var.ARM_CLIENT_SECRET
 }
 
 provider "fabric" {

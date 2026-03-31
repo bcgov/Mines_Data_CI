@@ -95,13 +95,8 @@ jobs:
     name: Terraform Quality Checks (${{ needs.resolve-environment.outputs.env_name }} / ${{ needs.resolve-environment.outputs.backend }})
     runs-on: ubuntu-latest
     needs: [resolve-environment]
-    environment: ${{ needs.resolve-environment.outputs.env_name }}
 
     env:
-      ARM_CLIENT_ID:             ${{ secrets.ARM_CLIENT_ID }}
-      ARM_CLIENT_SECRET:         ${{ secrets.ARM_CLIENT_SECRET }}
-      ARM_SUBSCRIPTION_ID:       ${{ vars.ARM_SUBSCRIPTION_ID }}
-      ARM_TENANT_ID:             ${{ secrets.ARM_TENANT_ID }}
       TF_TOKEN_app_terraform_io: ${{ secrets.TF_CLOUD_TOKEN }}
       TF_ENV:     ${{ needs.resolve-environment.outputs.env_name }}
       TF_BACKEND: ${{ needs.resolve-environment.outputs.backend }}
@@ -157,7 +152,7 @@ jobs:
       - name: Check for format changes
         id: fmt-changed
         run: |
-          git add '**.tf'
+          git add -u
           if git diff --staged --quiet; then
             echo "changed=false" >> $GITHUB_OUTPUT
             echo "Formatting is up to date"
@@ -171,6 +166,10 @@ jobs:
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
+          git stash
+          git pull --rebase origin ${{ github.event.pull_request.head.ref }}
+          git stash pop
+          git add -u
           git commit -m "fmt: auto-format Terraform files [skip ci]"
           git push
 
@@ -216,9 +215,15 @@ jobs:
       - name: Terraform Plan
         working-directory: build/artifacts
         env:
+          # Provider authentication — consumed directly by azurerm, azapi, and fabric providers
+          ARM_SUBSCRIPTION_ID: ${{ vars.ARM_SUBSCRIPTION_ID }}
+          ARM_TENANT_ID:       ${{ vars.ARM_TENANT_ID }}
+          ARM_CLIENT_ID:       ${{ vars.ARM_CLIENT_ID }}
+          ARM_CLIENT_SECRET:   ${{ secrets.ARM_CLIENT_SECRET }}
+          # Terraform input variables — populate var.* declarations in variables.tf
           TF_VAR_ARM_SUBSCRIPTION_ID: ${{ vars.ARM_SUBSCRIPTION_ID }}
-          TF_VAR_ARM_TENANT_ID:       ${{ secrets.ARM_TENANT_ID }}
-          TF_VAR_ARM_CLIENT_ID:       ${{ secrets.ARM_CLIENT_ID }}
+          TF_VAR_ARM_TENANT_ID:       ${{ vars.ARM_TENANT_ID }}
+          TF_VAR_ARM_CLIENT_ID:       ${{ vars.ARM_CLIENT_ID }}
           TF_VAR_ARM_CLIENT_SECRET:   ${{ secrets.ARM_CLIENT_SECRET }}
           TF_VAR_ENVIRONMENT:         ${{ env.TF_ENV }}
         run: |
@@ -245,7 +250,7 @@ jobs:
         id: docs-changed
         run: |
           # Only stage markdown files — avoids accidentally staging generated/temp files
-          git add '**.md'
+          git add -u
           if git diff --staged --quiet; then
             echo "changed=false" >> $GITHUB_OUTPUT
             echo "Documentation is up to date"
@@ -259,6 +264,10 @@ jobs:
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
+          git stash
+          git pull --rebase origin ${{ github.event.pull_request.head.ref }}
+          git stash pop
+          git add -u
           git commit -m "docs: auto-update Terraform documentation [skip ci]"
           git push
 
