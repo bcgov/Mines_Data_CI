@@ -43,7 +43,7 @@ module "fabric_gateway_minimal" {
     update = "45m"
     delete = "30m"
   }
-  depends_on = [ resource.azurerm_subnet.fabric_gateway ]
+  depends_on = [resource.azurerm_subnet.fabric_gateway]
 }
 
 
