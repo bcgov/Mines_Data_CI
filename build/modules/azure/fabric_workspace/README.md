@@ -31,6 +31,7 @@ No modules.
 | <a name="input_capacity_id"></a> [capacity\_id](#input\_capacity\_id) | ID of the Fabric Capacity to assign to the workspace. | `string` | `null` | no |
 | <a name="input_description"></a> [description](#input\_description) | Description of the Fabric Workspace. | `string` | `"Default Workspace Description"` | no |
 | <a name="input_enable_git_integration"></a> [enable\_git\_integration](#input\_enable\_git\_integration) | Flag to enable Fabric Workspace Git integration. | `bool` | `false` | no |
+| <a name="input_env"></a> [env](#input\_env) | Environment name for the Fabric Workspace. | `string` | `"dev"` | no |
 | <a name="input_git_initialization_strategy"></a> [git\_initialization\_strategy](#input\_git\_initialization\_strategy) | The initialization strategy for Git integration. Accepted values: PreferRemote, PreferWorkspace. | `string` | `null` | no |
 | <a name="input_git_provider_details"></a> [git\_provider\_details](#input\_git\_provider\_details) | Git provider details for Fabric Workspace Git integration. | <pre>object({<br>    git_provider_type = string<br>    organization_name = string<br>    project_name      = string<br>    repository_name   = string<br>    branch_name       = string<br>    directory_name    = string<br>  })</pre> | `null` | no |
 | <a name="input_identity_type"></a> [identity\_type](#input\_identity\_type) | Type of identity to assign. Only SystemAssigned is allowed. Empty string disables identity. | `string` | `""` | no |
