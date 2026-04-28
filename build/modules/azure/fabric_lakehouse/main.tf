@@ -5,10 +5,6 @@ terraform {
       version               = "1.6.0"
       configuration_aliases = [fabric.auth]
     }
-    null = {
-      source  = "hashicorp/null"
-      version = "~> 3.0"
-    }
   }
 }
 
@@ -51,43 +47,5 @@ resource "fabric_lakehouse" "this" {
       condition     = length(var.schemas) == 0 || var.enable_schemas == true
       error_message = "schemas can only be set when enable_schemas is true."
     }
-  }
-}
-
-# Create schemas via Fabric REST API using Azure CLI token
-# Only runs when enable_schemas = true and schemas are provided
-resource "null_resource" "lakehouse_schemas" {
-  for_each = var.enable_schemas ? toset(var.schemas) : toset([])
-
-  depends_on = [fabric_lakehouse.this]
-
-  triggers = {
-    lakehouse_id = fabric_lakehouse.this.id
-    schema_name  = each.value
-  }
-
-  provisioner "local-exec" {
-    interpreter = ["/bin/bash", "-c"]
-    command     = <<-EOT
-      TOKEN=$(az account get-access-token \
-        --resource https://api.fabric.microsoft.com \
-        --query accessToken \
-        --output tsv)
-
-      STATUS=$(curl -s -o /dev/null -w "%%{http_code}" \
-        -X POST \
-        -H "Authorization: Bearer $TOKEN" \
-        -H "Content-Type: application/json" \
-        -d '{"name": "${each.value}"}' \
-        "https://api.fabric.microsoft.com/v1/workspaces/${var.workspace_id}/lakehouses/${fabric_lakehouse.this.id}/schemas")
-
-      # 201 = created, 409 = already exists (idempotent)
-      if [[ "$STATUS" == "201" || "$STATUS" == "409" ]]; then
-        echo "Schema '${each.value}' OK (HTTP $STATUS)"
-      else
-        echo "ERROR: Failed to create schema '${each.value}' (HTTP $STATUS)"
-        exit 1
-      fi
-    EOT
   }
 }
