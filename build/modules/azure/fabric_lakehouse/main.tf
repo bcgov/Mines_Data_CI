@@ -53,6 +53,7 @@ resource "null_resource" "lakehouse_schemas" {
     schema_name  = each.value
   }
 
+
   provisioner "local-exec" {
     command = <<-EOT
       TOKEN=$(az account get-access-token \
@@ -60,7 +61,7 @@ resource "null_resource" "lakehouse_schemas" {
         --query accessToken \
         --output tsv)
 
-      STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
+      STATUS=$(curl -s -o /dev/null -w "%%{http_code}" \
         -X POST \
         -H "Authorization: Bearer $TOKEN" \
         -H "Content-Type: application/json" \
@@ -77,3 +78,4 @@ resource "null_resource" "lakehouse_schemas" {
     EOT
   }
 }
+
