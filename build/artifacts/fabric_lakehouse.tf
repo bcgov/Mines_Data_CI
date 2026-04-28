@@ -4,7 +4,6 @@ module "fabric_lakehouse_01" {
   providers = {
     fabric.auth = fabric.auth
   }
-
   prefix          = "mines"
   project         = "data-platform"
   instance_number = 01
