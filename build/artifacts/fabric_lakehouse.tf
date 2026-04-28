@@ -6,8 +6,8 @@ module "fabric_lakehouse" {
   }
 
   prefix          = "mines"
-  project         = "fabric"
-  instance_number = 1
+  project         = "data-platform"
+  instance_number = 01
   workspace_id    = module.fabric_workspace.workspace_id
   enable_schemas  = true
   schemas         = ["bronze", "silver", "gold"]
