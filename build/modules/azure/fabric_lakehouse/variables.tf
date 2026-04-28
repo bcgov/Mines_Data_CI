@@ -37,17 +37,6 @@ variable "enable_schemas" {
   default     = false
 }
 
-variable "schemas" {
-  description = "List of schema names to create in the lakehouse. Requires enable_schemas = true."
-  type        = list(string)
-  default     = []
-
-  validation {
-    condition     = length(var.schemas) == 0 || var.enable_schemas == true
-    error_message = "schemas can only be set when enable_schemas is true."
-  }
-}
-
 variable "timeouts" {
   description = "Timeout settings for the Fabric Lakehouse resource."
   type = object({

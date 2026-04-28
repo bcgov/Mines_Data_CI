@@ -41,11 +41,4 @@ resource "fabric_lakehouse" "this" {
     update = var.timeouts.update
     delete = var.timeouts.delete
   }
-
-  lifecycle {
-    precondition {
-      condition     = length(var.schemas) == 0 || var.enable_schemas == true
-      error_message = "schemas can only be set when enable_schemas is true."
-    }
-  }
 }
