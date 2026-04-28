@@ -20,8 +20,8 @@ variable "description" {
   default     = ""
 }
 
-variable "workspace_name" {
-  description = "Name of fabric workspace."
+variable "workspace_id" {
+  description = "id of fabric workspace."
   type        = string
   default     = null
 }
