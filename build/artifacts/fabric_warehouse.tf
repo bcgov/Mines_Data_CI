@@ -8,5 +8,5 @@ module "fabric_warehouse" {
   prefix          = "mines"
   project         = "fabric"
   instance_number = 1
-  workspace_name  = module.fabric_workspace.workspace_id
+  workspace_id  = module.fabric_workspace.workspace_id
 }
