@@ -13,7 +13,6 @@ locals {
 }
 
 
-
 resource "fabric_warehouse" "this_warehouse" {
   provider     = fabric.auth
   display_name = local.fabric_warehouse
