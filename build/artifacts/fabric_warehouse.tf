@@ -5,8 +5,8 @@ module "fabric_warehouse" {
     fabric.auth = fabric.auth
   }
 
-  prefix       = "mines"
-  project      = "fabric"
+  prefix          = "mines"
+  project         = "fabric"
   instance_number = 1
-  workspace_name = module.fabric_workspace.workspace_id
+  workspace_name  = module.fabric_workspace.workspace_id
 }
