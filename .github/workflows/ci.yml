@@ -95,6 +95,7 @@ jobs:
     name: Terraform Quality Checks (${{ needs.resolve-environment.outputs.env_name }} / ${{ needs.resolve-environment.outputs.backend }})
     runs-on: ubuntu-latest
     needs: [resolve-environment]
+    environment: ${{ needs.resolve-environment.outputs.env_name }}
 
     env:
       TF_TOKEN_app_terraform_io: ${{ secrets.TF_CLOUD_TOKEN }}
