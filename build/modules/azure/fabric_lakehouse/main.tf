@@ -5,10 +5,12 @@ terraform {
       version               = "1.6.0"
       configuration_aliases = [fabric.auth]
     }
+    null = {
+      source  = "hashicorp/null"
+      version = "~> 3.0"
+    }
   }
 }
-
-data "azurerm_client_config" "current" {}
 
 locals {
   lakehouse_name = substr(
@@ -39,6 +41,13 @@ resource "fabric_lakehouse" "this" {
     update = var.timeouts.update
     delete = var.timeouts.delete
   }
+
+  lifecycle {
+    precondition {
+      condition     = length(var.schemas) == 0 || var.enable_schemas == true
+      error_message = "schemas can only be set when enable_schemas is true."
+    }
+  }
 }
 
 # Create schemas via Fabric REST API using Azure CLI token
@@ -53,9 +62,9 @@ resource "null_resource" "lakehouse_schemas" {
     schema_name  = each.value
   }
 
-
   provisioner "local-exec" {
-    command = <<-EOT
+    interpreter = ["/bin/bash", "-c"]
+    command     = <<-EOT
       TOKEN=$(az account get-access-token \
         --resource https://api.fabric.microsoft.com \
         --query accessToken \
@@ -78,4 +87,3 @@ resource "null_resource" "lakehouse_schemas" {
     EOT
   }
 }
-
