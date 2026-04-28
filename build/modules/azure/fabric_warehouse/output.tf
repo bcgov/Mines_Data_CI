@@ -8,5 +8,5 @@ output "warehouse_id" {
 
 output "warehouse_connection_string" {
   description = "The SQL connection string for the warehouse."
-  value       = fabric_warehouse.this_warehouse.connection_string
+  value       = fabric_warehouse.this_warehouse.properties.connection_string
 }
