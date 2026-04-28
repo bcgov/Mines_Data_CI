@@ -4,7 +4,6 @@ module "fabric_warehouse" {
   providers = {
     fabric.auth = fabric.auth
   }
-
   prefix          = "mines"
   project         = "fabric"
   instance_number = 1
