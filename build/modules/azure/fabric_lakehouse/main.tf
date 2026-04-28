@@ -15,9 +15,13 @@ terraform {
 locals {
   lakehouse_name = substr(
     replace(
-      var.lakehouse_name != null ? var.lakehouse_name : "${var.prefix}-${var.project}-lh${var.instance_number}",
-      " ",
-      ""
+      replace(
+        var.lakehouse_name != null ? var.lakehouse_name : "${var.prefix}-${var.project}-lh${var.instance_number}",
+        " ",
+        ""
+      ),
+      "-",
+      "_"
     ),
     0,
     30
