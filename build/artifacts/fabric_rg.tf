@@ -1,7 +1,7 @@
 # artifacts/main.tf
 
 module "resource_group_mines" {
-  source = "../modules/azures/resource_groups"
+  source = "../modules/azure/resource_groups"
 
   prefix          = "mines"
   suffix          = "az"

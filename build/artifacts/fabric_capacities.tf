@@ -1,5 +1,5 @@
 module "fabric_capacity" {
-  source = "../modules/azures/fabric_rm_capacity"
+  source = "../modules/azure/fabric_rm_capacity"
   prefix                = "mines"
   suffix                = var.ENVIRONMENT
   project               = "fabric"
