@@ -8,3 +8,4 @@ module "fabric_capacity" {
   resource_group_name = module.resource_group_mines.rg_name
   Owners              = ["b0bf68e8-4e08-433c-8903-19b2fec4cc20"]
 }
+
