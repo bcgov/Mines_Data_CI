@@ -1,6 +1,6 @@
 # artifacts/fabric_workspace.tf
 
-module "fabric_workspace" {
+module "fabric_workspace_01" {
   source = "../modules/azure/fabric_workspace"
 
   providers = {

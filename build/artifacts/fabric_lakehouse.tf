@@ -1,4 +1,4 @@
-module "fabric_lakehouse" {
+module "fabric_lakehouse_01" {
   source = "../modules/azure/fabric_lakehouse"
 
   providers = {
@@ -8,7 +8,7 @@ module "fabric_lakehouse" {
   prefix          = "mines"
   project         = "data-platform"
   instance_number = 01
-  workspace_id    = module.fabric_workspace.workspace_id
+  workspace_id    = module.fabric_workspace_01.workspace_id
   enable_schemas  = true
   schemas         = ["bronze", "silver", "gold"]
 }
