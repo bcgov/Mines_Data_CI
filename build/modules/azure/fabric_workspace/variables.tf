@@ -103,3 +103,9 @@ variable "owners" {
   type        = list(string)
   default     = []
 }
+
+variable "env" {
+  description = "Environment name for the Fabric Workspace."
+  type        = string
+  default     = "dev"
+}
