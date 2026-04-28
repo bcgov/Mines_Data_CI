@@ -2,7 +2,6 @@
 
 module "fabric_workspace_01" {
   source = "../modules/azure/fabric_workspace"
-
   providers = {
     fabric.auth = fabric.auth
   }
