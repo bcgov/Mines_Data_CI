@@ -9,5 +9,4 @@ module "fabric_lakehouse_01" {
   instance_number = 01
   workspace_id    = module.fabric_workspace_01.workspace_id
   enable_schemas  = true
-  schemas         = ["bronze", "silver", "gold"]
 }
