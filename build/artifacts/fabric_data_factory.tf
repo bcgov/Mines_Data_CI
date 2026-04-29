@@ -107,6 +107,7 @@ resource "azurerm_role_assignment" "adf_kv_secrets_user" {
 # Idempotent — checks if already mounted before calling the API.
 # Re-runs only if the ADF resource ID or workspace ID changes.
 
+
 resource "null_resource" "mount_adf_to_fabric" {
   depends_on = [module.data_factory]
 
@@ -141,6 +142,7 @@ resource "null_resource" "mount_adf_to_fabric" {
     EOT
   }
 }
+
 
 
 resource "azurerm_data_factory_managed_private_endpoint" "kv" {
