@@ -14,7 +14,38 @@ module "resource_group_adf" {
   location        = "canadacentral"
 }
 
-# ── 2. Azure Data Factory ─────────────────────────────────────────────────────
+# ── 2. Key Vault ──────────────────────────────────────────────────────────────
+
+module "key_vault_adf" {
+  source = "../modules/azure/key_vault"
+
+  prefix          = "mines"
+  project         = "fabric"
+  suffix          = "kv"
+  Instance_Number = "01"
+
+  resource_group_name = module.resource_group_adf.rg_name
+  location            = "canadacentral"
+
+  sku_name                        = "standard"
+  enabled_for_disk_encryption     = false
+  enabled_for_template_deployment = true
+  soft_delete_retention_days      = 90
+  purge_protection_enabled        = true
+  public_network_access_enabled   = true
+  enable_rbac_assignments         = true
+
+  # Grant the ADF managed identity Key Vault access after ADF is created
+  # Done via additional_access_policies referencing the ADF principal_id output
+  # See module "data_factory" below — access policy added post-creation
+  additional_access_policies = []
+
+  tags = var.tags
+
+  depends_on = [module.resource_group_adf]
+}
+
+# ── 3. Azure Data Factory ─────────────────────────────────────────────────────
 
 module "data_factory" {
   source = "../modules/data_factory_base"
@@ -25,7 +56,9 @@ module "data_factory" {
 
   resource_group_name = module.resource_group_adf.rg_name
   location            = "canadacentral"
-  key_vault_name      = var.KEY_VAULT_NAME
+
+  # Reference the KV created above
+  key_vault_name = module.key_vault_adf.kv_name
 
   public_network_enabled          = true
   managed_virtual_network_enabled = true
@@ -40,7 +73,7 @@ module "data_factory" {
   email_address                    = var.ALERT_EMAIL
   enable_action_group_notification = true
 
-  # pep_storage_account_id = var.ONELAKE_STORAGE_ACCOUNT_ID
+  pep_storage_account_id = var.ONELAKE_STORAGE_ACCOUNT_ID
 
   global_parameters = [
     {
@@ -56,9 +89,23 @@ module "data_factory" {
   ]
 
   tags = var.tags
+
+  depends_on = [module.key_vault_adf]
 }
 
-# ── 3. Mount ADF into the Fabric workspace ────────────────────────────────────
+# ── 4. Grant ADF managed identity access to Key Vault ────────────────────────
+# The ADF system-assigned identity is only known after ADF is created,
+# so this role assignment is done as a separate resource after the fact.
+
+resource "azurerm_role_assignment" "adf_kv_secrets_user" {
+  scope                = module.key_vault_adf.kv_id
+  role_definition_name = "Key Vault Secrets User"
+  principal_id         = module.data_factory.adf_principal_id
+
+  depends_on = [module.data_factory, module.key_vault_adf]
+}
+
+# ── 5. Mount ADF into the Fabric workspace ────────────────────────────────────
 # Calls the Fabric REST API to attach the ADF instance to the workspace.
 # Idempotent — checks if already mounted before calling the API.
 # Re-runs only if the ADF resource ID or workspace ID changes.
