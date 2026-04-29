@@ -167,7 +167,7 @@ variable "vsts_configuration" {
     tenant_id          = string
     publishing_enabled = bool
   })
-  
+
   default = {
     account_name       = "DataIntelligencePlatform"
     branch_name        = "adf_publish"
@@ -183,8 +183,8 @@ variable "global_parameters" {
   description = "A list of global parameters for Azure Data Factory."
   type = list(object({
     name  = string
-    type  = string  # Possible Values: Array, Bool, Float, Int, Object, String
-    value = any     # Using `any` to accommodate various types of values
+    type  = string # Possible Values: Array, Bool, Float, Int, Object, String
+    value = any    # Using `any` to accommodate various types of values
   }))
   default = [
     {

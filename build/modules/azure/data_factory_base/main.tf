@@ -11,12 +11,12 @@ data "azurerm_key_vault" "existing" {
 }
 
 locals {
-  datafactory_name = substr(replace(var.datafactory_name == null ? "${var.prefix}-${var.project}-adf${var.Instance_Number}" : var.datafactory_name, " ", ""), 0, 30)
-  ir_name = substr(replace(var.ir_name == null ? "${var.prefix}-${var.project}-ir${var.Instance_Number}" : var.ir_name, " ", ""), 0, 30)
-  shir_name = substr(replace(var.shir_name == null ? "${var.prefix}-${var.project}-shir${var.Instance_Number}" : var.shir_name, " ", ""), 0, 30)
-  mpe_name = substr(replace(var.mpe_name == null ? "${var.prefix}-${var.project}-mpe${var.Instance_Number}" : var.mpe_name, " ", ""), 0, 30)
+  datafactory_name  = substr(replace(var.datafactory_name == null ? "${var.prefix}-${var.project}-adf${var.Instance_Number}" : var.datafactory_name, " ", ""), 0, 30)
+  ir_name           = substr(replace(var.ir_name == null ? "${var.prefix}-${var.project}-ir${var.Instance_Number}" : var.ir_name, " ", ""), 0, 30)
+  shir_name         = substr(replace(var.shir_name == null ? "${var.prefix}-${var.project}-shir${var.Instance_Number}" : var.shir_name, " ", ""), 0, 30)
+  mpe_name          = substr(replace(var.mpe_name == null ? "${var.prefix}-${var.project}-mpe${var.Instance_Number}" : var.mpe_name, " ", ""), 0, 30)
   linked_service_kv = substr(replace(var.linked_service_kv_name == null ? "${var.project}-kv${var.Instance_Number}" : var.linked_service_kv_name, " ", ""), 0, 30)
-  location = var.location == null ? "eastus2" : var.location
+  location          = var.location == null ? "eastus2" : var.location
 }
 
 resource "azurerm_data_factory" "adf" {
@@ -30,18 +30,18 @@ resource "azurerm_data_factory" "adf" {
     for_each = var.vsts_enabled ? [1] : []
 
     content {
-      account_name      = var.vsts_configuration.account_name
-      branch_name       = var.vsts_configuration.branch_name
-      project_name      = var.vsts_configuration.project_name
-      repository_name   = var.vsts_configuration.repository_name
-      root_folder       = var.vsts_configuration.root_folder
-      tenant_id         = var.vsts_configuration.tenant_id
+      account_name    = var.vsts_configuration.account_name
+      branch_name     = var.vsts_configuration.branch_name
+      project_name    = var.vsts_configuration.project_name
+      repository_name = var.vsts_configuration.repository_name
+      root_folder     = var.vsts_configuration.root_folder
+      tenant_id       = var.vsts_configuration.tenant_id
     }
   }
   identity {
     type = "SystemAssigned"
   }
-  tags                            = var.tags
+  tags = var.tags
 
   dynamic "global_parameter" {
     for_each = { for param in var.global_parameters : param.name => param }
@@ -99,7 +99,7 @@ resource "azurerm_monitor_action_group" "mag" {
     email_address           = var.email_address
     use_common_alert_schema = true
   }
-  tags                            = var.tags
+  tags = var.tags
 }
 
 resource "azurerm_monitor_metric_alert" "mmahcu" {
@@ -120,13 +120,13 @@ resource "azurerm_monitor_metric_alert" "mmahcu" {
       operator = "Include"
       values   = [azurerm_data_factory_integration_runtime_azure.ir.name]
     }
-    
+
   }
 
   action {
     action_group_id = azurerm_monitor_action_group.mag.id
   }
-  tags                            = var.tags
+  tags        = var.tags
   frequency   = "PT1H"
   severity    = 2
   window_size = "PT1H"
@@ -157,7 +157,7 @@ resource "azurerm_monitor_metric_alert" "mmamhcu" {
   action {
     action_group_id = azurerm_monitor_action_group.mag.id
   }
-  tags                            = var.tags
+  tags        = var.tags
   frequency   = "PT1H"
   severity    = 2
   window_size = "PT1H"
