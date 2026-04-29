@@ -153,8 +153,6 @@ JSONEOF
 }
 
 
-
-
 resource "azurerm_data_factory_managed_private_endpoint" "kv" {
   name               = "mines-fabric-mpe-kv01"
   data_factory_id    = module.data_factory.adf_id
