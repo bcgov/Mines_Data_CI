@@ -17,7 +17,7 @@ module "resource_group_adf" {
 # ── 2. Key Vault ──────────────────────────────────────────────────────────────
 
 module "key_vault_adf" {
-  source = "../modules/azure/key_vault"
+  source = "../modules/azure/key_vaults"
 
   prefix          = "mines"
   project         = "fabric"
