@@ -165,3 +165,12 @@ resource "null_resource" "mount_adf_to_fabric" {
     EOT
   }
 }
+
+resource "azurerm_data_factory_managed_private_endpoint" "kv" {
+  name               = "mines-fabric-mpe-kv01"
+  data_factory_id    = module.data_factory.adf_id
+  target_resource_id = module.key_vault_adf.kv_id
+  subresource_name   = "vault"
+
+  depends_on = [module.data_factory, module.key_vault_adf]
+}
