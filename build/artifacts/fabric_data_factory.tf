@@ -58,7 +58,7 @@ module "data_factory" {
   # Reference the KV created above
   key_vault_name = module.key_vault_adf.kv_name
 
-  public_network_enabled          = true
+  public_network_enabled          = false
   managed_virtual_network_enabled = true
   virtual_network_enabled         = true
 
