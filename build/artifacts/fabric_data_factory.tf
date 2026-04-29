@@ -32,7 +32,7 @@ module "key_vault_adf" {
   enabled_for_disk_encryption     = false
   enabled_for_template_deployment = true
   soft_delete_retention_days      = 7
-  purge_protection_enabled        = false
+  purge_protection_enabled        = true
   public_network_access_enabled   = false
   enable_rbac_assignments         = true
 
