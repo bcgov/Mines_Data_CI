@@ -12,12 +12,13 @@ module "resource_group_adf" {
   suffix          = "rg"
   Instance_Number = "02"
   location        = "canadacentral"
+
 }
 
 # ── 2. Key Vault ──────────────────────────────────────────────────────────────
 
 module "key_vault_adf" {
-  source = "../modules/azure/key_vaults"
+  source = "../modules/azure/key_vault"
 
   prefix          = "mines"
   project         = "fabric"
@@ -40,7 +41,7 @@ module "key_vault_adf" {
   # See module "data_factory" below — access policy added post-creation
   additional_access_policies = []
 
-
+  tags = var.tags
 
   depends_on = [module.resource_group_adf]
 }
@@ -48,7 +49,7 @@ module "key_vault_adf" {
 # ── 3. Azure Data Factory ─────────────────────────────────────────────────────
 
 module "data_factory" {
-  source = "../modules/azure/data_factory_base"
+  source = "../modules/data_factory_base"
 
   prefix          = "mines"
   project         = "fabric"
@@ -70,8 +71,10 @@ module "data_factory" {
   cleanup_enabled  = true
 
   action_group_name                = "mines-fabric-adf-alerts"
-  email_address                    = "test@gov.bc.ca"
+  email_address                    = var.ALERT_EMAIL
   enable_action_group_notification = true
+
+  pep_storage_account_id = var.ONELAKE_STORAGE_ACCOUNT_ID
 
   global_parameters = [
     {
@@ -86,6 +89,7 @@ module "data_factory" {
     }
   ]
 
+  tags = var.tags
 
   depends_on = [module.key_vault_adf]
 }
@@ -97,7 +101,7 @@ module "data_factory" {
 resource "azurerm_role_assignment" "adf_kv_secrets_user" {
   scope                = module.key_vault_adf.kv_id
   role_definition_name = "Key Vault Secrets User"
-  principal_id         = module.data_factory.adf_principal_id
+  principal_id         = module.data_factory.adf_identity_id[0].principal_id
 
   depends_on = [module.data_factory, module.key_vault_adf]
 }
