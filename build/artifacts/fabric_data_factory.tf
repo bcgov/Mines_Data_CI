@@ -24,16 +24,16 @@ module "key_vault_adf" {
   project         = "fabric"
   suffix          = "kv"
   Instance_Number = "01"
-
+  private_endpoint_enabled = false
   resource_group_name = module.resource_group_adf.rg_name
   location            = "canadacentral"
 
   sku_name                        = "standard"
   enabled_for_disk_encryption     = false
   enabled_for_template_deployment = true
-  soft_delete_retention_days      = 90
-  purge_protection_enabled        = true
-  public_network_access_enabled   = true
+  soft_delete_retention_days      = 1
+  purge_protection_enabled        = false
+  public_network_access_enabled   = false
   enable_rbac_assignments         = true
 
   # Grant the ADF managed identity Key Vault access after ADF is created
