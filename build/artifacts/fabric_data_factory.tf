@@ -117,7 +117,7 @@ resource "null_resource" "mount_adf_to_fabric" {
   }
 
   provisioner "local-exec" {
-    interpreter = ["/bin/bash", "-c"]
+    interpreter = ["python3", "-c"]
     environment = {
       WORKSPACE_ID  = module.fabric_workspace_01.workspace_id
       ADF_ID        = module.data_factory.adf_id
@@ -126,29 +126,55 @@ resource "null_resource" "mount_adf_to_fabric" {
       CLIENT_SECRET = var.ARM_CLIENT_SECRET
       TENANT_ID     = var.ARM_TENANT_ID
     }
-    command = <<-EOT
-      az login --service-principal --username "$CLIENT_ID" --password "$CLIENT_SECRET" --tenant "$TENANT_ID" --allow-no-subscriptions --output none
-      TOKEN=$(az account get-access-token --resource https://api.fabric.microsoft.com --query accessToken --output tsv)
-      echo "Checking if ADF is already mounted in workspace $WORKSPACE_ID..."
-      EXISTING=$(curl -s -H "Authorization: Bearer $TOKEN" "https://api.fabric.microsoft.com/v1/workspaces/$WORKSPACE_ID/items" | jq -r --arg id "$ADF_ID" '.value[] | select(.type == "AzureDataFactory" and .properties.linkedAdfResourceId == $id) | .id')
-      if [[ -n "$EXISTING" ]]; then
-        echo "ADF already mounted (item id: $EXISTING) — skipping"
-        exit 0
-      fi
-      echo "Mounting ADF '$ADF_NAME' to Fabric workspace..."
-      cat > /tmp/adf_mount_body.json << JSONEOF
-      {"displayName": "$ADF_NAME", "type": "AzureDataFactory", "properties": {"linkedAdfResourceId": "$ADF_ID"}}
-JSONEOF
-      STATUS=$(curl -s -o /tmp/adf_mount_response.json -w "%%{http_code}" -X POST -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/json" -d @/tmp/adf_mount_body.json "https://api.fabric.microsoft.com/v1/workspaces/$WORKSPACE_ID/items")
-      echo "HTTP status: $STATUS"
-      cat /tmp/adf_mount_response.json | jq . 2>/dev/null || cat /tmp/adf_mount_response.json
-      if [[ "$STATUS" == "200" || "$STATUS" == "201" || "$STATUS" == "202" ]]; then
-        echo "ADF mounted successfully"
-      else
-        echo "ERROR: Mount failed (HTTP $STATUS)"
-        exit 1
-      fi
-    EOT
+    command = <<-PYEOF
+import os, sys, json, urllib.request, urllib.parse
+
+client_id     = os.environ["CLIENT_ID"]
+client_secret = os.environ["CLIENT_SECRET"]
+tenant_id     = os.environ["TENANT_ID"]
+workspace_id  = os.environ["WORKSPACE_ID"]
+adf_id        = os.environ["ADF_ID"]
+adf_name      = os.environ["ADF_NAME"]
+
+# Step 1: Get Fabric access token via client credentials flow
+token_url  = f"https://login.microsoftonline.com/{tenant_id}/oauth2/v2.0/token"
+token_data = urllib.parse.urlencode({
+    "grant_type":    "client_credentials",
+    "client_id":     client_id,
+    "client_secret": client_secret,
+    "scope":         "https://api.fabric.microsoft.com/.default"
+}).encode()
+
+req      = urllib.request.Request(token_url, data=token_data, method="POST")
+response = urllib.request.urlopen(req)
+token    = json.loads(response.read())["access_token"]
+print("Token obtained")
+
+headers = {"Authorization": f"Bearer {token}", "Content-Type": "application/json"}
+
+# Step 2: Check if ADF is already mounted
+list_url = f"https://api.fabric.microsoft.com/v1/workspaces/{workspace_id}/items"
+req      = urllib.request.Request(list_url, headers=headers)
+items    = json.loads(urllib.request.urlopen(req).read()).get("value", [])
+existing = [i for i in items if i.get("type") == "AzureDataFactory" and i.get("creationPayload", {}).get("linkedAdfResourceId") == adf_id]
+if existing:
+    print(f"ADF already mounted (item id: {existing[0]['id']}) — skipping")
+    sys.exit(0)
+
+# Step 3: Mount ADF to Fabric workspace
+body = json.dumps({
+    "displayName":   adf_name,
+    "type":          "AzureDataFactory",
+    "creationPayload": {"linkedAdfResourceId": adf_id}
+}).encode()
+req = urllib.request.Request(list_url, data=body, headers=headers, method="POST")
+try:
+    response = urllib.request.urlopen(req)
+    print(f"ADF mounted successfully (HTTP {response.status})")
+except urllib.error.HTTPError as e:
+    print(f"ERROR: Mount failed (HTTP {e.code}): {e.read().decode()}", file=sys.stderr)
+    sys.exit(1)
+    PYEOF
   }
 }
 
