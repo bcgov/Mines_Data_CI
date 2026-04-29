@@ -118,19 +118,28 @@ resource "null_resource" "mount_adf_to_fabric" {
 
   provisioner "local-exec" {
     interpreter = ["/bin/bash", "-c"]
-    command     = <<-EOT
+    environment = {
+      WORKSPACE_ID = module.fabric_workspace_01.workspace_id
+      ADF_ID       = module.data_factory.adf_id
+      ADF_NAME     = module.data_factory.adf_name
+      CLIENT_ID    = var.ARM_CLIENT_ID
+      CLIENT_SECRET = var.ARM_CLIENT_SECRET
+      TENANT_ID    = var.ARM_TENANT_ID
+    }
+    command = <<-EOT
+      az login --service-principal --username "$CLIENT_ID" --password "$CLIENT_SECRET" --tenant "$TENANT_ID" --allow-no-subscriptions --output none
       TOKEN=$(az account get-access-token --resource https://api.fabric.microsoft.com --query accessToken --output tsv)
-      WORKSPACE_ID="${module.fabric_workspace_01.workspace_id}"
-      ADF_ID="${module.data_factory.adf_id}"
-      ADF_NAME="${module.data_factory.adf_name}"
       echo "Checking if ADF is already mounted in workspace $WORKSPACE_ID..."
-      EXISTING=$(curl -s -H "Authorization: Bearer $TOKEN" "https://api.fabric.microsoft.com/v1/workspaces/$WORKSPACE_ID/items" | jq -r --arg adf_id "$ADF_ID" '.value[] | select(.type == "AzureDataFactory" and .properties.linkedAdfResourceId == $adf_id) | .id')
+      EXISTING=$(curl -s -H "Authorization: Bearer $TOKEN" "https://api.fabric.microsoft.com/v1/workspaces/$WORKSPACE_ID/items" | jq -r --arg id "$ADF_ID" '.value[] | select(.type == "AzureDataFactory" and .properties.linkedAdfResourceId == $id) | .id')
       if [[ -n "$EXISTING" ]]; then
         echo "ADF already mounted (item id: $EXISTING) — skipping"
         exit 0
       fi
       echo "Mounting ADF '$ADF_NAME' to Fabric workspace..."
-      STATUS=$(curl -s -o /tmp/adf_mount_response.json -w "%%{http_code}" -X POST -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/json" -d "{"displayName": "$ADF_NAME", "type": "AzureDataFactory", "properties": {"linkedAdfResourceId": "$ADF_ID"}}" "https://api.fabric.microsoft.com/v1/workspaces/$WORKSPACE_ID/items")
+      cat > /tmp/adf_mount_body.json << JSONEOF
+      {"displayName": "$ADF_NAME", "type": "AzureDataFactory", "properties": {"linkedAdfResourceId": "$ADF_ID"}}
+JSONEOF
+      STATUS=$(curl -s -o /tmp/adf_mount_response.json -w "%%{http_code}" -X POST -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/json" -d @/tmp/adf_mount_body.json "https://api.fabric.microsoft.com/v1/workspaces/$WORKSPACE_ID/items")
       echo "HTTP status: $STATUS"
       cat /tmp/adf_mount_response.json | jq . 2>/dev/null || cat /tmp/adf_mount_response.json
       if [[ "$STATUS" == "200" || "$STATUS" == "201" || "$STATUS" == "202" ]]; then
@@ -142,6 +151,7 @@ resource "null_resource" "mount_adf_to_fabric" {
     EOT
   }
 }
+
 
 
 
