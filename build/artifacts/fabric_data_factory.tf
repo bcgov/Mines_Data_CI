@@ -20,13 +20,13 @@ module "resource_group_adf" {
 module "key_vault_adf" {
   source = "../modules/azure/key_vaults"
 
-  prefix          = "mines"
-  project         = "fabric"
-  suffix          = "kv"
-  Instance_Number = "01"
+  prefix                   = "mines"
+  project                  = "fabric"
+  suffix                   = "kv"
+  Instance_Number          = "01"
   private_endpoint_enabled = false
-  resource_group_name = module.resource_group_adf.rg_name
-  location            = "canadacentral"
+  resource_group_name      = module.resource_group_adf.rg_name
+  location                 = "canadacentral"
 
   sku_name                        = "standard"
   enabled_for_disk_encryption     = false
