@@ -40,7 +40,7 @@ module "key_vault_adf" {
   # See module "data_factory" below — access policy added post-creation
   additional_access_policies = []
 
-  tags = var.tags
+
 
   depends_on = [module.resource_group_adf]
 }
@@ -48,7 +48,7 @@ module "key_vault_adf" {
 # ── 3. Azure Data Factory ─────────────────────────────────────────────────────
 
 module "data_factory" {
-  source = "../modules/data_factory_base"
+  source = "../modules/azure/data_factory_base"
 
   prefix          = "mines"
   project         = "fabric"
@@ -70,10 +70,8 @@ module "data_factory" {
   cleanup_enabled  = true
 
   action_group_name                = "mines-fabric-adf-alerts"
-  email_address                    = var.ALERT_EMAIL
+  email_address                    = "test@gov.bc.ca"
   enable_action_group_notification = true
-
-  pep_storage_account_id = var.ONELAKE_STORAGE_ACCOUNT_ID
 
   global_parameters = [
     {
@@ -88,7 +86,6 @@ module "data_factory" {
     }
   ]
 
-  tags = var.tags
 
   depends_on = [module.key_vault_adf]
 }
