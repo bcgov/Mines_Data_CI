@@ -119,12 +119,12 @@ resource "null_resource" "mount_adf_to_fabric" {
   provisioner "local-exec" {
     interpreter = ["/bin/bash", "-c"]
     environment = {
-      WORKSPACE_ID = module.fabric_workspace_01.workspace_id
-      ADF_ID       = module.data_factory.adf_id
-      ADF_NAME     = module.data_factory.adf_name
-      CLIENT_ID    = var.ARM_CLIENT_ID
+      WORKSPACE_ID  = module.fabric_workspace_01.workspace_id
+      ADF_ID        = module.data_factory.adf_id
+      ADF_NAME      = module.data_factory.adf_name
+      CLIENT_ID     = var.ARM_CLIENT_ID
       CLIENT_SECRET = var.ARM_CLIENT_SECRET
-      TENANT_ID    = var.ARM_TENANT_ID
+      TENANT_ID     = var.ARM_TENANT_ID
     }
     command = <<-EOT
       az login --service-principal --username "$CLIENT_ID" --password "$CLIENT_SECRET" --tenant "$TENANT_ID" --allow-no-subscriptions --output none
