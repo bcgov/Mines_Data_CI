@@ -12,13 +12,12 @@ module "resource_group_adf" {
   suffix          = "rg"
   Instance_Number = "02"
   location        = "canadacentral"
-  tags            = var.tags
 }
 
 # ── 2. Key Vault ──────────────────────────────────────────────────────────────
 
 module "key_vault_adf" {
-  source = "../modules/azure/key_vault"
+  source = "../modules/azure/key_vaults"
 
   prefix          = "mines"
   project         = "fabric"
@@ -46,7 +45,6 @@ module "key_vault_adf" {
   # See module "data_factory" below — access policy added post-creation
   additional_access_policies = []
 
-  tags = var.tags
 
   depends_on = [module.resource_group_adf]
 }
@@ -76,11 +74,8 @@ module "data_factory" {
   cleanup_enabled  = true
 
   action_group_name                = "mines-fabric-adf-alerts"
-  email_address                    = var.ALERT_EMAIL
+  email_address                    = "test@gov.bc.ca"
   enable_action_group_notification = true
-
-  pep_storage_account_id = var.ONELAKE_STORAGE_ACCOUNT_ID
-
   global_parameters = [
     {
       name  = "fabric_workspace_id"
@@ -93,8 +88,6 @@ module "data_factory" {
       value = var.ENVIRONMENT
     }
   ]
-
-  tags = var.tags
 
   depends_on = [module.key_vault_adf]
 }
