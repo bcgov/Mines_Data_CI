@@ -8,9 +8,9 @@ on:
       - test
       - main
     paths:
-      - '**.tf'
-      - '**.tfvars'
-      - '**.tpl'
+      - 'build/artifacts/**.tf'
+      - 'build/artifacts/**.tfvars'
+      - 'build/artifacts/**.tpl'
 
 permissions:
   contents: write

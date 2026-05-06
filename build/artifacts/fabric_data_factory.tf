@@ -40,7 +40,6 @@ module "key_vault_adf" {
   # See module "data_factory" below — access policy added post-creation
   additional_access_policies = []
 
-
   depends_on = [module.resource_group_adf]
 }
 
