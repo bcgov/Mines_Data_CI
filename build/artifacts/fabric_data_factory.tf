@@ -33,9 +33,9 @@ module "key_vault_adf" {
   enable_rbac_assignments         = true
 
   # ADF connects to KV via managed private endpoint — no public access needed
-  private_endpoint_enabled        = false
-  ip_rules                        = []
-  virtual_network_subnet_ids      = []
+  private_endpoint_enabled   = false
+  ip_rules                   = []
+  virtual_network_subnet_ids = []
 
   # Grant the ADF managed identity Key Vault access after ADF is created
   # Done via additional_access_policies referencing the ADF principal_id output
