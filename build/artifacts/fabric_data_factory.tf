@@ -12,35 +12,43 @@ module "resource_group_adf" {
   suffix          = "rg"
   Instance_Number = "02"
   location        = "canadacentral"
-
+  tags            = var.tags
 }
 
 # ── 2. Key Vault ──────────────────────────────────────────────────────────────
 
 module "key_vault_adf" {
-  source = "../modules/azure/key_vaults"
+  source = "../modules/azure/key_vault"
 
-  prefix                   = "mines"
-  project                  = "fabric"
-  suffix                   = "kv"
-  Instance_Number          = "01"
-  private_endpoint_enabled = false
-  resource_group_name      = module.resource_group_adf.rg_name
-  location                 = "canadacentral"
+  prefix          = "mines"
+  project         = "fabric"
+  suffix          = "kv"
+  Instance_Number = "01"
+
+  resource_group_name = module.resource_group_adf.rg_name
+  location            = "canadacentral"
 
   sku_name                        = "standard"
   enabled_for_disk_encryption     = false
   enabled_for_template_deployment = true
-  soft_delete_retention_days      = 7
+  soft_delete_retention_days      = 90
   purge_protection_enabled        = true
   public_network_access_enabled   = false
   enable_rbac_assignments         = true
+
+  # ADF connects to KV via managed private endpoint — no public access needed
+  private_endpoint_enabled        = false
+  ip_rules                        = []
+  virtual_network_subnet_ids      = []
 
   # Grant the ADF managed identity Key Vault access after ADF is created
   # Done via additional_access_policies referencing the ADF principal_id output
   # See module "data_factory" below — access policy added post-creation
   additional_access_policies = []
-  depends_on                 = [module.resource_group_adf]
+
+  tags = var.tags
+
+  depends_on = [module.resource_group_adf]
 }
 
 # ── 3. Azure Data Factory ─────────────────────────────────────────────────────
@@ -68,9 +76,10 @@ module "data_factory" {
   cleanup_enabled  = true
 
   action_group_name                = "mines-fabric-adf-alerts"
-  email_address                    = "test@gov.bc.ca"
+  email_address                    = var.ALERT_EMAIL
   enable_action_group_notification = true
 
+  pep_storage_account_id = var.ONELAKE_STORAGE_ACCOUNT_ID
 
   global_parameters = [
     {
@@ -85,7 +94,7 @@ module "data_factory" {
     }
   ]
 
-
+  tags = var.tags
 
   depends_on = [module.key_vault_adf]
 }
@@ -103,10 +112,9 @@ resource "azurerm_role_assignment" "adf_kv_secrets_user" {
 }
 
 # ── 5. Mount ADF into the Fabric workspace ────────────────────────────────────
-# Calls the Fabric REST API to attach the ADF instance to the workspace.
-# Idempotent — checks if already mounted before calling the API.
-# Re-runs only if the ADF resource ID or workspace ID changes.
-
+# Uses MountedDataFactory item type per the official Fabric REST API docs:
+# https://learn.microsoft.com/en-us/rest/api/fabric/articles/item-management/item-management-overview
+# MountedDataFactory supports: Create with payload, Service principal auth ✅
 
 resource "null_resource" "mount_adf_to_fabric" {
   depends_on = [module.data_factory]
@@ -144,7 +152,6 @@ token_data = urllib.parse.urlencode({
     "client_secret": client_secret,
     "scope":         "https://api.fabric.microsoft.com/.default"
 }).encode()
-
 req      = urllib.request.Request(token_url, data=token_data, method="POST")
 response = urllib.request.urlopen(req)
 token    = json.loads(response.read())["access_token"]
@@ -156,15 +163,16 @@ headers = {"Authorization": f"Bearer {token}", "Content-Type": "application/json
 list_url = f"https://api.fabric.microsoft.com/v1/workspaces/{workspace_id}/items"
 req      = urllib.request.Request(list_url, headers=headers)
 items    = json.loads(urllib.request.urlopen(req).read()).get("value", [])
-existing = [i for i in items if i.get("type") == "AzureDataFactory" and i.get("creationPayload", {}).get("linkedAdfResourceId") == adf_id]
+existing = [i for i in items if i.get("type") == "MountedDataFactory" and i.get("displayName") == adf_name]
 if existing:
-    print(f"ADF already mounted (item id: {existing[0]['id']}) — skipping")
+    print(f"ADF already mounted (item id: {existing[0]['id']}) - skipping")
     sys.exit(0)
 
-# Step 3: Mount ADF to Fabric workspace
+# Step 3: Mount ADF using MountedDataFactory item type
+# Ref: https://learn.microsoft.com/en-us/rest/api/fabric/articles/item-management/item-management-overview
 body = json.dumps({
-    "displayName":   adf_name,
-    "type":          "AzureDataFactory",
+    "displayName":    adf_name,
+    "type":           "MountedDataFactory",
     "creationPayload": {"linkedAdfResourceId": adf_id}
 }).encode()
 req = urllib.request.Request(list_url, data=body, headers=headers, method="POST")
@@ -172,18 +180,9 @@ try:
     response = urllib.request.urlopen(req)
     print(f"ADF mounted successfully (HTTP {response.status})")
 except urllib.error.HTTPError as e:
-    print(f"ERROR: Mount failed (HTTP {e.code}): {e.read().decode()}", file=sys.stderr)
+    error_body = e.read().decode()
+    print(f"ERROR: Mount failed (HTTP {e.code}): {error_body}", file=sys.stderr)
     sys.exit(1)
     PYEOF
   }
-}
-
-
-resource "azurerm_data_factory_managed_private_endpoint" "kv" {
-  name               = "mines-fabric-mpe-kv01"
-  data_factory_id    = module.data_factory.adf_id
-  target_resource_id = module.key_vault_adf.kv_id
-  subresource_name   = "vault"
-
-  depends_on = [module.data_factory, module.key_vault_adf]
 }
