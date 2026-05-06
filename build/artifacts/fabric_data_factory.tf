@@ -39,7 +39,6 @@ module "key_vault_adf" {
   # Done via additional_access_policies referencing the ADF principal_id output
   # See module "data_factory" below — access policy added post-creation
   additional_access_policies = []
-
   depends_on = [module.resource_group_adf]
 }
 
