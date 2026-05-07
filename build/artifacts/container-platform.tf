@@ -47,7 +47,6 @@ module "subnets" {
     }
   ]
 
-  tags = var.tags
 }
 
 ###############################################################################
@@ -78,7 +77,6 @@ module "acr_01" {
   enable_rbac_assignments    = true
   additional_access_policies = []
 
-  tags = var.tags
 
   depends_on = [module.resource_group_adf]
 }
@@ -132,7 +130,6 @@ module "aci_jumpbox_01" {
     ENVIRONMENT   = var.ENVIRONMENT
   }
 
-  tags = var.tags
 
   depends_on = [
     module.resource_group_adf,
@@ -178,7 +175,6 @@ module "vscode_tunnel" {
   #   az account set --subscription 53205a1b-0f8d-459e-a424-65f1b39ec648
   secure_environment_variables = {}
 
-  tags = var.tags
 
   depends_on = [
     module.resource_group_adf,
