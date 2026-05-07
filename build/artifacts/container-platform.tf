@@ -1,6 +1,11 @@
 # =============================================================================
 # build/artifacts/container_platform.tf
 # =============================================================================
+# Add this temporarily to container_platform.tf, 
+import {
+  to = module.vscode_tunnel.azurerm_container_group.tunnel
+  id = "/subscriptions/53205a1b-0f8d-459e-a424-65f1b39ec648/resourceGroups/mines-fabric-rg02/providers/Microsoft.ContainerInstance/containerGroups/mines-fabric-tunnel01"
+}
 
 ###############################################################################
 # Subnet allocation
