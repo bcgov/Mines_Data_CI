@@ -1,0 +1,17 @@
+{
+    "name": "ls_azure_gen2_storage",
+    "type": "Microsoft.DataFactory/factories/linkedservices",
+    "properties": {
+        "parameters": {
+            "storage_account_endpoint": {
+                "type": "String",
+                "defaultValue": ""
+            }
+        },
+        "annotations": [],
+        "type": "AzureBlobFS",
+        "typeProperties": {
+            "url": "@{linkedService().storage_account_endpoint}"
+        }
+    }
+}

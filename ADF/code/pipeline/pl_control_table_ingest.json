@@ -1,0 +1,283 @@
+{
+    "name": "pl_control_table_ingest",
+    "type": "Microsoft.DataFactory/factories/pipelines",
+    "properties": {
+        "description": "Control-table-driven ingestion pipeline. Reads active rows from app.pipeline_control, iterates each in parallel, runs a parameterised copy activity, then writes results back to app.pipeline_log and advances the watermark.",
+        "activities": [
+            {
+                "name": "Lookup_ControlTable",
+                "description": "Read all active rows from app.pipeline_control ordered by priority.",
+                "type": "Lookup",
+                "dependsOn": [],
+                "policy": {
+                    "timeout": "0.00:05:00",
+                    "retry": 1,
+                    "retryIntervalInSeconds": 30,
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "typeProperties": {
+                    "source": {
+                        "type": "WarehouseSource",
+                        "sqlReaderQuery": "SELECT control_id, pipeline_name, source_system, source_entity, source_connection_string, key_vault_url, target_schema, target_table, source_query_template, from_date, to_date, watermark_column, last_watermark, load_type, load_frequency, priority FROM [app].[pipeline_control] WHERE is_active = 1 ORDER BY priority ASC",
+                        "queryTimeout": "00:05:00",
+                        "partitionOption": "None"
+                    },
+                    "dataset": {
+                        "referenceName": "ds_fabric_warehouse",
+                        "type": "DatasetReference",
+                        "parameters": {
+                            "schema": "app",
+                            "table_name": "pipeline_control",
+                            "query": ""
+                        }
+                    },
+                    "firstRowOnly": false
+                }
+            },
+            {
+                "name": "ForEach_ControlRow",
+                "description": "Iterate each active control row. Batch size 5 allows up to 5 concurrent copies.",
+                "type": "ForEach",
+                "dependsOn": [
+                    {
+                        "activity": "Lookup_ControlTable",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ],
+                "typeProperties": {
+                    "items": {
+                        "value": "@activity('Lookup_ControlTable').output.value",
+                        "type": "Expression"
+                    },
+                    "isSequential": false,
+                    "batchCount": 5,
+                    "activities": [
+                        {
+                            "name": "Log_Start",
+                            "description": "Insert a RUNNING row into app.pipeline_log before the copy begins.",
+                            "type": "Copy",
+                            "dependsOn": [],
+                            "policy": {
+                                "timeout": "0.00:02:00",
+                                "retry": 1,
+                                "retryIntervalInSeconds": 15,
+                                "secureOutput": false,
+                                "secureInput": false
+                            },
+                            "typeProperties": {
+                                "source": {
+                                    "type": "WarehouseSource",
+                                    "sqlReaderQuery": {
+                                        "value": "SELECT '@{pipeline().RunId}' AS run_id, '@{pipeline().RunId}' AS activity_run_id, '@{item().pipeline_name}' AS pipeline_name, '@{item().source_entity}' AS source_entity, '@{item().target_schema}' AS target_schema, '@{item().target_table}' AS target_table, 'RUNNING' AS status, NULL AS rows_read, NULL AS rows_written, NULL AS rows_skipped, @{if(equals(item().from_date, null), 'NULL', concat('''', item().from_date, ''''))} AS from_date, @{if(equals(item().to_date, null), 'NULL', concat('''', item().to_date, ''''))} AS to_date, @{if(equals(item().last_watermark, null), 'NULL', concat('''', item().last_watermark, ''''))} AS watermark_start, NULL AS watermark_end, NULL AS error_message, NULL AS error_code, CAST(SYSUTCDATETIME() AS DATETIME2(6)) AS start_time, NULL AS end_time, '@{pipeline().parameters.environment}' AS environment, '@{pipeline().TriggeredByPipelineName}' AS triggered_by, CAST(SYSUTCDATETIME() AS DATETIME2(6)) AS created_date",
+                                        "type": "Expression"
+                                    },
+                                    "queryTimeout": "00:02:00",
+                                    "partitionOption": "None"
+                                },
+                                "sink": {
+                                    "type": "WarehouseSink",
+                                    "writeBehavior": "Insert",
+                                    "sqlWriterUseTableLock": false,
+                                    "disableMetricsCollection": false
+                                },
+                                "enableStaging": false
+                            },
+                            "outputs": [
+                                {
+                                    "referenceName": "ds_fabric_warehouse",
+                                    "type": "DatasetReference",
+                                    "parameters": {
+                                        "schema": "app",
+                                        "table_name": "pipeline_log"
+                                    }
+                                }
+                            ],
+                            "inputs": [
+                                {
+                                    "referenceName": "ds_fabric_warehouse",
+                                    "type": "DatasetReference",
+                                    "parameters": {
+                                        "schema": "app",
+                                        "table_name": "pipeline_control"
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "name": "Copy_SourceToWarehouse",
+                            "description": "Run the parameterised source_query_template and land results into the target bronze table. @from_date resolves to last_watermark (or from_date on first run). @to_date resolves to utcNow().",
+                            "type": "Copy",
+                            "dependsOn": [
+                                {
+                                    "activity": "Log_Start",
+                                    "dependencyConditions": [
+                                        "Succeeded"
+                                    ]
+                                }
+                            ],
+                            "policy": {
+                                "timeout": "0.02:00:00",
+                                "retry": 2,
+                                "retryIntervalInSeconds": 60,
+                                "secureOutput": false,
+                                "secureInput": false
+                            },
+                            "typeProperties": {
+                                "source": {
+                                    "type": "WarehouseSource",
+                                    "sqlReaderQuery": {
+                                        "value": "@replace(replace(item().source_query_template, '@from_date', formatDateTime(if(equals(item().last_watermark, null), item().from_date, item().last_watermark), 'yyyy-MM-dd HH:mm:ss')), '@to_date', formatDateTime(utcNow(), 'yyyy-MM-dd HH:mm:ss'))",
+                                        "type": "Expression"
+                                    },
+                                    "queryTimeout": "01:00:00",
+                                    "partitionOption": "None"
+                                },
+                                "sink": {
+                                    "type": "WarehouseSink",
+                                    "writeBehavior": "Upsert",
+                                    "sqlWriterUseTableLock": false,
+                                    "disableMetricsCollection": false
+                                },
+                                "enableStaging": false,
+                                "enableSkipIncompatibleRow": true,
+                                "translator": {
+                                    "type": "TabularTranslator",
+                                    "typeConversion": true,
+                                    "typeConversionSettings": {
+                                        "allowDataTruncation": true,
+                                        "treatBooleanAsNumber": false
+                                    }
+                                }
+                            },
+                            "inputs": [
+                                {
+                                    "referenceName": "ds_fabric_warehouse",
+                                    "type": "DatasetReference",
+                                    "parameters": {
+                                        "schema": {
+                                            "value": "@item().target_schema",
+                                            "type": "Expression"
+                                        },
+                                        "table_name": {
+                                            "value": "@item().source_entity",
+                                            "type": "Expression"
+                                        }
+                                    }
+                                }
+                            ],
+                            "outputs": [
+                                {
+                                    "referenceName": "ds_fabric_warehouse",
+                                    "type": "DatasetReference",
+                                    "parameters": {
+                                        "schema": {
+                                            "value": "@item().target_schema",
+                                            "type": "Expression"
+                                        },
+                                        "table_name": {
+                                            "value": "@item().target_table",
+                                            "type": "Expression"
+                                        }
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "name": "Lookup_LogSuccess",
+                            "description": "Update pipeline_log to SUCCESS and advance the watermark on pipeline_control. Uses a Lookup with a DML statement \u2014 supported by Fabric Warehouse.",
+                            "type": "Lookup",
+                            "dependsOn": [
+                                {
+                                    "activity": "Copy_SourceToWarehouse",
+                                    "dependencyConditions": [
+                                        "Succeeded"
+                                    ]
+                                }
+                            ],
+                            "policy": {
+                                "timeout": "0.00:02:00",
+                                "retry": 1,
+                                "retryIntervalInSeconds": 15,
+                                "secureOutput": false,
+                                "secureInput": false
+                            },
+                            "typeProperties": {
+                                "source": {
+                                    "type": "WarehouseSource",
+                                    "sqlReaderQuery": {
+                                        "value": "UPDATE [app].[pipeline_log] SET [status] = 'SUCCESS', [rows_read] = @{activity('Copy_SourceToWarehouse').output.rowsRead}, [rows_written] = @{activity('Copy_SourceToWarehouse').output.rowsCopied}, [rows_skipped] = @{activity('Copy_SourceToWarehouse').output.rowsSkipped}, [watermark_end] = '@{formatDateTime(utcNow(), 'yyyy-MM-dd HH:mm:ss')}', [end_time] = CAST(SYSUTCDATETIME() AS DATETIME2(6)) WHERE [run_id] = '@{pipeline().RunId}' AND [pipeline_name] = '@{item().pipeline_name}'; UPDATE [app].[pipeline_control] SET [last_watermark] = '@{formatDateTime(utcNow(), 'yyyy-MM-dd HH:mm:ss')}', [last_run_status] = 'SUCCESS', [last_run_date] = CAST(SYSUTCDATETIME() AS DATETIME2(6)), [modified_date] = CAST(SYSUTCDATETIME() AS DATETIME2(6)) WHERE [control_id] = @{item().control_id}; SELECT 1 AS done",
+                                        "type": "Expression"
+                                    },
+                                    "queryTimeout": "00:02:00",
+                                    "partitionOption": "None"
+                                },
+                                "dataset": {
+                                    "referenceName": "ds_fabric_warehouse",
+                                    "type": "DatasetReference",
+                                    "parameters": {
+                                        "schema": "app",
+                                        "table_name": "pipeline_log"
+                                    }
+                                },
+                                "firstRowOnly": true
+                            }
+                        },
+                        {
+                            "name": "Lookup_LogFailure",
+                            "description": "On copy failure: update pipeline_log to FAILED with error details and mark pipeline_control last_run_status as FAILED.",
+                            "type": "Lookup",
+                            "dependsOn": [
+                                {
+                                    "activity": "Copy_SourceToWarehouse",
+                                    "dependencyConditions": [
+                                        "Failed"
+                                    ]
+                                }
+                            ],
+                            "policy": {
+                                "timeout": "0.00:02:00",
+                                "retry": 0,
+                                "retryIntervalInSeconds": 15,
+                                "secureOutput": false,
+                                "secureInput": false
+                            },
+                            "typeProperties": {
+                                "source": {
+                                    "type": "WarehouseSource",
+                                    "sqlReaderQuery": {
+                                        "value": "UPDATE [app].[pipeline_log] SET [status] = 'FAILED', [error_message] = '@{replace(activity('Copy_SourceToWarehouse').error.message, '''', '''''')}', [error_code] = '@{activity('Copy_SourceToWarehouse').error.errorCode}', [end_time] = CAST(SYSUTCDATETIME() AS DATETIME2(6)) WHERE [run_id] = '@{pipeline().RunId}' AND [pipeline_name] = '@{item().pipeline_name}'; UPDATE [app].[pipeline_control] SET [last_run_status] = 'FAILED', [last_run_date] = CAST(SYSUTCDATETIME() AS DATETIME2(6)), [modified_date] = CAST(SYSUTCDATETIME() AS DATETIME2(6)) WHERE [control_id] = @{item().control_id}; SELECT 1 AS done",
+                                        "type": "Expression"
+                                    },
+                                    "queryTimeout": "00:02:00",
+                                    "partitionOption": "None"
+                                },
+                                "dataset": {
+                                    "referenceName": "ds_fabric_warehouse",
+                                    "type": "DatasetReference",
+                                    "parameters": {
+                                        "schema": "app",
+                                        "table_name": "pipeline_log"
+                                    }
+                                },
+                                "firstRowOnly": true
+                            }
+                        }
+                    ]
+                }
+            }
+        ],
+        "parameters": {
+            "environment": {
+                "type": "string",
+                "defaultValue": "dev"
+            }
+        },
+        "folder": {
+            "name": "Ingestion"
+        },
+        "annotations": []
+    }
+}

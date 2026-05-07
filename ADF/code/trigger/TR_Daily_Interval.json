@@ -1,0 +1,28 @@
+{
+	"name": "TR_Daily_Interval",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Stopped",
+		"pipelines": [
+		],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Day",
+				"interval": 1,
+				"startTime": "2025-01-15T16:59:00",
+				"timeZone": "Pacific Standard Time",
+				"schedule": {
+					"minutes": [
+						30
+					],
+					"hours": [
+						1,
+						8,
+						14
+					]
+				}
+			}
+		}
+	}
+}

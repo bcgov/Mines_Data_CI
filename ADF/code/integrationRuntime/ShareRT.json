@@ -1,0 +1,8 @@
+{
+    "name": "ShareRT",
+    "type": "Microsoft.DataFactory/factories/integrationRuntimes",
+    "properties": {
+        "type": "SelfHosted",
+        "typeProperties": {}
+    }
+}

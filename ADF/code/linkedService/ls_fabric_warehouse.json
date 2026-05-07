@@ -1,0 +1,32 @@
+{
+    "name": "ls_fabric_warehouse",
+    "type": "Microsoft.DataFactory/factories/linkedservices",
+    "properties": {
+        "description": "Microsoft Fabric Warehouse linked service. Service Principal auth via Key Vault. workspaceId and artifactId must be GUIDs from the Fabric portal URL.",
+        "annotations": [],
+        "type": "Warehouse",
+        "typeProperties": {
+            "endpoint": "abjnw3ynhwfevmbw2nuf4nm23q-rahtrd7fltiurh5f7o734jufua.datawarehouse.fabric.microsoft.com",
+            "workspaceId": "8f380f88-5ce5-48d1-9fa5-fbbfbe2685a0",
+            "artifactId": "9ed9a608-33e5-408b-bd51-adc2dad1e7ab",
+            "tenant": "$[globalParameters.ARM_TENANT_ID]",
+            "servicePrincipalId": {
+                "type": "AzureKeyVaultSecret",
+                "store": {
+                    "referenceName": "ls_keyvault",
+                    "type": "LinkedServiceReference"
+                },
+                "secretName": "sp-client-id"
+            },
+            "servicePrincipalCredentialType": "ServicePrincipalKey",
+            "servicePrincipalCredential": {
+                "type": "AzureKeyVaultSecret",
+                "store": {
+                    "referenceName": "ls_keyvault",
+                    "type": "LinkedServiceReference"
+                },
+                "secretName": "sp-client-secret"
+            }
+        }
+    }
+}

@@ -1,0 +1,58 @@
+{
+    "name": "ds_azure_gen2_storage",
+    "properties": {
+        "linkedServiceName": {
+            "referenceName": "ls_azure_gen2_storage",
+            "type": "LinkedServiceReference",
+            "parameters": {
+                "storage_account_endpoint": {
+                    "value": "@dataset().storage_account",
+                    "type": "Expression"
+                }
+            }
+        },
+        "parameters": {
+            "file_system": {
+                "type": "String",
+                "defaultValue": "raw"
+            },
+            "directory": {
+                "type": "String",
+                "defaultValue": "adf"
+            },
+            "file_name": {
+                "type": "String",
+                "defaultValue": "my_file_ddmmyyy.parquet"
+            },
+            "storage_account": {
+                "type": "String",
+                "defaultValue": ""
+            }
+        },
+        "folder": {
+            "name": "Datalake"
+        },
+        "annotations": [],
+        "type": "Parquet",
+        "typeProperties": {
+            "location": {
+                "type": "AzureBlobFSLocation",
+                "folderPath": {
+                    "value": "@concat(dataset().directory,formatDateTime(utcnow(), 'yyyy/MM/dd/'))",
+                    "type": "Expression"
+                },
+                "fileSystem": {
+                    "value": "@dataset().file_system",
+                    "type": "Expression"
+                },
+                "fileName": {
+                    "value": "@dataset().file_name",
+                    "type": "Expression"
+                }
+            },
+            "compressionCodec": "snappy"
+        },
+        "schema": []
+    },
+    "type": "Microsoft.DataFactory/factories/datasets"
+}

@@ -1,0 +1,137 @@
+{
+    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "factoryName": {
+            "type": "string",
+            "metadata": "Data Factory name",
+            "defaultValue": "mines-fabric-adf01"
+        }
+    },
+    "variables": {
+        "factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+    },
+    "resources": [
+        {
+            "name": "[concat(parameters('factoryName'), '/ds_snowflake')]",
+            "type": "Microsoft.DataFactory/factories/datasets",
+            "apiVersion": "2018-06-01",
+            "properties": {
+                "description": "Generic parameterised Snowflake dataset. Pass schema_name, table_name, account, warehouse, database and role at runtime.",
+                "linkedServiceName": {
+                    "referenceName": "ls_snowflake",
+                    "type": "LinkedServiceReference",
+                    "parameters": {
+                        "account": {
+                            "value": "@dataset().account",
+                            "type": "Expression"
+                        },
+                        "warehouse": {
+                            "value": "@dataset().warehouse",
+                            "type": "Expression"
+                        },
+                        "database": {
+                            "value": "@dataset().database",
+                            "type": "Expression"
+                        },
+                        "role": {
+                            "value": "@dataset().role",
+                            "type": "Expression"
+                        }
+                    }
+                },
+                "parameters": {
+                    "schema_name": {
+                        "type": "String"
+                    },
+                    "table_name": {
+                        "type": "String"
+                    },
+                    "account": {
+                        "type": "String"
+                    },
+                    "warehouse": {
+                        "type": "String"
+                    },
+                    "database": {
+                        "type": "String"
+                    },
+                    "role": {
+                        "type": "String"
+                    }
+                },
+                "folder": {
+                    "name": "Snowflake"
+                },
+                "annotations": [],
+                "type": "SnowflakeTable",
+                "schema": [],
+                "typeProperties": {
+                    "schema": {
+                        "value": "@dataset().schema_name",
+                        "type": "Expression"
+                    },
+                    "table": {
+                        "value": "@dataset().table_name",
+                        "type": "Expression"
+                    }
+                }
+            },
+            "dependsOn": []
+        },
+        {
+            "name": "[concat(parameters('factoryName'), '/ds_sql_server')]",
+            "type": "Microsoft.DataFactory/factories/datasets",
+            "apiVersion": "2018-06-01",
+            "properties": {
+                "description": "Generic parameterised SQL Server dataset. Pass server, database, schema and table_name at runtime.",
+                "linkedServiceName": {
+                    "referenceName": "ls_sql_server",
+                    "type": "LinkedServiceReference",
+                    "parameters": {
+                        "server": {
+                            "value": "@dataset().server",
+                            "type": "Expression"
+                        },
+                        "database": {
+                            "value": "@dataset().database",
+                            "type": "Expression"
+                        }
+                    }
+                },
+                "parameters": {
+                    "schema": {
+                        "type": "String",
+                        "defaultValue": "dbo"
+                    },
+                    "table_name": {
+                        "type": "String"
+                    },
+                    "server": {
+                        "type": "String"
+                    },
+                    "database": {
+                        "type": "String"
+                    }
+                },
+                "folder": {
+                    "name": "SQL_Server"
+                },
+                "annotations": [],
+                "type": "SqlServerTable",
+                "schema": [],
+                "typeProperties": {
+                    "schema": {
+                        "value": "@dataset().schema",
+                        "type": "Expression"
+                    },
+                    "table": {
+                        "value": "@dataset().table_name",
+                        "type": "Expression"
+                    }
+                }
+            },
+            "dependsOn": []
+        }
+    ]
+}
