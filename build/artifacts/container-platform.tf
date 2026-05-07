@@ -1,11 +1,6 @@
 # =============================================================================
 # build/artifacts/container_platform.tf
 # =============================================================================
-# Add this temporarily to container_platform.tf, 
-import {
-  to = module.vscode_tunnel.azurerm_container_group.tunnel
-  id = "/subscriptions/53205a1b-0f8d-459e-a424-65f1b39ec648/resourceGroups/mines-fabric-rg02/providers/Microsoft.ContainerInstance/containerGroups/mines-fabric-tunnel01"
-}
 
 ###############################################################################
 # Subnet allocation
@@ -17,6 +12,7 @@ module "subnets" {
   vnet_name                = "ef74b0-dev-vwan-spoke"
   vnet_resource_group_name = "ef74b0-dev-networking"
   location                 = "canadacentral"
+
   subnets = [
     {
       name          = "mines-fabric-aci-snet"
@@ -36,12 +32,22 @@ module "subnets" {
           destination_port_range     = "443"
           source_address_prefix      = "*"
           destination_address_prefix = "AzureKeyVault"
+        },
+        {
+          name                       = "AllowVSCodeTunnelOutbound"
+          priority                   = 210
+          direction                  = "Outbound"
+          access                     = "Allow"
+          protocol                   = "Tcp"
+          destination_port_range     = "443"
+          source_address_prefix      = "*"
+          destination_address_prefix = "Internet"
         }
       ]
     }
   ]
 
-
+  tags = var.tags
 }
 
 ###############################################################################
@@ -72,7 +78,7 @@ module "acr_01" {
   enable_rbac_assignments    = true
   additional_access_policies = []
 
-
+  tags = var.tags
 
   depends_on = [module.resource_group_adf]
 }
@@ -126,7 +132,7 @@ module "aci_jumpbox_01" {
     ENVIRONMENT   = var.ENVIRONMENT
   }
 
-
+  tags = var.tags
 
   depends_on = [
     module.resource_group_adf,
@@ -141,7 +147,9 @@ module "aci_jumpbox_01" {
 #
 # Single ACI container with VS Code Remote Tunnel.
 # Connect from VS Code or browser — no public IP, no inbound ports.
-
+#
+# ARM_CLIENT_SECRET is read from Key Vault (not from Terraform variables)
+# so it never appears in terraform.tfstate.
 ###############################################################################
 
 module "vscode_tunnel" {
@@ -167,8 +175,10 @@ module "vscode_tunnel" {
   # interactively with device code auth (works because the tunnel gives you
   # a browser):
   #   az login --use-device-code
-  #   az account set --subscription ""
+  #   az account set --subscription 53205a1b-0f8d-459e-a424-65f1b39ec648
   secure_environment_variables = {}
+
+  tags = var.tags
 
   depends_on = [
     module.resource_group_adf,
