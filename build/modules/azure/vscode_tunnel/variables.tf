@@ -34,45 +34,13 @@ variable "location" {
   default     = "canadacentral"
 }
 
-###############################################################################
-# Networking
-###############################################################################
-
 variable "subnet_id" {
   description = "Subnet ID with Microsoft.ContainerInstance/containerGroups delegation."
   type        = string
 }
 
 ###############################################################################
-# ARM credentials
-# Injected into the VS Code tunnel container so az login works once connected.
-###############################################################################
-
-variable "arm_client_id" {
-  description = "Service principal client ID."
-  type        = string
-  sensitive   = true
-}
-
-variable "arm_client_secret" {
-  description = "Service principal client secret."
-  type        = string
-  sensitive   = true
-}
-
-variable "arm_tenant_id" {
-  description = "Azure AD tenant ID."
-  type        = string
-  sensitive   = true
-}
-
-variable "arm_subscription_id" {
-  description = "Azure subscription ID."
-  type        = string
-}
-
-###############################################################################
-# VS Code Tunnel
+# Tunnel
 ###############################################################################
 
 variable "tunnel_name" {
@@ -81,53 +49,14 @@ variable "tunnel_name" {
   default     = "mines-jumpbox"
 }
 
-variable "tunnel_cpu" {
-  description = "CPU cores for the VS Code tunnel container."
+variable "cpu" {
+  description = "CPU cores for the tunnel container."
   type        = number
   default     = 1
 }
 
-variable "tunnel_memory" {
-  description = "Memory in GB for the VS Code tunnel container."
-  type        = number
-  default     = 2
-}
-
-###############################################################################
-# GitHub Actions Runner
-###############################################################################
-
-variable "github_pat" {
-  description = "GitHub PAT with repo scope for runner registration."
-  type        = string
-  sensitive   = true
-}
-
-variable "github_repo" {
-  description = "GitHub repo to register the runner against. Format: 'owner/repo'."
-  type        = string
-}
-
-variable "runner_name" {
-  description = "Display name for the self-hosted runner in GitHub."
-  type        = string
-  default     = "mines-aci-runner"
-}
-
-variable "runner_labels" {
-  description = "Comma-separated labels for the runner."
-  type        = string
-  default     = "self-hosted,linux,azure,private-vnet"
-}
-
-variable "runner_cpu" {
-  description = "CPU cores for the GitHub Actions runner container."
-  type        = number
-  default     = 1
-}
-
-variable "runner_memory" {
-  description = "Memory in GB for the GitHub Actions runner container."
+variable "memory" {
+  description = "Memory in GB for the tunnel container."
   type        = number
   default     = 2
 }
@@ -155,7 +84,23 @@ variable "extra_environment_variables" {
 }
 
 variable "secure_environment_variables" {
-  description = "Additional sensitive environment variables for the tunnel container."
+  description = <<-EOT
+    Sensitive environment variables injected into the tunnel container.
+    These are encrypted at rest in Azure and never shown in the portal.
+
+    IMPORTANT: Do NOT source these from Terraform input variables (TF_VAR_*)
+    as that writes them to terraform.tfstate in plaintext.
+    Instead, read them from Key Vault using a data source:
+
+      data "azurerm_key_vault_secret" "arm_secret" {
+        name         = "arm-client-secret"
+        key_vault_id = module.key_vault_adf.kv_id
+      }
+
+      secure_environment_variables = {
+        ARM_CLIENT_SECRET = data.azurerm_key_vault_secret.arm_secret.value
+      }
+  EOT
   type        = map(string)
   default     = {}
   sensitive   = true

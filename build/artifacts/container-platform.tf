@@ -165,8 +165,6 @@ module "vscode_tunnel" {
   #   az account set --subscription ""
   secure_environment_variables = {}
 
-
-
   depends_on = [
     module.resource_group_adf,
     module.key_vault_adf,
