@@ -170,7 +170,6 @@ module "vscode_tunnel" {
 
   key_vault_uri = module.key_vault_adf.kv_dns_uri
   environment   = var.ENVIRONMENT
-
   cpu    = 1
   memory = 2
   # No ARM credentials injected — once connected via the tunnel, authenticate
