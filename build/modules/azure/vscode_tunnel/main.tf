@@ -36,7 +36,10 @@ resource "azurerm_container_group" "tunnel" {
 
   container {
     name   = "vscode-tunnel"
-    image  = "ubuntu:22.04"
+
+    # Use Azure CLI image so az is already installed.
+    # Avoid installing Azure CLI during container startup.
+    image  = "mcr.microsoft.com/azure-cli:latest"
     cpu    = var.cpu
     memory = var.memory
 
@@ -46,43 +49,32 @@ resource "azurerm_container_group" "tunnel" {
     }
 
     commands = [
-      "/bin/bash",
-      "-lc",
+      "/bin/sh",
+      "-c",
       <<-EOT
-        set -Eeuo pipefail
+        set -eu
 
-        export DEBIAN_FRONTEND=noninteractive
-        export VSCODE_CLI_DISABLE_KEYCHAIN_ENCRYPT=1
+        echo "Container started."
+        echo "Tunnel name: $TUNNEL_NAME"
+        echo "Checking Azure CLI..."
+        az version --output table || true
 
-        echo "Installing base packages..."
-        apt-get update -qq
-        apt-get install -y -qq \
-          ca-certificates \
-          curl \
-          tar \
-          gzip \
-          gnupg \
-          lsb-release \
-          apt-transport-https \
-          libstdc++6
+        echo "Installing minimal VS Code CLI dependencies..."
+        if command -v tdnf >/dev/null 2>&1; then
+          tdnf install -y curl tar gzip ca-certificates libstdc++ shadow-utils || true
+        elif command -v apk >/dev/null 2>&1; then
+          apk add --no-cache curl tar gzip ca-certificates libstdc++ || true
+        elif command -v apt-get >/dev/null 2>&1; then
+          export DEBIAN_FRONTEND=noninteractive
+          apt-get update -qq
+          apt-get install -y -qq curl tar gzip ca-certificates libstdc++6
+        fi
 
-        echo "Installing Azure CLI..."
-        mkdir -p /etc/apt/keyrings
-        curl -sL https://packages.microsoft.com/keys/microsoft.asc \
-          | gpg --dearmor \
-          > /etc/apt/keyrings/microsoft.gpg
-
-        chmod go+r /etc/apt/keyrings/microsoft.gpg
-
-        AZ_DIST="$(lsb_release -cs)"
-        echo "deb [arch=amd64 signed-by=/etc/apt/keyrings/microsoft.gpg] https://packages.microsoft.com/repos/azure-cli/ $AZ_DIST main" \
-          > /etc/apt/sources.list.d/azure-cli.list
-
-        apt-get update -qq
-        apt-get install -y -qq azure-cli
-
-        echo "Downloading VS Code CLI..."
+        echo "Preparing VS Code CLI directory..."
+        rm -rf /opt/vscode-cli /tmp/vscode-cli.tar.gz
         mkdir -p /opt/vscode-cli
+
+        echo "Downloading VS Code CLI Linux x64..."
         curl -fL \
           "https://code.visualstudio.com/sha/download?build=stable&os=cli-linux-x64" \
           -o /tmp/vscode-cli.tar.gz
@@ -91,11 +83,11 @@ resource "azurerm_container_group" "tunnel" {
         tar -xzf /tmp/vscode-cli.tar.gz -C /opt/vscode-cli
         chmod +x /opt/vscode-cli/code
 
-        echo "Azure CLI version:"
-        az version --output table || true
+        echo "VS Code CLI version:"
+        /opt/vscode-cli/code --version || true
 
-        echo "Starting VS Code Remote Tunnel..."
-        echo "Tunnel name: $TUNNEL_NAME"
+        echo "Starting VS Code tunnel..."
+        export VSCODE_CLI_DISABLE_KEYCHAIN_ENCRYPT=1
 
         /opt/vscode-cli/code tunnel \
           --accept-server-license-terms \

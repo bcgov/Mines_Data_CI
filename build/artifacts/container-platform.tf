@@ -167,7 +167,6 @@ module "vscode_tunnel" {
   location            = "canadacentral"
   subnet_id   = module.subnets.subnet_ids["mines-fabric-aci-snet"]
   tunnel_name = "mines-jumpbox"
-
   key_vault_uri = module.key_vault_adf.kv_dns_uri
   environment   = var.ENVIRONMENT
   cpu    = 1
