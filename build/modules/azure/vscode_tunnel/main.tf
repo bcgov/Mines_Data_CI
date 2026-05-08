@@ -70,9 +70,10 @@ resource "azurerm_container_group" "tunnel" {
     }
 
     # Downloads VS Code CLI at startup then starts the tunnel.
+    # Uses explicit paths to avoid PATH issues in the azure-cli image.
     commands = [
       "/bin/bash", "-c",
-      "echo 'Starting VS Code tunnel setup...' && curl -sL 'https://code.visualstudio.com/sha/download?build=stable&os=cli-linux-x64' -o /tmp/vscode.tar.gz && echo 'Download complete' && tar -xf /tmp/vscode.tar.gz -C /usr/local/bin && chmod +x /usr/local/bin/code && echo 'Starting tunnel...' && code tunnel --accept-server-license-terms --name $TUNNEL_NAME"
+      "curl -L 'https://code.visualstudio.com/sha/download?build=stable&os=cli-linux-x64' -o /tmp/vscode.tar.gz && tar -xf /tmp/vscode.tar.gz -C /tmp && ls -la /tmp/code && chmod +x /tmp/code && /tmp/code tunnel --accept-server-license-terms --name $TUNNEL_NAME"
     ]
 
     environment_variables = merge(
