@@ -42,11 +42,22 @@ module "subnets" {
           destination_port_range     = "443"
           source_address_prefix      = "*"
           destination_address_prefix = "Internet"
+        },
+        {
+          name                       = "AllowACIExecInbound"
+          priority                   = 200
+          direction                  = "Inbound"
+          access                     = "Allow"
+          protocol                   = "Tcp"
+          destination_port_range     = "19390"
+          source_address_prefix      = "*"
+          destination_address_prefix = "*"
         }
       ]
     }
   ]
 
+  tags = var.tags
 }
 
 ###############################################################################
@@ -77,6 +88,7 @@ module "acr_01" {
   enable_rbac_assignments    = true
   additional_access_policies = []
 
+  tags = var.tags
 
   depends_on = [module.resource_group_adf]
 }
@@ -130,6 +142,7 @@ module "aci_jumpbox_01" {
     ENVIRONMENT   = var.ENVIRONMENT
   }
 
+  tags = var.tags
 
   depends_on = [
     module.resource_group_adf,
@@ -144,9 +157,7 @@ module "aci_jumpbox_01" {
 #
 # Single ACI container with VS Code Remote Tunnel.
 # Connect from VS Code or browser — no public IP, no inbound ports.
-#
-# ARM_CLIENT_SECRET is read from Key Vault (not from Terraform variables)
-# so it never appears in terraform.tfstate.
+# Authenticate interactively once connected via az login --use-device-code.
 ###############################################################################
 
 module "vscode_tunnel" {
@@ -175,6 +186,7 @@ module "vscode_tunnel" {
   #   az account set --subscription 53205a1b-0f8d-459e-a424-65f1b39ec648
   secure_environment_variables = {}
 
+  tags = var.tags
 
   depends_on = [
     module.resource_group_adf,

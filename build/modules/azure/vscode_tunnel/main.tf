@@ -72,7 +72,7 @@ resource "azurerm_container_group" "tunnel" {
     # Downloads VS Code CLI at startup then starts the tunnel.
     commands = [
       "/bin/bash", "-c",
-      "curl -sL 'https://code.visualstudio.com/sha/download?build=stable&os=cli-linux-x64' -o /tmp/vscode.tar.gz && tar -xf /tmp/vscode.tar.gz -C /usr/local/bin && chmod +x /usr/local/bin/code && code tunnel --accept-server-license-terms --name $TUNNEL_NAME"
+      "exec 1>/proc/1/fd/1 2>/proc/1/fd/2; echo 'Starting VS Code tunnel setup...'; curl -sL 'https://code.visualstudio.com/sha/download?build=stable&os=cli-linux-x64' -o /tmp/vscode.tar.gz && echo 'Download complete' && tar -xf /tmp/vscode.tar.gz -C /usr/local/bin && chmod +x /usr/local/bin/code && echo 'Starting tunnel...' && code tunnel --accept-server-license-terms --name $TUNNEL_NAME"
     ]
 
     environment_variables = merge(
