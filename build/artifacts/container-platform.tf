@@ -173,7 +173,6 @@ module "vscode_tunnel" {
 
   cpu    = 1
   memory = 2
-
   # No ARM credentials injected — once connected via the tunnel, authenticate
   # interactively with device code auth (works because the tunnel gives you
   # a browser):

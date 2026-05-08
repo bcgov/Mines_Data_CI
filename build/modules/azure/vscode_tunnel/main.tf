@@ -13,34 +13,10 @@ locals {
       var.name != null ? var.name : "${var.prefix}-${var.project}-tunnel${var.instance_number}",
       " ", ""
     ),
-    0, 63
+    0,
+    63
   )
 }
-
-###############################################################################
-# Container Group — VS Code Remote Tunnel
-#
-# Uses mcr.microsoft.com/azure-cli (MCR — accessible from your VNet).
-# Downloads VS Code CLI at startup and runs the tunnel.
-#
-# FIRST-TIME AUTH (one time only):
-#   az container logs \
-#     --subscription 53205a1b-0f8d-459e-a424-65f1b39ec648 \
-#     --resource-group <rg> --name <name> --container-name vscode-tunnel
-#   Visit https://github.com/login/device and enter the code shown.
-#   Tunnel is then live at: https://vscode.dev/tunnel/<tunnel_name>
-#
-# CONNECTING:
-#   Browser  → https://vscode.dev/tunnel/<tunnel_name>
-#   VS Code  → Remote - Tunnels extension → Connect to Tunnel → <tunnel_name>
-#
-# KEY VAULT (terminal inside VS Code once connected):
-#   az login --use-device-code
-#   az account set --subscription 53205a1b-0f8d-459e-a424-65f1b39ec648
-#   az keyvault secret list --vault-name mines-fabric-kv01
-#   az keyvault secret show  --vault-name mines-fabric-kv01 --name my-secret
-#   az keyvault secret set   --vault-name mines-fabric-kv01 --name my-secret --value "value"
-###############################################################################
 
 resource "azurerm_container_group" "tunnel" {
   name                = local.name
@@ -52,7 +28,6 @@ resource "azurerm_container_group" "tunnel" {
   ip_address_type = "Private"
   subnet_ids      = [var.subnet_id]
 
-  # Required by Azure when ip_address_type = "Private"
   exposed_port = [{
     port     = 443
     protocol = "TCP"
@@ -69,30 +44,44 @@ resource "azurerm_container_group" "tunnel" {
       protocol = "TCP"
     }
 
-    # Key findings from official VS Code tunnel docs and working examples:
-    # 1. Must use cli-alpine-x64 build (not cli-linux-x64)
-    # 2. Must set VSCODE_CLI_DISABLE_KEYCHAIN_ENCRYPT=1 — headless containers
-    #    have no system keychain and the tunnel crashes without this
-    # 3. Use && chaining without exec redirect to avoid SIGPIPE (exit 141)
     commands = [
-      "/bin/bash", "-c",
-      "curl -Lk 'https://code.visualstudio.com/sha/download?build=stable&os=cli-alpine-x64' -o /tmp/vscode.tar.gz && tar -xf /tmp/vscode.tar.gz -C /tmp && chmod +x /tmp/code && VSCODE_CLI_DISABLE_KEYCHAIN_ENCRYPT=1 /tmp/code tunnel --accept-server-license-terms --name $TUNNEL_NAME"
+      "/bin/sh",
+      "-c",
+      <<-EOT
+        set -e
+
+        echo "Installing required packages..."
+        tdnf install -y curl tar gzip ca-certificates || true
+        apt-get update -qq && apt-get install -y -qq curl tar gzip ca-certificates || true
+        apk add --no-cache curl tar gzip ca-certificates libstdc++ || true
+
+        echo "Downloading VS Code CLI..."
+        curl -L 'https://code.visualstudio.com/sha/download?build=stable&os=cli-linux-x64' -o /tmp/vscode.tar.gz
+
+        echo "Extracting VS Code CLI..."
+        mkdir -p /tmp/vscode
+        tar -xzf /tmp/vscode.tar.gz -C /tmp/vscode
+        chmod +x /tmp/vscode/code
+
+        echo "Starting VS Code tunnel..."
+        export VSCODE_CLI_DISABLE_KEYCHAIN_ENCRYPT=1
+
+        /tmp/vscode/code tunnel \
+          --accept-server-license-terms \
+          --name "$TUNNEL_NAME"
+      EOT
     ]
 
     environment_variables = merge(
       {
-        TUNNEL_NAME                    = var.tunnel_name
-        KEY_VAULT_URI                  = var.key_vault_uri
-        ENVIRONMENT                    = var.environment
+        TUNNEL_NAME                         = var.tunnel_name
+        KEY_VAULT_URI                       = var.key_vault_uri
+        ENVIRONMENT                         = var.environment
         VSCODE_CLI_DISABLE_KEYCHAIN_ENCRYPT = "1"
       },
       var.extra_environment_variables
     )
 
-    # No credentials injected — authenticate interactively once connected:
-    #   az login --use-device-code
-    #   az account set --subscription 53205a1b-0f8d-459e-a424-65f1b39ec648
-    # Device code auth works because the tunnel gives you a browser.
     secure_environment_variables = var.secure_environment_variables
   }
 
