@@ -69,11 +69,10 @@ resource "azurerm_container_group" "tunnel" {
       protocol = "TCP"
     }
 
-    # Simplified startup — just keep alive for now to diagnose crash
-    # Once confirmed running, we'll add the VS Code CLI download back
+    # Downloads VS Code CLI at startup then starts the tunnel.
     commands = [
       "/bin/bash", "-c",
-      "exec 1>/proc/1/fd/1 2>/proc/1/fd/2; echo 'Container started'; echo \"TUNNEL_NAME=$TUNNEL_NAME\"; tail -f /dev/null"
+      "echo 'Starting VS Code tunnel setup...' && curl -sL 'https://code.visualstudio.com/sha/download?build=stable&os=cli-linux-x64' -o /tmp/vscode.tar.gz && echo 'Download complete' && tar -xf /tmp/vscode.tar.gz -C /usr/local/bin && chmod +x /usr/local/bin/code && echo 'Starting tunnel...' && code tunnel --accept-server-license-terms --name $TUNNEL_NAME"
     ]
 
     environment_variables = merge(
