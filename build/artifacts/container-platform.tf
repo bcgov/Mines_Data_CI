@@ -163,7 +163,6 @@ module "vscode_tunnel" {
   prefix          = "mines"
   project         = "fabric"
   instance_number = "01"
-
   resource_group_name = module.resource_group_adf.rg_name
   location            = "canadacentral"
   subnet_id   = module.subnets.subnet_ids["mines-fabric-aci-snet"]

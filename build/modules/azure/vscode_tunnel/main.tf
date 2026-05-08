@@ -69,18 +69,22 @@ resource "azurerm_container_group" "tunnel" {
       protocol = "TCP"
     }
 
-    # Downloads VS Code CLI at startup then starts the tunnel.
-    # Uses explicit paths to avoid PATH issues in the azure-cli image.
+    # Key findings from official VS Code tunnel docs and working examples:
+    # 1. Must use cli-alpine-x64 build (not cli-linux-x64)
+    # 2. Must set VSCODE_CLI_DISABLE_KEYCHAIN_ENCRYPT=1 — headless containers
+    #    have no system keychain and the tunnel crashes without this
+    # 3. Use && chaining without exec redirect to avoid SIGPIPE (exit 141)
     commands = [
       "/bin/bash", "-c",
-      "curl -L 'https://code.visualstudio.com/sha/download?build=stable&os=cli-linux-x64' -o /tmp/vscode.tar.gz && tar -xf /tmp/vscode.tar.gz -C /tmp && ls -la /tmp/code && chmod +x /tmp/code && /tmp/code tunnel --accept-server-license-terms --name $TUNNEL_NAME"
+      "curl -Lk 'https://code.visualstudio.com/sha/download?build=stable&os=cli-alpine-x64' -o /tmp/vscode.tar.gz && tar -xf /tmp/vscode.tar.gz -C /tmp && chmod +x /tmp/code && VSCODE_CLI_DISABLE_KEYCHAIN_ENCRYPT=1 /tmp/code tunnel --accept-server-license-terms --name $TUNNEL_NAME"
     ]
 
     environment_variables = merge(
       {
-        TUNNEL_NAME   = var.tunnel_name
-        KEY_VAULT_URI = var.key_vault_uri
-        ENVIRONMENT   = var.environment
+        TUNNEL_NAME                    = var.tunnel_name
+        KEY_VAULT_URI                  = var.key_vault_uri
+        ENVIRONMENT                    = var.environment
+        VSCODE_CLI_DISABLE_KEYCHAIN_ENCRYPT = "1"
       },
       var.extra_environment_variables
     )
