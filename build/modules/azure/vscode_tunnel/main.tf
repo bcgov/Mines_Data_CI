@@ -11,13 +11,36 @@ locals {
   name = substr(
     replace(
       var.name != null ? var.name : "${var.prefix}-${var.project}-tunnel${var.instance_number}",
-      " ",
-      ""
+      " ", ""
     ),
-    0,
-    63
+    0, 63
   )
 }
+
+###############################################################################
+# Container Group — VS Code Remote Tunnel
+#
+# Uses mcr.microsoft.com/azure-cli (MCR — accessible from your VNet).
+# Downloads VS Code CLI at startup and runs the tunnel.
+#
+# FIRST-TIME AUTH (one time only):
+#   az container logs \
+#     --subscription 53205a1b-0f8d-459e-a424-65f1b39ec648 \
+#     --resource-group <rg> --name <name> --container-name vscode-tunnel
+#   Visit https://github.com/login/device and enter the code shown.
+#   Tunnel is then live at: https://vscode.dev/tunnel/<tunnel_name>
+#
+# CONNECTING:
+#   Browser  → https://vscode.dev/tunnel/<tunnel_name>
+#   VS Code  → Remote - Tunnels extension → Connect to Tunnel → <tunnel_name>
+#
+# KEY VAULT (terminal inside VS Code once connected):
+#   az login --use-device-code
+#   az account set --subscription 53205a1b-0f8d-459e-a424-65f1b39ec648
+#   az keyvault secret list --vault-name mines-fabric-kv01
+#   az keyvault secret show  --vault-name mines-fabric-kv01 --name my-secret
+#   az keyvault secret set   --vault-name mines-fabric-kv01 --name my-secret --value "value"
+###############################################################################
 
 resource "azurerm_container_group" "tunnel" {
   name                = local.name
@@ -29,6 +52,7 @@ resource "azurerm_container_group" "tunnel" {
   ip_address_type = "Private"
   subnet_ids      = [var.subnet_id]
 
+  # Required by Azure when ip_address_type = "Private"
   exposed_port = [{
     port     = 443
     protocol = "TCP"
@@ -36,9 +60,6 @@ resource "azurerm_container_group" "tunnel" {
 
   container {
     name   = "vscode-tunnel"
-
-    # Use Azure CLI image so az is already installed.
-    # Avoid installing Azure CLI during container startup.
     image  = "mcr.microsoft.com/azure-cli:latest"
     cpu    = var.cpu
     memory = var.memory
@@ -48,63 +69,28 @@ resource "azurerm_container_group" "tunnel" {
       protocol = "TCP"
     }
 
+    # Uses update.code.visualstudio.com (direct binary endpoint) NOT
+    # code.visualstudio.com/sha/download which returns HTML "blocked" in
+    # restricted network environments like Azure Landing Zones.
     commands = [
-      "/bin/sh",
-      "-c",
-      <<-EOT
-        set -eu
-
-        echo "Container started."
-        echo "Tunnel name: $TUNNEL_NAME"
-        echo "Checking Azure CLI..."
-        az version --output table || true
-
-        echo "Installing minimal VS Code CLI dependencies..."
-        if command -v tdnf >/dev/null 2>&1; then
-          tdnf install -y curl tar gzip ca-certificates libstdc++ shadow-utils || true
-        elif command -v apk >/dev/null 2>&1; then
-          apk add --no-cache curl tar gzip ca-certificates libstdc++ || true
-        elif command -v apt-get >/dev/null 2>&1; then
-          export DEBIAN_FRONTEND=noninteractive
-          apt-get update -qq
-          apt-get install -y -qq curl tar gzip ca-certificates libstdc++6
-        fi
-
-        echo "Preparing VS Code CLI directory..."
-        rm -rf /opt/vscode-cli /tmp/vscode-cli.tar.gz
-        mkdir -p /opt/vscode-cli
-
-        echo "Downloading VS Code CLI Linux x64..."
-        curl -fL \
-          "https://code.visualstudio.com/sha/download?build=stable&os=cli-linux-x64" \
-          -o /tmp/vscode-cli.tar.gz
-
-        echo "Extracting VS Code CLI..."
-        tar -xzf /tmp/vscode-cli.tar.gz -C /opt/vscode-cli
-        chmod +x /opt/vscode-cli/code
-
-        echo "VS Code CLI version:"
-        /opt/vscode-cli/code --version || true
-
-        echo "Starting VS Code tunnel..."
-        export VSCODE_CLI_DISABLE_KEYCHAIN_ENCRYPT=1
-
-        /opt/vscode-cli/code tunnel \
-          --accept-server-license-terms \
-          --name "$TUNNEL_NAME"
-      EOT
+      "/bin/bash", "-c",
+      "curl -Lk 'https://update.code.visualstudio.com/latest/cli-alpine-x64/stable' -o /tmp/vscode.tar.gz && tar -xf /tmp/vscode.tar.gz -C /tmp && chmod +x /tmp/code && VSCODE_CLI_DISABLE_KEYCHAIN_ENCRYPT=1 /tmp/code tunnel --accept-server-license-terms --name $TUNNEL_NAME"
     ]
 
     environment_variables = merge(
       {
-        TUNNEL_NAME                         = var.tunnel_name
-        KEY_VAULT_URI                       = var.key_vault_uri
-        ENVIRONMENT                         = var.environment
+        TUNNEL_NAME                    = var.tunnel_name
+        KEY_VAULT_URI                  = var.key_vault_uri
+        ENVIRONMENT                    = var.environment
         VSCODE_CLI_DISABLE_KEYCHAIN_ENCRYPT = "1"
       },
       var.extra_environment_variables
     )
 
+    # No credentials injected — authenticate interactively once connected:
+    #   az login --use-device-code
+    #   az account set --subscription 53205a1b-0f8d-459e-a424-65f1b39ec648
+    # Device code auth works because the tunnel gives you a browser.
     secure_environment_variables = var.secure_environment_variables
   }
 
