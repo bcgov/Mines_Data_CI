@@ -60,7 +60,9 @@ resource "azurerm_container_group" "tunnel" {
 
   container {
     name   = "vscode-tunnel"
-    image  = "mcr.microsoft.com/azure-cli:latest"
+    # Ubuntu 22.04 from MCR — has full glibc required by cli-linux-x64.
+    # azure-cli image is CBL-Mariner (musl-based) and cannot run glibc binaries.
+    image  = "mcr.microsoft.com/mirror/docker/library/ubuntu:22.04"
     cpu    = var.cpu
     memory = var.memory
 
@@ -69,12 +71,11 @@ resource "azurerm_container_group" "tunnel" {
       protocol = "TCP"
     }
 
-    # Uses update.code.visualstudio.com (direct binary endpoint).
-    # cli-linux-x64 used (not alpine) — azure-cli image is CBL-Mariner based
-    # and has the required glibc. Binary moved to /usr/bin — /tmp is noexec.
+    # cli-linux-x64 requires glibc — Ubuntu 22.04 provides this.
+    # curl pre-installed on ubuntu:22.04, mv to /usr/bin avoids noexec on /tmp.
     commands = [
       "/bin/bash", "-c",
-      "curl -Lk 'https://update.code.visualstudio.com/latest/cli-linux-x64/stable' -o /tmp/vscode.tar.gz && tar -xf /tmp/vscode.tar.gz -C /tmp && mv /tmp/code /usr/bin/code && chmod +x /usr/bin/code && VSCODE_CLI_DISABLE_KEYCHAIN_ENCRYPT=1 /usr/bin/code tunnel --accept-server-license-terms --name $TUNNEL_NAME"
+      "apt-get update -qq && apt-get install -y -qq curl ca-certificates && curl -Lk 'https://update.code.visualstudio.com/latest/cli-linux-x64/stable' -o /tmp/vscode.tar.gz && tar -xf /tmp/vscode.tar.gz -C /tmp && mv /tmp/code /usr/bin/code && chmod +x /usr/bin/code && VSCODE_CLI_DISABLE_KEYCHAIN_ENCRYPT=1 /usr/bin/code tunnel --accept-server-license-terms --name $TUNNEL_NAME"
     ]
 
     environment_variables = merge(
