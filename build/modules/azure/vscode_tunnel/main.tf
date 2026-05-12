@@ -69,12 +69,12 @@ resource "azurerm_container_group" "tunnel" {
       protocol = "TCP"
     }
 
-    # Uses update.code.visualstudio.com (direct binary endpoint) NOT
-    # code.visualstudio.com/sha/download which returns HTML "blocked" in
-    # restricted network environments like Azure Landing Zones.
+    # Uses update.code.visualstudio.com (direct binary endpoint).
+    # cli-linux-x64 used (not alpine) — azure-cli image is CBL-Mariner based
+    # and has the required glibc. Binary moved to /usr/bin — /tmp is noexec.
     commands = [
       "/bin/bash", "-c",
-      "curl -Lk 'https://update.code.visualstudio.com/latest/cli-alpine-x64/stable' -o /tmp/vscode.tar.gz && tar -xf /tmp/vscode.tar.gz -C /tmp && chmod +x /tmp/code && VSCODE_CLI_DISABLE_KEYCHAIN_ENCRYPT=1 /tmp/code tunnel --accept-server-license-terms --name $TUNNEL_NAME"
+      "curl -Lk 'https://update.code.visualstudio.com/latest/cli-linux-x64/stable' -o /tmp/vscode.tar.gz && tar -xf /tmp/vscode.tar.gz -C /tmp && mv /tmp/code /usr/bin/code && chmod +x /usr/bin/code && VSCODE_CLI_DISABLE_KEYCHAIN_ENCRYPT=1 /usr/bin/code tunnel --accept-server-license-terms --name $TUNNEL_NAME"
     ]
 
     environment_variables = merge(
