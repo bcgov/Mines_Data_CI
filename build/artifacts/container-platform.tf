@@ -58,13 +58,14 @@ module "subnets" {
     {
       # Dedicated subnet for private endpoints — cannot share with ACI
       # delegation subnet as Azure blocks PE creation on delegated subnets.
+      # /28 (16 IPs) is sufficient — a PE only needs one IP.
       name          = "mines-fabric-pe-snet"
-      prefix_length = 27
+      prefix_length = 28
       nsg_rules     = []
     }
   ]
 
-
+  tags = var.tags
 }
 
 ###############################################################################
@@ -95,7 +96,7 @@ module "acr_01" {
   enable_rbac_assignments    = true
   additional_access_policies = []
 
-
+  tags = var.tags
 
   depends_on = [module.resource_group_adf]
 }
@@ -149,7 +150,7 @@ module "aci_jumpbox_01" {
     ENVIRONMENT   = var.ENVIRONMENT
   }
 
-
+  tags = var.tags
 
   depends_on = [
     module.resource_group_adf,
@@ -188,7 +189,7 @@ module "vscode_tunnel" {
 
   secure_environment_variables = {}
 
-
+  tags = var.tags
 
   depends_on = [
     module.resource_group_adf,
