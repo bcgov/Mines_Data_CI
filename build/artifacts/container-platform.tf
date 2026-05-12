@@ -157,31 +157,31 @@ module "aci_jumpbox_01" {
 # Authenticate interactively once connected via az login --use-device-code.
 ###############################################################################
 
-module "vscode_tunnel" {
-  source = "../modules/azure/vscode_tunnel"
+# module "vscode_tunnel" {
+#   source = "../modules/azure/vscode_tunnel"
 
-  prefix          = "mines"
-  project         = "fabric"
-  instance_number = "01"
-  resource_group_name = module.resource_group_adf.rg_name
-  location            = "canadacentral"
-  subnet_id   = module.subnets.subnet_ids["mines-fabric-aci-snet"]
-  tunnel_name = "mines-jumpbox"
-  key_vault_uri = module.key_vault_adf.kv_dns_uri
-  environment   = var.ENVIRONMENT
-  cpu    = 1
-  memory = 2
-  # No ARM credentials injected — once connected via the tunnel, authenticate
-  # interactively with device code auth (works because the tunnel gives you
-  # a browser):
-  #   az login --use-device-code
-  #   az account set --subscription 53205a1b-0f8d-459e-a424-65f1b39ec648
-  secure_environment_variables = {}
+#   prefix          = "mines"
+#   project         = "fabric"
+#   instance_number = "01"
+#   resource_group_name = module.resource_group_adf.rg_name
+#   location            = "canadacentral"
+#   subnet_id   = module.subnets.subnet_ids["mines-fabric-aci-snet"]
+#   tunnel_name = "mines-jumpbox"
+#   key_vault_uri = module.key_vault_adf.kv_dns_uri
+#   environment   = var.ENVIRONMENT
+#   cpu    = 1
+#   memory = 2
+#   # No ARM credentials injected — once connected via the tunnel, authenticate
+#   # interactively with device code auth (works because the tunnel gives you
+#   # a browser):
+#   #   az login --use-device-code
+#   #   az account set --subscription 53205a1b-0f8d-459e-a424-65f1b39ec648
+#   secure_environment_variables = {}
 
 
-  depends_on = [
-    module.resource_group_adf,
-    module.key_vault_adf,
-    module.subnets,
-  ]
-}
+#   depends_on = [
+#     module.resource_group_adf,
+#     module.key_vault_adf,
+#     module.subnets,
+#   ]
+# }
