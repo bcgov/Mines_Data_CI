@@ -75,7 +75,7 @@ resource "azurerm_container_group" "tunnel" {
     # curl pre-installed on ubuntu:22.04, mv to /usr/bin avoids noexec on /tmp.
     commands = [
       "/bin/bash", "-c",
-      "apt-get update -qq && apt-get install -y -qq curl ca-certificates && curl -Lk 'https://update.code.visualstudio.com/latest/cli-linux-x64/stable' -o /tmp/vscode.tar.gz && tar -xf /tmp/vscode.tar.gz -C /tmp && mv /tmp/code /usr/bin/code && chmod +x /usr/bin/code && VSCODE_CLI_DISABLE_KEYCHAIN_ENCRYPT=1 /usr/bin/code tunnel --accept-server-license-terms --name $TUNNEL_NAME"
+      "apt-get update -qq && apt-get install -y -qq curl ca-certificates gnupg lsb-release && curl -sL https://aka.ms/InstallAzureCLIDeb | bash && curl -Lk 'https://update.code.visualstudio.com/latest/cli-linux-x64/stable' -o /tmp/vscode.tar.gz && tar -xf /tmp/vscode.tar.gz -C /tmp && mv /tmp/code /usr/bin/code && chmod +x /usr/bin/code && VSCODE_CLI_DISABLE_KEYCHAIN_ENCRYPT=1 /usr/bin/code tunnel --accept-server-license-terms --name $TUNNEL_NAME"
     ]
 
     environment_variables = merge(
