@@ -13,7 +13,7 @@
         "type": "String"
       }
     },
-    "type": "PostgreSqlTable",
+    "type": "PostgreSqlV2Table",
     "typeProperties": {
       "schema": {
         "value": "@dataset().schema_name",

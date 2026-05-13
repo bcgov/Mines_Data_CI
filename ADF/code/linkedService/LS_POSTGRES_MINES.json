@@ -1,7 +1,7 @@
 {
   "name": "LS_POSTGRES_MINES",
   "properties": {
-    "type": "PostgreSql",
+    "type": "PostgreSqlV2",
     "typeProperties": {
       "connectionString": {
         "type": "AzureKeyVaultSecret",
