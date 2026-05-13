@@ -7,6 +7,10 @@
             "metadata": "Data Factory name",
             "defaultValue": "mines-fabric-adf01"
         },
+        "LS_POSTGRES_MINES_password": {
+            "type": "secureString",
+            "metadata": "Secure string for 'password' of 'LS_POSTGRES_MINES'"
+        },
         "ls_AZSQL_connectionString": {
             "type": "secureString",
             "metadata": "Secure string for 'connectionString' of 'ls_AZSQL'",
@@ -87,11 +91,17 @@
                     "factoryName": {
                         "value": "[parameters('factoryName')]"
                     },
+                    "LS_POSTGRES_MINES_password": {
+                        "value": "[parameters('LS_POSTGRES_MINES_password')]"
+                    },
                     "ls_AZSQL_connectionString": {
                         "value": "[parameters('ls_AZSQL_connectionString')]"
                     },
                     "ls_sql_server_connectionString": {
                         "value": "[parameters('ls_sql_server_connectionString')]"
+                    },
+                    "LS_POSTGRES_MINES_properties_typeProperties_connectionString_secretName": {
+                        "value": "[parameters('LS_POSTGRES_MINES_properties_typeProperties_connectionString_secretName')]"
                     },
                     "fabric-kv01_properties_typeProperties_baseUrl": {
                         "value": "[parameters('fabric-kv01_properties_typeProperties_baseUrl')]"
@@ -101,9 +111,6 @@
                     },
                     "ls_keyvault_properties_typeProperties_baseUrl": {
                         "value": "[parameters('ls_keyvault_properties_typeProperties_baseUrl')]"
-                    },
-                    "LS_POSTGRES_MINES_properties_typeProperties_connectionString_secretName": {
-                        "value": "[parameters('LS_POSTGRES_MINES_properties_typeProperties_connectionString_secretName')]"
                     },
                     "ls_api_properties_typeProperties_url": {
                         "value": "[parameters('ls_api_properties_typeProperties_url')]"

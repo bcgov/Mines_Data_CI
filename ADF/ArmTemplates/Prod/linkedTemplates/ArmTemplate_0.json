@@ -7,6 +7,10 @@
             "metadata": "Data Factory name",
             "defaultValue": "mines-fabric-adf01"
         },
+        "LS_POSTGRES_MINES_password": {
+            "type": "secureString",
+            "metadata": "Secure string for 'password' of 'LS_POSTGRES_MINES'"
+        },
         "ls_AZSQL_connectionString": {
             "type": "secureString",
             "metadata": "Secure string for 'connectionString' of 'ls_AZSQL'",
@@ -16,6 +20,10 @@
             "type": "secureString",
             "metadata": "Secure string for 'connectionString' of 'ls_sql_server'",
             "defaultValue": "integrated security=False;Data Source=@{linkedService().server};Initial Catalog=@{linkedService().database};User ID="
+        },
+        "LS_POSTGRES_MINES_properties_typeProperties_connectionString_secretName": {
+            "type": "string",
+            "defaultValue": "mines-fabric-kv01"
         },
         "fabric-kv01_properties_typeProperties_baseUrl": {
             "type": "string",
@@ -28,10 +36,6 @@
         "ls_keyvault_properties_typeProperties_baseUrl": {
             "type": "string",
             "defaultValue": "https://mines-fabric-kv01.vault.azure.net/"
-        },
-        "LS_POSTGRES_MINES_properties_typeProperties_connectionString_secretName": {
-            "type": "string",
-            "defaultValue": "mines-fabric-kv01"
         },
         "ls_api_properties_typeProperties_url": {
             "type": "string",
@@ -282,6 +286,33 @@
             "dependsOn": []
         },
         {
+            "name": "[concat(parameters('factoryName'), '/LS_POSTGRES_MINES')]",
+            "type": "Microsoft.DataFactory/factories/linkedServices",
+            "apiVersion": "2018-06-01",
+            "properties": {
+                "annotations": [],
+                "type": "PostgreSqlV2",
+                "typeProperties": {
+                    "port": 5432,
+                    "password": {
+                        "type": "SecureString",
+                        "value": "[parameters('LS_POSTGRES_MINES_password')]"
+                    },
+                    "sslMode": 2,
+                    "authenticationType": "Basic",
+                    "connectionString": {
+                        "type": "AzureKeyVaultSecret",
+                        "store": {
+                            "referenceName": "fabric-kv01",
+                            "type": "LinkedServiceReference"
+                        },
+                        "secretName": "[parameters('LS_POSTGRES_MINES_properties_typeProperties_connectionString_secretName')]"
+                    }
+                }
+            },
+            "dependsOn": []
+        },
+        {
             "name": "[concat(parameters('factoryName'), '/fabric-kv01')]",
             "type": "Microsoft.DataFactory/factories/linkedServices",
             "apiVersion": "2018-06-01",
@@ -445,6 +476,40 @@
             "dependsOn": []
         },
         {
+            "name": "[concat(parameters('factoryName'), '/DS_POSTGRES_DYNAMIC_TABLE')]",
+            "type": "Microsoft.DataFactory/factories/datasets",
+            "apiVersion": "2018-06-01",
+            "properties": {
+                "linkedServiceName": {
+                    "referenceName": "LS_POSTGRES_MINES",
+                    "type": "LinkedServiceReference"
+                },
+                "parameters": {
+                    "schema_name": {
+                        "type": "String"
+                    },
+                    "table_name": {
+                        "type": "String"
+                    }
+                },
+                "annotations": [],
+                "type": "PostgreSqlV2Table",
+                "typeProperties": {
+                    "schema": {
+                        "value": "@dataset().schema_name",
+                        "type": "Expression"
+                    },
+                    "table": {
+                        "value": "@dataset().table_name",
+                        "type": "Expression"
+                    }
+                }
+            },
+            "dependsOn": [
+                "[concat(variables('factoryId'), '/linkedServices/LS_POSTGRES_MINES')]"
+            ]
+        },
+        {
             "name": "[concat(parameters('factoryName'), '/ds_azsql')]",
             "type": "Microsoft.DataFactory/factories/datasets",
             "apiVersion": "2018-06-01",
@@ -559,28 +624,6 @@
             },
             "dependsOn": [
                 "[concat(variables('factoryId'), '/linkedServices/ls_azure_gen2_storage')]"
-            ]
-        },
-        {
-            "name": "[concat(parameters('factoryName'), '/LS_POSTGRES_MINES')]",
-            "type": "Microsoft.DataFactory/factories/linkedServices",
-            "apiVersion": "2018-06-01",
-            "properties": {
-                "annotations": [],
-                "type": "PostgreSql",
-                "typeProperties": {
-                    "connectionString": {
-                        "type": "AzureKeyVaultSecret",
-                        "store": {
-                            "referenceName": "fabric-kv01",
-                            "type": "LinkedServiceReference"
-                        },
-                        "secretName": "[parameters('LS_POSTGRES_MINES_properties_typeProperties_connectionString_secretName')]"
-                    }
-                }
-            },
-            "dependsOn": [
-                "[concat(variables('factoryId'), '/linkedServices/fabric-kv01')]"
             ]
         },
         {
@@ -723,40 +766,6 @@
             "dependsOn": [
                 "[concat(variables('factoryId'), '/integrationRuntimes/ShareRT')]",
                 "[concat(variables('factoryId'), '/linkedServices/ls_keyvault')]"
-            ]
-        },
-        {
-            "name": "[concat(parameters('factoryName'), '/DS_POSTGRES_DYNAMIC_TABLE')]",
-            "type": "Microsoft.DataFactory/factories/datasets",
-            "apiVersion": "2018-06-01",
-            "properties": {
-                "linkedServiceName": {
-                    "referenceName": "LS_POSTGRES_MINES",
-                    "type": "LinkedServiceReference"
-                },
-                "parameters": {
-                    "schema_name": {
-                        "type": "String"
-                    },
-                    "table_name": {
-                        "type": "String"
-                    }
-                },
-                "annotations": [],
-                "type": "PostgreSqlTable",
-                "typeProperties": {
-                    "schema": {
-                        "value": "@dataset().schema_name",
-                        "type": "Expression"
-                    },
-                    "table": {
-                        "value": "@dataset().table_name",
-                        "type": "Expression"
-                    }
-                }
-            },
-            "dependsOn": [
-                "[concat(variables('factoryId'), '/linkedServices/LS_POSTGRES_MINES')]"
             ]
         },
         {

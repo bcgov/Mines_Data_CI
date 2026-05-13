@@ -5,6 +5,9 @@
         "factoryName": {
             "value": "mines-fabric-adf01"
         },
+        "LS_POSTGRES_MINES_password": {
+            "value": ""
+        },
         "ls_AZSQL_connectionString": {
             "value": "Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=@{linkedService().server},1433;Initial Catalog=@{linkedService().database}"
         },

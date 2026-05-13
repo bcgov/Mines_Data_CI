@@ -7,6 +7,10 @@
             "metadata": "Data Factory name",
             "defaultValue": "mines-fabric-adf01"
         },
+        "LS_POSTGRES_MINES_password": {
+            "type": "secureString",
+            "metadata": "Secure string for 'password' of 'LS_POSTGRES_MINES'"
+        },
         "ls_AZSQL_connectionString": {
             "type": "secureString",
             "metadata": "Secure string for 'connectionString' of 'ls_AZSQL'",
@@ -588,7 +592,7 @@
                     }
                 },
                 "annotations": [],
-                "type": "PostgreSqlTable",
+                "type": "PostgreSqlV2Table",
                 "typeProperties": {
                     "schema": {
                         "value": "@dataset().schema_name",
@@ -917,8 +921,15 @@
             "apiVersion": "2018-06-01",
             "properties": {
                 "annotations": [],
-                "type": "PostgreSql",
+                "type": "PostgreSqlV2",
                 "typeProperties": {
+                    "port": 5432,
+                    "password": {
+                        "type": "SecureString",
+                        "value": "[parameters('LS_POSTGRES_MINES_password')]"
+                    },
+                    "sslMode": 2,
+                    "authenticationType": "Basic",
                     "connectionString": {
                         "type": "AzureKeyVaultSecret",
                         "store": {
@@ -929,9 +940,7 @@
                     }
                 }
             },
-            "dependsOn": [
-                "[concat(variables('factoryId'), '/linkedServices/fabric-kv01')]"
-            ]
+            "dependsOn": []
         },
         {
             "name": "[concat(parameters('factoryName'), '/fabric-kv01')]",
