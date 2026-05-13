@@ -17,6 +17,14 @@
             "metadata": "Secure string for 'connectionString' of 'ls_sql_server'",
             "defaultValue": "integrated security=False;Data Source=@{linkedService().server};Initial Catalog=@{linkedService().database};User ID="
         },
+        "LS_POSTGRES_MINES_properties_typeProperties_connectionString_secretName": {
+            "type": "string",
+            "defaultValue": "mines-fabric-kv01"
+        },
+        "fabric-kv01_properties_typeProperties_baseUrl": {
+            "type": "string",
+            "defaultValue": "https://mines-fabric-kv01.vault.azure.net/"
+        },
         "ls_api_properties_typeProperties_url": {
             "type": "string",
             "defaultValue": "@{linkedService().base_URL}"
@@ -85,11 +93,17 @@
                     "ls_sql_server_connectionString": {
                         "value": "[parameters('ls_sql_server_connectionString')]"
                     },
+                    "fabric-kv01_properties_typeProperties_baseUrl": {
+                        "value": "[parameters('fabric-kv01_properties_typeProperties_baseUrl')]"
+                    },
                     "ls_azure_gen2_storage_properties_typeProperties_url": {
                         "value": "[parameters('ls_azure_gen2_storage_properties_typeProperties_url')]"
                     },
                     "ls_keyvault_properties_typeProperties_baseUrl": {
                         "value": "[parameters('ls_keyvault_properties_typeProperties_baseUrl')]"
+                    },
+                    "LS_POSTGRES_MINES_properties_typeProperties_connectionString_secretName": {
+                        "value": "[parameters('LS_POSTGRES_MINES_properties_typeProperties_connectionString_secretName')]"
                     },
                     "ls_api_properties_typeProperties_url": {
                         "value": "[parameters('ls_api_properties_typeProperties_url')]"
@@ -109,6 +123,26 @@
                 }
             },
             "dependsOn": []
+        },
+        {
+            "name": "mines-fabric-adf01_ArmTemplate_1",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2024-03-01",
+            "properties": {
+                "mode": "incremental",
+                "templateLink": {
+                    "uri": "[concat(parameters('containerUri'), '/ArmTemplate_1.json', parameters('containerSasToken'))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "factoryName": {
+                        "value": "[parameters('factoryName')]"
+                    }
+                }
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Resources/deployments', 'mines-fabric-adf01_ArmTemplate_0')]"
+            ]
         }
     ]
 }
