@@ -28,7 +28,7 @@ module "fabric_gw_subnet" {
       delegation = {
         name         = "fabric-gw-delegation"
         service_name = "Microsoft.PowerPlatform/vnetaccesslinks"
-        actions      = ["Microsoft.Network/virtualNetworks/subnets/join/action"]
+        actions      = []
       }
       nsg_rules = [
         {
