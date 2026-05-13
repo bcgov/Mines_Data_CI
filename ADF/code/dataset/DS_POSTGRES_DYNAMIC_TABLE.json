@@ -1,0 +1,28 @@
+{
+  "name": "DS_POSTGRES_DYNAMIC_TABLE",
+  "properties": {
+    "linkedServiceName": {
+      "referenceName": "LS_POSTGRES_MINES",
+      "type": "LinkedServiceReference"
+    },
+    "parameters": {
+      "schema_name": {
+        "type": "String"
+      },
+      "table_name": {
+        "type": "String"
+      }
+    },
+    "type": "PostgreSqlTable",
+    "typeProperties": {
+      "schema": {
+        "value": "@dataset().schema_name",
+        "type": "Expression"
+      },
+      "table": {
+        "value": "@dataset().table_name",
+        "type": "Expression"
+      }
+    }
+  }
+}

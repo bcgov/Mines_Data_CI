@@ -1,0 +1,16 @@
+{
+  "name": "LS_POSTGRES_MINES",
+  "properties": {
+    "type": "PostgreSql",
+    "typeProperties": {
+      "connectionString": {
+        "type": "AzureKeyVaultSecret",
+        "store": {
+          "referenceName": "LS_AKV_FABRIC_KV01",
+          "type": "LinkedServiceReference"
+        },
+        "secretName": "mines-fabric-kv01"
+      }
+    }
+  }
+}
