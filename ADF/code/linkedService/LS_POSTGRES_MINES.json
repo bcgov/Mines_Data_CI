@@ -6,7 +6,7 @@
       "connectionString": {
         "type": "AzureKeyVaultSecret",
         "store": {
-          "referenceName": "LS_AKV_FABRIC_KV01",
+          "referenceName": "fabric-kv01",
           "type": "LinkedServiceReference"
         },
         "secretName": "mines-fabric-kv01"
