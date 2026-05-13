@@ -45,7 +45,7 @@ module "fabric_gw_subnet" {
     }
   ]
 
-  tags = var.tags
+
 }
 
 ###############################################################################
@@ -53,7 +53,7 @@ module "fabric_gw_subnet" {
 ###############################################################################
 
 module "fabric_data_gateway_01" {
-  source = "../modules/fabric/fabric_virtual_gateway"
+  source = "../modules/azure/fabric_virtual_gateway"
 
   providers = {
     fabric.auth = fabric.auth
