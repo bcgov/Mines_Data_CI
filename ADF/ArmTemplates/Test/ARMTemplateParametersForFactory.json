@@ -11,6 +11,12 @@
         "ls_sql_server_connectionString": {
             "value": "integrated security=False;Data Source=@{linkedService().server};Initial Catalog=@{linkedService().database};User ID="
         },
+        "LS_POSTGRES_MINES_properties_typeProperties_connectionString_secretName": {
+            "value": "mines-fabric-kv01"
+        },
+        "fabric-kv01_properties_typeProperties_baseUrl": {
+            "value": "https://mines-fabric-kv01.vault.azure.net/"
+        },
         "ls_api_properties_typeProperties_url": {
             "value": "@{linkedService().base_URL}"
         },

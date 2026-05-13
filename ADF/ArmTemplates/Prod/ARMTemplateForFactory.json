@@ -17,6 +17,14 @@
             "metadata": "Secure string for 'connectionString' of 'ls_sql_server'",
             "defaultValue": "integrated security=False;Data Source=@{linkedService().server};Initial Catalog=@{linkedService().database};User ID="
         },
+        "LS_POSTGRES_MINES_properties_typeProperties_connectionString_secretName": {
+            "type": "string",
+            "defaultValue": "mines-fabric-kv01"
+        },
+        "fabric-kv01_properties_typeProperties_baseUrl": {
+            "type": "string",
+            "defaultValue": "https://mines-fabric-kv01.vault.azure.net/"
+        },
         "ls_api_properties_typeProperties_url": {
             "type": "string",
             "defaultValue": "@{linkedService().base_URL}"
@@ -563,6 +571,40 @@
             ]
         },
         {
+            "name": "[concat(parameters('factoryName'), '/DS_POSTGRES_DYNAMIC_TABLE')]",
+            "type": "Microsoft.DataFactory/factories/datasets",
+            "apiVersion": "2018-06-01",
+            "properties": {
+                "linkedServiceName": {
+                    "referenceName": "LS_POSTGRES_MINES",
+                    "type": "LinkedServiceReference"
+                },
+                "parameters": {
+                    "schema_name": {
+                        "type": "String"
+                    },
+                    "table_name": {
+                        "type": "String"
+                    }
+                },
+                "annotations": [],
+                "type": "PostgreSqlTable",
+                "typeProperties": {
+                    "schema": {
+                        "value": "@dataset().schema_name",
+                        "type": "Expression"
+                    },
+                    "table": {
+                        "value": "@dataset().table_name",
+                        "type": "Expression"
+                    }
+                }
+            },
+            "dependsOn": [
+                "[concat(variables('factoryId'), '/linkedServices/LS_POSTGRES_MINES')]"
+            ]
+        },
+        {
             "name": "[concat(parameters('factoryName'), '/ds_api')]",
             "type": "Microsoft.DataFactory/factories/datasets",
             "apiVersion": "2018-06-01",
@@ -868,6 +910,41 @@
             "dependsOn": [
                 "[concat(variables('factoryId'), '/linkedServices/ls_sql_server')]"
             ]
+        },
+        {
+            "name": "[concat(parameters('factoryName'), '/LS_POSTGRES_MINES')]",
+            "type": "Microsoft.DataFactory/factories/linkedServices",
+            "apiVersion": "2018-06-01",
+            "properties": {
+                "annotations": [],
+                "type": "PostgreSql",
+                "typeProperties": {
+                    "connectionString": {
+                        "type": "AzureKeyVaultSecret",
+                        "store": {
+                            "referenceName": "fabric-kv01",
+                            "type": "LinkedServiceReference"
+                        },
+                        "secretName": "[parameters('LS_POSTGRES_MINES_properties_typeProperties_connectionString_secretName')]"
+                    }
+                }
+            },
+            "dependsOn": [
+                "[concat(variables('factoryId'), '/linkedServices/fabric-kv01')]"
+            ]
+        },
+        {
+            "name": "[concat(parameters('factoryName'), '/fabric-kv01')]",
+            "type": "Microsoft.DataFactory/factories/linkedServices",
+            "apiVersion": "2018-06-01",
+            "properties": {
+                "annotations": [],
+                "type": "AzureKeyVault",
+                "typeProperties": {
+                    "baseUrl": "[parameters('fabric-kv01_properties_typeProperties_baseUrl')]"
+                }
+            },
+            "dependsOn": []
         },
         {
             "name": "[concat(parameters('factoryName'), '/ls_AZSQL')]",
