@@ -42,3 +42,23 @@ resource "fabric_gateway" "this" {
     delete = var.timeouts.delete
   }
 }
+
+###############################################################################
+# Gateway Role Assignments
+#
+# Grants access on the gateway to one or more users/groups/service principals.
+# Without this, only the principal that created the gateway can see it.
+###############################################################################
+
+resource "fabric_gateway_role_assignment" "this" {
+  provider = fabric.auth
+  for_each = { for ra in var.role_assignments : ra.principal_id => ra }
+
+  gateway_id = fabric_gateway.this.id
+  role       = each.value.role
+
+  principal = {
+    id   = each.value.principal_id
+    type = each.value.principal_type
+  }
+}

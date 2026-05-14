@@ -67,3 +67,29 @@ variable "timeouts" {
   })
   default = {}
 }
+
+variable "role_assignments" {
+  description = "List of principals to grant access on the gateway. Each entry: { principal_id, principal_type, role }. principal_type: User, Group, ServicePrincipal. role: Admin, ConnectionCreator, ConnectionCreatorWithResharing."
+  type = list(object({
+    principal_id   = string
+    principal_type = string
+    role           = string
+  }))
+  default = []
+
+  validation {
+    condition = alltrue([
+      for ra in var.role_assignments :
+      contains(["User", "Group", "ServicePrincipal"], ra.principal_type)
+    ])
+    error_message = "principal_type must be one of: User, Group, ServicePrincipal."
+  }
+
+  validation {
+    condition = alltrue([
+      for ra in var.role_assignments :
+      contains(["Admin", "ConnectionCreator", "ConnectionCreatorWithResharing"], ra.role)
+    ])
+    error_message = "role must be one of: Admin, ConnectionCreator, ConnectionCreatorWithResharing."
+  }
+}

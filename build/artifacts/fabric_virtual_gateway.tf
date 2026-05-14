@@ -13,6 +13,7 @@
 ###############################################################################
 # Subnet for the Fabric VNet Data Gateway
 ###############################################################################
+
 module "fabric_gw_subnet" {
   source = "../modules/azure/subnet_allocator"
 
@@ -52,7 +53,7 @@ module "fabric_gw_subnet" {
 ###############################################################################
 
 module "fabric_data_gateway_01" {
-  source = "../modules/azure/fabric_virtual_gateway"
+  source = "../modules/fabric/fabric_data_gateway"
 
   providers = {
     fabric.auth = fabric.auth
@@ -62,7 +63,7 @@ module "fabric_data_gateway_01" {
   project         = "fabric"
   instance_number = "01"
 
-  capacity_id                     = "198C68F4-8402-45B9-8010-BDE58A729DDF"
+  capacity_id                     = var.FABRIC_CAPACITY_ID
   inactivity_minutes_before_sleep = 30
   number_of_member_gateways       = 1
 
@@ -72,6 +73,14 @@ module "fabric_data_gateway_01" {
     virtual_network_name = "ef74b0-dev-vwan-spoke"
     subnet_name          = "mines-fabric-gw-snet"
   }
+
+  role_assignments = [
+    {
+      principal_id   = "b0bf68e8-4e08-433c-8903-19b2fec4cc20"
+      principal_type = "User"
+      role           = "Admin"
+    }
+  ]
 
   timeouts = {
     create = "30m"
