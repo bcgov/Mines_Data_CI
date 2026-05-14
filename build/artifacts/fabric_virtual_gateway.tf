@@ -13,7 +13,6 @@
 ###############################################################################
 # Subnet for the Fabric VNet Data Gateway
 ###############################################################################
-
 module "fabric_gw_subnet" {
   source = "../modules/azure/subnet_allocator"
 
