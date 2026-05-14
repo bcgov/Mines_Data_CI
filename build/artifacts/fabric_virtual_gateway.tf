@@ -59,8 +59,8 @@ module "fabric_data_gateway_01" {
     fabric.auth = fabric.auth
   }
 
-  prefix          = "mines"
-  project         = "fabric"
+  prefix          = "MCM"
+  project         = "MDP"
   instance_number = "01"
 
   capacity_id                     = "198C68F4-8402-45B9-8010-BDE58A729DDF"
