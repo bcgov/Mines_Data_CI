@@ -53,7 +53,7 @@ module "fabric_gw_subnet" {
 ###############################################################################
 
 module "fabric_data_gateway_01" {
-  source = "../modules/fabric/fabric_data_gateway"
+  source = "../modules/azure/fabric_data_gateway"
 
   providers = {
     fabric.auth = fabric.auth
