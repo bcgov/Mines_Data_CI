@@ -53,7 +53,7 @@ module "fabric_gw_subnet" {
 ###############################################################################
 
 module "fabric_data_gateway_01" {
-  source = "../modules/azure/fabric_data_gateway"
+  source = "../modules/azure/fabric_virtual_gateway"
 
   providers = {
     fabric.auth = fabric.auth
@@ -63,7 +63,7 @@ module "fabric_data_gateway_01" {
   project         = "fabric"
   instance_number = "01"
 
-  capacity_id                     = var.FABRIC_CAPACITY_ID
+  capacity_id                     = "198C68F4-8402-45B9-8010-BDE58A729DDF"
   inactivity_minutes_before_sleep = 30
   number_of_member_gateways       = 1
 
