@@ -61,16 +61,27 @@ variable "username" {
   description = "Username for Basic authentication."
   sensitive   = true
 }
-
-variable "password_keyvault_id" {
+variable "password" {
   type        = string
-  description = "Resource ID of the Azure Key Vault holding the password secret. Format: /subscriptions/<sub>/resourceGroups/<rg>/providers/Microsoft.KeyVault/vaults/<vault>"
+  description = "Password for Basic authentication. Sent to Fabric, never stored in state."
+  sensitive   = true
 }
 
-variable "password_secret_name" {
-  type        = string
-  description = "Name of the secret in Key Vault that holds the password."
+variable "password_version" {
+  type        = number
+  description = "Increment to rotate the password through Terraform."
+  default     = 1
 }
+
+# variable "password_keyvault_id" {
+#   type        = string
+#   description = "Resource ID of the Azure Key Vault holding the password secret. Format: /subscriptions/<sub>/resourceGroups/<rg>/providers/Microsoft.KeyVault/vaults/<vault>"
+# }
+
+# variable "password_secret_name" {
+#   type        = string
+#   description = "Name of the secret in Key Vault that holds the password."
+# }
 
 # ─── Security / behaviour ───────────────────────────────────────────────────
 
