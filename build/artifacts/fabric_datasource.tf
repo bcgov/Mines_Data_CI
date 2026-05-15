@@ -1,5 +1,8 @@
 
 module "postgres_mds_via_vnet_gateway" {
+   providers = {
+    fabric.auth = fabric.auth
+  }
   source = "../modules/azure/fabric_connection"
   display_name      = "postgres-mds-via-vnet-gw"
   connection_type   = "PostgreSQL"
