@@ -31,6 +31,7 @@ locals {
 }
 
 resource "fabric_connection" "this" {
+  provider = fabric.auth
   display_name      = var.display_name
   connectivity_type = var.connectivity_type
   privacy_level     = var.privacy_level
