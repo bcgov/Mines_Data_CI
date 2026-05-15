@@ -12,7 +12,7 @@
 # }
 
 module "copy_camp_detail" {
-  source = "./modules/azure/fabric_copy_job"
+  source = "../modules/azure/fabric_copy_job"
 
   # ─── Target workspace (where the Copy Job item lives) ────────────────────
   workspace_id = "8f380f88-5ce5-48d1-9fa5-fbbfbe2685a0"
