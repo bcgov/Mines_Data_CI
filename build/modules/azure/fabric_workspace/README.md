@@ -3,14 +3,14 @@
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_fabric"></a> [fabric](#requirement\_fabric) | 1.6.0 |
+| <a name="requirement_fabric"></a> [fabric](#requirement\_fabric) | 1.10.0 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
 | <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | n/a |
-| <a name="provider_fabric.auth"></a> [fabric.auth](#provider\_fabric.auth) | 1.6.0 |
+| <a name="provider_fabric.auth"></a> [fabric.auth](#provider\_fabric.auth) | 1.10.0 |
 
 ## Modules
 
@@ -20,8 +20,8 @@ No modules.
 
 | Name | Type |
 |------|------|
-| [fabric_workspace.this](https://registry.terraform.io/providers/microsoft/fabric/1.6.0/docs/resources/workspace) | resource |
-| [fabric_workspace_role_assignment.admins](https://registry.terraform.io/providers/microsoft/fabric/1.6.0/docs/resources/workspace_role_assignment) | resource |
+| [fabric_workspace.this](https://registry.terraform.io/providers/microsoft/fabric/1.10.0/docs/resources/workspace) | resource |
+| [fabric_workspace_role_assignment.admins](https://registry.terraform.io/providers/microsoft/fabric/1.10.0/docs/resources/workspace_role_assignment) | resource |
 | [azurerm_client_config.current](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/client_config) | data source |
 
 ## Inputs

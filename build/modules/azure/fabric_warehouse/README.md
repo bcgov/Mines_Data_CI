@@ -3,13 +3,13 @@
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_fabric"></a> [fabric](#requirement\_fabric) | 1.6.0 |
+| <a name="requirement_fabric"></a> [fabric](#requirement\_fabric) | 1.10.0 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_fabric.auth"></a> [fabric.auth](#provider\_fabric.auth) | 1.6.0 |
+| <a name="provider_fabric.auth"></a> [fabric.auth](#provider\_fabric.auth) | 1.10.0 |
 
 ## Modules
 
@@ -19,7 +19,7 @@ No modules.
 
 | Name | Type |
 |------|------|
-| [fabric_warehouse.this_warehouse](https://registry.terraform.io/providers/microsoft/fabric/1.6.0/docs/resources/warehouse) | resource |
+| [fabric_warehouse.this_warehouse](https://registry.terraform.io/providers/microsoft/fabric/1.10.0/docs/resources/warehouse) | resource |
 
 ## Inputs
 

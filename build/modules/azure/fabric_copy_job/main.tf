@@ -11,7 +11,7 @@ terraform {
   required_providers {
     fabric = {
       source                = "microsoft/fabric"
-      version               = "1.6.0"
+      version               = "1.10.0"
       configuration_aliases = [fabric.auth]
     }
   }

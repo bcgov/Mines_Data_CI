@@ -81,8 +81,8 @@ provider "registry.terraform.io/hashicorp/null" {
 }
 
 provider "registry.terraform.io/microsoft/fabric" {
-  version     = "1.6.0"
-  constraints = "1.6.0"
+  version     = "1.10.0"
+  constraints = "1.10.0"
   hashes = [
     "h1:AE1fNSxmjQEapftNJtmRIh5rWysugR+Heq9aI3K44AM=",
     "zh:0451f63c0d50291956a3c7c632218b86c1ec1b73b6c5daf58c0a2733c3bc843e",
