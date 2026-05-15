@@ -75,16 +75,15 @@ resource "fabric_connection" "this" {
     )
   }
 
-  credential_details = {
+credential_details = {
     connection_encryption = var.connection_encryption
     credential_type       = "Basic"
     single_sign_on_type   = "None"
     skip_test_connection  = var.skip_test_connection
 
     basic_credentials = {
-      username            = var.username
-      password_wo         = var.password
-      password_wo_version = var.password_version
+      username = var.username
+      password = var.password
     }
   }
 }
