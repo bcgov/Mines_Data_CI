@@ -60,7 +60,6 @@ resource "fabric_copy_job" "this" {
     "copyjob-content.json" = {
       source = "${path.module}/copyjob-content.json.tmpl"
       tokens = {
-        source_type          = var.source_type
         source_connection_id = var.source_connection_id
         source_database      = var.source_database
         sink_workspace_id    = var.sink_workspace_id

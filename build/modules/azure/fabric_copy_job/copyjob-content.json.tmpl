@@ -1,10 +1,9 @@
 {
   "properties": {
-    "jobMode": "Batch",
     "source": {
-      "type": "{{.source_type}}Table",
+      "type": "PostgreSqlTable",
       "connectionSettings": {
-        "type": "{{.source_type}}",
+        "type": "PostgreSql",
         "typeProperties": {
           "database": "{{.source_database}}"
         },
