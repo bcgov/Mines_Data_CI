@@ -1,40 +1,32 @@
 {
   "properties": {
-    "activities": [
-      {
-        "name": "SourceToFabricWarehouse",
-        "type": "CopyJob",
+    "jobMode": "Batch",
+    "source": {
+      "type": "{{.source_type}}Table",
+      "connectionSettings": {
+        "type": "{{.source_type}}",
         "typeProperties": {
-          "source": {
-            "type": "{{.source_type}}Source",
-            "connectionProperties": {
-              "connectionId": "{{.source_connection_id}}"
-            },
-            "database": "{{.source_database}}",
-            "schema": "{{.source_schema}}"
-          },
-          "sink": {
-            "type": "DataWarehouseSink",
-            "connectionProperties": {
-              "workspaceId": "{{.sink_workspace_id}}",
-              "artifactId":  "{{.sink_warehouse_id}}"
-            },
-            "schema": "{{.sink_schema}}",
-            "tableOption": "{{.table_option}}"
-          },
-          "tableMappings": {{.table_mappings_json}},
-          "translator": {
-            "type": "TabularTranslator",
-            "typeConversion": true,
-            "typeConversionSettings": {
-              "allowDataTruncation": false,
-              "treatBooleanAsNumber": false
-            }
-          }
+          "database": "{{.source_database}}"
+        },
+        "externalReferences": {
+          "connection": "{{.source_connection_id}}"
         }
       }
-    ],
-    "copyJobMode": "FullCopy",
-    "scheduleType": "Manual"
-  }
+    },
+    "destination": {
+      "type": "DataWarehouseTable",
+      "connectionSettings": {
+        "type": "DataWarehouse",
+        "typeProperties": {
+          "workspaceId": "{{.sink_workspace_id}}",
+          "artifactId": "{{.sink_warehouse_id}}"
+        }
+      }
+    },
+    "policy": {
+      "timeout": "0.12:00:00",
+      "retry": 0
+    }
+  },
+  "activities": {{.activities_json}}
 }

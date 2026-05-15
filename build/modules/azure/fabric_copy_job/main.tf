@@ -16,6 +16,37 @@ terraform {
     }
   }
 }
+locals {
+  activities = [
+    for m in var.table_mappings : {
+      properties = {
+        source = {
+          datasetSettings = {
+            schema = var.source_schema
+            table  = m.source_table
+          }
+        }
+        destination = {
+          datasetSettings = {
+            schema = var.sink_schema
+            table  = m.sink_table
+          }
+          tableOption   = var.table_option
+          writeBehavior = "Append"
+        }
+        translator = {
+          type = "TabularTranslator"
+        }
+        typeConversionSettings = {
+          typeConversion = {
+            allowDataTruncation  = true
+            treatBooleanAsNumber = false
+          }
+        }
+      }
+    }
+  ]
+}
 
 resource "fabric_copy_job" "this" {
   display_name = var.display_name
@@ -32,12 +63,9 @@ resource "fabric_copy_job" "this" {
         source_type          = var.source_type
         source_connection_id = var.source_connection_id
         source_database      = var.source_database
-        source_schema        = var.source_schema
         sink_workspace_id    = var.sink_workspace_id
         sink_warehouse_id    = var.sink_warehouse_id
-        sink_schema          = var.sink_schema
-        table_mappings_json  = jsonencode(var.table_mappings)
-        table_option         = var.table_option
+        activities_json      = jsonencode(local.activities)
       }
     }
   }
