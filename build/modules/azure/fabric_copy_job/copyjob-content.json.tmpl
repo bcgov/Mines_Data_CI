@@ -6,23 +6,23 @@
         "type": "CopyJob",
         "typeProperties": {
           "source": {
-            "type": "{{source_type}}Source",
+            "type": "{{.source_type}}Source",
             "connectionProperties": {
-              "connectionId": "{{source_connection_id}}"
+              "connectionId": "{{.source_connection_id}}"
             },
-            "database": "{{source_database}}",
-            "schema": "{{source_schema}}"
+            "database": "{{.source_database}}",
+            "schema": "{{.source_schema}}"
           },
           "sink": {
             "type": "DataWarehouseSink",
             "connectionProperties": {
-              "workspaceId": "{{sink_workspace_id}}",
-              "artifactId":  "{{sink_warehouse_id}}"
+              "workspaceId": "{{.sink_workspace_id}}",
+              "artifactId":  "{{.sink_warehouse_id}}"
             },
-            "schema": "{{sink_schema}}",
-            "tableOption": "useExistingTable"
+            "schema": "{{.sink_schema}}",
+            "tableOption": "{{.table_option}}"
           },
-          "tableMappings": {{table_mappings_json}},
+          "tableMappings": {{.table_mappings_json}},
           "translator": {
             "type": "TabularTranslator",
             "typeConversion": true,
