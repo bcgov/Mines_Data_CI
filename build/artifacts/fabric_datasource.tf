@@ -8,6 +8,7 @@ module "postgres_mds_via_vnet_gateway" {
   server   = "mds-reporting-pg13-live.postgres.database.azure.com"
   database = "mds"
   username = "fakeuser"
-  password = "fakepassword"
   skip_test_connection = false
+  password_keyvault_id = "/subscriptions/53205a1b-0f8d-459e-a424-65f1b39ec648/resourceGroups/mines-fabric-rg02/providers/Microsoft.KeyVault/vaults/mines-fabric-kv01"
+  password_secret_name = "postgresql-password"
 }

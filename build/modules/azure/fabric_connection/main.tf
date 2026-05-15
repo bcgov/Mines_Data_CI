@@ -1,14 +1,3 @@
-# ─────────────────────────────────────────────────────────────────────────────
-# Fabric Connection — PostgreSQL or Oracle
-#
-# Creates a Fabric ShareableCloud connection that Copy Jobs and Pipelines
-# can reference. Credentials are passed as write-only attributes to avoid
-# state persistence.
-#
-# Connection types supported:
-#   - PostgreSQL  →  type=PostgreSQL,  creation_method=PostgreSQL.Database
-#   - Oracle      →  type=Oracle,      creation_method=Oracle.Database
-# ─────────────────────────────────────────────────────────────────────────────
 
 terraform {
   required_version = ">= 1.6"
@@ -23,10 +12,6 @@ terraform {
 
 locals {
   # Map of supported connection types → Fabric connector metadata
-  # type            = Fabric connector type identifier
-  # creation_method = Power Query creation method
-  # server_param    = parameter name used for server
-  # database_param  = parameter name used for database
   connector_map = {
     PostgreSQL = {
       type            = "PostgreSQL"
@@ -50,7 +35,7 @@ resource "fabric_connection" "this" {
   connectivity_type = var.connectivity_type
   privacy_level     = var.privacy_level
 
-  # Only set gateway_id for VirtualNetworkGateway / OnPremisesGateway connections
+  # Gateway is required for VirtualNetworkGateway and OnPremisesGateway
   gateway_id = var.connectivity_type == "ShareableCloud" ? null : var.gateway_id
 
   connection_details = {
@@ -68,14 +53,14 @@ resource "fabric_connection" "this" {
           value = var.database
         }
       ],
-      # Oracle needs an additional 'port' parameter when non-default
+      # Oracle gets an optional port parameter
       var.connection_type == "Oracle" && var.port != null ? [
         { name = "port", value = tostring(var.port) }
       ] : []
     )
   }
 
-credential_details = {
+  credential_details = {
     connection_encryption = var.connection_encryption
     credential_type       = "Basic"
     single_sign_on_type   = "None"
@@ -83,7 +68,10 @@ credential_details = {
 
     basic_credentials = {
       username = var.username
-      password = var.password
+      password_reference = {
+        key_vault_id = var.password_keyvault_id
+        secret_name  = var.password_secret_name
+      }
     }
   }
 }

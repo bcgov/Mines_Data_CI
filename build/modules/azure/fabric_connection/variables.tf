@@ -54,7 +54,7 @@ variable "port" {
   default     = null
 }
 
-# ─── Credentials (write-only) ───────────────────────────────────────────────
+# ─── Credentials ────────────────────────────────────────────────────────────
 
 variable "username" {
   type        = string
@@ -62,16 +62,14 @@ variable "username" {
   sensitive   = true
 }
 
-variable "password" {
+variable "password_keyvault_id" {
   type        = string
-  description = "Password for Basic authentication. Stored as a write-only attribute — never written to Terraform state."
-  sensitive   = true
+  description = "Resource ID of the Azure Key Vault holding the password secret. Format: /subscriptions/<sub>/resourceGroups/<rg>/providers/Microsoft.KeyVault/vaults/<vault>"
 }
 
-variable "password_version" {
-  type        = number
-  description = "Increment this number to trigger a password rotation through Terraform."
-  default     = 1
+variable "password_secret_name" {
+  type        = string
+  description = "Name of the secret in Key Vault that holds the password."
 }
 
 # ─── Security / behaviour ───────────────────────────────────────────────────
