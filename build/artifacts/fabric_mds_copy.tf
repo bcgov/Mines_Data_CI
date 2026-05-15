@@ -22,7 +22,7 @@ module "copy_camp_detail" {
   description  = "On-demand copy: PostgreSQL public.camp_detail → Fabric Warehouse mines-data-platform-fabwh1.bronze.camp_detail"
 
   # ─── Source: existing PostgreSQL connection ──────────────────────────────
-  source_type          = "PostgreSQ"
+  source_type          = "PostgreSQL"
   source_connection_id = "351f4f16-0e5d-48f8-a05a-e0a6849f0343"
   source_database      = "mds"          # adjust if the DB name on this connection is different
   source_schema        = "public"
