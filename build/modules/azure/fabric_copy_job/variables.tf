@@ -23,7 +23,7 @@ variable "source_type" {
   description = "Source connector type. One of: PostgreSql, Oracle."
 
   validation {
-    condition     = contains(["PostgreSql", "Oracle"], var.source_type)
+    condition     = contains(["PostgreSql", "Oracle", "PostgreSQL", "ORACLE"], var.source_type)
     error_message = "source_type must be PostgreSql or Oracle."
   }
 }
