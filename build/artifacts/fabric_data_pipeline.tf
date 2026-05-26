@@ -4,7 +4,6 @@ module "pipeline_raw_to_bronze" {
   providers = {
     fabric.auth = fabric.auth
   }
-
   # ─── Workspace ──────────────────────────────────────────────────────────
   workspace_id = "8f380f88-5ce5-48d1-9fa5-fbbfbe2685a0"
   display_name = "pl_ingest_mds"
