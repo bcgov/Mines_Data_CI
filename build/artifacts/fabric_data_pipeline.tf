@@ -6,7 +6,7 @@ module "pipeline_raw_to_bronze" {
   }
 
   workspace_id = "8f380f88-5ce5-48d1-9fa5-fbbfbe2685a0"
-  display_name = "raw_to_bronze"
+  display_name = "raw_to_bronze_01"
   description  = "On-demand copy: MDS Core PostgreSQL → Lakehouse raw parquet files"
 
   source_connection_id = "21b383a1-c561-4540-980d-ce3683e89236"
