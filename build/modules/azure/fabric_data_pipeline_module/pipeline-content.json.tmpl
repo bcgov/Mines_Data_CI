@@ -1,0 +1,33 @@
+{
+  "name": "{{.display_name}}",
+  "properties": {
+    "activities": {{.activities_json}},
+    "parameters": {},
+    "variables": {},
+    "annotations": []
+  },
+  "connections": {
+    "ds_postgresql_source": {
+      "connectionId": "{{.source_connection_id}}",
+      "connectionType": "linkedService",
+      "type": "ConnectionReference",
+      "properties": {
+        "type": "PostgreSql",
+        "typeProperties": {
+          "database": "{{.source_database}}"
+        }
+      }
+    },
+    "ds_warehouse_sink": {
+      "connectionType": "linkedService",
+      "type": "ConnectionReference",
+      "properties": {
+        "type": "Warehouse",
+        "typeProperties": {
+          "workspaceId": "{{.sink_workspace_id}}",
+          "artifactId":  "{{.sink_warehouse_id}}"
+        }
+      }
+    }
+  }
+}
