@@ -60,6 +60,13 @@ variable "lakehouse_id" {
   description = "Artifact ID of the destination Fabric Lakehouse."
 }
 
+
+variable "environment" {
+  type        = string
+  description = "Environment name written to app.pipeline_log (e.g. DEV, TEST, PROD)."
+  default     = "DEV"
+}
+
 # ─── Execution ───────────────────────────────────────────────────────────────
 
 variable "parallel_copies" {
