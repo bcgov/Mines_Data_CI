@@ -22,7 +22,8 @@ terraform {
 
 locals {
   # Build one Copy activity per table mapping.
-  # Structure matches exactly what the Fabric portal generates (confirmed from portal JSON).
+  # Sink structure confirmed from Fabric portal JSON export — uses inline
+  # linkedService block inside datasetSettings, not externalReferences.
   activities = [
     for m in var.table_mappings : {
       name      = "Copy_${m.source_table}_to_${m.sink_table}"
@@ -53,25 +54,33 @@ locals {
           }
         }
         sink = {
-          type             = "WarehouseSink"
-          writeBatchSize   = 1000000
-          writeBatchTimeout = "00:30:00"
-          writeBehavior    = var.write_behavior
+          type             = "DataWarehouseSink"
+          allowCopyCommand = true
+          writeBehavior    = "Insert"
           tableOption      = var.table_option
           datasetSettings = {
             annotations = []
-            type        = "WarehouseTable"
-            schema      = []
+            linkedService = {
+              name = var.sink_warehouse_name
+              properties = {
+                annotations = []
+                type        = "DataWarehouse"
+                typeProperties = {
+                  endpoint    = var.sink_endpoint
+                  artifactId  = var.sink_warehouse_id
+                  workspaceId = var.sink_workspace_id
+                }
+              }
+            }
+            type   = "DataWarehouseTable"
+            schema = []
             typeProperties = {
               schema = var.sink_schema
               table  = m.sink_table
             }
-            externalReferences = {
-              connection = "${var.sink_workspace_id}/${var.sink_warehouse_id}"
-            }
           }
         }
-        enableStaging = var.enable_staging
+        enableStaging = false
         translator = {
           type = "TabularTranslator"
           typeConversion = true

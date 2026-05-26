@@ -52,6 +52,19 @@ variable "sink_schema" {
   default     = "bronze"
 }
 
+
+variable "sink_warehouse_name" {
+  type        = string
+  description = "Display name of the Fabric Warehouse (used in the linkedService name field)."
+  default     = "mines-data-platform-fabwh1"
+}
+
+variable "sink_endpoint" {
+  type        = string
+  description = "Fabric Warehouse SQL endpoint hostname."
+  default     = "abjnw3ynhwfevmbw2nuf4nm23q-rahtrd7fltiurh5f7o734jufua.datawarehouse.fabric.microsoft.com"
+}
+
 # ─── Table mappings ──────────────────────────────────────────────────────────
 
 variable "table_mappings" {
