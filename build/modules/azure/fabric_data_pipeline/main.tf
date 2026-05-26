@@ -80,7 +80,11 @@ locals {
             }
           }
         }
-        enableStaging = false
+        enableStaging = true
+        stagingSettings = {
+          enableCompression    = false
+          stagingStorageType   = "Workspace"
+        }
         translator = {
           type = "TabularTranslator"
           typeConversion = true
