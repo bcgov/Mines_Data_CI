@@ -7,11 +7,11 @@ module "pipeline_raw_to_bronze" {
 
   # ─── Workspace ──────────────────────────────────────────────────────────
   workspace_id = "8f380f88-5ce5-48d1-9fa5-fbbfbe2685a0"
-  display_name = "raw_to_bronze_01"
+  display_name = "pl_ingest_mds"
   description  = "Control table driven: MDS Core PostgreSQL → Lakehouse raw parquet files"
 
   # Default shown in the portal run dialog
-  pipeline_name_param_default = "raw_to_bronze_01"
+  pipeline_name_param_default = "pl_ingest_mds"
 
   # ─── Source: MDS Core PostgreSQL connection ──────────────────────────────
   source_connection_id = "21b383a1-c561-4540-980d-ce3683e89236"
