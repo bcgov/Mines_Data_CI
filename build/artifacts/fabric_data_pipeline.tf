@@ -13,7 +13,7 @@ module "pipeline_mds_to_bronze" {
   description  = "On-demand copy: MDS Core PostgreSQL → Fabric Warehouse bronze layer"
 
   # ─── Source: existing MDS Core connection ───────────────────────────────
-  source_connection_id = "21b383a1-c561-4540-980d-ce3683e89236"
+  source_connection_id = "ba89abfc-8b16-4141-87de-8bc02accfe28"
   source_database      = "mds"
   source_schema        = "public"
 
