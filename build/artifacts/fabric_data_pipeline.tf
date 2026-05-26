@@ -9,7 +9,7 @@ module "pipeline_mds_to_bronze" {
 
   # ─── Workspace ──────────────────────────────────────────────────────────
   workspace_id = "8f380f88-5ce5-48d1-9fa5-fbbfbe2685a0"
-  display_name = "pl-mds-core-to-bronze"
+  display_name = "pl-mds-core-to-bronze-01"
   description  = "On-demand copy: MDS Core PostgreSQL → Fabric Warehouse bronze layer"
 
   # ─── Source: existing MDS Core connection ───────────────────────────────
@@ -32,6 +32,8 @@ module "pipeline_mds_to_bronze" {
     { source_table = "camp_detail",  sink_table = "camp_detail"  },
   ]
 }
+
+
 
 output "pipeline_id"       { value = module.pipeline_mds_to_bronze.pipeline_id }
 output "run_rest_command"  { value = module.pipeline_mds_to_bronze.run_rest_command }
