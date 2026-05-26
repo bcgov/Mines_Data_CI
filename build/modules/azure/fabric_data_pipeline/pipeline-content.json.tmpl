@@ -2,7 +2,12 @@
   "name": "{{.display_name}}",
   "properties": {
     "activities": {{.activities_json}},
-    "parameters": {},
+    "parameters": {
+      "pipeline_name": {
+        "type": "String",
+        "defaultValue": "{{.pipeline_name_param}}"
+      }
+    },
     "variables": {},
     "annotations": []
   }

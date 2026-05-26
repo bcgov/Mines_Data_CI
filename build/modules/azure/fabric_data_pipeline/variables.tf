@@ -13,25 +13,39 @@ variable "display_name" {
 variable "description" {
   type        = string
   description = "Description shown in the Fabric Portal."
-  default     = "On-demand Data Pipeline: PostgreSQL → Lakehouse raw files (parquet)"
+  default     = "Control table driven pipeline: PostgreSQL → Lakehouse raw files (parquet) with full logging"
 }
 
-# ─── Source: PostgreSQL ──────────────────────────────────────────────────────
+variable "pipeline_name_param_default" {
+  type        = string
+  description = "Default value for the pipeline_name parameter shown in the Fabric Portal run dialog."
+  default     = ""
+}
+
+# ─── Control table + logging: Fabric Warehouse ───────────────────────────────
+
+variable "sink_warehouse_id" {
+  type        = string
+  description = "Artifact ID of the Fabric Warehouse holding app.pipeline_control and app.pipeline_log."
+}
+
+variable "sink_warehouse_name" {
+  type        = string
+  description = "Display name of the Fabric Warehouse."
+  default     = "mines-data-platform-fabwh1"
+}
+
+variable "sink_endpoint" {
+  type        = string
+  description = "Fabric Warehouse SQL endpoint hostname."
+  default     = "abjnw3ynhwfevmbw2nuf4nm23q-rahtrd7fltiurh5f7o734jufua.datawarehouse.fabric.microsoft.com"
+}
+
+# ─── Source: PostgreSQL connection ───────────────────────────────────────────
 
 variable "source_connection_id" {
   type        = string
-  description = "Fabric connection ID for the PostgreSQL source."
-}
-
-variable "source_database" {
-  type        = string
-  description = "PostgreSQL database name (e.g. 'mds')."
-}
-
-variable "source_schema" {
-  type        = string
-  description = "PostgreSQL source schema (e.g. 'public')."
-  default     = "public"
+  description = "Fabric connection ID for the PostgreSQL source. Used for all tables driven by the control table."
 }
 
 # ─── Sink: Fabric Lakehouse Files ───────────────────────────────────────────
@@ -46,31 +60,22 @@ variable "lakehouse_id" {
   description = "Artifact ID of the destination Fabric Lakehouse."
 }
 
-# ─── Table mappings ──────────────────────────────────────────────────────────
+# ─── Execution ───────────────────────────────────────────────────────────────
 
-variable "table_mappings" {
-  type = list(object({
-    source_table = string
-    sink_table   = string
-  }))
-  description = "List of {source_table, sink_table} pairs. Files land at raw/<source_table>/yyyy/mm/dd/<source_table>_<timestamp>.parquet"
-
-  validation {
-    condition     = length(var.table_mappings) > 0
-    error_message = "At least one table mapping is required."
-  }
+variable "parallel_copies" {
+  type        = number
+  description = "Max number of tables to copy in parallel within the same ForEach batch."
+  default     = 10
 }
-
-# ─── Activity policy ─────────────────────────────────────────────────────────
 
 variable "activity_timeout" {
   type        = string
-  description = "Activity timeout in d.HH:MM:SS format."
+  description = "Timeout per Copy activity in d.HH:MM:SS format."
   default     = "0.12:00:00"
 }
 
 variable "activity_retry" {
   type        = number
-  description = "Number of retry attempts on failure."
+  description = "Number of retry attempts per activity on failure."
   default     = 0
 }
