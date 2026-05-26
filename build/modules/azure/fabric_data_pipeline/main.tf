@@ -1,11 +1,10 @@
 # ─────────────────────────────────────────────────────────────────────────────
-# Fabric Data Pipeline — PostgreSQL or Oracle → Fabric Warehouse
+# Fabric Data Pipeline — PostgreSQL → Lakehouse Files (raw/table/yyyy/mm/dd/)
 #
-# Creates a Fabric Data Pipeline item using the Copy activity schema.
-# Source connection is a Fabric connection referenced by ID.
-# Sink is a Fabric Warehouse referenced by workspace/artifact IDs.
+# Writes parquet files to the Lakehouse Files zone under:
+#   raw/<table_name>/<yyyy>/<mm>/<dd>/<table_name>_<timestamp>.parquet
 #
-# Trigger: on-demand only. No schedule attached.
+# No warehouse hop — raw landing zone only.
 # ─────────────────────────────────────────────────────────────────────────────
 
 terraform {
@@ -21,12 +20,9 @@ terraform {
 }
 
 locals {
-  # Build one Copy activity per table mapping.
-  # Sink structure confirmed from Fabric portal JSON export — uses inline
-  # linkedService block inside datasetSettings, not externalReferences.
   activities = [
     for m in var.table_mappings : {
-      name      = "Copy_${m.source_table}_to_${m.sink_table}"
+      name      = "Copy_${m.source_table}_to_raw"
       type      = "Copy"
       dependsOn = []
       policy = {
@@ -54,44 +50,47 @@ locals {
           }
         }
         sink = {
-          type             = "DataWarehouseSink"
-          allowCopyCommand = true
-          writeBehavior    = "Insert"
-          tableOption      = var.table_option
+          type             = "ParquetSink"
+          storeSettings = {
+            type                = "LakehouseWriteSettings"
+            recursiveCompression = false
+          }
+          formatSettings = {
+            type = "ParquetWriteSettings"
+          }
           datasetSettings = {
             annotations = []
             linkedService = {
-              name = var.sink_warehouse_name
+              name = var.lakehouse_name
               properties = {
                 annotations = []
-                type        = "DataWarehouse"
+                type        = "Lakehouse"
                 typeProperties = {
-                  endpoint    = var.sink_endpoint
-                  artifactId  = var.sink_warehouse_id
-                  workspaceId = var.sink_workspace_id
+                  artifactId  = var.lakehouse_id
+                  workspaceId = var.workspace_id
+                  rootFolder  = "Files"
                 }
               }
             }
-            type   = "DataWarehouseTable"
+            type   = "Parquet"
             schema = []
             typeProperties = {
-              schema = var.sink_schema
-              table  = m.sink_table
+              location = {
+                type           = "LakehouseLocation"
+                folderPath = {
+                  value = "@concat('raw/${m.source_table}/', formatDateTime(utcNow(), 'yyyy'), '/', formatDateTime(utcNow(), 'MM'), '/', formatDateTime(utcNow(), 'dd'))"
+                  type  = "Expression"
+                }
+              }
+              compressionCodec = "snappy"
             }
           }
         }
-        enableStaging = true
-        stagingSettings = {
-          enableCompression    = false
-          stagingStorageType   = "Workspace"
-        }
-        translator = {
-          type = "TabularTranslator"
-          typeConversion = true
-          typeConversionSettings = {
-            allowDataTruncation  = var.allow_data_truncation
-            treatBooleanAsNumber = false
-          }
+        enableStaging = false
+        # File name: <table>_<timestamp>.parquet
+        fileNamePrefix = {
+          value = "@concat('${m.source_table}_', formatDateTime(utcNow(), 'yyyyMMdd_HHmmss'))"
+          type  = "Expression"
         }
       }
     }

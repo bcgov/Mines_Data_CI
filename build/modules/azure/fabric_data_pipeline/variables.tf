@@ -13,14 +13,14 @@ variable "display_name" {
 variable "description" {
   type        = string
   description = "Description shown in the Fabric Portal."
-  default     = "On-demand Data Pipeline: PostgreSQL → Fabric Warehouse"
+  default     = "On-demand Data Pipeline: PostgreSQL → Lakehouse raw files (parquet)"
 }
 
-# ─── Source: PostgreSQL connection ───────────────────────────────────────────
+# ─── Source: PostgreSQL ──────────────────────────────────────────────────────
 
 variable "source_connection_id" {
   type        = string
-  description = "Fabric connection ID for the PostgreSQL source. Must already exist in Fabric Portal."
+  description = "Fabric connection ID for the PostgreSQL source."
 }
 
 variable "source_database" {
@@ -34,35 +34,16 @@ variable "source_schema" {
   default     = "public"
 }
 
-# ─── Sink: Fabric Warehouse ──────────────────────────────────────────────────
+# ─── Sink: Fabric Lakehouse Files ───────────────────────────────────────────
 
-variable "sink_workspace_id" {
+variable "lakehouse_name" {
   type        = string
-  description = "Workspace ID of the destination Fabric Warehouse."
+  description = "Display name of the destination Fabric Lakehouse."
 }
 
-variable "sink_warehouse_id" {
+variable "lakehouse_id" {
   type        = string
-  description = "Fabric Warehouse artifact ID (destination)."
-}
-
-variable "sink_schema" {
-  type        = string
-  description = "Destination schema in the Fabric Warehouse (e.g. 'bronze')."
-  default     = "bronze"
-}
-
-
-variable "sink_warehouse_name" {
-  type        = string
-  description = "Display name of the Fabric Warehouse (used in the linkedService name field)."
-  default     = "mines-data-platform-fabwh1"
-}
-
-variable "sink_endpoint" {
-  type        = string
-  description = "Fabric Warehouse SQL endpoint hostname."
-  default     = "abjnw3ynhwfevmbw2nuf4nm23q-rahtrd7fltiurh5f7o734jufua.datawarehouse.fabric.microsoft.com"
+  description = "Artifact ID of the destination Fabric Lakehouse."
 }
 
 # ─── Table mappings ──────────────────────────────────────────────────────────
@@ -72,48 +53,12 @@ variable "table_mappings" {
     source_table = string
     sink_table   = string
   }))
-  description = "List of {source_table, sink_table} pairs. Each generates one Copy activity in the pipeline."
+  description = "List of {source_table, sink_table} pairs. Files land at raw/<source_table>/yyyy/mm/dd/<source_table>_<timestamp>.parquet"
 
   validation {
     condition     = length(var.table_mappings) > 0
     error_message = "At least one table mapping is required."
   }
-}
-
-# ─── Copy behaviour ──────────────────────────────────────────────────────────
-
-variable "write_behavior" {
-  type        = string
-  description = "How data is written to the warehouse. 'insert' appends rows; 'upsert' merges on key."
-  default     = "insert"
-
-  validation {
-    condition     = contains(["insert", "upsert"], var.write_behavior)
-    error_message = "write_behavior must be insert or upsert."
-  }
-}
-
-variable "table_option" {
-  type        = string
-  description = "'autoCreate' creates the sink table if it doesn't exist. 'none' requires the table to already exist."
-  default     = "autoCreate"
-
-  validation {
-    condition     = contains(["autoCreate", "none"], var.table_option)
-    error_message = "table_option must be autoCreate or none."
-  }
-}
-
-variable "allow_data_truncation" {
-  type        = bool
-  description = "Allow truncation when source value is larger than sink column definition."
-  default     = true
-}
-
-variable "enable_staging" {
-  type        = bool
-  description = "Enable staging (required for on-premises sources writing to Fabric Warehouse). Uses an external Azure Storage staging account."
-  default     = false
 }
 
 # ─── Activity policy ─────────────────────────────────────────────────────────
