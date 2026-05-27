@@ -2,9 +2,8 @@
 # Fabric Connection — PostgreSQL, Oracle, or Warehouse
 #
 # Uses null_resource + local-exec to call the Fabric Connections REST API.
-# Auth uses ARM_CLIENT_ID, ARM_CLIENT_SECRET, ARM_TENANT_ID from the
-# runner's environment — these are already set by the CI pipeline's env:
-# block and inherited by child processes. No credentials in Terraform state.
+# ARM_CLIENT_ID, ARM_CLIENT_SECRET, ARM_TENANT_ID are read from the
+# runner environment — no credentials in Terraform state.
 # ─────────────────────────────────────────────────────────────────────────────
 
 terraform {
@@ -93,21 +92,23 @@ locals {
       }
     }
   })
+
+  conn_file = "/tmp/fabric_conn_${var.display_name}.txt"
 }
 
+# ── Step 1: Create the connection ─────────────────────────────────────────────
 resource "null_resource" "fabric_connection" {
   triggers = {
     display_name     = var.display_name
     connection_type  = var.connection_type
     password_version = tostring(var.password_version)
+    request_hash     = sha256(local.request_body)
   }
 
   provisioner "local-exec" {
     command = <<-BASH
       set -e
 
-      # ARM_CLIENT_ID, ARM_CLIENT_SECRET, ARM_TENANT_ID are inherited
-      # from the CI runner environment — no Terraform variables needed
       az login --service-principal \
         --username "$ARM_CLIENT_ID" \
         --password "$ARM_CLIENT_SECRET" \
@@ -118,7 +119,6 @@ resource "null_resource" "fabric_connection" {
         --resource https://api.fabric.microsoft.com \
         --query accessToken -o tsv)
 
-      # Check if connection already exists
       EXISTING=$(curl -s -X GET \
         -H "Authorization: Bearer $TOKEN" \
         "https://api.fabric.microsoft.com/v1/connections" | \
@@ -132,7 +132,7 @@ print(match[0]['id'] if match else '')
 
       if [ -n "$EXISTING" ]; then
         echo "Connection already exists: $EXISTING"
-        echo -n "$EXISTING" > /tmp/fabric_conn_${var.display_name}.txt
+        echo -n "$EXISTING" > ${local.conn_file}
       else
         RESPONSE=$(curl -s -X POST \
           -H "Authorization: Bearer $TOKEN" \
@@ -149,9 +149,8 @@ if not cid:
     sys.exit(1)
 print(cid)
         ")
-
         echo "Created connection: $CONNECTION_ID"
-        echo -n "$CONNECTION_ID" > /tmp/fabric_conn_${var.display_name}.txt
+        echo -n "$CONNECTION_ID" > ${local.conn_file}
       fi
     BASH
     interpreter = ["bash", "-c"]
@@ -161,17 +160,54 @@ print(cid)
     when    = destroy
     command = <<-BASH
       set -e
+      if [ ! -f "${self.triggers.display_name}" ]; then
+        CONN_FILE="/tmp/fabric_conn_${self.triggers.display_name}.txt"
+        if [ ! -f "$CONN_FILE" ]; then
+          echo "No connection ID file — skipping delete"
+          exit 0
+        fi
+        CONNECTION_ID=$(cat "$CONN_FILE")
+        if [ -z "$CONNECTION_ID" ]; then
+          echo "Empty connection ID — skipping delete"
+          exit 0
+        fi
+        az login --service-principal \
+          --username "$ARM_CLIENT_ID" \
+          --password "$ARM_CLIENT_SECRET" \
+          --tenant "$ARM_TENANT_ID" \
+          --output none
+        TOKEN=$(az account get-access-token \
+          --resource https://api.fabric.microsoft.com \
+          --query accessToken -o tsv)
+        curl -s -X DELETE \
+          -H "Authorization: Bearer $TOKEN" \
+          "https://api.fabric.microsoft.com/v1/connections/$CONNECTION_ID"
+        rm -f "$CONN_FILE"
+        echo "Deleted connection: $CONNECTION_ID"
+      fi
+    BASH
+    interpreter = ["bash", "-c"]
+  }
+}
 
-      CONN_FILE="/tmp/fabric_conn_${self.triggers.display_name}.txt"
-      if [ ! -f "$CONN_FILE" ]; then
-        echo "No connection ID file — skipping delete"
-        exit 0
-      fi
-      CONNECTION_ID=$(cat "$CONN_FILE")
-      if [ -z "$CONNECTION_ID" ]; then
-        echo "Empty connection ID — skipping delete"
-        exit 0
-      fi
+# ── Step 2: Read connection ID ────────────────────────────────────────────────
+data "local_file" "connection_id" {
+  filename   = local.conn_file
+  depends_on = [null_resource.fabric_connection]
+}
+
+# ── Step 3: Grant Owner access to each principal ──────────────────────────────
+resource "null_resource" "connection_role_assignment" {
+  for_each = toset(var.owner_principal_ids)
+
+  triggers = {
+    connection_id = trimspace(data.local_file.connection_id.content)
+    principal_id  = each.value
+  }
+
+  provisioner "local-exec" {
+    command = <<-BASH
+      set -e
 
       az login --service-principal \
         --username "$ARM_CLIENT_ID" \
@@ -183,18 +219,16 @@ print(cid)
         --resource https://api.fabric.microsoft.com \
         --query accessToken -o tsv)
 
-      curl -s -X DELETE \
-        -H "Authorization: Bearer $TOKEN" \
-        "https://api.fabric.microsoft.com/v1/connections/$CONNECTION_ID"
+      echo "Granting Owner access to principal: ${each.value}"
 
-      rm -f "$CONN_FILE"
-      echo "Deleted connection: $CONNECTION_ID"
+      curl -s -X POST \
+        -H "Authorization: Bearer $TOKEN" \
+        -H "Content-Type: application/json" \
+        -d '{"principal":{"id":"${each.value}","type":"User"},"role":"Owner"}' \
+        "https://api.fabric.microsoft.com/v1/connections/${self.triggers.connection_id}/roleAssignments"
+
+      echo "Role assignment complete"
     BASH
     interpreter = ["bash", "-c"]
   }
-}
-
-data "local_file" "connection_id" {
-  filename   = "/tmp/fabric_conn_${var.display_name}.txt"
-  depends_on = [null_resource.fabric_connection]
 }

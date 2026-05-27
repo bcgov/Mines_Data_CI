@@ -7,4 +7,6 @@ module "warehouse_mds_connection" {
 
   server   = "abjnw3ynhwfevmbw2nuf4nm23q-rahtrd7fltiurh5f7o734jufua.datawarehouse.fabric.microsoft.com"
   database = "mines-data-platform-fabwh1"
+
+  owner_principal_ids = ["b0bf68e8-4e08-433c-8903-19b2fec4cc20"]
 }

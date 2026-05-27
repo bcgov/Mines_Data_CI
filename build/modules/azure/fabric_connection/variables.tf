@@ -121,3 +121,11 @@ variable "skip_test_connection" {
   description = "Skip the connection test during create/update."
   default     = false
 }
+
+# ─── Access control ──────────────────────────────────────────────────────────
+
+variable "owner_principal_ids" {
+  type        = list(string)
+  description = "List of user/group/SP object IDs to grant Owner role on this connection. Owners can see and manage the connection in the Fabric Portal."
+  default     = []
+}
