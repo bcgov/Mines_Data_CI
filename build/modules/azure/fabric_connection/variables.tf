@@ -80,12 +80,14 @@ variable "username" {
 
 variable "password_keyvault_id" {
   type        = string
-  description = "Resource ID of the Azure Key Vault holding the password secret. Format: /subscriptions/<sub>/resourceGroups/<rg>/providers/Microsoft.KeyVault/vaults/<vault>"
+  description = "Resource ID of the Azure Key Vault holding the password secret."
+  default     = null
 }
 
 variable "password_secret_name" {
   type        = string
   description = "Name of the secret in Key Vault that holds the password."
+  default     = null
 }
 
 # ─── Security / behaviour ───────────────────────────────────────────────────

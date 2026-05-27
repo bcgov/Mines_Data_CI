@@ -1,13 +1,5 @@
 # ─────────────────────────────────────────────────────────────────────────────
-# Fabric Connection — PostgreSQL or Oracle
-#
-# Creates a Fabric ShareableCloud, VNet Gateway, or On-Premises Gateway
-# connection. Credentials are referenced from Azure Key Vault — the password
-# never enters Terraform state.
-#
-# Connection types supported:
-#   - PostgreSQL  →  type=PostgreSQL,  creation_method=PostgreSQL.Database
-#   - Oracle      →  type=Oracle,      creation_method=Oracle.Database
+# Fabric Connection — PostgreSQL, Oracle, or Warehouse
 # ─────────────────────────────────────────────────────────────────────────────
 
 terraform {
@@ -23,29 +15,61 @@ terraform {
 }
 
 locals {
-  # Map of supported connection types → Fabric connector metadata
   connector_map = {
     PostgreSQL = {
       type            = "PostgreSQL"
       creation_method = "PostgreSQL.Database"
       server_param    = "server"
       database_param  = "database"
+      requires_auth   = true
     }
+
     Oracle = {
       type            = "Oracle"
       creation_method = "Oracle.Database"
       server_param    = "server"
       database_param  = "database"
+      requires_auth   = true
     }
+
     Warehouse = {
       type            = "Warehouse"
       creation_method = "Fabric.Warehouse"
       server_param    = null
       database_param  = null
+      requires_auth   = false
     }
   }
 
   connector = local.connector_map[var.connection_type]
+
+  connection_parameters = var.connection_type == "Warehouse" ? [
+    {
+      name  = "workspaceId"
+      value = var.workspace_id
+    },
+    {
+      name  = "artifactId"
+      value = var.warehouse_id
+    }
+  ] : concat(
+    [
+      {
+        name  = local.connector.server_param
+        value = var.server
+      },
+      {
+        name  = local.connector.database_param
+        value = var.database
+      }
+    ],
+    var.connection_type == "Oracle" && var.port != null ? [
+      {
+        name  = "port"
+        value = tostring(var.port)
+      }
+    ] : []
+  )
 }
 
 resource "fabric_connection" "this" {
@@ -55,7 +79,6 @@ resource "fabric_connection" "this" {
   connectivity_type = var.connectivity_type
   privacy_level     = var.privacy_level
 
-  # Gateway is required for VirtualNetworkGateway and OnPremisesGateway
   gateway_id = var.connectivity_type == "ShareableCloud" ? null : var.gateway_id
 
   connection_details = {
@@ -83,12 +106,20 @@ resource "fabric_connection" "this" {
         }
       ],
       var.connection_type == "Oracle" && var.port != null ? [
-        { name = "port", value = tostring(var.port) }
+        {
+          name  = "port"
+          value = tostring(var.port)
+        }
       ] : []
     )
   }
 
-  credential_details = {
+  credential_details = var.connection_type == "Warehouse" ? {
+    connection_encryption = var.connection_encryption
+    credential_type       = "OAuth2"
+    single_sign_on_type   = "None"
+    skip_test_connection  = var.skip_test_connection
+  } : {
     connection_encryption = var.connection_encryption
     credential_type       = "Basic"
     single_sign_on_type   = "None"
@@ -96,6 +127,7 @@ resource "fabric_connection" "this" {
 
     basic_credentials = {
       username = var.username
+
       password_reference = {
         key_vault_id = var.password_keyvault_id
         secret_name  = var.password_secret_name
