@@ -81,7 +81,7 @@ variable "username" {
 
 variable "password" {
   type        = string
-  description = "Password for Basic authentication. Not required for Warehouse connections. Never stored in state (write-only)."
+  description = "Password for Basic authentication. Not required for Warehouse connections."
   sensitive   = true
   default     = null
 }

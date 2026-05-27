@@ -1,8 +1,10 @@
 # ─────────────────────────────────────────────────────────────────────────────
 # Fabric Connection — PostgreSQL, Oracle, or Warehouse
 #
-# Uses null_resource + local-exec to call the Fabric REST API directly.
-# No microsoft/fabric provider preview features required.
+# Uses null_resource + local-exec to call the Fabric Connections REST API.
+# Auth uses ARM_CLIENT_ID, ARM_CLIENT_SECRET, ARM_TENANT_ID from the
+# runner's environment — these are already set by the CI pipeline's env:
+# block and inherited by child processes. No credentials in Terraform state.
 # ─────────────────────────────────────────────────────────────────────────────
 
 terraform {
@@ -95,23 +97,22 @@ locals {
 
 resource "null_resource" "fabric_connection" {
   triggers = {
-    display_name      = var.display_name
-    connection_type   = var.connection_type
-    connectivity_type = var.connectivity_type
-    server            = var.server != null ? var.server : ""
-    database          = var.database != null ? var.database : ""
-    workspace_id      = var.workspace_id != null ? var.workspace_id : ""
-    warehouse_id      = var.warehouse_id != null ? var.warehouse_id : ""
-    password_version  = tostring(var.password_version)
-    request_body      = local.request_body
-    # connection_id is populated by the create provisioner and stored here
-    # so the destroy provisioner can read it via self.triggers.connection_id
-    connection_id     = ""
+    display_name     = var.display_name
+    connection_type  = var.connection_type
+    password_version = tostring(var.password_version)
   }
 
   provisioner "local-exec" {
     command = <<-BASH
       set -e
+
+      # ARM_CLIENT_ID, ARM_CLIENT_SECRET, ARM_TENANT_ID are inherited
+      # from the CI runner environment — no Terraform variables needed
+      az login --service-principal \
+        --username "$ARM_CLIENT_ID" \
+        --password "$ARM_CLIENT_SECRET" \
+        --tenant "$ARM_TENANT_ID" \
+        --output none
 
       TOKEN=$(az account get-access-token \
         --resource https://api.fabric.microsoft.com \
@@ -130,16 +131,19 @@ print(match[0]['id'] if match else '')
       ")
 
       if [ -n "$EXISTING" ]; then
-        echo "Connection already exists with id: $EXISTING"
-        CONNECTION_ID="$EXISTING"
+        echo "Connection already exists: $EXISTING"
+        echo -n "$EXISTING" > /tmp/fabric_conn_${var.display_name}.txt
       else
-        RESPONSE=$(curl -s -X POST \
+        RESPONSE=$(curl -s -w "\n%%HTTP_CODE%%:%{http_code}" -X POST \
           -H "Authorization: Bearer $TOKEN" \
           -H "Content-Type: application/json" \
           -d '${local.request_body}' \
           "https://api.fabric.microsoft.com/v1/connections")
 
-        CONNECTION_ID=$(echo "$RESPONSE" | python3 -c "
+        HTTP_CODE=$(echo "$RESPONSE" | grep '%%HTTP_CODE%%' | cut -d: -f2)
+        BODY=$(echo "$RESPONSE" | grep -v '%%HTTP_CODE%%')
+
+        CONNECTION_ID=$(echo "$BODY" | python3 -c "
 import sys, json
 data = json.load(sys.stdin)
 cid = data.get('id', data.get('connectionId', ''))
@@ -148,12 +152,10 @@ if not cid:
     sys.exit(1)
 print(cid)
         ")
-        echo "Created connection: $CONNECTION_ID"
-      fi
 
-      # Write connection_id back to terraform state via triggers
-      # by writing to a temp file that terraform_data picks up
-      echo -n "$CONNECTION_ID" > /tmp/fabric_conn_${var.display_name}.txt
+        echo "Created connection: $CONNECTION_ID"
+        echo -n "$CONNECTION_ID" > /tmp/fabric_conn_${var.display_name}.txt
+      fi
     BASH
     interpreter = ["bash", "-c"]
   }
@@ -162,10 +164,10 @@ print(cid)
     when    = destroy
     command = <<-BASH
       set -e
-      # Read connection_id stored in a temp file during create
+
       CONN_FILE="/tmp/fabric_conn_${self.triggers.display_name}.txt"
       if [ ! -f "$CONN_FILE" ]; then
-        echo "No connection ID file found — skipping delete"
+        echo "No connection ID file — skipping delete"
         exit 0
       fi
       CONNECTION_ID=$(cat "$CONN_FILE")
@@ -173,12 +175,21 @@ print(cid)
         echo "Empty connection ID — skipping delete"
         exit 0
       fi
+
+      az login --service-principal \
+        --username "$ARM_CLIENT_ID" \
+        --password "$ARM_CLIENT_SECRET" \
+        --tenant "$ARM_TENANT_ID" \
+        --output none
+
       TOKEN=$(az account get-access-token \
         --resource https://api.fabric.microsoft.com \
         --query accessToken -o tsv)
+
       curl -s -X DELETE \
         -H "Authorization: Bearer $TOKEN" \
         "https://api.fabric.microsoft.com/v1/connections/$CONNECTION_ID"
+
       rm -f "$CONN_FILE"
       echo "Deleted connection: $CONNECTION_ID"
     BASH
@@ -186,7 +197,6 @@ print(cid)
   }
 }
 
-# Read the connection ID written by the create provisioner
 data "local_file" "connection_id" {
   filename   = "/tmp/fabric_conn_${var.display_name}.txt"
   depends_on = [null_resource.fabric_connection]

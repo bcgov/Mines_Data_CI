@@ -1,5 +1,5 @@
 output "connection_id" {
-  description = "GUID of the created Fabric connection — pass this to pipeline modules."
+  description = "GUID of the created Fabric connection."
   value       = trimspace(data.local_file.connection_id.content)
 }
 
