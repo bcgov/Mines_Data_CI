@@ -26,8 +26,8 @@ locals {
       type            = "PostgreSQL"
       creation_method = "PostgreSQL.Database"
       parameters = [
-        { dataType = "Text", name = "server",   value = coalesce(var.server,   "") },
-        { dataType = "Text", name = "database", value = coalesce(var.database, "") }
+        { dataType = "Text", name = "server",   value = var.server != null ? var.server : "" },
+        { dataType = "Text", name = "database", value = var.database != null ? var.database : "" }
       ]
     }
     Oracle = {
@@ -35,8 +35,8 @@ locals {
       creation_method = "Oracle.Database"
       parameters = concat(
         [
-          { dataType = "Text", name = "server",   value = coalesce(var.server,   "") },
-          { dataType = "Text", name = "database", value = coalesce(var.database, "") }
+          { dataType = "Text", name = "server",   value = var.server != null ? var.server : "" },
+          { dataType = "Text", name = "database", value = var.database != null ? var.database : "" }
         ],
         var.port != null ? [{ dataType = "Text", name = "port", value = tostring(var.port) }] : []
       )
@@ -45,8 +45,8 @@ locals {
       type            = "Warehouse"
       creation_method = "Fabric.Warehouse"
       parameters = [
-        { dataType = "Text", name = "workspaceId", value = coalesce(var.workspace_id, "") },
-        { dataType = "Text", name = "artifactId",  value = coalesce(var.warehouse_id, "") }
+        { dataType = "Text", name = "workspaceId", value = var.workspace_id != null ? var.workspace_id : "" },
+        { dataType = "Text", name = "artifactId",  value = var.warehouse_id != null ? var.warehouse_id : "" }
       ]
     }
   }
@@ -86,8 +86,8 @@ locals {
       skipTestConnection   = var.skip_test_connection
       credentials = {
         credentialType = "Basic"
-        username       = coalesce(var.username, "")
-        password       = coalesce(var.password, "")
+        username       = var.username != null ? var.username : ""
+        password       = var.password != null ? var.password : ""
       }
     }
   })
@@ -98,10 +98,10 @@ resource "null_resource" "fabric_connection" {
     display_name      = var.display_name
     connection_type   = var.connection_type
     connectivity_type = var.connectivity_type
-    server            = coalesce(var.server, "")
-    database          = coalesce(var.database, "")
-    workspace_id      = coalesce(var.workspace_id, "")
-    warehouse_id      = coalesce(var.warehouse_id, "")
+    server            = var.server != null ? var.server : ""
+    database          = var.database != null ? var.database : ""
+    workspace_id      = var.workspace_id != null ? var.workspace_id : ""
+    warehouse_id      = var.warehouse_id != null ? var.warehouse_id : ""
     password_version  = tostring(var.password_version)
     request_body      = local.request_body
     # connection_id is populated by the create provisioner and stored here
