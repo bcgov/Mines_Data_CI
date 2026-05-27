@@ -17,6 +17,7 @@ terraform {
     fabric = {
       source  = "microsoft/fabric"
       version = ">= 1.5"
+      configuration_aliases = [fabric.auth]
     }
   }
 }
