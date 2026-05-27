@@ -41,6 +41,12 @@ variable "sink_endpoint" {
   default     = "abjnw3ynhwfevmbw2nuf4nm23q-rahtrd7fltiurh5f7o734jufua.datawarehouse.fabric.microsoft.com"
 }
 
+
+variable "warehouse_connection_id" {
+  type        = string
+  description = "Fabric connection ID for the warehouse (from Manage connections and gateways). Used by Script and Lookup activities to connect to app.pipeline_control and app.pipeline_log."
+}
+
 # ─── Source: PostgreSQL connection ───────────────────────────────────────────
 
 variable "source_connection_id" {
@@ -58,6 +64,13 @@ variable "lakehouse_name" {
 variable "lakehouse_id" {
   type        = string
   description = "Artifact ID of the destination Fabric Lakehouse."
+}
+
+
+variable "environment" {
+  type        = string
+  description = "Environment name written to app.pipeline_log (e.g. DEV, TEST, PROD)."
+  default     = "DEV"
 }
 
 # ─── Execution ───────────────────────────────────────────────────────────────
@@ -79,10 +92,3 @@ variable "activity_retry" {
   description = "Number of retry attempts per activity on failure."
   default     = 0
 }
-
-variable "environment" {
-  type        = number
-  description = "Number of retry attempts per activity on failure."
-  default     = 0
-}
-

@@ -4,7 +4,9 @@ module "pipeline_raw_to_bronze" {
   providers = {
     fabric.auth = fabric.auth
   }
+
   environment = var.ENVIRONMENT
+
   # ─── Workspace ──────────────────────────────────────────────────────────
   workspace_id = "8f380f88-5ce5-48d1-9fa5-fbbfbe2685a0"
   display_name = "pl_ingest_mds"
@@ -17,9 +19,10 @@ module "pipeline_raw_to_bronze" {
   source_connection_id = "21b383a1-c561-4540-980d-ce3683e89236"
 
   # ─── Control table + logging: Fabric Warehouse ──────────────────────────
-  sink_warehouse_id   = "9ed9a608-33e5-408b-bd51-adc2dad1e7ab"
-  sink_warehouse_name = "mines-data-platform-fabwh1"
-  sink_endpoint       = "abjnw3ynhwfevmbw2nuf4nm23q-rahtrd7fltiurh5f7o734jufua.datawarehouse.fabric.microsoft.com"
+  sink_warehouse_id       = "9ed9a608-33e5-408b-bd51-adc2dad1e7ab"
+  sink_warehouse_name     = "mines-data-platform-fabwh1"
+  sink_endpoint           = "abjnw3ynhwfevmbw2nuf4nm23q-rahtrd7fltiurh5f7o734jufua.datawarehouse.fabric.microsoft.com"
+  warehouse_connection_id = module.warehouse_mds_connection.connection_id
 
   # ─── Sink: Lakehouse Files ───────────────────────────────────────────────
   # Files land at: raw/<source_entity>/yyyy/MM/dd/<source_entity>_yyyyMMdd_HHmmss.parquet

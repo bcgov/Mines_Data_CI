@@ -26,20 +26,6 @@ terraform {
 }
 
 locals {
-  # Warehouse linkedService block — reused across all Script activities
-  warehouse_linked_service = {
-    name = var.sink_warehouse_name
-    properties = {
-      annotations = []
-      type        = "DataWarehouse"
-      typeProperties = {
-        endpoint    = var.sink_endpoint
-        artifactId  = var.sink_warehouse_id
-        workspaceId = var.workspace_id
-      }
-    }
-  }
-
   foreach_activities = [
     # ── 1. Log Start ────────────────────────────────────────────────────────
     {
@@ -64,13 +50,15 @@ locals {
           }
         ]
         datasetSettings = {
-          annotations  = []
-          linkedService = local.warehouse_linked_service
-          type         = "DataWarehouseTable"
-          schema       = []
+          annotations = []
+          type        = "DataWarehouseTable"
+          schema      = []
           typeProperties = {
             schema = "app"
             table  = "pipeline_log"
+          }
+          externalReferences = {
+            connection = var.warehouse_connection_id
           }
         }
       }
@@ -202,13 +190,15 @@ locals {
           }
         ]
         datasetSettings = {
-          annotations  = []
-          linkedService = local.warehouse_linked_service
-          type         = "DataWarehouseTable"
-          schema       = []
+          annotations = []
+          type        = "DataWarehouseTable"
+          schema      = []
           typeProperties = {
             schema = "app"
             table  = "pipeline_log"
+          }
+          externalReferences = {
+            connection = var.warehouse_connection_id
           }
         }
       }
@@ -251,13 +241,15 @@ locals {
           }
         ]
         datasetSettings = {
-          annotations  = []
-          linkedService = local.warehouse_linked_service
-          type         = "DataWarehouseTable"
-          schema       = []
+          annotations = []
+          type        = "DataWarehouseTable"
+          schema      = []
           typeProperties = {
             schema = "app"
             table  = "pipeline_log"
+          }
+          externalReferences = {
+            connection = var.warehouse_connection_id
           }
         }
       }
@@ -288,13 +280,15 @@ locals {
           partitionOption = "None"
         }
         datasetSettings = {
-          annotations  = []
-          linkedService = local.warehouse_linked_service
-          type         = "DataWarehouseTable"
-          schema       = []
+          annotations = []
+          type        = "DataWarehouseTable"
+          schema      = []
           typeProperties = {
             schema = "app"
             table  = "pipeline_control"
+          }
+          externalReferences = {
+            connection = var.warehouse_connection_id
           }
         }
         firstRowOnly = false
