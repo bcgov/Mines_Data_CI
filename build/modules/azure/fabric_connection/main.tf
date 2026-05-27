@@ -88,19 +88,19 @@ locals {
   })
 }
 
-# ── Create connection and store ID in state ───────────────────────────────────
-# The provisioner fetches or creates the connection, then writes the ID
-# back into the state file by updating triggers.connection_id.
-# Since the state file is committed to the repo by the CI pipeline after
-# every apply, the ID persists across runs.
+# ── Step 1: Create or fetch the connection ────────────────────────────────────
+# Only re-runs when request_hash changes.
+# Writes the connection ID into terraform.tfstate directly so it
+# persists in state and is readable as an output.
 resource "null_resource" "fabric_connection" {
   triggers = {
     display_name     = var.display_name
     connection_type  = var.connection_type
     password_version = tostring(var.password_version)
     request_hash     = sha256(local.request_body)
-    # connection_id is written by the provisioner into the state file
-    connection_id    = ""
+    # Seeded as "none" so the key always exists in the map.
+    # Overwritten with the real ID by the provisioner patching the state file.
+    connection_id    = "none"
   }
 
   provisioner "local-exec" {
@@ -117,7 +117,6 @@ resource "null_resource" "fabric_connection" {
         --resource https://api.fabric.microsoft.com \
         --query accessToken -o tsv)
 
-      # Fetch or create
       EXISTING=$(curl -s -X GET \
         -H "Authorization: Bearer $TOKEN" \
         "https://api.fabric.microsoft.com/v1/connections" | \
@@ -137,7 +136,6 @@ print(match[0]['id'] if match else '')
           -H "Content-Type: application/json" \
           -d '${local.request_body}' \
           "https://api.fabric.microsoft.com/v1/connections")
-
         CONNECTION_ID=$(echo "$RESPONSE" | python3 -c "
 import sys,json
 data=json.load(sys.stdin)
@@ -149,40 +147,36 @@ print(cid)
         echo "Created: $CONNECTION_ID"
       fi
 
-      # Write connection_id into the state file so the output can read it
-      # The state file is in the Terraform working directory
-      python3 - <<PYEOF
-import json, glob, os, sys
+      # Patch the state file to store connection_id in triggers
+      python3 - "$CONNECTION_ID" "${var.display_name}" <<'PYEOF'
+import json, glob, sys
 
-# Find state file
-state_files = glob.glob('terraform.tfstate') + glob.glob('*.tfstate')
+connection_id = sys.argv[1]
+display_name  = sys.argv[2]
+
+state_files = glob.glob('terraform.tfstate')
 if not state_files:
     print("ERROR: terraform.tfstate not found", file=sys.stderr)
     sys.exit(1)
 
-state_file = state_files[0]
-with open(state_file) as f:
+with open(state_files[0]) as f:
     state = json.load(f)
 
 updated = False
 for res in state.get('resources', []):
     if res.get('type') == 'null_resource' and res.get('name') == 'fabric_connection':
-        module = res.get('module', '')
-        if '${var.display_name}' in module or not module or True:
-            for inst in res.get('instances', []):
-                attrs = inst.get('attributes', {})
-                triggers = attrs.get('triggers', {})
-                if triggers.get('display_name') == '${var.display_name}':
-                    triggers['connection_id'] = '$CONNECTION_ID'
-                    updated = True
+        for inst in res.get('instances', []):
+            triggers = inst.get('attributes', {}).get('triggers', {})
+            if triggers.get('display_name') == display_name:
+                triggers['connection_id'] = connection_id
+                updated = True
 
-with open(state_file, 'w') as f:
+with open(state_files[0], 'w') as f:
     json.dump(state, f, indent=2)
 
-if updated:
-    print("State updated with connection_id: $CONNECTION_ID")
-else:
-    print("WARNING: Could not find matching resource in state to update")
+print("State patched — connection_id:", connection_id if updated else "NOT FOUND")
+if not updated:
+    sys.exit(1)
 PYEOF
     BASH
     interpreter = ["bash", "-c"]
@@ -192,8 +186,12 @@ PYEOF
     when    = destroy
     command = <<-BASH
       set -e
-      CONNECTION_ID="${lookup(self.triggers, "connection_id", "")}"
-      [ -z "$CONNECTION_ID" ] && echo "No ID in state — skipping" && exit 0
+      # connection_id is stored in triggers in state — always present as "none" or a real ID
+      CONNECTION_ID="${self.triggers["connection_id"]}"
+      if [ -z "$CONNECTION_ID" ] || [ "$CONNECTION_ID" = "none" ]; then
+        echo "No connection ID in state — skipping delete"
+        exit 0
+      fi
 
       az login --service-principal \
         --username "$ARM_CLIENT_ID" \
@@ -214,20 +212,23 @@ PYEOF
   }
 }
 
-# ── Grant Owner access ────────────────────────────────────────────────────────
+# ── Step 2: Grant Owner access ────────────────────────────────────────────────
 resource "null_resource" "connection_role_assignment" {
   for_each = toset(var.owner_principal_ids)
 
   triggers = {
-    connection_id = lookup(null_resource.fabric_connection.triggers, "connection_id", "")
+    connection_id = null_resource.fabric_connection.triggers["connection_id"]
     principal_id  = each.value
   }
 
   provisioner "local-exec" {
     command = <<-BASH
       set -e
-      CONNECTION_ID="${lookup(null_resource.fabric_connection.triggers, "connection_id", "")}"
-      [ -z "$CONNECTION_ID" ] && echo "No ID yet — skipping" && exit 0
+      CONNECTION_ID="${null_resource.fabric_connection.triggers["connection_id"]}"
+      if [ -z "$CONNECTION_ID" ] || [ "$CONNECTION_ID" = "none" ]; then
+        echo "No connection ID yet — skipping role assignment"
+        exit 0
+      fi
 
       az login --service-principal \
         --username "$ARM_CLIENT_ID" \
