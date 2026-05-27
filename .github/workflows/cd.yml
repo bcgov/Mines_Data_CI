@@ -55,7 +55,7 @@ jobs:
         working-directory: build/artifacts
         run: |
           echo "Initialising Terraform with local backend..."
-          terraform init -reconfigure
+          terraform init -upgrade
 
       - name: Terraform Apply
         working-directory: build/artifacts

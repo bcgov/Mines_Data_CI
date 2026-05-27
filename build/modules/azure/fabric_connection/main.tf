@@ -1,15 +1,15 @@
 # ─────────────────────────────────────────────────────────────────────────────
-# Fabric Connection — PostgreSQL, Oracle, or Warehouse
+# Fabric Connection Module — PostgreSQL, Oracle, or Warehouse
 # ─────────────────────────────────────────────────────────────────────────────
 
 terraform {
-  required_version = ">= 1.6"
+  required_version = ">= 1.8"
 
   required_providers {
     fabric = {
       source                = "microsoft/fabric"
-      version               = ">= 1.5"
-      # configuration_aliases = [fabric.auth]
+      version               = "~> 1.10"
+      configuration_aliases = [fabric.auth]
     }
   }
 }
@@ -42,12 +42,11 @@ locals {
 }
 
 resource "fabric_connection" "this" {
-  # provider = fabric.auth
-
   display_name      = var.display_name
   connectivity_type = var.connectivity_type
   privacy_level     = var.privacy_level
 
+  # Gateway is only needed for On-premises / VNet connectivity
   gateway_id = var.connectivity_type == "ShareableCloud" ? null : var.gateway_id
 
   connection_details = {
@@ -74,12 +73,11 @@ resource "fabric_connection" "this" {
           value = coalesce(var.database, "")
         }
       ],
-      var.connection_type == "Oracle" && var.port != null ? [
-        {
-          name  = "port"
-          value = tostring(var.port)
-        }
-      ] : []
+      # Optional port for Oracle
+      var.connection_type == "Oracle" && var.port != null ? [{
+        name  = "port"
+        value = tostring(var.port)
+      }] : []
     )
   }
 
@@ -105,4 +103,10 @@ resource "fabric_connection" "this" {
       }
     }
   }
+}
+
+# Output the connection ID so it can be used in other modules
+output "connection_id" {
+  description = "The ID of the created Fabric Connection"
+  value       = fabric_connection.this.id
 }
