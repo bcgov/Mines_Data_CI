@@ -9,7 +9,7 @@ terraform {
     fabric = {
       source                = "microsoft/fabric"
       version               = ">= 1.5"
-      configuration_aliases = [fabric.auth]
+      # configuration_aliases = [fabric.auth]
     }
   }
 }
@@ -42,7 +42,7 @@ locals {
 }
 
 resource "fabric_connection" "this" {
-  provider = fabric.auth
+  # provider = fabric.auth
 
   display_name      = var.display_name
   connectivity_type = var.connectivity_type
