@@ -33,6 +33,7 @@ variable "warehouse_connection_id" {
 variable "sink_warehouse_id" {
   type        = string
   description = "Artifact ID of the Fabric Warehouse holding app.pipeline_control and app.pipeline_log."
+  default     = "none"
 }
 
 variable "sink_warehouse_name" {
