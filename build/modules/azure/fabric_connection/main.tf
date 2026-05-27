@@ -69,7 +69,7 @@ locals {
       connectionEncryption = "NotEncrypted"
       skipTestConnection   = var.skip_test_connection
       credentials = {
-        credentialType = "OAuth2"
+        credentialType = "WorkspaceIdentity"
       }
     }
   }) : jsonencode({
