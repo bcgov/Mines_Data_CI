@@ -44,11 +44,11 @@ locals {
       )
     }
     Warehouse = {
-      type            = "Warehouse"
-      creation_method = "Fabric.Warehouse"
+      type            = "SQL"
+      creation_method = "SQL"
       parameters = [
-        { dataType = "Text", name = "workspaceId", value = var.workspace_id != null ? var.workspace_id : "" },
-        { dataType = "Text", name = "artifactId",  value = var.warehouse_id != null ? var.warehouse_id : "" }
+        { dataType = "Text", name = "server",   value = var.server != null ? var.server : "" },
+        { dataType = "Text", name = "database", value = var.database != null ? var.database : "" }
       ]
     }
   }
