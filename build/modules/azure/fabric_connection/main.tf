@@ -1,9 +1,12 @@
 # ─────────────────────────────────────────────────────────────────────────────
 # Fabric Connection — PostgreSQL, Oracle, or Warehouse
 #
-# Creates the connection via Fabric REST API on first apply.
-# The connection ID is stored in triggers in the state file (committed to repo)
-# so it persists across CI runs. Credentials never enter state.
+# Creates the Fabric connection via REST API on first apply.
+# The connection ID is fetched on every apply via an external data source
+# script that reads SP credentials from the runner environment.
+#
+# State contains: connection ID (just a GUID)
+# State does NOT contain: SP credentials, passwords, or other secrets
 # ─────────────────────────────────────────────────────────────────────────────
 
 terraform {
@@ -13,6 +16,10 @@ terraform {
     null = {
       source  = "hashicorp/null"
       version = ">= 3.0"
+    }
+    external = {
+      source  = "hashicorp/external"
+      version = ">= 2.0"
     }
   }
 }
@@ -88,19 +95,13 @@ locals {
   })
 }
 
-# ── Step 1: Create or fetch the connection ────────────────────────────────────
-# Only re-runs when request_hash changes.
-# Writes the connection ID into terraform.tfstate directly so it
-# persists in state and is readable as an output.
+# ── Step 1: Create the connection (only on first apply / config change) ──────
 resource "null_resource" "fabric_connection" {
   triggers = {
     display_name     = var.display_name
     connection_type  = var.connection_type
     password_version = tostring(var.password_version)
     request_hash     = sha256(local.request_body)
-    # Seeded as "none" so the key always exists in the map.
-    # Overwritten with the real ID by the provisioner patching the state file.
-    connection_id    = "none"
   }
 
   provisioner "local-exec" {
@@ -128,8 +129,7 @@ print(match[0]['id'] if match else '')
 ")
 
       if [ -n "$EXISTING" ]; then
-        CONNECTION_ID="$EXISTING"
-        echo "Connection exists: $CONNECTION_ID"
+        echo "Connection exists: $EXISTING"
       else
         RESPONSE=$(curl -s -X POST \
           -H "Authorization: Bearer $TOKEN" \
@@ -146,38 +146,6 @@ print(cid)
 ")
         echo "Created: $CONNECTION_ID"
       fi
-
-      # Patch the state file to store connection_id in triggers
-      python3 - "$CONNECTION_ID" "${var.display_name}" <<'PYEOF'
-import json, glob, sys
-
-connection_id = sys.argv[1]
-display_name  = sys.argv[2]
-
-state_files = glob.glob('terraform.tfstate')
-if not state_files:
-    print("ERROR: terraform.tfstate not found", file=sys.stderr)
-    sys.exit(1)
-
-with open(state_files[0]) as f:
-    state = json.load(f)
-
-updated = False
-for res in state.get('resources', []):
-    if res.get('type') == 'null_resource' and res.get('name') == 'fabric_connection':
-        for inst in res.get('instances', []):
-            triggers = inst.get('attributes', {}).get('triggers', {})
-            if triggers.get('display_name') == display_name:
-                triggers['connection_id'] = connection_id
-                updated = True
-
-with open(state_files[0], 'w') as f:
-    json.dump(state, f, indent=2)
-
-print("State patched — connection_id:", connection_id if updated else "NOT FOUND")
-if not updated:
-    sys.exit(1)
-PYEOF
     BASH
     interpreter = ["bash", "-c"]
   }
@@ -186,13 +154,6 @@ PYEOF
     when    = destroy
     command = <<-BASH
       set -e
-      # connection_id is stored in triggers in state — always present as "none" or a real ID
-      CONNECTION_ID="${self.triggers["connection_id"]}"
-      if [ -z "$CONNECTION_ID" ] || [ "$CONNECTION_ID" = "none" ]; then
-        echo "No connection ID in state — skipping delete"
-        exit 0
-      fi
-
       az login --service-principal \
         --username "$ARM_CLIENT_ID" \
         --password "$ARM_CLIENT_SECRET" \
@@ -203,6 +164,16 @@ PYEOF
         --resource https://api.fabric.microsoft.com \
         --query accessToken -o tsv)
 
+      CONNECTION_ID=$(curl -s -X GET \
+        -H "Authorization: Bearer $TOKEN" \
+        "https://api.fabric.microsoft.com/v1/connections" | \
+        python3 -c "
+import sys,json
+data=json.load(sys.stdin)
+match=[c for c in data.get('value',[]) if c.get('displayName')=='${self.triggers.display_name}']
+print(match[0]['id'] if match else '')
+")
+      [ -z "$CONNECTION_ID" ] && echo "Not found — skipping" && exit 0
       curl -s -X DELETE \
         -H "Authorization: Bearer $TOKEN" \
         "https://api.fabric.microsoft.com/v1/connections/$CONNECTION_ID"
@@ -212,23 +183,34 @@ PYEOF
   }
 }
 
-# ── Step 2: Grant Owner access ────────────────────────────────────────────────
+# ── Step 2: Fetch connection ID from API and store in state ───────────────────
+# external data source runs every apply, looks up the connection by display_name,
+# and returns the ID. The ID becomes part of Terraform state as a normal
+# data source attribute — no /tmp dependency.
+data "external" "connection_id" {
+  program = ["bash", "${path.module}/get_connection_id.sh"]
+
+  query = {
+    display_name = var.display_name
+  }
+
+  depends_on = [null_resource.fabric_connection]
+}
+
+# ── Step 3: Grant Owner access ────────────────────────────────────────────────
 resource "null_resource" "connection_role_assignment" {
   for_each = toset(var.owner_principal_ids)
 
   triggers = {
-    connection_id = null_resource.fabric_connection.triggers["connection_id"]
+    connection_id = data.external.connection_id.result.id
     principal_id  = each.value
   }
 
   provisioner "local-exec" {
     command = <<-BASH
       set -e
-      CONNECTION_ID="${null_resource.fabric_connection.triggers["connection_id"]}"
-      if [ -z "$CONNECTION_ID" ] || [ "$CONNECTION_ID" = "none" ]; then
-        echo "No connection ID yet — skipping role assignment"
-        exit 0
-      fi
+      CONNECTION_ID="${data.external.connection_id.result.id}"
+      [ -z "$CONNECTION_ID" ] && echo "No connection ID — skipping" && exit 0
 
       az login --service-principal \
         --username "$ARM_CLIENT_ID" \
@@ -250,6 +232,4 @@ resource "null_resource" "connection_role_assignment" {
     BASH
     interpreter = ["bash", "-c"]
   }
-
-  depends_on = [null_resource.fabric_connection]
 }

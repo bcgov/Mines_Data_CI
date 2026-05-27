@@ -1,6 +1,6 @@
 output "connection_id" {
-  description = "GUID of the Fabric connection — stored in state after first apply."
-  value       = null_resource.fabric_connection.triggers["connection_id"]
+  description = "GUID of the Fabric connection — stored in Terraform state."
+  value       = data.external.connection_id.result.id
 }
 
 output "connection_display_name" {
