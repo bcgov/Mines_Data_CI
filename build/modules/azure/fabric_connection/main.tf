@@ -134,16 +134,13 @@ print(match[0]['id'] if match else '')
         echo "Connection already exists: $EXISTING"
         echo -n "$EXISTING" > /tmp/fabric_conn_${var.display_name}.txt
       else
-        RESPONSE=$(curl -s -w "\n%%HTTP_CODE%%:%{http_code}" -X POST \
+        RESPONSE=$(curl -s -X POST \
           -H "Authorization: Bearer $TOKEN" \
           -H "Content-Type: application/json" \
           -d '${local.request_body}' \
           "https://api.fabric.microsoft.com/v1/connections")
 
-        HTTP_CODE=$(echo "$RESPONSE" | grep '%%HTTP_CODE%%' | cut -d: -f2)
-        BODY=$(echo "$RESPONSE" | grep -v '%%HTTP_CODE%%')
-
-        CONNECTION_ID=$(echo "$BODY" | python3 -c "
+        CONNECTION_ID=$(echo "$RESPONSE" | python3 -c "
 import sys, json
 data = json.load(sys.stdin)
 cid = data.get('id', data.get('connectionId', ''))

@@ -1,6 +1,5 @@
 module "warehouse_mds_connection" {
   source = "../modules/azure/fabric_connection"
-
   display_name      = "warehouse-mines-data-platform"
   connection_type   = "Warehouse"
   connectivity_type = "ShareableCloud"
