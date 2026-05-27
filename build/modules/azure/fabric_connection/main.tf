@@ -42,6 +42,8 @@ locals {
 }
 
 resource "fabric_connection" "this" {
+  provider = fabric.auth
+  
   display_name      = var.display_name
   connectivity_type = var.connectivity_type
   privacy_level     = var.privacy_level
@@ -103,10 +105,4 @@ resource "fabric_connection" "this" {
       }
     }
   }
-}
-
-# Output the connection ID so it can be used in other modules
-output "connection_id" {
-  description = "The ID of the created Fabric Connection"
-  value       = fabric_connection.this.id
 }
