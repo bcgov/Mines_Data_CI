@@ -36,7 +36,7 @@ variable "gateway_id" {
   default     = null
 }
 
-# ─── Warehouse specific ─────────────────────────────────────────────────────
+# ─── Warehouse-specific ──────────────────────────────────────────────────────
 
 variable "workspace_id" {
   type        = string
@@ -79,16 +79,17 @@ variable "username" {
   default     = null
 }
 
-variable "password_keyvault_id" {
+variable "password" {
   type        = string
-  description = "Resource ID of the Azure Key Vault holding the password secret."
+  description = "Password for Basic authentication. Not required for Warehouse connections. Never stored in state (write-only)."
+  sensitive   = true
   default     = null
 }
 
-variable "password_secret_name" {
-  type        = string
-  description = "Name of the secret in Key Vault that holds the password."
-  default     = null
+variable "password_version" {
+  type        = number
+  description = "Increment this to rotate the password through Terraform."
+  default     = 1
 }
 
 # ─── Security / behaviour ───────────────────────────────────────────────────
@@ -117,17 +118,6 @@ variable "connection_encryption" {
 
 variable "skip_test_connection" {
   type        = bool
-  description = "Skip the connection test during create/update (useful if firewalls block the test but allow runtime)."
+  description = "Skip the connection test during create/update."
   default     = false
-}
-
-# ─────────────────────────────────────────────────────────────────────────────
-# Conditional Validations
-# ─────────────────────────────────────────────────────────────────────────────
-
-# Warehouse requires workspace_id + warehouse_id
-variable "validate_warehouse" {
-  type        = bool
-  default     = true
-  description = "Internal validation variable - do not set"
 }

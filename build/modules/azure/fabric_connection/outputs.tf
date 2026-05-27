@@ -1,10 +1,10 @@
 output "connection_id" {
-  description = "GUID of the created Fabric connection — pass this to fabric_copy_job."
-  value       = azapi_resource.this.id
+  description = "GUID of the created Fabric connection — pass this to pipeline modules."
+  value       = trimspace(data.local_file.connection_id.content)
 }
 
 output "connection_display_name" {
-  description = "Display name."
+  description = "Display name of the connection."
   value       = var.display_name
 }
 
