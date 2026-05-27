@@ -21,7 +21,6 @@ locals {
       creation_method = "PostgreSQL.Database"
       server_param    = "server"
       database_param  = "database"
-      requires_auth   = true
     }
 
     Oracle = {
@@ -29,7 +28,6 @@ locals {
       creation_method = "Oracle.Database"
       server_param    = "server"
       database_param  = "database"
-      requires_auth   = true
     }
 
     Warehouse = {
@@ -37,39 +35,10 @@ locals {
       creation_method = "Fabric.Warehouse"
       server_param    = null
       database_param  = null
-      requires_auth   = false
     }
   }
 
   connector = local.connector_map[var.connection_type]
-
-  connection_parameters = var.connection_type == "Warehouse" ? [
-    {
-      name  = "workspaceId"
-      value = var.workspace_id
-    },
-    {
-      name  = "artifactId"
-      value = var.warehouse_id
-    }
-  ] : concat(
-    [
-      {
-        name  = local.connector.server_param
-        value = var.server
-      },
-      {
-        name  = local.connector.database_param
-        value = var.database
-      }
-    ],
-    var.connection_type == "Oracle" && var.port != null ? [
-      {
-        name  = "port"
-        value = tostring(var.port)
-      }
-    ] : []
-  )
 }
 
 resource "fabric_connection" "this" {
@@ -119,6 +88,8 @@ resource "fabric_connection" "this" {
     credential_type       = "OAuth2"
     single_sign_on_type   = "None"
     skip_test_connection  = var.skip_test_connection
+
+    basic_credentials = null
   } : {
     connection_encryption = var.connection_encryption
     credential_type       = "Basic"
