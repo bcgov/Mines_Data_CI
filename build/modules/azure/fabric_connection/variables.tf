@@ -9,7 +9,7 @@ variable "display_name" {
 
 variable "connection_type" {
   type        = string
-  description = "Source system type. One of: PostgreSQL, Oracle."
+  description = "Source system type. One of: PostgreSQL, Oracle, Warehouse."
 
   validation {
     condition     = contains(["PostgreSQL", "Oracle", "Warehouse"], var.connection_type)
@@ -35,7 +35,6 @@ variable "gateway_id" {
   description = "Gateway GUID (required when connectivity_type is not ShareableCloud)."
   default     = null
 }
-
 
 variable "workspace_id" {
   type        = string

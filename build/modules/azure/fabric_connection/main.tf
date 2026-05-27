@@ -6,10 +6,9 @@ terraform {
   required_version = ">= 1.8"
 
   required_providers {
-    fabric = {
-      source                = "microsoft/fabric"
-      version               = "~> 1.10"
-      # configuration_aliases = [fabric.auth]
+    azapi = {
+      source  = "Azure/azapi"
+      version = "~> 2.0"
     }
   }
 }
@@ -39,70 +38,79 @@ locals {
   }
 
   connector = local.connector_map[var.connection_type]
-}
 
-resource "fabric_connection" "this" {
-  # provider = fabric.auth
-  
-  display_name      = var.display_name
-  connectivity_type = var.connectivity_type
-  privacy_level     = var.privacy_level
-
-  # Gateway is only needed for On-premises / VNet connectivity
-  gateway_id = var.connectivity_type == "ShareableCloud" ? null : var.gateway_id
-
-  connection_details = {
-    type            = local.connector.type
-    creation_method = local.connector.creation_method
-
-    parameters = var.connection_type == "Warehouse" ? [
+  # Build parameters array
+  parameters = var.connection_type == "Warehouse" ? [
+    {
+      name  = "workspaceId"
+      value = coalesce(var.workspace_id, "")
+    },
+    {
+      name  = "artifactId"
+      value = coalesce(var.warehouse_id, "")
+    }
+  ] : concat(
+    [
       {
-        name  = "workspaceId"
-        value = coalesce(var.workspace_id, "")
+        name  = local.connector.server_param
+        value = coalesce(var.server, "")
       },
       {
-        name  = "artifactId"
-        value = coalesce(var.warehouse_id, "")
+        name  = local.connector.database_param
+        value = coalesce(var.database, "")
       }
-    ] : concat(
-      [
-        {
-          name  = local.connector.server_param
-          value = coalesce(var.server, "")
-        },
-        {
-          name  = local.connector.database_param
-          value = coalesce(var.database, "")
-        }
-      ],
-      # Optional port for Oracle
-      var.connection_type == "Oracle" && var.port != null ? [{
-        name  = "port"
-        value = tostring(var.port)
-      }] : []
-    )
-  }
+    ],
+    var.connection_type == "Oracle" && var.port != null ? [{
+      name  = "port"
+      value = tostring(var.port)
+    }] : []
+  )
 
+  # Credential details
   credential_details = var.connection_type == "Warehouse" ? {
-    connection_encryption = var.connection_encryption
-    credential_type       = "OAuth2"
-    single_sign_on_type   = "None"
-    skip_test_connection  = var.skip_test_connection
-
-    basic_credentials = null
+    credentialType       = "OAuth2"
+    connectionEncryption = var.connection_encryption
+    singleSignOnType     = "None"
+    skipTestConnection   = var.skip_test_connection
   } : {
-    connection_encryption = var.connection_encryption
-    credential_type       = "Basic"
-    single_sign_on_type   = "None"
-    skip_test_connection  = var.skip_test_connection
-
-    basic_credentials = {
+    credentialType       = "Basic"
+    connectionEncryption = var.connection_encryption
+    singleSignOnType     = "None"
+    skipTestConnection   = var.skip_test_connection
+    basicCredentials = {
       username = var.username
-
-      password_reference = {
-        key_vault_id = var.password_keyvault_id
-        secret_name  = var.password_secret_name
+      passwordReference = {
+        keyVaultId = var.password_keyvault_id
+        secretName = var.password_secret_name
       }
     }
   }
+}
+
+resource "azapi_resource" "this" {
+  type      = "Microsoft.Fabric/connections@2024-02-01-preview"  # Most stable preview version
+  name      = var.display_name
+  parent_id = "/providers/Microsoft.Fabric/workspaces/${var.workspace_id}"
+
+  body = jsonencode({
+    properties = {
+      displayName       = var.display_name
+      connectivityType  = var.connectivity_type
+      privacyLevel      = var.privacy_level
+      connectionDetails = {
+        type            = local.connector.type
+        creationMethod  = local.connector.creation_method
+        parameters      = local.parameters
+      }
+      credentialDetails = local.credential_details
+    }
+  })
+
+  ignore_missing_property = true
+  response_export_values  = ["id", "properties"]
+}
+
+# This output helps with debugging
+output "connection_resource_id" {
+  value = azapi_resource.this.id
 }
