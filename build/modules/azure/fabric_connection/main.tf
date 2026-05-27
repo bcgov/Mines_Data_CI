@@ -39,7 +39,7 @@ locals {
 
   connector = local.connector_map[var.connection_type]
 
-  # Parameters
+  # Build parameters array
   parameters = var.connection_type == "Warehouse" ? [
     {
       name  = "workspaceId"
@@ -66,12 +66,13 @@ locals {
     }] : []
   )
 
-  # Credential details - cleaned up
+  # Credential details - Both branches must have the same keys
   credential_details = var.connection_type == "Warehouse" ? {
     credentialType       = "OAuth2"
     connectionEncryption = var.connection_encryption
     singleSignOnType     = "None"
     skipTestConnection   = var.skip_test_connection
+    basicCredentials     = null                       # ← Required for type consistency
   } : {
     credentialType       = "Basic"
     connectionEncryption = var.connection_encryption
@@ -90,7 +91,7 @@ locals {
 resource "azapi_resource" "this" {
   type      = "Microsoft.Fabric/connections@2024-02-01-preview"
   name      = var.display_name
-  parent_id = "/providers/Microsoft.Fabric"   # Important: Tenant level
+  parent_id = "/providers/Microsoft.Fabric"   # Tenant level
 
   body = jsonencode({
     properties = {

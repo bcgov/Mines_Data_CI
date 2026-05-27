@@ -36,6 +36,8 @@ variable "gateway_id" {
   default     = null
 }
 
+# ─── Warehouse specific ─────────────────────────────────────────────────────
+
 variable "workspace_id" {
   type        = string
   description = "Fabric workspace ID. Required for Warehouse connections."
@@ -117,4 +119,15 @@ variable "skip_test_connection" {
   type        = bool
   description = "Skip the connection test during create/update (useful if firewalls block the test but allow runtime)."
   default     = false
+}
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Conditional Validations
+# ─────────────────────────────────────────────────────────────────────────────
+
+# Warehouse requires workspace_id + warehouse_id
+variable "validate_warehouse" {
+  type        = bool
+  default     = true
+  description = "Internal validation variable - do not set"
 }
