@@ -192,7 +192,7 @@ PYEOF
     when    = destroy
     command = <<-BASH
       set -e
-      CONNECTION_ID="${self.triggers.connection_id}"
+      CONNECTION_ID="${lookup(self.triggers, "connection_id", "")}"
       [ -z "$CONNECTION_ID" ] && echo "No ID in state — skipping" && exit 0
 
       az login --service-principal \
@@ -219,14 +219,14 @@ resource "null_resource" "connection_role_assignment" {
   for_each = toset(var.owner_principal_ids)
 
   triggers = {
-    connection_id = null_resource.fabric_connection.triggers.connection_id
+    connection_id = lookup(null_resource.fabric_connection.triggers, "connection_id", "")
     principal_id  = each.value
   }
 
   provisioner "local-exec" {
     command = <<-BASH
       set -e
-      CONNECTION_ID="${null_resource.fabric_connection.triggers.connection_id}"
+      CONNECTION_ID="${lookup(null_resource.fabric_connection.triggers, "connection_id", "")}"
       [ -z "$CONNECTION_ID" ] && echo "No ID yet — skipping" && exit 0
 
       az login --service-principal \
