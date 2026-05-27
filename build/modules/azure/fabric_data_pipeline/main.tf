@@ -51,8 +51,8 @@ locals {
         ]
         datasetSettings = {
           annotations = []
-          type        = "DataWarehouseTable"
-          schema      = []
+          type   = "DataWarehouseTable"
+          schema = []
           typeProperties = {
             schema = "app"
             table  = "pipeline_log"
@@ -191,8 +191,8 @@ locals {
         ]
         datasetSettings = {
           annotations = []
-          type        = "DataWarehouseTable"
-          schema      = []
+          type   = "DataWarehouseTable"
+          schema = []
           typeProperties = {
             schema = "app"
             table  = "pipeline_log"
@@ -242,8 +242,8 @@ locals {
         ]
         datasetSettings = {
           annotations = []
-          type        = "DataWarehouseTable"
-          schema      = []
+          type   = "DataWarehouseTable"
+          schema = []
           typeProperties = {
             schema = "app"
             table  = "pipeline_log"
@@ -281,8 +281,8 @@ locals {
         }
         datasetSettings = {
           annotations = []
-          type        = "DataWarehouseTable"
-          schema      = []
+          type   = "DataWarehouseTable"
+          schema = []
           typeProperties = {
             schema = "app"
             table  = "pipeline_control"

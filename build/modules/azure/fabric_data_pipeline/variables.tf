@@ -22,6 +22,12 @@ variable "pipeline_name_param_default" {
   default     = ""
 }
 
+
+variable "warehouse_connection_id" {
+  type        = string
+  description = "Fabric connection ID for the warehouse (output of the fabric_connection module). Used by Script and Lookup activities to connect to app.pipeline_control and app.pipeline_log."
+}
+
 # ─── Control table + logging: Fabric Warehouse ───────────────────────────────
 
 variable "sink_warehouse_id" {
@@ -42,10 +48,6 @@ variable "sink_endpoint" {
 }
 
 
-variable "warehouse_connection_id" {
-  type        = string
-  description = "Fabric connection ID for the warehouse (from Manage connections and gateways). Used by Script and Lookup activities to connect to app.pipeline_control and app.pipeline_log."
-}
 
 # ─── Source: PostgreSQL connection ───────────────────────────────────────────
 
