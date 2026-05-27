@@ -12,8 +12,8 @@ variable "connection_type" {
   description = "Source system type. One of: PostgreSQL, Oracle."
 
   validation {
-    condition     = contains(["PostgreSQL", "Oracle"], var.connection_type)
-    error_message = "connection_type must be one of: PostgreSQL, Oracle."
+    condition     = contains(["PostgreSQL", "Oracle", "Warehouse"], var.connection_type)
+    error_message = "connection_type must be one of: PostgreSQL, Oracle, Warehouse."
   }
 }
 
@@ -36,16 +36,31 @@ variable "gateway_id" {
   default     = null
 }
 
+
+variable "workspace_id" {
+  type        = string
+  description = "Fabric workspace ID. Required for Warehouse connections."
+  default     = null
+}
+
+variable "warehouse_id" {
+  type        = string
+  description = "Fabric Warehouse artifact ID. Required for Warehouse connections."
+  default     = null
+}
+
 # ─── Server / database ──────────────────────────────────────────────────────
 
 variable "server" {
   type        = string
-  description = "Hostname or IP of the source server (e.g. 'mds-reporting-pg13-live.postgres.database.azure.com')."
+  description = "Hostname or IP of the source server. Not required for Warehouse connections."
+  default     = null
 }
 
 variable "database" {
   type        = string
-  description = "Database name to connect to."
+  description = "Database name to connect to. Not required for Warehouse connections."
+  default     = null
 }
 
 variable "port" {
@@ -58,30 +73,20 @@ variable "port" {
 
 variable "username" {
   type        = string
-  description = "Username for Basic authentication."
+  description = "Username for Basic authentication. Not required for Warehouse connections."
   sensitive   = true
+  default     = null
 }
-variable "password" {
+
+variable "password_keyvault_id" {
   type        = string
-  description = "Password for Basic authentication. Sent to Fabric, never stored in state."
-  sensitive   = true
+  description = "Resource ID of the Azure Key Vault holding the password secret. Format: /subscriptions/<sub>/resourceGroups/<rg>/providers/Microsoft.KeyVault/vaults/<vault>"
 }
 
-variable "password_version" {
-  type        = number
-  description = "Increment to rotate the password through Terraform."
-  default     = 1
+variable "password_secret_name" {
+  type        = string
+  description = "Name of the secret in Key Vault that holds the password."
 }
-
-# variable "password_keyvault_id" {
-#   type        = string
-#   description = "Resource ID of the Azure Key Vault holding the password secret. Format: /subscriptions/<sub>/resourceGroups/<rg>/providers/Microsoft.KeyVault/vaults/<vault>"
-# }
-
-# variable "password_secret_name" {
-#   type        = string
-#   description = "Name of the secret in Key Vault that holds the password."
-# }
 
 # ─── Security / behaviour ───────────────────────────────────────────────────
 

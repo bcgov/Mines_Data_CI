@@ -60,13 +60,6 @@ variable "lakehouse_id" {
   description = "Artifact ID of the destination Fabric Lakehouse."
 }
 
-
-variable "environment" {
-  type        = string
-  description = "Environment name written to app.pipeline_log (e.g. DEV, TEST, PROD)."
-  default     = "DEV"
-}
-
 # ─── Execution ───────────────────────────────────────────────────────────────
 
 variable "parallel_copies" {
@@ -86,3 +79,10 @@ variable "activity_retry" {
   description = "Number of retry attempts per activity on failure."
   default     = 0
 }
+
+variable "environment" {
+  type        = number
+  description = "Number of retry attempts per activity on failure."
+  default     = 0
+}
+
