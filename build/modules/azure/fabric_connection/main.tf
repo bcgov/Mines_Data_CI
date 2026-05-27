@@ -66,12 +66,13 @@ locals {
     }] : []
   )
 
-  # Credential details
+  # Credential details - FIXED: Both branches now have the same structure
   credential_details = var.connection_type == "Warehouse" ? {
     credentialType       = "OAuth2"
     connectionEncryption = var.connection_encryption
     singleSignOnType     = "None"
     skipTestConnection   = var.skip_test_connection
+    basicCredentials     = null                    # ← Added this for type consistency
   } : {
     credentialType       = "Basic"
     connectionEncryption = var.connection_encryption
@@ -88,7 +89,7 @@ locals {
 }
 
 resource "azapi_resource" "this" {
-  type      = "Microsoft.Fabric/connections@2024-02-01-preview"  # Most stable preview version
+  type      = "Microsoft.Fabric/connections@2024-02-01-preview"
   name      = var.display_name
   parent_id = "/providers/Microsoft.Fabric/workspaces/${var.workspace_id}"
 
@@ -108,9 +109,4 @@ resource "azapi_resource" "this" {
 
   ignore_missing_property = true
   response_export_values  = ["id", "properties"]
-}
-
-# This output helps with debugging
-output "connection_resource_id" {
-  value = azapi_resource.this.id
 }
