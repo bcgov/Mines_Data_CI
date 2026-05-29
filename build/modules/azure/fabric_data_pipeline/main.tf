@@ -1,26 +1,7 @@
 # ─────────────────────────────────────────────────────────────────────────────
 # Fabric Data Pipeline — Control Table Driven with Full Logging
 #
-# Flow per table (inside ForEach):
-#   1. Log_Start       → INSERT into app.pipeline_log (status = RUNNING)
-#   2. Copy_to_Raw     → PostgreSQL → Lakehouse Files raw/entity/yyyy/mm/dd/
-#   3. Log_Success     → UPDATE app.pipeline_log (status = SUCCEEDED)
-#                      → UPDATE app.pipeline_control (last_run_status, last_run_date, last_watermark)
-#   4. Log_Failure     → UPDATE app.pipeline_log (status = FAILED, error_message)
-#                      → UPDATE app.pipeline_control (last_run_status, last_run_date)
-#                        runs on Copy_to_Raw failure
-#
-# Output path: raw/<source_entity>/yyyy/mm/dd/<source_entity>_<timestamp>.parquet
-#
-# Key Fabric pipeline JSON schema rules used here:
-#   • Script activity: externalReferences.connection is at the ACTIVITY level
-#     (sibling of typeProperties). No datasetSettings, no linkedService.
-#   • Copy activity:   externalReferences.connection sits inside the source's
-#     and sink's datasetSettings (standard ADF Copy pattern).
-#   • Lookup activity: externalReferences.connection sits inside the source's
-#     datasetSettings.
-#   • System variable pipeline().TriggerName is NOT supported in Fabric pipelines.
-#     We use a pipeline parameter `triggered_by` (default "manual") instead.
+# Structure matches exactly the portal JSON export.
 # ─────────────────────────────────────────────────────────────────────────────
 
 terraform {
@@ -88,7 +69,7 @@ locals {
           type         = "PostgreSqlSource"
           queryTimeout = "02:00:00"
           query = {
-            value = "@if(empty(item().source_query_template), concat('SELECT * FROM ', item().target_schema, '.', item().source_entity), item().source_query_template)"
+            value = "@if(empty(item().source_query_template), concat('SELECT * FROM ', item().target_schema, '.', item().source_entity), replace(replace(item().source_query_template, '@from_date', if(empty(string(item().from_date)), '1900-01-01 00:00:00', formatDateTime(item().from_date, 'yyyy-MM-dd HH:mm:ss'))), '@to_date', if(empty(string(item().to_date)), formatDateTime(utcNow(), 'yyyy-MM-dd HH:mm:ss'), formatDateTime(item().to_date, 'yyyy-MM-dd HH:mm:ss'))))"
             type  = "Expression"
           }
           datasetSettings = {
@@ -117,7 +98,8 @@ locals {
             recursiveCompression = false
           }
           formatSettings = {
-            type = "ParquetWriteSettings"
+            type              = "ParquetWriteSettings"
+            enableVertiParquet = true
           }
           datasetSettings = {
             annotations = []
@@ -127,8 +109,8 @@ locals {
                 annotations = []
                 type        = "Lakehouse"
                 typeProperties = {
-                  artifactId  = var.lakehouse_id
                   workspaceId = var.workspace_id
+                  artifactId  = var.lakehouse_id
                   rootFolder  = "Files"
                 }
               }
@@ -138,12 +120,12 @@ locals {
             typeProperties = {
               location = {
                 type = "LakehouseLocation"
-                folderPath = {
-                  value = "@concat('raw/', item().source_entity, '/', formatDateTime(utcNow(), 'yyyy'), '/', formatDateTime(utcNow(), 'MM'), '/', formatDateTime(utcNow(), 'dd'))"
-                  type  = "Expression"
-                }
                 fileName = {
                   value = "@concat(item().source_entity, '_', formatDateTime(utcNow(), 'yyyyMMdd_HHmmss'), '.parquet')"
+                  type  = "Expression"
+                }
+                folderPath = {
+                  value = "@concat('raw/', item().source_entity, '/', formatDateTime(utcNow(), 'yyyy'), '/', formatDateTime(utcNow(), 'MM'), '/', formatDateTime(utcNow(), 'dd'))"
                   type  = "Expression"
                 }
               }
@@ -174,7 +156,6 @@ locals {
       }
       typeProperties = {
         scripts = [
-          # Update pipeline_log row to SUCCEEDED with row counts
           {
             type = "NonQuery"
             text = {
@@ -182,7 +163,6 @@ locals {
               type  = "Expression"
             }
           },
-          # Update pipeline_control with last run status and watermark
           {
             type = "NonQuery"
             text = {
@@ -217,7 +197,6 @@ locals {
       }
       typeProperties = {
         scripts = [
-          # Update pipeline_log row with FAILED status and error details
           {
             type = "NonQuery"
             text = {
@@ -225,7 +204,6 @@ locals {
               type  = "Expression"
             }
           },
-          # Update pipeline_control with last run status
           {
             type = "NonQuery"
             text = {
@@ -244,7 +222,7 @@ locals {
 
   # ── Outer pipeline activities ───────────────────────────────────────────────
   activities = [
-    # Lookup all active rows for this pipeline_name
+    # Lookup — matches portal JSON exactly (AzureSqlSource with two datasetSettings)
     {
       name      = "Lookup_ControlTable"
       type      = "Lookup"
@@ -258,16 +236,13 @@ locals {
       }
       typeProperties = {
         source = {
-          type = "DataWarehouseSource"
-          query = {
-            value = "@concat('SELECT control_id, pipeline_name, source_system, source_entity, target_schema, target_table, source_query_template, watermark_column, last_watermark, load_type, priority, from_date, to_date FROM [app].[pipeline_control] WHERE [pipeline_name] = ''', pipeline().parameters.pipeline_name, ''' AND [is_active] = 1 ORDER BY [priority] ASC')"
-            type  = "Expression"
-          }
+          type         = "AzureSqlSource"
+          queryTimeout = "02:00:00"
           partitionOption = "None"
           datasetSettings = {
             annotations = []
-            type        = "DataWarehouseTable"
             schema      = []
+            type        = "DataWarehouseTable"
             typeProperties = {
               schema = "app"
               table  = "pipeline_control"
@@ -276,13 +251,29 @@ locals {
               connection = var.warehouse_connection_id
             }
           }
+          query = {
+            value = "@concat('SELECT control_id, pipeline_name, source_system, source_entity, target_schema, target_table, source_query_template, watermark_column, last_watermark, load_type, priority, from_date, to_date FROM [app].[pipeline_control] WHERE [pipeline_name] = ''', pipeline().parameters.pipeline_name, ''' AND [is_active] = 1 ORDER BY [priority] ASC')"
+            type  = "Expression"
+          }
         }
         firstRowOnly = false
+        datasetSettings = {
+          annotations = []
+          type        = "AzureSqlTable"
+          schema      = []
+          typeProperties = {
+            schema   = "app"
+            table    = "pipeline_control"
+            database = var.sink_warehouse_name
+          }
+          externalReferences = {
+            connection = var.warehouse_connection_id
+          }
+        }
       }
     },
 
-    # ForEach — all rows in parallel (priority ordering is done in the SQL ORDER BY)
-    # For strict sequential priority groups, add a Filter activity per priority level.
+    # ForEach — parallel within batch
     {
       name = "ForEach_ControlRows"
       type = "ForEach"
