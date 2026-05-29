@@ -11,6 +11,16 @@
 #                        runs on Copy_to_Raw failure
 #
 # Output path: raw/<source_entity>/yyyy/mm/dd/<source_entity>_<timestamp>.parquet
+#
+# Key Fabric pipeline JSON schema rules used here:
+#   • Script activity: externalReferences.connection is at the ACTIVITY level
+#     (sibling of typeProperties). No datasetSettings, no linkedService.
+#   • Copy activity:   externalReferences.connection sits inside the source's
+#     and sink's datasetSettings (standard ADF Copy pattern).
+#   • Lookup activity: externalReferences.connection sits inside the source's
+#     datasetSettings.
+#   • System variable pipeline().TriggerName is NOT supported in Fabric pipelines.
+#     We use a pipeline parameter `triggered_by` (default "manual") instead.
 # ─────────────────────────────────────────────────────────────────────────────
 
 terraform {
@@ -27,7 +37,7 @@ terraform {
 
 locals {
   foreach_activities = [
-    # ── 1. Log Start ────────────────────────────────────────────────────────
+    # ── 1. Log Start ──────────────────────────────────────────────────────────
     {
       name      = "Log_Start"
       type      = "Script"
@@ -44,27 +54,19 @@ locals {
           {
             type = "NonQuery"
             text = {
-              value = "@concat('INSERT INTO [app].[pipeline_log] ([run_id],[activity_run_id],[pipeline_name],[source_entity],[target_schema],[target_table],[status],[from_date],[to_date],[watermark_start],[start_time],[environment],[triggered_by],[created_date]) VALUES (''', pipeline().RunId, ''',''', pipeline().RunId, ''',''', pipeline().parameters.pipeline_name, ''',''', item().source_entity, ''',''', item().target_schema, ''',''', item().target_table, ''',''RUNNING'',', if(empty(string(item().from_date)), 'NULL', concat('''', string(item().from_date), '''')), ',', if(empty(string(item().to_date)), 'NULL', concat('''', string(item().to_date), '''')), ',', if(empty(item().last_watermark), 'NULL', concat('''', item().last_watermark, '''')), ',''', utcNow(), ''',''', pipeline().parameters.environment, ''',''', pipeline().TriggerName, ''',''', utcNow(), ''')')"
-              type = "Expression"
+              value = "@concat('INSERT INTO [app].[pipeline_log] ([run_id],[activity_run_id],[pipeline_name],[source_entity],[target_schema],[target_table],[status],[from_date],[to_date],[watermark_start],[start_time],[environment],[triggered_by],[created_date]) VALUES (''', pipeline().RunId, ''',''', pipeline().RunId, ''',''', pipeline().parameters.pipeline_name, ''',''', item().source_entity, ''',''', item().target_schema, ''',''', item().target_table, ''',''RUNNING'',', if(empty(string(item().from_date)), 'NULL', concat('''', string(item().from_date), '''')), ',', if(empty(string(item().to_date)), 'NULL', concat('''', string(item().to_date), '''')), ',', if(empty(item().last_watermark), 'NULL', concat('''', item().last_watermark, '''')), ',''', utcNow(), ''',''', pipeline().parameters.environment, ''',''', pipeline().parameters.triggered_by, ''',''', utcNow(), ''')')"
+              type  = "Expression"
             }
           }
         ]
-        datasetSettings = {
-          annotations = []
-          type   = "DataWarehouseTable"
-          schema = []
-          typeProperties = {
-            schema = "app"
-            table  = "pipeline_log"
-          }
-          externalReferences = {
-            connection = var.warehouse_connection_id
-          }
-        }
+        scriptBlockExecutionTimeout = "02:00:00"
+      }
+      externalReferences = {
+        connection = var.warehouse_connection_id
       }
     },
 
-    # ── 2. Copy PostgreSQL → Lakehouse raw files ─────────────────────────────
+    # ── 2. Copy PostgreSQL → Lakehouse raw files ──────────────────────────────
     {
       name = "Copy_to_Raw"
       type = "Copy"
@@ -172,35 +174,27 @@ locals {
       }
       typeProperties = {
         scripts = [
-          # Update pipeline_log
+          # Update pipeline_log row to SUCCEEDED with row counts
           {
             type = "NonQuery"
             text = {
               value = "@concat('UPDATE [app].[pipeline_log] SET [status]=''SUCCEEDED'', [rows_read]=', string(activity('Copy_to_Raw').output.rowsRead), ', [rows_written]=', string(activity('Copy_to_Raw').output.rowsCopied), ', [end_time]=''', utcNow(), ''' WHERE [run_id]=''', pipeline().RunId, ''' AND [source_entity]=''', item().source_entity, '''')"
-              type = "Expression"
+              type  = "Expression"
             }
           },
-          # Update pipeline_control
+          # Update pipeline_control with last run status and watermark
           {
             type = "NonQuery"
             text = {
               value = "@concat('UPDATE [app].[pipeline_control] SET [last_run_status]=''SUCCEEDED'', [last_run_date]=''', utcNow(), ''', [last_watermark]=', if(empty(item().watermark_column), 'NULL', concat('''', utcNow(), '''')), ', [modified_date]=''', utcNow(), ''' WHERE [control_id]=', string(item().control_id))"
-              type = "Expression"
+              type  = "Expression"
             }
           }
         ]
-        datasetSettings = {
-          annotations = []
-          type   = "DataWarehouseTable"
-          schema = []
-          typeProperties = {
-            schema = "app"
-            table  = "pipeline_log"
-          }
-          externalReferences = {
-            connection = var.warehouse_connection_id
-          }
-        }
+        scriptBlockExecutionTimeout = "02:00:00"
+      }
+      externalReferences = {
+        connection = var.warehouse_connection_id
       }
     },
 
@@ -223,40 +217,32 @@ locals {
       }
       typeProperties = {
         scripts = [
-          # Update pipeline_log with error
+          # Update pipeline_log row with FAILED status and error details
           {
             type = "NonQuery"
             text = {
               value = "@concat('UPDATE [app].[pipeline_log] SET [status]=''FAILED'', [end_time]=''', utcNow(), ''', [error_message]=''', replace(activity('Copy_to_Raw').output.errors[0].Message, '''', ''''''), ''', [error_code]=''', activity('Copy_to_Raw').output.errors[0].Code, ''' WHERE [run_id]=''', pipeline().RunId, ''' AND [source_entity]=''', item().source_entity, '''')"
-              type = "Expression"
+              type  = "Expression"
             }
           },
-          # Update pipeline_control
+          # Update pipeline_control with last run status
           {
             type = "NonQuery"
             text = {
               value = "@concat('UPDATE [app].[pipeline_control] SET [last_run_status]=''FAILED'', [last_run_date]=''', utcNow(), ''', [modified_date]=''', utcNow(), ''' WHERE [control_id]=', string(item().control_id))"
-              type = "Expression"
+              type  = "Expression"
             }
           }
         ]
-        datasetSettings = {
-          annotations = []
-          type   = "DataWarehouseTable"
-          schema = []
-          typeProperties = {
-            schema = "app"
-            table  = "pipeline_log"
-          }
-          externalReferences = {
-            connection = var.warehouse_connection_id
-          }
-        }
+        scriptBlockExecutionTimeout = "02:00:00"
+      }
+      externalReferences = {
+        connection = var.warehouse_connection_id
       }
     }
   ]
 
-  # ── Outer pipeline activities ─────────────────────────────────────────────
+  # ── Outer pipeline activities ───────────────────────────────────────────────
   activities = [
     # Lookup all active rows for this pipeline_name
     {
@@ -272,23 +258,23 @@ locals {
       }
       typeProperties = {
         source = {
-          type  = "DataWarehouseSource"
+          type = "DataWarehouseSource"
           query = {
             value = "@concat('SELECT control_id, pipeline_name, source_system, source_entity, target_schema, target_table, source_query_template, watermark_column, last_watermark, load_type, priority, from_date, to_date FROM [app].[pipeline_control] WHERE [pipeline_name] = ''', pipeline().parameters.pipeline_name, ''' AND [is_active] = 1 ORDER BY [priority] ASC')"
             type  = "Expression"
           }
           partitionOption = "None"
-        }
-        datasetSettings = {
-          annotations = []
-          type   = "DataWarehouseTable"
-          schema = []
-          typeProperties = {
-            schema = "app"
-            table  = "pipeline_control"
-          }
-          externalReferences = {
-            connection = var.warehouse_connection_id
+          datasetSettings = {
+            annotations = []
+            type        = "DataWarehouseTable"
+            schema      = []
+            typeProperties = {
+              schema = "app"
+              table  = "pipeline_control"
+            }
+            externalReferences = {
+              connection = var.warehouse_connection_id
+            }
           }
         }
         firstRowOnly = false
@@ -296,7 +282,7 @@ locals {
     },
 
     # ForEach — all rows in parallel (priority ordering is done in the SQL ORDER BY)
-    # For strict sequential priority groups, add a Filter activity per priority level
+    # For strict sequential priority groups, add a Filter activity per priority level.
     {
       name = "ForEach_ControlRows"
       type = "ForEach"
@@ -333,10 +319,11 @@ resource "fabric_data_pipeline" "this" {
     "pipeline-content.json" = {
       source = "${path.module}/pipeline-content.json.tmpl"
       tokens = {
-        display_name         = var.display_name
-        activities_json      = jsonencode(local.activities)
-        pipeline_name_param  = var.pipeline_name_param_default
-        environment          = var.environment
+        display_name        = var.display_name
+        activities_json     = jsonencode(local.activities)
+        pipeline_name_param = var.pipeline_name_param_default
+        environment         = var.environment
+        triggered_by        = var.triggered_by_default
       }
     }
   }

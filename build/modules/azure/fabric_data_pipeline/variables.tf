@@ -1,4 +1,4 @@
-# ─── Identity ───────────────────────────────────────────────────────────────
+# ─── Identity ────────────────────────────────────────────────────────────────
 
 variable "workspace_id" {
   type        = string
@@ -16,39 +16,35 @@ variable "description" {
   default     = "Control table driven pipeline: PostgreSQL → Lakehouse raw files (parquet) with full logging"
 }
 
+# ─── Pipeline parameters (defaults shown in Fabric Portal run dialog) ────────
+
 variable "pipeline_name_param_default" {
   type        = string
-  description = "Default value for the pipeline_name parameter shown in the Fabric Portal run dialog."
+  description = "Default value for the pipeline_name parameter, used to filter app.pipeline_control rows."
   default     = ""
 }
 
+variable "environment" {
+  type        = string
+  description = "Default value for the environment parameter, written to app.pipeline_log (e.g. DEV, TEST, PROD)."
+  default     = "DEV"
+}
+
+variable "triggered_by_default" {
+  type        = string
+  description = "Default value for the triggered_by parameter, written to app.pipeline_log. Replaces unsupported pipeline().TriggerName."
+  default     = "manual"
+}
+
+# ─── Warehouse connection (for Lookup + Script activities) ───────────────────
+# Script activities and the Lookup activity reach the warehouse via the
+# connection GUID only — no linkedService, artifactId, or endpoint required
+# in Fabric pipeline JSON.
 
 variable "warehouse_connection_id" {
   type        = string
-  description = "Fabric connection ID for the warehouse (output of the fabric_connection module). Used by Script and Lookup activities to connect to app.pipeline_control and app.pipeline_log."
+  description = "Fabric connection ID for the warehouse holding app.pipeline_control and app.pipeline_log."
 }
-
-# ─── Control table + logging: Fabric Warehouse ───────────────────────────────
-
-variable "sink_warehouse_id" {
-  type        = string
-  description = "Artifact ID of the Fabric Warehouse holding app.pipeline_control and app.pipeline_log."
-  default     = "none"
-}
-
-variable "sink_warehouse_name" {
-  type        = string
-  description = "Display name of the Fabric Warehouse."
-  default     = "mines-data-platform-fabwh1"
-}
-
-variable "sink_endpoint" {
-  type        = string
-  description = "Fabric Warehouse SQL endpoint hostname."
-  default     = "abjnw3ynhwfevmbw2nuf4nm23q-rahtrd7fltiurh5f7o734jufua.datawarehouse.fabric.microsoft.com"
-}
-
-
 
 # ─── Source: PostgreSQL connection ───────────────────────────────────────────
 
@@ -57,7 +53,7 @@ variable "source_connection_id" {
   description = "Fabric connection ID for the PostgreSQL source. Used for all tables driven by the control table."
 }
 
-# ─── Sink: Fabric Lakehouse Files ───────────────────────────────────────────
+# ─── Sink: Fabric Lakehouse (Files area for raw parquet output) ─────────────
 
 variable "lakehouse_name" {
   type        = string
@@ -67,13 +63,6 @@ variable "lakehouse_name" {
 variable "lakehouse_id" {
   type        = string
   description = "Artifact ID of the destination Fabric Lakehouse."
-}
-
-
-variable "environment" {
-  type        = string
-  description = "Environment name written to app.pipeline_log (e.g. DEV, TEST, PROD)."
-  default     = "DEV"
 }
 
 # ─── Execution ───────────────────────────────────────────────────────────────
@@ -86,7 +75,7 @@ variable "parallel_copies" {
 
 variable "activity_timeout" {
   type        = string
-  description = "Timeout per Copy activity in d.HH:MM:SS format."
+  description = "Timeout per Copy / Lookup activity in d.HH:MM:SS format."
   default     = "0.12:00:00"
 }
 
