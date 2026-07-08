@@ -607,19 +607,13 @@ resource "fabric_data_pipeline" "this" {
     "pipeline-content.json" = {
       source = "${path.module}/pipeline-content.json.tmpl"
 
-      tokens = {
-        display_name        = var.display_name
-        activities_json     = jsonencode(local.activities)
-        pipeline_name_param = var.pipeline_name_param_default
-        environment         = var.environment
-        triggered_by        = var.triggered_by_default
-
-        # Add matching parameters to pipeline-content.json.tmpl.
-        override_from_date             = ""
-        override_to_date               = ""
-        table_filter_csv               = ""
-        advance_watermark_on_override  = "false"
-      }
+    tokens = {
+      display_name        = var.display_name
+      activities_json     = jsonencode(local.activities)
+      pipeline_name_param = var.pipeline_name_param_default
+      environment         = var.environment
+      triggered_by        = var.triggered_by_default
+    }
     }
   }
 }
