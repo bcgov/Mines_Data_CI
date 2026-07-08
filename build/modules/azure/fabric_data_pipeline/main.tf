@@ -142,7 +142,7 @@ locals {
           type         = "PostgreSqlSource"
           queryTimeout = "02:00:00"
           query = {
-            value = "@concat('SELECT to_char(MAX(', item().watermark_column, '), ''YYYY-MM-DD HH24:MI:SS'') AS max_watermark, COUNT(*) AS row_count FROM ', item().source_entity, ' WHERE ', item().watermark_column, ' >= ''', ${local.expr_from_effective}, ''' AND ', item().watermark_column, ' < ''', ${local.expr_to_effective}, '''')"
+            value = "@concat('SELECT TO_CHAR(MAX(', item().watermark_column, '), ''YYYY-MM-DD HH24:MI:SS'') AS max_watermark, COUNT(*) AS row_count FROM ', item().source_entity, ' WHERE ', item().watermark_column, ' >= ''', ${local.expr_from_effective}, ''' AND ', item().watermark_column, ' < ''', ${local.expr_to_effective}, '''')"
             type  = "Expression"
           }
           datasetSettings = local.postgres_dataset
