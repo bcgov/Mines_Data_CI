@@ -50,9 +50,17 @@ locals {
 
   # Upper bound precedence:
   #   1. runtime override_to_date
-  #   2. control.to_date, for scheduled/manual catch-up ceilings
-  #   3. utcNow()
-  expr_to_effective = "if(not(empty(pipeline().parameters.override_to_date)), pipeline().parameters.override_to_date, if(empty(string(item().to_date)), formatDateTime(utcNow(), 'yyyy-MM-dd HH:mm:ss'), formatDateTime(item().to_date, 'yyyy-MM-dd HH:mm:ss')))"
+  #   2. utcNow()
+  #
+  # Note: control.to_date is treated as the previous processed upper bound / audit checkpoint.
+  # It is NOT used as the next upper bound, otherwise a run where from_date == to_date
+  # would create an empty window.
+  expr_to_effective = "if(not(empty(pipeline().parameters.override_to_date)), pipeline().parameters.override_to_date, formatDateTime(utcNow(), 'yyyy-MM-dd HH:mm:ss'))"
+
+  # For non-incremental/full rows, move the old to_date into from_date and set to_date to utcNow().
+  # If to_date is empty, fall back to the existing from_effective value.
+  expr_full_from_update = "if(empty(string(item().to_date)), ${local.expr_from_effective}, formatDateTime(item().to_date, 'yyyy-MM-dd HH:mm:ss'))"
+  expr_full_to_update   = "formatDateTime(utcNow(), 'yyyy-MM-dd HH:mm:ss')"
 
   # Watermark should advance for normal incremental runs.
   # Replay/backfill overrides do not advance the persisted watermark unless explicitly requested.
@@ -209,7 +217,7 @@ locals {
           queryTimeout = "02:00:00"
 
           query = {
-            value = "@replace(replace(item().source_query_template, '@from_date', ${local.expr_from_effective}), '@to_date', ${local.expr_to_effective})"
+            value = "@if(and(contains(toLower(coalesce(item().source_query_template, '')), '@from_date'), contains(toLower(coalesce(item().source_query_template, '')), '@to_date')), replace(replace(item().source_query_template, '@from_date', ${local.expr_from_effective}), '@to_date', ${local.expr_to_effective}), concat(item().source_query_template, if(contains(toLower(item().source_query_template), ' where '), ' AND ', ' WHERE '), item().watermark_column, ' >= ''', ${local.expr_from_effective}, ''' AND ', item().watermark_column, ' < ''', ${local.expr_to_effective}, ''''))"
             type  = "Expression"
           }
 
@@ -248,7 +256,7 @@ locals {
             type = "NonQuery"
 
             text = {
-              value = "@if(${local.expr_should_advance_watermark}, concat('UPDATE [app].[pipeline_control] SET [last_run_status]=''SUCCEEDED'', [last_run_date]=''', utcNow(), ''', [last_watermark]=''', ${local.expr_to_effective}, ''', [from_date]=''', ${local.expr_to_effective}, ''', [to_date]=NULL, [modified_date]=''', utcNow(), ''' WHERE [control_id]=', string(item().control_id)), concat('UPDATE [app].[pipeline_control] SET [last_run_status]=''SUCCEEDED_REPLAY'', [last_run_date]=''', utcNow(), ''', [modified_date]=''', utcNow(), ''' WHERE [control_id]=', string(item().control_id)))"
+              value = "@if(greater(coalesce(activity('Copy_Incremental').output?.rowsCopied, 0), 0), concat('UPDATE [app].[pipeline_control] SET [last_run_status]=''SUCCEEDED'', [last_run_date]=''', utcNow(), ''', [last_watermark]=''', ${local.expr_to_effective}, ''', [from_date]=''', ${local.expr_to_effective}, ''', [to_date]=''', ${local.expr_to_effective}, ''', [modified_date]=''', utcNow(), ''' WHERE [control_id]=', string(item().control_id)), concat('UPDATE [app].[pipeline_control] SET [last_run_status]=''SUCCEEDED'', [last_run_date]=''', utcNow(), ''', [modified_date]=''', utcNow(), ''' WHERE [control_id]=', string(item().control_id)))"
               type  = "Expression"
             }
           }
@@ -399,7 +407,7 @@ locals {
             type = "NonQuery"
 
             text = {
-              value = "@concat('UPDATE [app].[pipeline_control] SET [last_run_status]=''SUCCEEDED'', [last_run_date]=''', utcNow(), ''', [modified_date]=''', utcNow(), ''' WHERE [control_id]=', string(item().control_id))"
+              value = "@if(greater(coalesce(activity('Copy_Full').output?.rowsCopied, 0), 0), concat('UPDATE [app].[pipeline_control] SET [last_run_status]=''SUCCEEDED'', [last_run_date]=''', utcNow(), ''', [from_date]=''', ${local.expr_full_from_update}, ''', [to_date]=''', ${local.expr_full_to_update}, ''', [modified_date]=''', utcNow(), ''' WHERE [control_id]=', string(item().control_id)), concat('UPDATE [app].[pipeline_control] SET [last_run_status]=''SUCCEEDED'', [last_run_date]=''', utcNow(), ''', [modified_date]=''', utcNow(), ''' WHERE [control_id]=', string(item().control_id)))"
               type  = "Expression"
             }
           }
@@ -497,7 +505,7 @@ locals {
 
       typeProperties = {
         expression = {
-          value = "@and(equals(toUpper(coalesce(item().load_type, '')), 'INCREMENTAL'), and(not(empty(coalesce(item().watermark_column, ''))), contains(toLower(coalesce(item().source_query_template, '')), toLower(coalesce(item().watermark_column, 'zz_no_watermark')))))"
+          value = "@and(equals(toUpper(coalesce(item().load_type, '')), 'INCREMENTAL'), not(empty(coalesce(item().watermark_column, ''))))"
           type  = "Expression"
         }
 
@@ -607,13 +615,19 @@ resource "fabric_data_pipeline" "this" {
     "pipeline-content.json" = {
       source = "${path.module}/pipeline-content.json.tmpl"
 
-    tokens = {
-      display_name        = var.display_name
-      activities_json     = jsonencode(local.activities)
-      pipeline_name_param = var.pipeline_name_param_default
-      environment         = var.environment
-      triggered_by        = var.triggered_by_default
-    }
+      tokens = {
+        display_name        = var.display_name
+        activities_json     = jsonencode(local.activities)
+        pipeline_name_param = var.pipeline_name_param_default
+        environment         = var.environment
+        triggered_by        = var.triggered_by_default
+
+        # Add matching parameters to pipeline-content.json.tmpl.
+        override_from_date             = ""
+        override_to_date               = ""
+        table_filter_csv               = ""
+        advance_watermark_on_override  = "false"
+      }
     }
   }
 }
