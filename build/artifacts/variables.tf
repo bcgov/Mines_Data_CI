@@ -45,7 +45,7 @@ variable "GITHUB_PAT" {
 variable "ENVIRONMENT" {
   description = "Environment name (dev, test, prod). Injected by CI/CD as TF_VAR_ENVIRONMENT based on the target branch."
   type        = string
-  default     = "test"
+  default     = "prod"
 
   validation {
     condition     = contains(["dev", "test", "prod"], var.ENVIRONMENT)
@@ -123,4 +123,10 @@ variable "NETWORK_LICENSE_PLATE" {
   description = "BC Gov landing-zone license plate used when deriving default network names."
   type        = string
   default     = "ef74b0"
+}
+
+"REGISTER_POWERPLATFORM_RP" {
+  description = "Whether to register the Microsoft.PowerPlatform RP in the subscription. Set to true for dev/test subscriptions, false for prod subscriptions."
+  type        = bool
+  default     = true
 }
