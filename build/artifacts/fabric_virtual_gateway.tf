@@ -17,13 +17,13 @@
 module "fabric_gw_subnet" {
   source = "../modules/azure/subnet_allocator"
 
-  vnet_name                = "ef74b0-dev-vwan-spoke"
-  vnet_resource_group_name = "ef74b0-dev-networking"
+  vnet_name                = "ef74b0-test-vwan-spoke"
+  vnet_resource_group_name = "ef74b0-test-networking"
   location                 = "canadacentral"
 
   subnets = [
     {
-      name          = "mines-fabric-gw-snet"
+      name          = "mcm-mdp-gw-snet-test01"
       prefix_length = 28
       delegation = {
         name         = "fabric-gw-delegation"
@@ -60,7 +60,7 @@ module "fabric_data_gateway_01" {
   }
 
   prefix          = "mcm"
-  project         = "mdp"
+  project         = "mdp-${var.ENVIRONMENT}"
   instance_number = "01"
 
   capacity_id                     = "198C68F4-8402-45B9-8010-BDE58A729DDF"

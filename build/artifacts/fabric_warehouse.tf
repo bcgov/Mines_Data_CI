@@ -4,8 +4,8 @@ module "fabric_warehouse_01" {
   providers = {
     fabric.auth = fabric.auth
   }
-  prefix          = "mines"
-  project         = "data-platform"
+  prefix          = "mcm"
+  project         = "mdp-${var.ENVIRONMENT}"
   instance_number = 01
   workspace_id    = module.fabric_workspace_01.workspace_id
 }
