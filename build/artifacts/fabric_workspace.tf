@@ -6,10 +6,10 @@ module "fabric_workspace_01" {
     fabric.auth = fabric.auth
   }
   env             = var.ENVIRONMENT
-  prefix          = "mcm"
-  project         = "mdp"
+  prefix          = var.PREFIX
+  project         = var.PROJECT
   instance_number = "01"
-  capacity_id     = "198C68F4-8402-45B9-8010-BDE58A729DDF"
-  owners          = ["b0bf68e8-4e08-433c-8903-19b2fec4cc20", "ebb8207d-1ebe-423a-990d-82cf1e128cce", "e5922863-7748-46c8-9f50-bbc24834c2dd"]
+  capacity_id     = local.fabric_capacity_id
+  owners          = var.WORKSPACE_OWNERS
   identity_type   = "SystemAssigned"
 }

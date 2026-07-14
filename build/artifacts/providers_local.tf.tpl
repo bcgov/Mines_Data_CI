@@ -1,6 +1,9 @@
 terraform {
   backend "local" {
-    path = "terraform.tfstate"
+    # __ENV__ is replaced with dev/test/prod by the CI/CD workflows so each
+    # environment branch keeps its own state file and can never read another
+    # environment's state.
+    path = "terraform-__ENV__.tfstate"
   }
 
   required_providers {
@@ -41,4 +44,5 @@ provider "fabric" {
   tenant_id     = var.ARM_TENANT_ID
   client_id     = var.ARM_CLIENT_ID
   client_secret = var.ARM_CLIENT_SECRET
+  preview       = true
 }

@@ -31,3 +31,9 @@ variable "fabric_warehouse" {
   type        = string
   default     = null
 }
+
+variable "env" {
+  description = "Environment name appended as a suffix to the warehouse name (e.g. dev, test, prod). Empty string omits the suffix."
+  type        = string
+  default     = ""
+}

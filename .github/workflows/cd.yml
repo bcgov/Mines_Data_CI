@@ -1,5 +1,20 @@
 name: Terraform Apply
 
+# ─────────────────────────────────────────────────────────────────────────────
+# Deploys the environment that matches the branch:
+#   dev  → dev | test → test | main → prod
+#
+# Triggered when a PR into dev/test/main is merged, or manually via
+# workflow_dispatch (run it FROM the branch you want to deploy).
+#
+# APPROVAL GATES: the job's `environment:` maps to a GitHub Environment
+# (dev / test / prod). Required reviewers configured on the `test` and `prod`
+# environments (Settings → Environments → <env> → Required reviewers) pause
+# this job until a reviewer approves the deployment. Environment-scoped
+# variables/secrets (ARM_*, GITHUB_PAT, FABRIC_CAPACITY_NAME, ...) are also
+# resolved from that same environment.
+# ─────────────────────────────────────────────────────────────────────────────
+
 on:
   workflow_dispatch:
   pull_request:
@@ -12,31 +27,38 @@ on:
       - 'build/artifacts/**.tf'
       - 'build/artifacts/**.tfvars'
       - 'build/artifacts/**.tpl'
+      - 'build/modules/**.tf'
+
 permissions:
   contents: write
   pull-requests: write
 
+# Key on the resolved target branch so applies to the same environment queue
+# up instead of racing (github.ref on a merged PR is the merge ref, not the base)
 concurrency:
-  group: terraform-apply-${{ github.ref }}
+  group: terraform-apply-${{ github.base_ref || github.ref_name }}
   cancel-in-progress: false
 
 jobs:
   terraform-apply:
-    name: Terraform Apply (${{ github.base_ref == 'main' && 'prod' || github.base_ref }})
+    name: Terraform Apply (${{ (github.base_ref || github.ref_name) == 'main' && 'prod' || (github.base_ref || github.ref_name) }})
     runs-on: ubuntu-latest
     if: |
       github.event_name == 'workflow_dispatch' ||
       (github.event_name == 'pull_request' && github.event.pull_request.merged == true && vars.TF_DEFAULT_BACKEND == 'local')
-    environment: ${{ github.base_ref == 'main' && 'prod' || github.base_ref == 'test' && 'test' || 'dev' }}
+    # GitHub Environment — supplies env-scoped vars/secrets AND enforces the
+    # required-reviewer approval gate for test and prod
+    environment: ${{ (github.base_ref || github.ref_name) == 'main' && 'prod' || (github.base_ref || github.ref_name) == 'test' && 'test' || 'dev' }}
 
     env:
-      TF_ENV: ${{ github.base_ref == 'main' && 'prod' || github.base_ref == 'test' && 'test' || 'dev' }}
+      TARGET_BRANCH: ${{ github.base_ref || github.ref_name }}
+      TF_ENV: ${{ (github.base_ref || github.ref_name) == 'main' && 'prod' || (github.base_ref || github.ref_name) == 'test' && 'test' || 'dev' }}
 
     steps:
-      - name: Checkout code
+      - name: Checkout target branch
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.base_ref }}
+          ref: ${{ github.base_ref || github.ref_name }}
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Setup Terraform
@@ -48,8 +70,36 @@ jobs:
         working-directory: build/artifacts
         run: |
           cp providers_local.tf.tpl providers.tf
+          # Point the backend at this environment's state file
+          sed -i "s/__ENV__/${TF_ENV}/g" providers.tf
           terraform fmt providers.tf
-          echo "providers.tf generated from local template"
+          echo "providers.tf generated for $TF_ENV from local template"
+
+      - name: Verify state hygiene
+        working-directory: build/artifacts
+        run: |
+          # Migrate dev's legacy state file name once (terraform.tfstate → terraform-dev.tfstate)
+          if [[ "$TF_ENV" == "dev" && -f terraform.tfstate && ! -f terraform-dev.tfstate ]]; then
+            git mv terraform.tfstate terraform-dev.tfstate
+            echo "Migrated legacy terraform.tfstate to terraform-dev.tfstate"
+          fi
+          # A bare terraform.tfstate on test/prod is foreign state inherited
+          # from dev when the branch was cut — refuse to deploy over it.
+          if [[ "$TF_ENV" != "dev" && -f terraform.tfstate ]]; then
+            echo "ERROR: legacy terraform.tfstate found on '$TARGET_BRANCH'."
+            echo "This state belongs to another environment. Delete it from this branch, then re-run."
+            exit 1
+          fi
+          for f in terraform-*.tfstate; do
+            [[ -e "$f" ]] || continue
+            if [[ "$f" != "terraform-${TF_ENV}.tfstate" ]]; then
+              echo "ERROR: state file '$f' does not belong to environment '$TF_ENV'. Remove it from this branch."
+              exit 1
+            fi
+          done
+          if [[ ! -f "terraform-${TF_ENV}.tfstate" ]]; then
+            echo "No existing state for $TF_ENV — first deployment, starting from a clean state."
+          fi
 
       - name: Terraform Init
         working-directory: build/artifacts
@@ -72,6 +122,8 @@ jobs:
           TF_VAR_ARM_CLIENT_SECRET:   ${{ secrets.ARM_CLIENT_SECRET }}
           TF_VAR_ENVIRONMENT:         ${{ env.TF_ENV }}
           TF_VAR_GITHUB_PAT:          ${{ secrets.GITHUB_PAT }}
+          # Optional: resolve Fabric capacity by display name (set per GitHub Environment)
+          TF_VAR_FABRIC_CAPACITY_NAME: ${{ vars.FABRIC_CAPACITY_NAME }}
         run: |
           echo "Applying for environment: $TF_ENV..."
           terraform apply -input=false -auto-approve
@@ -82,13 +134,14 @@ jobs:
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
-          git add build/artifacts/terraform.tfstate
-          git add build/artifacts/terraform.tfstate.backup || true
+          git add "build/artifacts/terraform-${TF_ENV}.tfstate" 2>/dev/null || true
+          # Include the legacy-name migration if it happened
+          git add -u build/artifacts/ 2>/dev/null || true
           if git diff --staged --quiet; then
             echo "No state changes to commit"
           else
             git commit -m "state: update ${{ env.TF_ENV }} state after apply [skip ci]"
-            git push
+            git push origin "$TARGET_BRANCH"
           fi
 
       - name: Cleanup generated files

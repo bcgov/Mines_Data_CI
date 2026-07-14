@@ -97,7 +97,9 @@ jobs:
   # JOB 3: Terraform quality checks
   # ─────────────────────────────────────────────────────────────────────────────
   terraform-quality:
-    name: Terraform Quality Checks (${{ needs.resolve-environment.outputs.env_name }} / ${{ needs.resolve-environment.outputs.backend }})
+    # NOTE: keep this name static — it must exactly match the required status
+    # check context in the branch rulesets.
+    name: Terraform Quality Checks
     runs-on: ubuntu-latest
     needs: [resolve-environment]
     environment: ${{ needs.resolve-environment.outputs.env_name }}
@@ -146,6 +148,8 @@ jobs:
             echo "Using local backend..."
             cp providers_local.tf.tpl providers.tf
           fi
+          # Point the backend at this environment (TFC workspace / state file name)
+          sed -i "s/__ENV__/${TF_ENV}/g" providers.tf
           # Format immediately after copy to prevent fmt failures
           terraform fmt providers.tf
           echo "providers.tf generated and formatted from $TF_BACKEND template"
@@ -198,6 +202,27 @@ jobs:
 
       # ── Init & validate ───────────────────────────────────────────────────────
 
+      - name: Verify state hygiene
+        working-directory: build/artifacts
+        run: |
+          # Each environment must only ever see its own state file.
+          # A bare terraform.tfstate is legacy dev state — it must not exist on
+          # branches targeting test/prod (it would have been inherited when the
+          # branch was cut from dev).
+          if [[ "$TF_ENV" != "dev" && -f terraform.tfstate ]]; then
+            echo "ERROR: legacy terraform.tfstate found while targeting '$TF_ENV'."
+            echo "This state belongs to another environment (likely dev). Delete it from this branch before merging."
+            exit 1
+          fi
+          for f in terraform-*.tfstate; do
+            [[ -e "$f" ]] || continue
+            if [[ "$f" != "terraform-${TF_ENV}.tfstate" ]]; then
+              echo "ERROR: state file '$f' belongs to a different environment than '$TF_ENV'. Remove it from this branch."
+              exit 1
+            fi
+          done
+          echo "State hygiene OK for $TF_ENV"
+
       - name: Terraform Init (artifacts)
         working-directory: build/artifacts
         run: |
@@ -233,6 +258,8 @@ jobs:
           TF_VAR_ARM_CLIENT_SECRET:   ${{ secrets.ARM_CLIENT_SECRET }}
           TF_VAR_ENVIRONMENT:         ${{ env.TF_ENV }}
           TF_VAR_GITHUB_PAT:          ${{ secrets.GITHUB_PAT }}
+          # Optional: resolve Fabric capacity by display name (set per GitHub Environment)
+          TF_VAR_FABRIC_CAPACITY_NAME: ${{ vars.FABRIC_CAPACITY_NAME }}
         run: |
           echo "Planning for environment: $TF_ENV..."
           terraform plan -input=false

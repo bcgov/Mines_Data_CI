@@ -12,7 +12,7 @@ locals {
   lakehouse_name = substr(
     replace(
       replace(
-        var.lakehouse_name != null ? var.lakehouse_name : "${var.prefix}-${var.project}-lh${var.instance_number}",
+        var.lakehouse_name != null ? var.lakehouse_name : "${var.prefix}-${var.project}-lh${var.instance_number}${var.env != "" ? "-${var.env}" : ""}",
         " ",
         ""
       ),

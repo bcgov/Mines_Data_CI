@@ -1,5 +1,5 @@
 # =============================================================================
-# build/artifacts/fabric_data_gateway.tf
+# build/artifacts/fabric_virtual_gateway.tf
 #
 # Adds a Fabric VNet Data Gateway with a dedicated delegated subnet allocated
 # automatically by the subnet_allocator. The subnet is delegated to the
@@ -10,6 +10,14 @@
 # with other workloads.
 # =============================================================================
 
+locals {
+  # Network names default to the landing-zone pattern for the current
+  # environment; override via VNET_NAME / VNET_RESOURCE_GROUP if needed.
+  vnet_name      = coalesce(var.VNET_NAME, "${var.NETWORK_LICENSE_PLATE}-${var.ENVIRONMENT}-vwan-spoke")
+  vnet_rg        = coalesce(var.VNET_RESOURCE_GROUP, "${var.NETWORK_LICENSE_PLATE}-${var.ENVIRONMENT}-networking")
+  gw_subnet_name = "${var.PREFIX}-${var.PROJECT}-gw-snet-${var.ENVIRONMENT}01"
+}
+
 ###############################################################################
 # Subnet for the Fabric VNet Data Gateway
 ###############################################################################
@@ -17,13 +25,13 @@
 module "fabric_gw_subnet" {
   source = "../modules/azure/subnet_allocator"
 
-  vnet_name                = "ef74b0-test-vwan-spoke"
-  vnet_resource_group_name = "ef74b0-test-networking"
-  location                 = "canadacentral"
+  vnet_name                = local.vnet_name
+  vnet_resource_group_name = local.vnet_rg
+  location                 = var.LOCATION
 
   subnets = [
     {
-      name          = "mcm-mdp-gw-snet-test01"
+      name          = local.gw_subnet_name
       prefix_length = 28
       delegation = {
         name         = "fabric-gw-delegation"
@@ -44,8 +52,6 @@ module "fabric_gw_subnet" {
       ]
     }
   ]
-
-
 }
 
 ###############################################################################
@@ -59,24 +65,27 @@ module "fabric_data_gateway_01" {
     fabric.auth = fabric.auth
   }
 
-  prefix          = "mcm"
-  project         = "mdp-${var.ENVIRONMENT}"
+  env             = var.ENVIRONMENT
+  prefix          = var.PREFIX
+  project         = var.PROJECT
   instance_number = "01"
 
-  capacity_id                     = "198C68F4-8402-45B9-8010-BDE58A729DDF"
+  capacity_id                     = local.fabric_capacity_id
   inactivity_minutes_before_sleep = 30
   number_of_member_gateways       = 1
 
+  # Points at the subnet created by fabric_gw_subnet above — previously this
+  # was hardcoded to a different (dev) VNet/subnet than the one being created.
   virtual_network_azure_resource = {
     subscription_id      = var.ARM_SUBSCRIPTION_ID
-    resource_group_name  = "ef74b0-dev-networking"
-    virtual_network_name = "ef74b0-dev-vwan-spoke"
-    subnet_name          = "mines-fabric-gw-snet"
+    resource_group_name  = local.vnet_rg
+    virtual_network_name = local.vnet_name
+    subnet_name          = local.gw_subnet_name
   }
 
   role_assignments = [
-    {
-      principal_id   = "b0bf68e8-4e08-433c-8903-19b2fec4cc20"
+    for id in var.GATEWAY_ADMINS : {
+      principal_id   = id
       principal_type = "User"
       role           = "Admin"
     }

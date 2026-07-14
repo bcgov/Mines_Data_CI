@@ -11,7 +11,7 @@ terraform {
 locals {
   gateway_name = substr(
     replace(
-      var.gateway_name != null ? var.gateway_name : "${var.prefix}-${var.project}-fabricgw${var.instance_number}",
+      var.gateway_name != null ? var.gateway_name : "${var.prefix}-${var.project}-fabricgw${var.instance_number}${var.env != "" ? "-${var.env}" : ""}",
       " ",
       ""
     ),

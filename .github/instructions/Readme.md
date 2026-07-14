@@ -372,3 +372,70 @@ For issues with rulesets:
 - [GitHub Rulesets Documentation](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/about-rulesets)
 - [CODEOWNERS Syntax](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners)
 - [Branch Protection Best Practices](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches)
+
+---
+
+## GitHub Environments & Deployment Approval Gates
+
+Branch rulesets gate the **merge**; GitHub Environments gate the **deployment**.
+The `Terraform Apply` job in `cd.yml` (and the plan job in `ci.yml`) run inside a
+GitHub Environment matching the target branch:
+
+| Branch | GitHub Environment |
+|--------|--------------------|
+| `dev`  | `dev`              |
+| `test` | `test`             |
+| `main` | `prod`             |
+
+### One-time setup (Settings → Environments)
+
+1. Create three environments: `dev`, `test`, `prod`.
+2. On **`test`** and **`prod`**, add **Required reviewers** (1+ for test, 2 for prod
+   is recommended). Any workflow job bound to that environment — including the
+   post-merge `Terraform Apply` — will pause and wait for an approval before it runs.
+   This is the deployment approval gate.
+3. On each environment, set **Deployment branches** to the matching branch only
+   (`test` env → `test` branch, `prod` env → `main` branch) so a workflow on the
+   wrong branch can never pick up another environment's credentials.
+4. Configure per-environment values:
+
+   **Environment variables** (Environment → Variables):
+   - `ARM_SUBSCRIPTION_ID`
+   - `ARM_TENANT_ID`
+   - `ARM_CLIENT_ID`
+   - `FABRIC_CAPACITY_NAME` — display name of the Fabric capacity for this
+     environment; lets Terraform resolve the capacity ID by name instead of a
+     hardcoded GUID (optional; falls back to `FABRIC_CAPACITY_ID` in
+     `variables.tf`)
+
+   **Environment secrets** (Environment → Secrets):
+   - `ARM_CLIENT_SECRET`
+   - `GITHUB_PAT`
+
+   Repository-level variables (shared across environments):
+   - `TF_DEFAULT_BACKEND` (`local` or `cloud`)
+   - `TF_VERSION` (optional)
+
+   Because the workflow jobs declare `environment:`, GitHub automatically resolves
+   `vars.*` / `secrets.*` from the environment matching the branch — this is how
+   each branch picks up its own values.
+
+> Note: required reviewers apply to **every** job bound to the environment, so the
+> CI `terraform plan` on PRs into `test`/`main` will also request approval. If you
+> want plans to run unattended, create read-only mirror environments (e.g.
+> `test-plan`) without reviewers and point the CI job at those instead.
+
+### State files (local backend)
+
+Each environment branch keeps its own state file, committed by the CD workflow:
+`build/artifacts/terraform-<env>.tfstate`. The workflows refuse to run if a state
+file from another environment (including a legacy bare `terraform.tfstate`) is
+present on the branch — this prevents a branch cut from `dev` from ever applying
+against dev's state. The first deploy to `test`/`prod` therefore starts from a
+clean, empty state.
+
+### Required status checks
+
+The ruleset check contexts must exactly match the workflow job names:
+- `Validate Branch Strategy`
+- `Terraform Quality Checks` (job name kept static in `ci.yml` for this reason)

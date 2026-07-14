@@ -14,7 +14,7 @@ data "azurerm_client_config" "current" {}
 locals {
   workspace_name = substr(
     replace(
-      var.workspace_name != null ? var.workspace_name : "${var.prefix}-${var.project}-fabricws-${var.env}-${var.instance_number}",
+      var.workspace_name != null ? var.workspace_name : "${var.prefix}-${var.project}-fabricws${var.instance_number}-${var.env}",
       " ",
       ""
     ),

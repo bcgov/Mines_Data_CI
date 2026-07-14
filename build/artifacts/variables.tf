@@ -1,3 +1,15 @@
+# =============================================================================
+# build/artifacts/variables.tf
+#
+# Single source of truth for every input used by the artifact layer.
+# Values are supplied per environment through GitHub Environment variables
+# (dev / test / prod) exported as TF_VAR_* in the workflows. Anything not
+# supplied falls back to the defaults below, which reflect THIS branch's
+# environment (test).
+# =============================================================================
+
+# ── Authentication (from GitHub Environment vars/secrets) ────────────────────
+
 variable "ARM_TENANT_ID" {
   description = "Azure Tenant ID"
   type        = string
@@ -21,15 +33,94 @@ variable "ARM_SUBSCRIPTION_ID" {
   default     = null
 }
 
-variable "ENVIRONMENT" {
-  description = "Environment name"
-  type        = string
-  default     = "test"
-}
-
-
 variable "GITHUB_PAT" {
   description = "GitHub Personal Access Token with repo scope. Used by the vscode_tunnel container to register the self-hosted GitHub Actions runner at startup. Set via GitHub secret GITHUB_PAT."
   type        = string
   sensitive   = true
+  default     = null
+}
+
+# ── Environment ──────────────────────────────────────────────────────────────
+
+variable "ENVIRONMENT" {
+  description = "Environment name (dev, test, prod). Injected by CI/CD as TF_VAR_ENVIRONMENT based on the target branch."
+  type        = string
+  default     = "test"
+
+  validation {
+    condition     = contains(["dev", "test", "prod"], var.ENVIRONMENT)
+    error_message = "ENVIRONMENT must be one of: dev, test, prod."
+  }
+}
+
+# ── Naming ───────────────────────────────────────────────────────────────────
+
+variable "PREFIX" {
+  description = "Ministry/organization prefix used in all resource names."
+  type        = string
+  default     = "mcm"
+}
+
+variable "PROJECT" {
+  description = "Project short name used in all resource names. Do NOT embed the environment here — modules append it as a suffix."
+  type        = string
+  default     = "mdp"
+}
+
+variable "LOCATION" {
+  description = "Azure region for regional resources."
+  type        = string
+  default     = "canadacentral"
+}
+
+# ── Fabric capacity ──────────────────────────────────────────────────────────
+
+variable "FABRIC_CAPACITY_NAME" {
+  description = "Display name of the Fabric capacity. When set (recommended — set per environment via GitHub Environment variable FABRIC_CAPACITY_NAME), the capacity ID is resolved by name at plan time instead of hardcoding a GUID."
+  type        = string
+  default     = ""
+}
+
+variable "FABRIC_CAPACITY_ID" {
+  description = "Fallback Fabric capacity GUID, used only when FABRIC_CAPACITY_NAME is empty."
+  type        = string
+  default     = "198C68F4-8402-45B9-8010-BDE58A729DDF"
+}
+
+# ── Access control ───────────────────────────────────────────────────────────
+
+variable "WORKSPACE_OWNERS" {
+  description = "Entra object IDs granted Admin on the Fabric workspace."
+  type        = list(string)
+  default = [
+    "b0bf68e8-4e08-433c-8903-19b2fec4cc20",
+    "ebb8207d-1ebe-423a-990d-82cf1e128cce",
+    "e5922863-7748-46c8-9f50-bbc24834c2dd",
+  ]
+}
+
+variable "GATEWAY_ADMINS" {
+  description = "Entra object IDs granted Admin on the Fabric VNet data gateway."
+  type        = list(string)
+  default     = ["b0bf68e8-4e08-433c-8903-19b2fec4cc20"]
+}
+
+# ── Networking (Fabric VNet data gateway) ────────────────────────────────────
+
+variable "VNET_NAME" {
+  description = "Name of the existing spoke VNet hosting the gateway subnet. Leave null to derive from the environment (ef74b0-<env>-vwan-spoke)."
+  type        = string
+  default     = null
+}
+
+variable "VNET_RESOURCE_GROUP" {
+  description = "Resource group of the existing spoke VNet. Leave null to derive from the environment (ef74b0-<env>-networking)."
+  type        = string
+  default     = null
+}
+
+variable "NETWORK_LICENSE_PLATE" {
+  description = "BC Gov landing-zone license plate used when deriving default network names."
+  type        = string
+  default     = "ef74b0"
 }
