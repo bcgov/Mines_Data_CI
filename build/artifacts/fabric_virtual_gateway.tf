@@ -55,6 +55,36 @@ module "fabric_gw_subnet" {
 }
 
 ###############################################################################
+# Prerequisites for the Fabric VNet Data Gateway
+#
+# 1. The Microsoft.PowerPlatform resource provider MUST be registered on the
+#    subscription, or gateway creation fails with:
+#    "PowerPlatformVirtualNetworkSubnetNotConfiguredForDelegation"
+#    (the azurerm provider is configured with
+#    resource_provider_registrations = "none", so it never registers RPs
+#    automatically). Registration is a one-time, subscription-level action.
+#
+# 2. The subnet delegation needs a short propagation window before the Fabric
+#    service can see it — creating the gateway in the same second as the
+#    subnet intermittently fails with the same error.
+###############################################################################
+
+resource "azurerm_resource_provider_registration" "power_platform" {
+  count = var.REGISTER_POWERPLATFORM_RP ? 1 : 0
+
+  name = "Microsoft.PowerPlatform"
+}
+
+resource "time_sleep" "wait_for_subnet_delegation" {
+  create_duration = "120s"
+
+  depends_on = [
+    module.fabric_gw_subnet,
+    azurerm_resource_provider_registration.power_platform,
+  ]
+}
+
+###############################################################################
 # Fabric VNet Data Gateway
 ###############################################################################
 
@@ -98,7 +128,7 @@ module "fabric_data_gateway_01" {
     delete = "30m"
   }
 
-  depends_on = [module.fabric_gw_subnet]
+  depends_on = [time_sleep.wait_for_subnet_delegation]
 }
 
 ###############################################################################
