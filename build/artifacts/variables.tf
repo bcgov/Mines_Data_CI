@@ -128,5 +128,5 @@ variable "NETWORK_LICENSE_PLATE" {
 variable  REGISTER_POWERPLATFORM_RP {
   description = "Whether to register the Microsoft.PowerPlatform RP in the subscription. Set to true for dev/test subscriptions, false for prod subscriptions."
   type        = bool
-  default     = true
+  default     = false
 }
