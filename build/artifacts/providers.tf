@@ -1,9 +1,9 @@
 terraform {
   backend "local" {
-    # __ENV__ is replaced with dev/test/prod by the CI/CD workflows so each
+    # dev is replaced with dev/test/prod by the CI/CD workflows so each
     # environment branch keeps its own state file and can never read another
     # environment's state.
-    path = "terraform-__ENV__.tfstate"
+    path = "terraform-dev.tfstate"
   }
 
   required_providers {
@@ -21,7 +21,6 @@ terraform {
     }
   }
 }
-
 
 provider "azurerm" {
   resource_provider_registrations = "none"
