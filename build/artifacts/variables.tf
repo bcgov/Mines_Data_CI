@@ -129,5 +129,5 @@ variable "NETWORK_LICENSE_PLATE" {
 variable "REGISTER_POWERPLATFORM_RP" {
   description = "If true, register the Microsoft.PowerPlatform resource provider on the subscription. Required for the Fabric VNet data gateway to work. Set to false if already registered."
   type        = bool
-  default     = true
+  default     = false
 }
