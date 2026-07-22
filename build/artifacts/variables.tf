@@ -45,7 +45,7 @@ variable "GITHUB_PAT" {
 variable "ENVIRONMENT" {
   description = "Environment name (dev, test, prod). Injected by CI/CD as TF_VAR_ENVIRONMENT based on the target branch."
   type        = string
-  default     = "test"
+  default     = "dev"
 
   validation {
     condition     = contains(["dev", "test", "prod"], var.ENVIRONMENT)
