@@ -32,8 +32,6 @@ override.tf.json
 *_override.tf
 *_override.tf.json
 
-# Generated provider config (created from the .tpl templates by CI/CD)
-build/artifacts/providers.tf
 
 # Misc
 terraform-docs-*.tar.gz*
