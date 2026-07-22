@@ -2,7 +2,7 @@ module "warehouse_mds_connection" {
   source = "../modules/azure/fabric_connection"
 
   providers = {
-    fabric.auth = fabric.auth
+    fabric = fabric.auth
   }
 
   display_name      = "warehouse-${var.PREFIX}-${var.PROJECT}-${var.ENVIRONMENT}"
