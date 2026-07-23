@@ -1,23 +1,17 @@
 # ─────────────────────────────────────────────────────────────────────────────
 # Fabric Data Pipeline — Control Table Driven Incremental Loads with Replay
 #
-# Goals:
-#   1. Normal incremental loads use persisted control-table state.
-#   2. Users can override from/to dates at pipeline runtime for replay/backfill.
-#   3. Users can run a subset of tables using table_filter_csv.
-#   4. ForEach stays parallel.
-#   5. Script activities retry Fabric Warehouse snapshot conflicts.
+# Logging is delegated to one stored procedure (see logging_proc.sql):
+#   [app].[usp_pipeline_log] @mode='START'  INSERT a RUNNING row into pipeline_log
+#   [app].[usp_pipeline_log] @mode='END'    UPDATE that log row AND pipeline_control
 #
-# Expected control table pattern:
-#   source_entity = public.standard_permit_conditions
-#   target_schema = bronze
-#   target_table  = standard_permit_conditions
+# Watermark rule enforced inside the proc on END:
+#   advance only when status = SUCCEEDED AND rows_written > 0
+#   AND @new_watermark is non-null AND @advance = 1
 #
-# Expected source_query_template example:
-#   SELECT *
-#   FROM public.standard_permit_conditions
-#   WHERE update_timestamp >= '@from_date'
-#     AND update_timestamp < '@to_date'
+# @new_watermark is the MAX(watermark_column) actually observed on the source
+# during this run, capped by the rolling window (utcNow() - N days).
+# It is NOT utcNow(), so rows arriving after the source max are never skipped.
 # ─────────────────────────────────────────────────────────────────────────────
 
 terraform {
@@ -33,7 +27,7 @@ terraform {
 }
 
 locals {
-  # ── Runtime expression fragments, raw ADF/Fabric expression text, no leading @ ──
+  # ── Runtime expression fragments, raw expression text, no leading @ ────────
 
   # Unique log row key per control row inside a pipeline run.
   expr_activity_run_id = "concat(pipeline().RunId, '-', string(item().control_id))"
@@ -51,23 +45,24 @@ locals {
   # Upper bound precedence:
   #   1. runtime override_to_date
   #   2. utcNow()
-  #
-  # Note: control.to_date is treated as the previous processed upper bound / audit checkpoint.
-  # It is NOT used as the next upper bound, otherwise a run where from_date == to_date
-  # would create an empty window.
   expr_to_effective = "if(not(empty(pipeline().parameters.override_to_date)), pipeline().parameters.override_to_date, formatDateTime(utcNow(), 'yyyy-MM-dd HH:mm:ss'))"
 
-  # For non-incremental/full rows, move the old to_date into from_date and set to_date to utcNow().
-  # If to_date is empty, fall back to the existing from_effective value.
-  expr_full_from_update = "if(empty(string(item().to_date)), ${local.expr_from_effective}, formatDateTime(item().to_date, 'yyyy-MM-dd HH:mm:ss'))"
-  expr_full_to_update   = "formatDateTime(utcNow(), 'yyyy-MM-dd HH:mm:ss')"
+  # Rolling window ceiling: never advance the watermark into the last N days.
+  expr_rolling_cutoff = "formatDateTime(addDays(utcNow(), -${var.watermark_lag_days}), 'yyyy-MM-dd HH:mm:ss')"
 
-  # Watermark should advance for normal incremental runs.
-  # Replay/backfill overrides do not advance the persisted watermark unless explicitly requested.
-  expr_should_advance_watermark = "or(not(${local.expr_has_date_override}), equals(toLower(pipeline().parameters.advance_watermark_on_override), 'true'))"
-
-  # Optional: source MAX for logging/diagnostics only. The persisted watermark advances to to_effective.
+  # MAX(watermark_column) observed on the source this run. Empty when the
+  # window returned no rows (Postgres MAX over an empty set is NULL).
   expr_source_max = "coalesce(activity('Lookup_SourceMax').output?.firstRow?.max_watermark, '')"
+
+  # new_watermark = LEAST(source_max, rolling_cutoff); empty when no rows found.
+  # Empty is passed to the proc as NULL, which then does not advance.
+  expr_new_watermark = "if(empty(${local.expr_source_max}), '', if(greater(${local.expr_source_max}, ${local.expr_rolling_cutoff}), ${local.expr_rolling_cutoff}, ${local.expr_source_max}))"
+
+  # SQL literal helper: emits NULL (unquoted) or a quoted string.
+  expr_new_watermark_sql = "if(empty(${local.expr_new_watermark}), 'NULL', concat('''', ${local.expr_new_watermark}, ''''))"
+
+  # Watermark advances on normal runs; replay/backfill only when explicitly asked.
+  expr_advance_flag = "if(or(not(${local.expr_has_date_override}), equals(toLower(pipeline().parameters.advance_watermark_on_override), 'true')), '1', '0')"
 
   # ── Policies ───────────────────────────────────────────────────────────────
 
@@ -92,7 +87,6 @@ locals {
   # ── Dataset settings ───────────────────────────────────────────────────────
 
   # Splits source_entity like public.standard_permit_conditions into schema/table.
-  # If source_entity has no dot, schema defaults to public.
   postgres_dataset = {
     annotations = []
     type        = "PostgreSqlTable"
@@ -184,7 +178,7 @@ locals {
           queryTimeout = "02:00:00"
 
           query = {
-            value = "@concat('SELECT TO_CHAR(MAX(', item().watermark_column, '), ''YYYY-MM-DD HH24:MI:SS'') AS max_watermark, COUNT(*) AS row_count FROM ', item().source_entity, ' WHERE ', item().watermark_column, ' >= ''', ${local.expr_from_effective}, ''' AND ', item().watermark_column, ' < ''', ${local.expr_to_effective}, '''')"
+            value = "@concat('SELECT COALESCE(TO_CHAR(MAX(', item().watermark_column, '), ''YYYY-MM-DD HH24:MI:SS''), '''') AS max_watermark, COUNT(*) AS row_count FROM ', item().source_entity, ' WHERE ', item().watermark_column, ' >= ''', ${local.expr_from_effective}, ''' AND ', item().watermark_column, ' < ''', ${local.expr_to_effective}, '''')"
             type  = "Expression"
           }
 
@@ -217,7 +211,7 @@ locals {
           queryTimeout = "02:00:00"
 
           query = {
-            value = "@if(and(contains(toLower(coalesce(item().source_query_template, '')), '@from_date'), contains(toLower(coalesce(item().source_query_template, '')), '@to_date')), replace(replace(item().source_query_template, '@from_date', ${local.expr_from_effective}), '@to_date', ${local.expr_to_effective}), concat(item().source_query_template, if(contains(toLower(item().source_query_template), ' where '), ' AND ', ' WHERE '), item().watermark_column, ' >= ''', ${local.expr_from_effective}, ''' AND ', item().watermark_column, ' < ''', ${local.expr_to_effective}, ''''))"
+            value = "@if(and(contains(toLower(coalesce(item().source_query_template, '')), '@from_date'), contains(toLower(coalesce(item().source_query_template, '')), '@to_date')), replace(replace(item().source_query_template, '@from_date', ${local.expr_from_effective}), '@to_date', ${local.expr_to_effective}), concat(coalesce(item().source_query_template, concat('SELECT * FROM ', item().source_entity)), if(contains(toLower(coalesce(item().source_query_template, '')), ' where '), ' AND ', ' WHERE '), item().watermark_column, ' >= ''', ${local.expr_from_effective}, ''' AND ', item().watermark_column, ' < ''', ${local.expr_to_effective}, ''''))"
             type  = "Expression"
           }
 
@@ -248,15 +242,7 @@ locals {
             type = "NonQuery"
 
             text = {
-              value = "@concat('UPDATE [app].[pipeline_log] SET [status]=''SUCCEEDED'', [rows_read]=', string(coalesce(activity('Copy_Incremental').output?.rowsRead, 0)), ', [rows_written]=', string(coalesce(activity('Copy_Incremental').output?.rowsCopied, 0)), ', [watermark_end]=''', ${local.expr_to_effective}, ''', [source_max_watermark]=''', ${local.expr_source_max}, ''', [end_time]=''', utcNow(), ''' WHERE [activity_run_id]=''', ${local.expr_activity_run_id}, '''')"
-              type  = "Expression"
-            }
-          },
-          {
-            type = "NonQuery"
-
-            text = {
-              value = "@if(greater(coalesce(activity('Copy_Incremental').output?.rowsCopied, 0), 0), concat('UPDATE [app].[pipeline_control] SET [last_run_status]=''SUCCEEDED'', [last_run_date]=''', utcNow(), ''', [last_watermark]=''', ${local.expr_to_effective}, ''', [from_date]=''', ${local.expr_to_effective}, ''', [to_date]=''', ${local.expr_to_effective}, ''', [modified_date]=''', utcNow(), ''' WHERE [control_id]=', string(item().control_id)), concat('UPDATE [app].[pipeline_control] SET [last_run_status]=''SUCCEEDED'', [last_run_date]=''', utcNow(), ''', [modified_date]=''', utcNow(), ''' WHERE [control_id]=', string(item().control_id)))"
+              value = "@concat('EXEC [app].[usp_pipeline_log] @mode=''END'', @activity_run_id=''', ${local.expr_activity_run_id}, ''', @control_id=', string(item().control_id), ', @status=''SUCCEEDED'', @rows_read=', string(coalesce(activity('Copy_Incremental').output?.rowsRead, 0)), ', @rows_written=', string(coalesce(activity('Copy_Incremental').output?.rowsCopied, 0)), ', @watermark_end=', ${local.expr_new_watermark_sql}, ', @new_watermark=', ${local.expr_new_watermark_sql}, ', @window_from=''', ${local.expr_from_effective}, ''', @window_to=', ${local.expr_new_watermark_sql}, ', @advance=', ${local.expr_advance_flag})"
               type  = "Expression"
             }
           }
@@ -289,15 +275,7 @@ locals {
             type = "NonQuery"
 
             text = {
-              value = "@concat('UPDATE [app].[pipeline_log] SET [status]=''FAILED'', [end_time]=''', utcNow(), ''', [error_message]=''', replace(coalesce(activity('Copy_Incremental').output?.errors[0]?.Message, 'Copy failed'), '''', ''''''), ''', [error_code]=''', coalesce(activity('Copy_Incremental').output?.errors[0]?.Code, 'Unknown'), ''' WHERE [activity_run_id]=''', ${local.expr_activity_run_id}, '''')"
-              type  = "Expression"
-            }
-          },
-          {
-            type = "NonQuery"
-
-            text = {
-              value = "@concat('UPDATE [app].[pipeline_control] SET [last_run_status]=''FAILED'', [last_run_date]=''', utcNow(), ''', [modified_date]=''', utcNow(), ''' WHERE [control_id]=', string(item().control_id))"
+              value = "@concat('EXEC [app].[usp_pipeline_log] @mode=''END'', @activity_run_id=''', ${local.expr_activity_run_id}, ''', @control_id=', string(item().control_id), ', @status=''FAILED'', @rows_read=', string(coalesce(activity('Copy_Incremental').output?.rowsRead, 0)), ', @rows_written=', string(coalesce(activity('Copy_Incremental').output?.rowsCopied, 0)), ', @error_message=''', replace(coalesce(activity('Copy_Incremental').output?.errors[0]?.Message, 'Copy failed'), '''', ''''''), ''', @error_code=''', replace(coalesce(activity('Copy_Incremental').output?.errors[0]?.Code, 'Unknown'), '''', ''''''), '''')"
               type  = "Expression"
             }
           }
@@ -330,15 +308,7 @@ locals {
             type = "NonQuery"
 
             text = {
-              value = "@concat('UPDATE [app].[pipeline_log] SET [status]=''FAILED'', [end_time]=''', utcNow(), ''', [error_message]=''', replace(coalesce(activity('Lookup_SourceMax').error?.message, 'Lookup_SourceMax failed'), '''', ''''''), ''', [error_code]=''LOOKUP_SOURCE_MAX_FAILED'' WHERE [activity_run_id]=''', ${local.expr_activity_run_id}, '''')"
-              type  = "Expression"
-            }
-          },
-          {
-            type = "NonQuery"
-
-            text = {
-              value = "@concat('UPDATE [app].[pipeline_control] SET [last_run_status]=''FAILED'', [last_run_date]=''', utcNow(), ''', [modified_date]=''', utcNow(), ''' WHERE [control_id]=', string(item().control_id))"
+              value = "@concat('EXEC [app].[usp_pipeline_log] @mode=''END'', @activity_run_id=''', ${local.expr_activity_run_id}, ''', @control_id=', string(item().control_id), ', @status=''FAILED'', @error_message=''', replace(coalesce(activity('Lookup_SourceMax').error?.message, 'Lookup_SourceMax failed'), '''', ''''''), ''', @error_code=''LOOKUP_SOURCE_MAX_FAILED''')"
               type  = "Expression"
             }
           }
@@ -354,6 +324,8 @@ locals {
   ]
 
   # ── Full load branch ───────────────────────────────────────────────────────
+  # No watermark column, so there is no source MAX to advance to. The snapshot
+  # time is recorded instead, and only when rows were actually written.
 
   fullload_activities = [
     {
@@ -368,7 +340,7 @@ locals {
           queryTimeout = "02:00:00"
 
           query = {
-            value = "@if(empty(item().source_query_template), concat('SELECT * FROM ', item().source_entity), replace(replace(item().source_query_template, '@from_date', ${local.expr_from_effective}), '@to_date', ${local.expr_to_effective}))"
+            value = "@if(empty(coalesce(item().source_query_template, '')), concat('SELECT * FROM ', item().source_entity), replace(replace(item().source_query_template, '@from_date', ${local.expr_from_effective}), '@to_date', ${local.expr_to_effective}))"
             type  = "Expression"
           }
 
@@ -399,15 +371,7 @@ locals {
             type = "NonQuery"
 
             text = {
-              value = "@concat('UPDATE [app].[pipeline_log] SET [status]=''SUCCEEDED'', [rows_read]=', string(coalesce(activity('Copy_Full').output?.rowsRead, 0)), ', [rows_written]=', string(coalesce(activity('Copy_Full').output?.rowsCopied, 0)), ', [end_time]=''', utcNow(), ''' WHERE [activity_run_id]=''', ${local.expr_activity_run_id}, '''')"
-              type  = "Expression"
-            }
-          },
-          {
-            type = "NonQuery"
-
-            text = {
-              value = "@if(greater(coalesce(activity('Copy_Full').output?.rowsCopied, 0), 0), concat('UPDATE [app].[pipeline_control] SET [last_run_status]=''SUCCEEDED'', [last_run_date]=''', utcNow(), ''', [from_date]=''', ${local.expr_full_from_update}, ''', [to_date]=''', ${local.expr_full_to_update}, ''', [modified_date]=''', utcNow(), ''' WHERE [control_id]=', string(item().control_id)), concat('UPDATE [app].[pipeline_control] SET [last_run_status]=''SUCCEEDED'', [last_run_date]=''', utcNow(), ''', [modified_date]=''', utcNow(), ''' WHERE [control_id]=', string(item().control_id)))"
+              value = "@concat('EXEC [app].[usp_pipeline_log] @mode=''END'', @activity_run_id=''', ${local.expr_activity_run_id}, ''', @control_id=', string(item().control_id), ', @status=''SUCCEEDED'', @rows_read=', string(coalesce(activity('Copy_Full').output?.rowsRead, 0)), ', @rows_written=', string(coalesce(activity('Copy_Full').output?.rowsCopied, 0)), ', @new_watermark=', if(greater(coalesce(activity('Copy_Full').output?.rowsCopied, 0), 0), concat('''', ${local.expr_to_effective}, ''''), 'NULL'), ', @window_from=''', ${local.expr_from_effective}, ''', @window_to=''', ${local.expr_to_effective}, ''', @advance=', ${local.expr_advance_flag})"
               type  = "Expression"
             }
           }
@@ -440,15 +404,7 @@ locals {
             type = "NonQuery"
 
             text = {
-              value = "@concat('UPDATE [app].[pipeline_log] SET [status]=''FAILED'', [end_time]=''', utcNow(), ''', [error_message]=''', replace(coalesce(activity('Copy_Full').output?.errors[0]?.Message, 'Copy failed'), '''', ''''''), ''', [error_code]=''', coalesce(activity('Copy_Full').output?.errors[0]?.Code, 'Unknown'), ''' WHERE [activity_run_id]=''', ${local.expr_activity_run_id}, '''')"
-              type  = "Expression"
-            }
-          },
-          {
-            type = "NonQuery"
-
-            text = {
-              value = "@concat('UPDATE [app].[pipeline_control] SET [last_run_status]=''FAILED'', [last_run_date]=''', utcNow(), ''', [modified_date]=''', utcNow(), ''' WHERE [control_id]=', string(item().control_id))"
+              value = "@concat('EXEC [app].[usp_pipeline_log] @mode=''END'', @activity_run_id=''', ${local.expr_activity_run_id}, ''', @control_id=', string(item().control_id), ', @status=''FAILED'', @rows_read=', string(coalesce(activity('Copy_Full').output?.rowsRead, 0)), ', @rows_written=', string(coalesce(activity('Copy_Full').output?.rowsCopied, 0)), ', @error_message=''', replace(coalesce(activity('Copy_Full').output?.errors[0]?.Message, 'Copy failed'), '''', ''''''), ''', @error_code=''', replace(coalesce(activity('Copy_Full').output?.errors[0]?.Code, 'Unknown'), '''', ''''''), '''')"
               type  = "Expression"
             }
           }
@@ -478,7 +434,7 @@ locals {
             type = "NonQuery"
 
             text = {
-              value = "@concat('INSERT INTO [app].[pipeline_log] ([run_id],[activity_run_id],[pipeline_name],[source_entity],[target_schema],[target_table],[status],[from_date],[to_date],[watermark_start],[start_time],[environment],[triggered_by],[created_date]) VALUES (''', pipeline().RunId, ''',''', ${local.expr_activity_run_id}, ''',''', pipeline().parameters.pipeline_name, ''',''', item().source_entity, ''',''', item().target_schema, ''',''', item().target_table, ''',''RUNNING'',''', ${local.expr_from_effective}, ''',''', ${local.expr_to_effective}, ''',', if(empty(coalesce(item().last_watermark, '')), 'NULL', concat('''', item().last_watermark, '''')), ',''', utcNow(), ''',''', pipeline().parameters.environment, ''',''', pipeline().parameters.triggered_by, ''',''', utcNow(), ''')')"
+              value = "@concat('EXEC [app].[usp_pipeline_log] @mode=''START'', @activity_run_id=''', ${local.expr_activity_run_id}, ''', @run_id=''', pipeline().RunId, ''', @pipeline_name=''', pipeline().parameters.pipeline_name, ''', @source_entity=''', item().source_entity, ''', @target_schema=''', item().target_schema, ''', @target_table=''', item().target_table, ''', @from_date=''', ${local.expr_from_effective}, ''', @to_date=''', ${local.expr_to_effective}, ''', @watermark_start=', if(empty(coalesce(item().last_watermark, '')), 'NULL', concat('''', item().last_watermark, '''')), ', @environment=''', pipeline().parameters.environment, ''', @triggered_by=''', pipeline().parameters.triggered_by, '''')"
               type  = "Expression"
             }
           }
@@ -530,7 +486,6 @@ locals {
           queryTimeout    = "02:00:00"
           partitionOption = "None"
 
-          # AzureSqlSource uses sqlReaderQuery, not query.
           # table_filter_csv accepts target table names, for example:
           #   standard_permit_conditions,camp_detail
           sqlReaderQuery = {
@@ -586,7 +541,6 @@ locals {
       ]
 
       typeProperties = {
-        # Keep parallel execution.
         isSequential = false
         batchCount   = var.parallel_copies
 
@@ -622,11 +576,10 @@ resource "fabric_data_pipeline" "this" {
         environment         = var.environment
         triggered_by        = var.triggered_by_default
 
-        # Add matching parameters to pipeline-content.json.tmpl.
-        override_from_date             = ""
-        override_to_date               = ""
-        table_filter_csv               = ""
-        advance_watermark_on_override  = "false"
+        override_from_date            = ""
+        override_to_date              = ""
+        table_filter_csv              = ""
+        advance_watermark_on_override = "false"
       }
     }
   }
