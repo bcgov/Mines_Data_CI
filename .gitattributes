@@ -1,0 +1,1 @@
+build/artifacts/variables.tf merge=keep-current
