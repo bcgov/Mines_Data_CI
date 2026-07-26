@@ -103,7 +103,7 @@ variable "WORKSPACE_OWNERS" {
 variable "GATEWAY_ADMINS" {
   description = "Entra object IDs granted Admin on the Fabric VNet data gateway."
   type        = list(string)
-  default     = ["b0bf68e8-4e08-433c-8903-19b2fec4cc20"]
+ default = ["b0bf68e8-4e08-433c-8903-19b2fec4cc20", "71a5bb67-14d7-40fe-8f3e-47120f2e32d3"]
 }
 
 # ── Networking (Fabric VNet data gateway) ────────────────────────────────────
