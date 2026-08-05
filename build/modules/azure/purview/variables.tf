@@ -34,7 +34,7 @@ variable "env" {
 }
 
 variable "purview_account_name" {
-  description = "Optional account name to override the default naming convention."
+  description = "Name of the Purview account. When create_account is false this identifies the existing account — leave null to discover the single account in the subscription. When create_account is true it overrides the generated name."
   type        = string
   default     = null
 }
@@ -43,9 +43,21 @@ variable "purview_account_name" {
 # Purview account
 ###############################################################################
 
+variable "create_account" {
+  description = "Whether to create the Purview account. A Microsoft Entra tenant may hold only one account, so this defaults to false and the module attaches to the existing account instead. Creating a second returns 409 / error 35001."
+  type        = bool
+  default     = false
+}
+
 variable "resource_group_name" {
-  description = "Name of the existing resource group that will hold the Purview account."
+  description = "Resource group holding the Purview account. Required when create_account is true; otherwise optional, and used only to narrow the search for the existing account."
   type        = string
+  default     = null
+
+  validation {
+    condition     = !var.create_account || var.resource_group_name != null
+    error_message = "resource_group_name is required when create_account is true."
+  }
 }
 
 variable "location" {
@@ -86,6 +98,36 @@ variable "admins" {
   description = "Entra object IDs granted Root Collection Admin on the Purview account — the data-plane admin role covering every collection, data source and scan."
   type        = list(string)
   default     = []
+}
+
+variable "include_deploying_principal_as_admin" {
+  description = "Whether to add the deploying service principal to the Root Collection Admins. Required on an account this module did not create — without it the principal cannot call the scanning data plane. Harmless when creating, since the creator gets the role automatically."
+  type        = bool
+  default     = true
+}
+
+variable "account_api_version" {
+  description = "API version for the Purview control plane (used by the addRootCollectionAdmin action)."
+  type        = string
+  default     = "2021-12-01"
+}
+
+variable "admin_retry_attempts" {
+  description = "Attempts per admin grant. Each grant rewrites the root collection policy under optimistic concurrency, so a retry is needed when calls collide or when a newly created account is still initialising."
+  type        = number
+  default     = 6
+}
+
+variable "admin_retry_delay_seconds" {
+  description = "Seconds before the first retry of a failed admin grant. Doubles on each subsequent attempt."
+  type        = number
+  default     = 10
+}
+
+variable "admin_settle_seconds" {
+  description = "Seconds to wait between consecutive admin grants, so each call reads the policy the previous write left behind."
+  type        = number
+  default     = 5
 }
 
 variable "enable_rbac_assignments" {

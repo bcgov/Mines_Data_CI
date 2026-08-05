@@ -1,9 +1,18 @@
 # =============================================================================
 # build/artifacts/purview.tf
 #
-# Microsoft Purview account for the data platform, plus the Fabric tenant
-# registration and scan that keep the catalog in sync with the workspace
-# created in fabric_workspace.tf.
+# Fabric tenant registration and scan in Microsoft Purview, plus the admin
+# grants that go with them.
+#
+# A Microsoft Entra tenant may hold exactly one Purview account, and this tenant
+# already has one — so by default this attaches to that account rather than
+# creating another (which fails with 409 / error 35001). Set
+# PURVIEW_ACCOUNT_NAME if the subscription holds more than one, or
+# PURVIEW_CREATE_ACCOUNT = true only in a tenant that has none.
+#
+# Each environment registers its own data source and scan under the shared
+# account, named from the same convention as the workspace
+# (mcm-mdp-fabric01-dev), so dev/test/prod stay distinguishable in the Data Map.
 #
 # The same people who administer the Fabric workspace administer Purview —
 # PURVIEW_ADMINS falls back to WORKSPACE_OWNERS so there is one list to
@@ -14,10 +23,10 @@
 locals {
   purview_admins = length(var.PURVIEW_ADMINS) > 0 ? var.PURVIEW_ADMINS : var.WORKSPACE_OWNERS
 
-  # Landing-zone application resource group for the current environment, unless
-  # overridden. Follows the same derivation as the networking names in
-  # fabric_virtual_gateway.tf.
-  purview_rg = coalesce(var.PURVIEW_RESOURCE_GROUP_NAME, "${var.NETWORK_LICENSE_PLATE}-${var.ENVIRONMENT}")
+  # Only used to narrow the search for the existing account, or as the target
+  # resource group when PURVIEW_CREATE_ACCOUNT is true. Null means "search the
+  # whole subscription".
+  purview_rg = var.PURVIEW_RESOURCE_GROUP_NAME
 }
 
 module "purview_01" {
@@ -29,6 +38,8 @@ module "purview_01" {
   instance_number = "01"
   location        = var.LOCATION
 
+  create_account         = var.PURVIEW_CREATE_ACCOUNT
+  purview_account_name   = var.PURVIEW_ACCOUNT_NAME
   resource_group_name    = local.purview_rg
   public_network_enabled = var.PURVIEW_PUBLIC_NETWORK_ENABLED
 
@@ -56,8 +67,13 @@ module "purview_01" {
 ###############################################################################
 
 output "purview_name" {
-  description = "Name of the Purview account"
+  description = "Name of the Purview account this configuration registers the Fabric scan against"
   value       = module.purview_01.purview_name
+}
+
+output "purview_created_here" {
+  description = "False when attached to the pre-existing tenant-level account, true when this configuration owns it"
+  value       = module.purview_01.purview_created_here
 }
 
 output "purview_scan_endpoint" {

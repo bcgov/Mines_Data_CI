@@ -1,23 +1,33 @@
 # modules/azure/purview/outputs.tf
 
 output "purview_id" {
-  description = "The ID of the created Purview account."
-  value       = azurerm_purview_account.this.id
+  description = "Resource ID of the Purview account — the one created here, or the existing tenant account this module attached to."
+  value       = local.account_id
 }
 
 output "purview_name" {
-  description = "The name of the created Purview account."
-  value       = azurerm_purview_account.this.name
+  description = "Name of the Purview account."
+  value       = local.account_name
+}
+
+output "purview_resource_group_name" {
+  description = "Resource group holding the Purview account."
+  value       = local.account_rg
+}
+
+output "purview_created_here" {
+  description = "Whether this configuration owns the account lifecycle, or is attached to an account managed elsewhere."
+  value       = local.created != null
 }
 
 output "purview_identity_principal_id" {
   description = "Object ID of the Purview system-assigned managed identity. Add this to the Entra security group allowed to use the Fabric read-only admin APIs."
-  value       = azurerm_purview_account.this.identity[0].principal_id
+  value       = local.account_identity_principal_id
 }
 
 output "purview_catalog_endpoint" {
   description = "Catalog (Atlas) endpoint of the Purview account."
-  value       = azurerm_purview_account.this.catalog_endpoint
+  value       = local.created != null ? local.created.catalog_endpoint : try(data.azurerm_purview_account.existing[0].catalog_endpoint, null)
 }
 
 output "purview_scan_endpoint" {

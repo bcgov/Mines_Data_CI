@@ -139,6 +139,17 @@ variable "REGISTER_POWERPLATFORM_RP" {
 }
 
 # ── Purview ──────────────────────────────────────────────────────────────────
+variable "PURVIEW_CREATE_ACCOUNT" {
+  description = "Whether to create the Purview account. A tenant may hold only one, and this tenant already has one, so the default attaches to the existing account. Creating a second fails with 409 / error 35001."
+  type        = bool
+  default     = false
+}
+
+variable "PURVIEW_ACCOUNT_NAME" {
+  description = "Name of the existing Purview account to register the Fabric scan against. Leave null to discover the single account in the subscription; set it when the subscription holds more than one."
+  type        = string
+  default     = null
+}
 
 variable "PURVIEW_RESOURCE_GROUP_NAME" {
   description = "Resource group that holds the Purview account. Leave null to derive from the environment (ef74b0-<env>)."
