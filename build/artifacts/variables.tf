@@ -106,6 +106,12 @@ variable "GATEWAY_ADMINS" {
  default = ["b0bf68e8-4e08-433c-8903-19b2fec4cc20", "71a5bb67-14d7-40fe-8f3e-47120f2e32d3"]
 }
 
+variable "PURVIEW_ADMINS" {
+  description = "Entra object IDs granted Root Collection Admin on the Purview account. Leave empty to reuse WORKSPACE_OWNERS — set this only when the two lists need to diverge."
+  type        = list(string)
+  default     = []
+}
+
 # ── Networking (Fabric VNet data gateway) ────────────────────────────────────
 
 variable "VNET_NAME" {
@@ -128,6 +134,38 @@ variable "NETWORK_LICENSE_PLATE" {
 
 variable "REGISTER_POWERPLATFORM_RP" {
   description = "If true, register the Microsoft.PowerPlatform resource provider on the subscription. Required for the Fabric VNet data gateway to work. Set to false if already registered."
+  type        = bool
+  default     = false
+}
+
+# ── Purview ──────────────────────────────────────────────────────────────────
+
+variable "PURVIEW_RESOURCE_GROUP_NAME" {
+  description = "Resource group that holds the Purview account. Leave null to derive from the environment (ef74b0-<env>)."
+  type        = string
+  default     = null
+}
+
+variable "PURVIEW_PUBLIC_NETWORK_ENABLED" {
+  description = "Whether the Purview account accepts public network traffic. Required by the Azure integration runtime used for Fabric scans; set to false only when moving to a managed VNet runtime."
+  type        = bool
+  default     = true
+}
+
+variable "PURVIEW_SCAN_ENABLED" {
+  description = "If true, register the Fabric tenant as a Purview data source and configure the recurring scan. Set to false to deploy the account on its own — useful before the Fabric admin-portal prerequisites are in place."
+  type        = bool
+  default     = true
+}
+
+variable "PURVIEW_SCAN_SCOPE_TO_WORKSPACE" {
+  description = "If true, scope the scan to the Fabric workspace created by this configuration. Set to false to scan every workspace in the tenant."
+  type        = bool
+  default     = true
+}
+
+variable "PURVIEW_RUN_SCAN_ON_APPLY" {
+  description = "If true, start a scan run at the end of each apply instead of waiting for the first scheduled run."
   type        = bool
   default     = false
 }
