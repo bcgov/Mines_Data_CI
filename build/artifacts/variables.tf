@@ -143,7 +143,7 @@ variable "REGISTER_POWERPLATFORM_RP" {
 variable "PURVIEW_RESOURCE_GROUP_NAME" {
   description = "Resource group that holds the Purview account. Leave null to derive from the environment (ef74b0-<env>)."
   type        = string
-  default     = null
+  default     = "minesfabric-rg01"
 }
 
 variable "PURVIEW_PUBLIC_NETWORK_ENABLED" {
