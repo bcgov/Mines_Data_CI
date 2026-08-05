@@ -57,7 +57,7 @@ module "purview_01" {
 
 | Layer | Managed by | Resource |
 |-------|-----------|----------|
-| Account discovery | `azurerm` | `azurerm_resources`, `azurerm_purview_account` data sources |
+| Account discovery | `azurerm` / `azapi` | `azurerm_resources` data source, then `azapi_resource` to read identity and endpoints |
 | Account creation (opt-in) | `azurerm` | `azurerm_purview_account` |
 | Root Collection Admin | REST via `local-exec` | `add_root_collection_admins.sh` |
 | ARM RBAC on the account (optional) | `azurerm` | `azurerm_role_assignment` |
@@ -68,6 +68,11 @@ row is driven by `configure_fabric_scan.sh` in the same way
 `modules/azure/fabric_connection` drives the Fabric connections API. Every call
 is an idempotent `PUT`, so re-running an apply is safe. Terraform state holds a
 hash of the scan configuration, not the scan itself.
+
+`azapi_resource` is used for the second read because azurerm ships
+`azurerm_purview_account` only as a managed resource — there is no data source
+of that name, so an existing account's managed identity principal ID and
+endpoints are not reachable through azurerm at all.
 
 Attaching to an existing account does not modify it — network posture,
 identity and tags stay as their owner set them. Only collection admins, the data

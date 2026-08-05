@@ -26,6 +26,10 @@ terraform {
       source  = "hashicorp/azurerm"
       version = ">= 4.0"
     }
+    azapi = {
+      source  = "Azure/azapi"
+      version = ">= 2.0"
+    }
     null = {
       source  = "hashicorp/null"
       version = ">= 3.0"
@@ -69,7 +73,7 @@ locals {
   account_identity_principal_id = (
     local.created != null
     ? local.created.identity[0].principal_id
-    : try(data.azurerm_purview_account.existing[0].identity[0].principal_id, null)
+    : try(data.azapi_resource.existing[0].output.identity.principalId, null)
   )
 
   # Data-plane endpoint. The root collection always carries the same reference
@@ -159,11 +163,17 @@ data "azurerm_resources" "purview" {
   resource_group_name = var.resource_group_name
 }
 
-data "azurerm_purview_account" "existing" {
-  count = !var.create_account && local.account_name != null ? 1 : 0
+# azurerm has no azurerm_purview_account *data source* — only the managed
+# resource — so the existing account is read through azapi instead. This is
+# only needed for attributes azurerm_resources does not return: the managed
+# identity principal ID and the endpoints.
+data "azapi_resource" "existing" {
+  count = !var.create_account && local.account_id != null ? 1 : 0
 
-  name                = local.account_name
-  resource_group_name = local.account_rg
+  type        = "Microsoft.Purview/accounts@${var.account_api_version}"
+  resource_id = local.account_id
+
+  response_export_values = ["*"]
 }
 
 resource "azurerm_purview_account" "this" {

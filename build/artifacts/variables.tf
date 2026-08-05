@@ -142,7 +142,7 @@ variable "REGISTER_POWERPLATFORM_RP" {
 variable "PURVIEW_CREATE_ACCOUNT" {
   description = "Whether to create the Purview account. A tenant may hold only one, and this tenant already has one, so the default attaches to the existing account. Creating a second fails with 409 / error 35001."
   type        = bool
-  default     = false
+  default     = true
 }
 
 variable "PURVIEW_ACCOUNT_NAME" {

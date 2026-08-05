@@ -18,7 +18,7 @@ variable "project" {
 variable "suffix" {
   type        = string
   description = "Resource type abbreviation used in the account name."
-  default     = "pview"
+  default     = "pv"
 }
 
 variable "instance_number" {

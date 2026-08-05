@@ -27,7 +27,7 @@ output "purview_identity_principal_id" {
 
 output "purview_catalog_endpoint" {
   description = "Catalog (Atlas) endpoint of the Purview account."
-  value       = local.created != null ? local.created.catalog_endpoint : try(data.azurerm_purview_account.existing[0].catalog_endpoint, null)
+  value       = local.created != null ? local.created.catalog_endpoint : try(data.azapi_resource.existing[0].output.properties.endpoints.catalog, null)
 }
 
 output "purview_scan_endpoint" {
