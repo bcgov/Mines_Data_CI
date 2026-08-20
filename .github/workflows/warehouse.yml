@@ -187,8 +187,11 @@ jobs:
           curl -fsSL -o /tmp/sqlcmd.tar.bz2 \
             "https://github.com/microsoft/go-sqlcmd/releases/latest/download/sqlcmd-linux-amd64.tar.bz2"
           tar -xjf /tmp/sqlcmd.tar.bz2 -C /tmp sqlcmd
-          sudo mv /tmp/sqlcmd /usr/local/bin/sqlcmd
-          sqlcmd --version
+          # Distinct name: the runner image preinstalls the legacy ODBC sqlcmd
+          # on PATH, which must not shadow this one. The deploy step points
+          # SQLCMD_BIN at this path explicitly.
+          sudo mv /tmp/sqlcmd /usr/local/bin/go-sqlcmd
+          go-sqlcmd --version
 
       # ── Deploy ───────────────────────────────────────────────────────────────
 
@@ -201,6 +204,8 @@ jobs:
           AZURE_CLIENT_ID:     ${{ vars.ARM_CLIENT_ID }}
           AZURE_TENANT_ID:     ${{ vars.ARM_TENANT_ID }}
           AZURE_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
+          # Explicit go-sqlcmd path — bypasses the runner's legacy ODBC sqlcmd
+          SQLCMD_BIN:          /usr/local/bin/go-sqlcmd
         run: |
           chmod +x src/init/warehouse_init.sh
           ./src/init/warehouse_init.sh

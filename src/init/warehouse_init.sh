@@ -48,6 +48,11 @@ TENANT_ID="${AZURE_TENANT_ID:?AZURE_TENANT_ID is required}"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 SRC_DIR="$(cd "${SCRIPT_DIR}/.." && pwd)"
 
+# Which sqlcmd to use. GitHub runners preinstall the legacy ODBC sqlcmd, which
+# can shadow go-sqlcmd on PATH — set SQLCMD_BIN to an explicit go-sqlcmd path
+# (the CI workflow does) to bypass PATH ordering entirely.
+SQLCMD_BIN="${SQLCMD_BIN:-sqlcmd}"
+
 # Ordered deployment set: init first, then procs, then data.
 # Glob expansion is sorted, so numeric prefixes (010_, 020_, ...) control order.
 build_sql_file_list() {
@@ -82,7 +87,7 @@ check_dependencies() {
     command -v az      &>/dev/null || missing+=("azure-cli")
     command -v curl    &>/dev/null || missing+=("curl")
     command -v jq      &>/dev/null || missing+=("jq")
-    command -v sqlcmd  &>/dev/null || missing+=("sqlcmd (go-sqlcmd)")
+    command -v "$SQLCMD_BIN" &>/dev/null || missing+=("sqlcmd (go-sqlcmd)")
 
     if [[ ${#missing[@]} -gt 0 ]]; then
         echo -e "${RED}[✗]${NC} Missing required tools: ${missing[*]}"
@@ -94,15 +99,19 @@ check_dependencies() {
         exit 1
     fi
 
-    # The legacy ODBC sqlcmd (mssql-tools18) has no --authentication-method
-    # flag and cannot do service-principal auth non-interactively on Linux.
-    if ! sqlcmd --help 2>&1 | grep -q -- '--authentication-method'; then
-        echo -e "${RED}[✗]${NC} The 'sqlcmd' on PATH is the legacy ODBC version."
-        echo "This script requires go-sqlcmd (see install instructions above)."
+    # The legacy ODBC sqlcmd (mssql-tools18) cannot do service-principal auth
+    # non-interactively on Linux and doesn't support --version (it errors),
+    # while go-sqlcmd does — use that as the discriminator. GitHub runners
+    # preinstall the legacy one, so a plain 'sqlcmd' on PATH may be wrong;
+    # point SQLCMD_BIN at a go-sqlcmd binary explicitly in that case.
+    if ! "$SQLCMD_BIN" --version &>/dev/null; then
+        echo -e "${RED}[✗]${NC} '$SQLCMD_BIN' appears to be the legacy ODBC sqlcmd (or is broken)."
+        echo "This script requires go-sqlcmd. Either install it first on PATH,"
+        echo "or set SQLCMD_BIN=/path/to/go-sqlcmd (see install instructions above)."
         exit 1
     fi
 
-    echo -e "${GREEN}[✓]${NC} All dependencies present (go-sqlcmd detected)"
+    echo -e "${GREEN}[✓]${NC} All dependencies present (go-sqlcmd: $("$SQLCMD_BIN" --version 2>/dev/null | tr -d '\r'))"
 }
 
 # ══════════════════════════════════════════════════════════════
@@ -177,7 +186,7 @@ run_sql_file() {
     # -C  = trust server certificate
     # -b  = exit on first error
     # -i  = input file
-    sqlcmd \
+    "$SQLCMD_BIN" \
         -S "$WH_SERVER" \
         -d "$WH_DATABASE" \
         --authentication-method ActiveDirectoryDefault \
