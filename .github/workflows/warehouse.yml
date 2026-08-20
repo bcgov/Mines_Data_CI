@@ -1,0 +1,211 @@
+name: Warehouse Deploy
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Deploys the SQL layer (schemas, control/log tables, stored procedures, and
+# pipeline_control seed data) into the Fabric Warehouse that Terraform created.
+#
+# Everything executed here is idempotent:
+#   src/init/warehouse_init.sql   IF NOT EXISTS guards + ALTER-add-column guards
+#   src/procs/*.sql               CREATE OR ALTER
+#   src/data/load_control.sql     app.usp_upsert_pipeline_control (never resets
+#                                 runtime watermarks on re-run)
+# so re-running this workflow against the same environment is always safe.
+#
+# Triggers:
+#   1. workflow_run — after "Terraform Apply" succeeds on dev/test/main, so a
+#      fresh or changed infra deployment is immediately configured.
+#   2. push to dev/test/main touching src/** — SQL-only changes (new control
+#      rows, proc updates) deploy without re-running Terraform.
+#   3. workflow_dispatch — run it FROM the branch you want to deploy.
+#
+# A merge touching both build/** and src/** can queue two runs (one per
+# trigger); the concurrency group serialises them and idempotency makes the
+# second a no-op.
+#
+# The warehouse identity (workspace_id / warehouse_id) is resolved from the
+# committed terraform-<env>.tfstate via `terraform output`, falling back to
+# reading the state file directly — no hardcoded IDs anywhere.
+# ─────────────────────────────────────────────────────────────────────────────
+
+on:
+  workflow_dispatch:
+  workflow_run:
+    workflows: ["Terraform Apply"]
+    types: [completed]
+  push:
+    branches:
+      - dev
+      - test
+      - main
+    paths:
+      - 'src/**'
+      - '.github/workflows/warehouse.yml'
+
+permissions:
+  contents: read
+
+# Serialise deployments per target branch/environment
+concurrency:
+  group: warehouse-deploy-${{ github.event.workflow_run.head_branch || github.ref_name }}
+  cancel-in-progress: false
+
+jobs:
+  # ───────────────────────────────────────────────────────────────────────────
+  # JOB 1: Resolve target branch and environment
+  # ───────────────────────────────────────────────────────────────────────────
+  resolve-environment:
+    name: Resolve Environment
+    runs-on: ubuntu-latest
+    # For workflow_run: only proceed when Terraform Apply succeeded on an
+    # environment branch. Other triggers pass straight through.
+    if: |
+      github.event_name != 'workflow_run' ||
+      (github.event.workflow_run.conclusion == 'success' &&
+       contains(fromJSON('["dev","test","main"]'), github.event.workflow_run.head_branch))
+    outputs:
+      branch:   ${{ steps.set-env.outputs.branch }}
+      env_name: ${{ steps.set-env.outputs.env_name }}
+
+    steps:
+      - name: Set environment name
+        id: set-env
+        run: |
+          if [[ "${{ github.event_name }}" == "workflow_run" ]]; then
+            BRANCH="${{ github.event.workflow_run.head_branch }}"
+          else
+            BRANCH="${{ github.ref_name }}"
+          fi
+
+          case "$BRANCH" in
+            main) ENV_NAME="prod" ;;
+            test) ENV_NAME="test" ;;
+            dev)  ENV_NAME="dev"  ;;
+            *)
+              echo "ERROR: Warehouse deploy must run from dev, test, or main (got '$BRANCH')."
+              echo "Each environment branch owns its own state and warehouse."
+              exit 1
+              ;;
+          esac
+
+          echo "branch=$BRANCH"     >> $GITHUB_OUTPUT
+          echo "env_name=$ENV_NAME" >> $GITHUB_OUTPUT
+          echo "Deploying warehouse SQL for branch '$BRANCH' → environment '$ENV_NAME'"
+
+  # ───────────────────────────────────────────────────────────────────────────
+  # JOB 2: Deploy SQL into the warehouse
+  # ───────────────────────────────────────────────────────────────────────────
+  warehouse-deploy:
+    name: Warehouse Deploy (${{ needs.resolve-environment.outputs.env_name }})
+    runs-on: ubuntu-latest
+    needs: [resolve-environment]
+    # GitHub Environment — supplies env-scoped vars/secrets AND enforces the
+    # required-reviewer approval gate for test and prod (same as cd.yml)
+    environment: ${{ needs.resolve-environment.outputs.env_name }}
+
+    env:
+      TARGET_BRANCH: ${{ needs.resolve-environment.outputs.branch }}
+      TF_ENV:        ${{ needs.resolve-environment.outputs.env_name }}
+
+    steps:
+      - name: Checkout target branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.resolve-environment.outputs.branch }}
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: ${{ vars.TF_VERSION || '1.11.4' }}
+
+      # ── Resolve warehouse identity from committed state ──────────────────────
+
+      - name: Verify state exists
+        working-directory: build/artifacts
+        run: |
+          if [[ ! -f "terraform-${TF_ENV}.tfstate" ]]; then
+            echo "ERROR: build/artifacts/terraform-${TF_ENV}.tfstate not found on '$TARGET_BRANCH'."
+            echo "Run the 'Terraform Apply' workflow first — the warehouse must exist before it can be configured."
+            exit 1
+          fi
+          echo "State file found for $TF_ENV"
+
+      - name: Select providers file
+        working-directory: build/artifacts
+        run: |
+          cp providers_local.tf.tpl providers.tf
+          sed -i "s/__ENV__/${TF_ENV}/g" providers.tf
+          terraform fmt providers.tf
+          echo "providers.tf generated for $TF_ENV from local template"
+
+      - name: Terraform Init
+        working-directory: build/artifacts
+        run: terraform init -input=false
+
+      - name: Resolve warehouse identity
+        id: warehouse
+        working-directory: build/artifacts
+        run: |
+          STATE="terraform-${TF_ENV}.tfstate"
+
+          # Preferred: root outputs (build/artifacts/outputs.tf). These only
+          # exist in state after an apply that included outputs.tf, so fall
+          # back to reading the resources in the state file directly.
+          WORKSPACE_ID=$(terraform output -raw workspace_id 2>/dev/null || true)
+          WAREHOUSE_ID=$(terraform output -raw warehouse_id 2>/dev/null || true)
+
+          if [[ -z "$WORKSPACE_ID" || -z "$WAREHOUSE_ID" ]]; then
+            echo "Root outputs not in state yet — falling back to state file inspection"
+            WAREHOUSE_ID=$(jq -r '[.resources[] | select(.type=="fabric_warehouse") | .instances[0].attributes.id] | first // empty' "$STATE")
+            WORKSPACE_ID=$(jq -r '[.resources[] | select(.type=="fabric_warehouse") | .instances[0].attributes.workspace_id] | first // empty' "$STATE")
+          fi
+
+          if [[ -z "$WORKSPACE_ID" || -z "$WAREHOUSE_ID" ]]; then
+            echo "ERROR: could not resolve workspace_id / warehouse_id from $STATE."
+            echo "Has 'Terraform Apply' created the warehouse for '$TF_ENV'?"
+            exit 1
+          fi
+
+          echo "workspace_id=$WORKSPACE_ID" >> $GITHUB_OUTPUT
+          echo "warehouse_id=$WAREHOUSE_ID" >> $GITHUB_OUTPUT
+          echo "Resolved workspace: $WORKSPACE_ID"
+          echo "Resolved warehouse: $WAREHOUSE_ID"
+
+      # ── SQL tooling ──────────────────────────────────────────────────────────
+
+      - name: Install sqlcmd (go-sqlcmd)
+        run: |
+          curl -fsSL -o /tmp/sqlcmd.tar.bz2 \
+            "https://github.com/microsoft/go-sqlcmd/releases/latest/download/sqlcmd-linux-amd64.tar.bz2"
+          tar -xjf /tmp/sqlcmd.tar.bz2 -C /tmp sqlcmd
+          sudo mv /tmp/sqlcmd /usr/local/bin/sqlcmd
+          sqlcmd --version
+
+      # ── Deploy ───────────────────────────────────────────────────────────────
+
+      - name: Deploy warehouse SQL
+        env:
+          WORKSPACE_ID:        ${{ steps.warehouse.outputs.workspace_id }}
+          WAREHOUSE_ID:        ${{ steps.warehouse.outputs.warehouse_id }}
+          # Same service principal Terraform used to create the warehouse — it
+          # owns the warehouse, so it can run DDL against it.
+          AZURE_CLIENT_ID:     ${{ vars.ARM_CLIENT_ID }}
+          AZURE_TENANT_ID:     ${{ vars.ARM_TENANT_ID }}
+          AZURE_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
+        run: |
+          chmod +x src/init/warehouse_init.sh
+          ./src/init/warehouse_init.sh
+
+      # ── Cleanup ──────────────────────────────────────────────────────────────
+
+      - name: Cleanup generated files
+        if: always()
+        run: |
+          rm -f build/artifacts/providers.tf
+          echo "Cleaned up generated files"
+
+      - name: Deployment summary
+        if: success()
+        run: |
+          echo "Warehouse SQL deployment complete"
+          echo "Environment : $TF_ENV"
+          echo "Branch      : $TARGET_BRANCH"
