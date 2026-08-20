@@ -253,7 +253,7 @@ IF NOT EXISTS (
 )
 BEGIN
     CREATE TABLE [app].[config] (
-        [config_id]       INT            IDENTITY NOT NULL,
+        [config_id]       BIGINT         IDENTITY NOT NULL,  -- Fabric requires BIGINT for identity
         [config_key]      VARCHAR(200)   NOT NULL,
         [config_value]    VARCHAR(MAX)   NOT NULL,
         [config_group]    VARCHAR(100)   NOT NULL,
@@ -308,7 +308,7 @@ IF NOT EXISTS (
 )
 BEGIN
     CREATE TABLE [app].[schema_registry] (
-        [registry_id]     INT            IDENTITY NOT NULL,
+        [registry_id]     BIGINT         IDENTITY NOT NULL,  -- Fabric requires BIGINT for identity
         [schema_name]     VARCHAR(50)    NOT NULL,
         [layer]           VARCHAR(50)    NOT NULL,
         [description]     VARCHAR(500)   NULL,
