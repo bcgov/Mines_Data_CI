@@ -6,8 +6,7 @@ module "postgres_mds_test_connection" {
   connectivity_type = "VirtualNetworkGateway"
   gateway_id        = "f15b9af0-2bda-4add-85a1-066d89935a82"
 
-  server   = "142.34.194.69"
-  port     = 48625
+  server   = "142.34.194.69:48625"
   database = "mds"
   username = "mds_data_analytics"
   password = var.mds_test_password
