@@ -27,7 +27,7 @@ terraform {
 locals {
   connector_map = {
     PostgreSQL = {
-      type            = "PostgreSQL"
+      type            = "PostgreSql"
       creation_method = "PostgreSql.Database"
       parameters = [
         { dataType = "Text", name = "server",   value = var.server != null ? var.server : "" },
