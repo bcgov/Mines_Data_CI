@@ -116,6 +116,10 @@ jobs:
         uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: ${{ vars.TF_VERSION || '1.11.4' }}
+          # CRITICAL: the default wrapper echoes "::error::Terraform exited..."
+          # to stdout on failure, which corrupts $(terraform output -raw ...)
+          # command substitution. We capture outputs in shell, so disable it.
+          terraform_wrapper: false
 
       # ── Resolve warehouse identity from committed state ──────────────────────
 
@@ -146,6 +150,7 @@ jobs:
         working-directory: build/artifacts
         run: |
           STATE="terraform-${TF_ENV}.tfstate"
+          GUID_RE='^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$'
 
           # Preferred: root outputs (build/artifacts/outputs.tf). These only
           # exist in state after an apply that included outputs.tf, so fall
@@ -153,14 +158,19 @@ jobs:
           WORKSPACE_ID=$(terraform output -raw workspace_id 2>/dev/null || true)
           WAREHOUSE_ID=$(terraform output -raw warehouse_id 2>/dev/null || true)
 
-          if [[ -z "$WORKSPACE_ID" || -z "$WAREHOUSE_ID" ]]; then
-            echo "Root outputs not in state yet — falling back to state file inspection"
+          # Belt-and-braces: only accept values that actually look like Fabric
+          # GUIDs. Anything else (wrapper noise, error text, empty) triggers
+          # the state-file fallback.
+          if [[ ! "$WORKSPACE_ID" =~ $GUID_RE || ! "$WAREHOUSE_ID" =~ $GUID_RE ]]; then
+            echo "Root outputs unavailable or invalid — falling back to state file inspection"
             WAREHOUSE_ID=$(jq -r '[.resources[] | select(.type=="fabric_warehouse") | .instances[0].attributes.id] | first // empty' "$STATE")
             WORKSPACE_ID=$(jq -r '[.resources[] | select(.type=="fabric_warehouse") | .instances[0].attributes.workspace_id] | first // empty' "$STATE")
           fi
 
-          if [[ -z "$WORKSPACE_ID" || -z "$WAREHOUSE_ID" ]]; then
-            echo "ERROR: could not resolve workspace_id / warehouse_id from $STATE."
+          if [[ ! "$WORKSPACE_ID" =~ $GUID_RE || ! "$WAREHOUSE_ID" =~ $GUID_RE ]]; then
+            echo "ERROR: could not resolve a valid workspace_id / warehouse_id from $STATE."
+            echo "  workspace_id: '$WORKSPACE_ID'"
+            echo "  warehouse_id: '$WAREHOUSE_ID'"
             echo "Has 'Terraform Apply' created the warehouse for '$TF_ENV'?"
             exit 1
           fi
