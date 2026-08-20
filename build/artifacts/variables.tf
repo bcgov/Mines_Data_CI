@@ -180,3 +180,8 @@ variable "PURVIEW_RUN_SCAN_ON_APPLY" {
   type        = bool
   default     = false
 }
+
+variable "mds_test_password" {
+  type      = string
+  sensitive = true
+}
