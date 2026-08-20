@@ -11,7 +11,6 @@ module "postgres_mds_test_connection" {
   database = "mds"
   username = "mds_data_analytics"
   password = var.mds_test_password
-
   owner_principal_ids = ["b0bf68e8-4e08-433c-8903-19b2fec4cc20"]
 }
 
