@@ -1,8 +1,24 @@
 #!/bin/bash
 # =============================================================================
-# initialize/warehouse_init.sh
-# Initializes a Fabric Warehouse with medallion schemas and app control objects
-# Follows the same auth pattern as create_workspace.sh
+# src/init/warehouse_init.sh
+# Deploys the full SQL layer into a Fabric Warehouse, in order:
+#   1. src/init/warehouse_init.sql   — schemas + tables (IF NOT EXISTS / ALTER guards)
+#   2. src/procs/*.sql               — stored procedures (CREATE OR ALTER)
+#   3. src/data/*.sql                — pipeline_control config (upsert SP)
+#
+# Every step is idempotent — safe to re-run against an already-configured
+# warehouse. Follows the same auth pattern as create_workspace.sh.
+#
+# Required environment:
+#   WORKSPACE_ID          Fabric workspace ID
+#   WAREHOUSE_ID          Fabric warehouse ID
+#   AZURE_CLIENT_ID       Service principal client ID
+#   AZURE_CLIENT_SECRET   Service principal secret
+#   AZURE_TENANT_ID       Entra tenant ID
+#
+# Requires go-sqlcmd (https://github.com/microsoft/go-sqlcmd) — the modern
+# sqlcmd with --authentication-method support. The AZURE_* variables above are
+# picked up automatically by its ActiveDirectoryDefault credential chain.
 # =============================================================================
 
 set -euo pipefail
@@ -30,18 +46,31 @@ CLIENT_SECRET="${AZURE_CLIENT_SECRET:?AZURE_CLIENT_SECRET is required}"
 TENANT_ID="${AZURE_TENANT_ID:?AZURE_TENANT_ID is required}"
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-SQL_FILE="${SCRIPT_DIR}/warehouse_init.sql"
+SRC_DIR="$(cd "${SCRIPT_DIR}/.." && pwd)"
+
+# Ordered deployment set: init first, then procs, then data.
+# Glob expansion is sorted, so numeric prefixes (010_, 020_, ...) control order.
+build_sql_file_list() {
+    SQL_FILES=("${SCRIPT_DIR}/warehouse_init.sql")
+
+    local f
+    for f in "${SRC_DIR}/procs/"*.sql; do
+        [[ -e "$f" ]] && SQL_FILES+=("$f")
+    done
+    for f in "${SRC_DIR}/data/"*.sql; do
+        [[ -e "$f" ]] && SQL_FILES+=("$f")
+    done
+}
 
 echo -e "${CYAN}"
 echo "╔═══════════════════════════════════════════════════════════════════╗"
 echo "║             Fabric Warehouse Initializer                          ║"
-echo "║             Schemas: bronze | silver | gold | app                 ║"
+echo "║             init → procs → data  (idempotent)                     ║"
 echo "╚═══════════════════════════════════════════════════════════════════╝"
 echo -e "${NC}"
 
 echo -e "${BLUE}[INFO]${NC} Workspace ID : ${WORKSPACE_ID}"
 echo -e "${BLUE}[INFO]${NC} Warehouse ID : ${WAREHOUSE_ID}"
-echo -e "${BLUE}[INFO]${NC} SQL Script   : ${SQL_FILE}"
 
 # ══════════════════════════════════════════════════════════════
 # Validate dependencies
@@ -53,19 +82,27 @@ check_dependencies() {
     command -v az      &>/dev/null || missing+=("azure-cli")
     command -v curl    &>/dev/null || missing+=("curl")
     command -v jq      &>/dev/null || missing+=("jq")
-    command -v sqlcmd  &>/dev/null || missing+=("sqlcmd (mssql-tools18)")
+    command -v sqlcmd  &>/dev/null || missing+=("sqlcmd (go-sqlcmd)")
 
     if [[ ${#missing[@]} -gt 0 ]]; then
         echo -e "${RED}[✗]${NC} Missing required tools: ${missing[*]}"
         echo ""
-        echo "Install sqlcmd on Ubuntu:"
-        echo "  curl -fsSL https://packages.microsoft.com/keys/microsoft.asc | sudo gpg --dearmor -o /usr/share/keyrings/microsoft-prod.gpg"
-        echo "  curl -fsSL https://packages.microsoft.com/config/ubuntu/22.04/prod.list | sudo tee /etc/apt/sources.list.d/msprod.list"
-        echo "  sudo apt-get update && sudo ACCEPT_EULA=Y apt-get install -y mssql-tools18 unixodbc-dev"
+        echo "Install go-sqlcmd on Linux:"
+        echo "  curl -fsSL -o /tmp/sqlcmd.tar.bz2 https://github.com/microsoft/go-sqlcmd/releases/latest/download/sqlcmd-linux-amd64.tar.bz2"
+        echo "  tar -xjf /tmp/sqlcmd.tar.bz2 -C /tmp sqlcmd"
+        echo "  sudo mv /tmp/sqlcmd /usr/local/bin/sqlcmd"
         exit 1
     fi
 
-    echo -e "${GREEN}[✓]${NC} All dependencies present"
+    # The legacy ODBC sqlcmd (mssql-tools18) has no --authentication-method
+    # flag and cannot do service-principal auth non-interactively on Linux.
+    if ! sqlcmd --help 2>&1 | grep -q -- '--authentication-method'; then
+        echo -e "${RED}[✗]${NC} The 'sqlcmd' on PATH is the legacy ODBC version."
+        echo "This script requires go-sqlcmd (see install instructions above)."
+        exit 1
+    fi
+
+    echo -e "${GREEN}[✓]${NC} All dependencies present (go-sqlcmd detected)"
 }
 
 # ══════════════════════════════════════════════════════════════
@@ -84,7 +121,7 @@ authenticate_azure() {
 }
 
 get_fabric_token() {
-    echo -e "${BLUE}[INFO]${NC} Fetching Fabric access token..."
+    echo -e "${BLUE}[INFO]${NC} Fetching Fabric access token..." >&2
     az account get-access-token \
         --resource https://api.fabric.microsoft.com \
         --query accessToken \
@@ -92,61 +129,64 @@ get_fabric_token() {
 }
 
 # ══════════════════════════════════════════════════════════════
-# Resolve warehouse connection string via Fabric REST API
+# Resolve warehouse connection string + name via Fabric REST API
 # ══════════════════════════════════════════════════════════════
 
-get_connection_string() {
+resolve_warehouse() {
     local token="$1"
 
-    echo -e "${BLUE}[INFO]${NC} Resolving warehouse connection string..." >&2
+    echo -e "${BLUE}[INFO]${NC} Resolving warehouse connection details..." >&2
 
     local response
     response=$(curl -s \
         -H "Authorization: Bearer ${token}" \
         "https://api.fabric.microsoft.com/v1/workspaces/${WORKSPACE_ID}/warehouses/${WAREHOUSE_ID}")
 
-    local conn_string
-    conn_string=$(echo "$response" | jq -r '.properties.connectionString // empty')
+    WH_SERVER=$(echo "$response" | jq -r '.properties.connectionString // empty')
+    WH_DATABASE=$(echo "$response" | jq -r '.displayName // empty')
 
-    if [[ -z "$conn_string" || "$conn_string" == "null" ]]; then
-        echo -e "${RED}[✗]${NC} Could not resolve connection string. Response:" >&2
+    if [[ -z "$WH_SERVER" || -z "$WH_DATABASE" ]]; then
+        echo -e "${RED}[✗]${NC} Could not resolve warehouse. Response:" >&2
         echo "$response" >&2
         exit 1
     fi
 
-    echo -e "${GREEN}[✓]${NC} Connection string: ${conn_string}" >&2
-    echo "$conn_string"
+    echo -e "${GREEN}[✓]${NC} SQL endpoint : ${WH_SERVER}" >&2
+    echo -e "${GREEN}[✓]${NC} Database     : ${WH_DATABASE}" >&2
 }
 
 # ══════════════════════════════════════════════════════════════
-# Execute SQL initialization script
+# Execute SQL files in order
 # ══════════════════════════════════════════════════════════════
 
-run_sql_init() {
-    local conn_string="$1"
+run_sql_file() {
+    local sql_file="$1"
 
-    if [[ ! -f "$SQL_FILE" ]]; then
-        echo -e "${RED}[✗]${NC} SQL file not found: ${SQL_FILE}"
+    if [[ ! -f "$sql_file" ]]; then
+        echo -e "${RED}[✗]${NC} SQL file not found: ${sql_file}"
         exit 1
     fi
 
     echo ""
-    echo -e "${BOLD}Running warehouse_init.sql...${NC}"
+    echo -e "${BOLD}Running $(basename "$sql_file")...${NC}"
     echo "─────────────────────────────────────────────────────────────────"
 
-    # -G  = Azure AD authentication (uses the SP credentials from az login)
+    # ActiveDirectoryDefault picks up AZURE_CLIENT_ID / AZURE_CLIENT_SECRET /
+    # AZURE_TENANT_ID from the environment (service-principal credential),
+    # falling back to the az CLI login above when run locally.
     # -C  = trust server certificate
     # -b  = exit on first error
     # -i  = input file
     sqlcmd \
-        -S "$conn_string" \
-        -G \
+        -S "$WH_SERVER" \
+        -d "$WH_DATABASE" \
+        --authentication-method ActiveDirectoryDefault \
         -C \
         -b \
-        -i "$SQL_FILE"
+        -i "$sql_file"
 
     echo "─────────────────────────────────────────────────────────────────"
-    echo -e "${GREEN}[✓]${NC} SQL script executed successfully"
+    echo -e "${GREEN}[✓]${NC} $(basename "$sql_file") executed successfully"
 }
 
 # ══════════════════════════════════════════════════════════════
@@ -160,17 +200,28 @@ main() {
     local fabric_token
     fabric_token=$(get_fabric_token)
 
-    local conn_string
-    conn_string=$(get_connection_string "$fabric_token")
+    resolve_warehouse "$fabric_token"
 
-    run_sql_init "$conn_string"
+    build_sql_file_list
+    echo ""
+    echo -e "${BLUE}[INFO]${NC} Deployment order:"
+    local f
+    for f in "${SQL_FILES[@]}"; do
+        echo "         - ${f#"${SRC_DIR}/../"}"
+    done
+
+    for f in "${SQL_FILES[@]}"; do
+        run_sql_file "$f"
+    done
 
     echo ""
     echo -e "${GREEN}${BOLD}══════════════════════════════════════════════════════════════${NC}"
-    echo -e "${GREEN}${BOLD}  Warehouse initialization complete!                           ${NC}"
-    echo -e "${GREEN}${BOLD}  Schemas created: bronze | silver | gold | app               ${NC}"
-    echo -e "${GREEN}${BOLD}  App objects:     pipeline_control | pipeline_log | config    ${NC}"
-    echo -e "${GREEN}${BOLD}                  error_log | schema_registry                 ${NC}"
+    echo -e "${GREEN}${BOLD}  Warehouse deployment complete!                              ${NC}"
+    echo -e "${GREEN}${BOLD}  Schemas:  bronze | silver | gold | app                      ${NC}"
+    echo -e "${GREEN}${BOLD}  Objects:  pipeline_control | pipeline_log | config          ${NC}"
+    echo -e "${GREEN}${BOLD}            error_log | schema_registry                       ${NC}"
+    echo -e "${GREEN}${BOLD}  Procs:    usp_upsert_pipeline_control | usp_pipeline_log    ${NC}"
+    echo -e "${GREEN}${BOLD}  Data:     pipeline_control config upserted                  ${NC}"
     echo -e "${GREEN}${BOLD}══════════════════════════════════════════════════════════════${NC}"
 }
 
