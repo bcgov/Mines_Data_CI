@@ -5,7 +5,8 @@
 --
 -- Idempotent: safe to run any number of times.
 --   * Schemas / tables:  IF NOT EXISTS guards
---   * Schema drift:      IF COL_LENGTH(...) IS NULL → ALTER TABLE ADD guards,
+--   * Schema drift:      sys.columns existence checks + ALTER TABLE ADD guards
+--                        (COL_LENGTH is not supported in Fabric Warehouse),
 --                        so warehouses created from an older version of this
 --                        script converge to the current shape without drops.
 --
@@ -114,22 +115,52 @@ GO
 -- ── Drift guards: columns added after the first release ──────────────────────
 -- New columns are added as NULL so this converges on any existing table.
 
-IF COL_LENGTH('app.pipeline_control', 'source_connection_string') IS NULL
+IF NOT EXISTS (
+    SELECT 1 FROM sys.columns c
+    JOIN sys.tables t  ON c.object_id = t.object_id
+    JOIN sys.schemas s ON t.schema_id = s.schema_id
+    WHERE s.name = 'app' AND t.name = 'pipeline_control' AND c.name = 'source_connection_string'
+)
     ALTER TABLE [app].[pipeline_control] ADD [source_connection_string] VARCHAR(500) NULL;
 GO
-IF COL_LENGTH('app.pipeline_control', 'key_vault_url') IS NULL
+IF NOT EXISTS (
+    SELECT 1 FROM sys.columns c
+    JOIN sys.tables t  ON c.object_id = t.object_id
+    JOIN sys.schemas s ON t.schema_id = s.schema_id
+    WHERE s.name = 'app' AND t.name = 'pipeline_control' AND c.name = 'key_vault_url'
+)
     ALTER TABLE [app].[pipeline_control] ADD [key_vault_url] VARCHAR(500) NULL;
 GO
-IF COL_LENGTH('app.pipeline_control', 'source_query_template') IS NULL
+IF NOT EXISTS (
+    SELECT 1 FROM sys.columns c
+    JOIN sys.tables t  ON c.object_id = t.object_id
+    JOIN sys.schemas s ON t.schema_id = s.schema_id
+    WHERE s.name = 'app' AND t.name = 'pipeline_control' AND c.name = 'source_query_template'
+)
     ALTER TABLE [app].[pipeline_control] ADD [source_query_template] VARCHAR(MAX) NULL;
 GO
-IF COL_LENGTH('app.pipeline_control', 'version_number') IS NULL
+IF NOT EXISTS (
+    SELECT 1 FROM sys.columns c
+    JOIN sys.tables t  ON c.object_id = t.object_id
+    JOIN sys.schemas s ON t.schema_id = s.schema_id
+    WHERE s.name = 'app' AND t.name = 'pipeline_control' AND c.name = 'version_number'
+)
     ALTER TABLE [app].[pipeline_control] ADD [version_number] INT NULL;
 GO
-IF COL_LENGTH('app.pipeline_control', 'row_hash') IS NULL
+IF NOT EXISTS (
+    SELECT 1 FROM sys.columns c
+    JOIN sys.tables t  ON c.object_id = t.object_id
+    JOIN sys.schemas s ON t.schema_id = s.schema_id
+    WHERE s.name = 'app' AND t.name = 'pipeline_control' AND c.name = 'row_hash'
+)
     ALTER TABLE [app].[pipeline_control] ADD [row_hash] VARCHAR(64) NULL;
 GO
-IF COL_LENGTH('app.pipeline_control', 'primary_key') IS NULL
+IF NOT EXISTS (
+    SELECT 1 FROM sys.columns c
+    JOIN sys.tables t  ON c.object_id = t.object_id
+    JOIN sys.schemas s ON t.schema_id = s.schema_id
+    WHERE s.name = 'app' AND t.name = 'pipeline_control' AND c.name = 'primary_key'
+)
     ALTER TABLE [app].[pipeline_control] ADD [primary_key] VARCHAR(200) NULL;
 GO
 
@@ -177,16 +208,36 @@ GO
 
 -- ── Drift guards ──────────────────────────────────────────────────────────────
 
-IF COL_LENGTH('app.pipeline_log', 'activity_run_id') IS NULL
+IF NOT EXISTS (
+    SELECT 1 FROM sys.columns c
+    JOIN sys.tables t  ON c.object_id = t.object_id
+    JOIN sys.schemas s ON t.schema_id = s.schema_id
+    WHERE s.name = 'app' AND t.name = 'pipeline_log' AND c.name = 'activity_run_id'
+)
     ALTER TABLE [app].[pipeline_log] ADD [activity_run_id] VARCHAR(100) NULL;
 GO
-IF COL_LENGTH('app.pipeline_log', 'error_code') IS NULL
+IF NOT EXISTS (
+    SELECT 1 FROM sys.columns c
+    JOIN sys.tables t  ON c.object_id = t.object_id
+    JOIN sys.schemas s ON t.schema_id = s.schema_id
+    WHERE s.name = 'app' AND t.name = 'pipeline_log' AND c.name = 'error_code'
+)
     ALTER TABLE [app].[pipeline_log] ADD [error_code] VARCHAR(100) NULL;
 GO
-IF COL_LENGTH('app.pipeline_log', 'environment') IS NULL
+IF NOT EXISTS (
+    SELECT 1 FROM sys.columns c
+    JOIN sys.tables t  ON c.object_id = t.object_id
+    JOIN sys.schemas s ON t.schema_id = s.schema_id
+    WHERE s.name = 'app' AND t.name = 'pipeline_log' AND c.name = 'environment'
+)
     ALTER TABLE [app].[pipeline_log] ADD [environment] VARCHAR(20) NULL;
 GO
-IF COL_LENGTH('app.pipeline_log', 'triggered_by') IS NULL
+IF NOT EXISTS (
+    SELECT 1 FROM sys.columns c
+    JOIN sys.tables t  ON c.object_id = t.object_id
+    JOIN sys.schemas s ON t.schema_id = s.schema_id
+    WHERE s.name = 'app' AND t.name = 'pipeline_log' AND c.name = 'triggered_by'
+)
     ALTER TABLE [app].[pipeline_log] ADD [triggered_by] VARCHAR(200) NULL;
 GO
 
