@@ -15,6 +15,7 @@ FROM public.variance_document_xref',
     @priority = 100,
     @dependency_on = NULL;
 GO
+
 EXEC [app].[usp_upsert_pipeline_control]
     @pipeline_name = 'pl_ingest_mds',
     @source_system = 'mds',
