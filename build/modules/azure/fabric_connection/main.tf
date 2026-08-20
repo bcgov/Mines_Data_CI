@@ -28,7 +28,7 @@ locals {
   connector_map = {
     PostgreSQL = {
       type            = "PostgreSQL"
-      creation_method = "PostgreSQL.Database"
+      creation_method = "PostgreSql.Database"
       parameters = [
         { dataType = "Text", name = "server",   value = var.server != null ? var.server : "" },
         { dataType = "Text", name = "database", value = var.database != null ? var.database : "" }
