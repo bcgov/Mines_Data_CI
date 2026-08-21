@@ -4,7 +4,8 @@
 # Deploys the full SQL layer into a Fabric Warehouse, in order:
 #   1. src/init/warehouse_init.sql   — schemas + tables (IF NOT EXISTS / ALTER guards)
 #   2. src/procs/*.sql               — stored procedures (CREATE OR ALTER)
-#   3. src/data/*.sql                — pipeline_control config (upsert SP)
+#   3. src/security/*.sql            — permissions (GRANTs are re-run-safe)
+#   4. src/data/*.sql                — pipeline_control config (upsert SP)
 #
 # Every step is idempotent — safe to re-run against an already-configured
 # warehouse. Follows the same auth pattern as create_workspace.sh.
@@ -60,6 +61,9 @@ build_sql_file_list() {
 
     local f
     for f in "${SRC_DIR}/procs/"*.sql; do
+        [[ -e "$f" ]] && SQL_FILES+=("$f")
+    done
+    for f in "${SRC_DIR}/security/"*.sql; do
         [[ -e "$f" ]] && SQL_FILES+=("$f")
     done
     for f in "${SRC_DIR}/data/"*.sql; do
