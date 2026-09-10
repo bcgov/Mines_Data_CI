@@ -53,3 +53,19 @@ variable "env" {
   type        = string
   default     = ""
 }
+
+variable "file_folders" {
+  description = <<-DESC
+    Folders to pre-create under the lakehouse Files/ area, as paths relative to
+    Files. Nested paths are fine — parents are created first.
+
+    Defaults to the medallion layers at the top level: Files/bronze,
+    Files/silver, Files/gold.
+
+    Set to [] to skip folder creation entirely. Note these are storage folders,
+    not lakehouse schemas: schemas live under Tables/ and are created when a
+    table is first written to them.
+  DESC
+  type        = list(string)
+  default     = ["bronze", "silver", "gold"]
+}

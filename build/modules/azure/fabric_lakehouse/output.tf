@@ -24,3 +24,8 @@ output "sql_connection_string" {
   description = "The SQL connection string for the Lakehouse SQL analytics endpoint."
   value       = fabric_lakehouse.this.properties.sql_endpoint_properties.connection_string
 }
+
+output "file_folders" {
+  description = "Folders pre-created under the Lakehouse Files/ area."
+  value       = var.file_folders
+}
