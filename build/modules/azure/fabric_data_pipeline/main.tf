@@ -277,7 +277,7 @@ locals {
             type = "NonQuery"
 
             text = {
-              value = "@concat('EXEC [app].[usp_pipeline_log] @mode=''END'', @activity_run_id=''', ${local.expr_activity_run_id}, ''', @control_id=', string(item().control_id), ', @status=''FAILED'', @rows_read=', string(coalesce(activity('Copy_Incremental').output?.rowsRead, 0)), ', @rows_written=', string(coalesce(activity('Copy_Incremental').output?.rowsCopied, 0)), ', @error_message=''', replace(coalesce(activity('Copy_Incremental').output?.errors[0]?.Message, 'Copy failed'), '''', ''''''), ''', @error_code=''', replace(coalesce(activity('Copy_Incremental').output?.errors[0]?.Code, 'Unknown'), '''', ''''''), '''')"
+              value = "@concat('EXEC [app].[usp_pipeline_log] @mode=''END'', @activity_run_id=''', ${local.expr_activity_run_id}, ''', @control_id=', string(item().control_id), ', @status=''FAILED'', @rows_read=', string(coalesce(activity('Copy_Incremental').output?.rowsRead, 0)), ', @rows_written=', string(coalesce(activity('Copy_Incremental').output?.rowsCopied, 0)), ', @error_message=''', replace(string(coalesce(activity('Copy_Incremental').output?.errors[0]?.Message, 'Copy failed')), '''', ''''''), ''', @error_code=''', replace(string(coalesce(activity('Copy_Incremental').output?.errors[0]?.Code, 'Unknown')), '''', ''''''), '''')"
               type  = "Expression"
             }
           }
@@ -312,7 +312,7 @@ locals {
             type = "NonQuery"
 
             text = {
-              value = "@concat('EXEC [app].[usp_pipeline_log] @mode=''END'', @activity_run_id=''', ${local.expr_activity_run_id}, ''', @control_id=', string(item().control_id), ', @status=''FAILED'', @error_message=''', replace(coalesce(activity('Lookup_SourceMax').error?.message, 'Lookup_SourceMax failed'), '''', ''''''), ''', @error_code=''LOOKUP_SOURCE_MAX_FAILED''')"
+              value = "@concat('EXEC [app].[usp_pipeline_log] @mode=''END'', @activity_run_id=''', ${local.expr_activity_run_id}, ''', @control_id=', string(item().control_id), ', @status=''FAILED'', @error_message=''', replace(string(coalesce(activity('Lookup_SourceMax').error?.message, 'Lookup_SourceMax failed')), '''', ''''''), ''', @error_code=''LOOKUP_SOURCE_MAX_FAILED''')"
               type  = "Expression"
             }
           }
@@ -412,7 +412,7 @@ locals {
             type = "NonQuery"
 
             text = {
-              value = "@concat('EXEC [app].[usp_pipeline_log] @mode=''END'', @activity_run_id=''', ${local.expr_activity_run_id}, ''', @control_id=', string(item().control_id), ', @status=''FAILED'', @rows_read=', string(coalesce(activity('Copy_Full').output?.rowsRead, 0)), ', @rows_written=', string(coalesce(activity('Copy_Full').output?.rowsCopied, 0)), ', @error_message=''', replace(coalesce(activity('Copy_Full').output?.errors[0]?.Message, 'Copy failed'), '''', ''''''), ''', @error_code=''', replace(coalesce(activity('Copy_Full').output?.errors[0]?.Code, 'Unknown'), '''', ''''''), '''')"
+              value = "@concat('EXEC [app].[usp_pipeline_log] @mode=''END'', @activity_run_id=''', ${local.expr_activity_run_id}, ''', @control_id=', string(item().control_id), ', @status=''FAILED'', @rows_read=', string(coalesce(activity('Copy_Full').output?.rowsRead, 0)), ', @rows_written=', string(coalesce(activity('Copy_Full').output?.rowsCopied, 0)), ', @error_message=''', replace(string(coalesce(activity('Copy_Full').output?.errors[0]?.Message, 'Copy failed')), '''', ''''''), ''', @error_code=''', replace(string(coalesce(activity('Copy_Full').output?.errors[0]?.Code, 'Unknown')), '''', ''''''), '''')"
               type  = "Expression"
             }
           }
