@@ -273,7 +273,7 @@ FROM public.etl_bond',
     @dependency_on = NULL;
 GO
 EXEC [app].[usp_upsert_pipeline_control]
-    @pipeline_name = 'pl_MTA.MTA_TENURE',
+    @pipeline_name = 'pl_ingest_mto',
     @source_system = 'MTOPROD',
     @source_entity = 'MTA.MTA_TENURE',
     @source_connection_string = 'nrkdb02.bcgov:1521/mtoprod.nrs.bcgov',
@@ -1874,7 +1874,7 @@ WHERE update_timestamp >= ''@from_date''
     @dependency_on = NULL;
 GO
 EXEC [app].[usp_upsert_pipeline_control]
-    @pipeline_name = 'pl_MTA.MTA_TENURE_EVENT_XREF',
+    @pipeline_name = 'pl_ingest_mto',
     @source_system = 'MTOPROD',
     @source_entity = 'MTA.MTA_TENURE_EVENT_XREF',
     @source_connection_string = 'nrkdb02.bcgov:1521/mtoprod.nrs.bcgov',
@@ -1927,7 +1927,7 @@ FROM public.project_summary_document_xref',
     @dependency_on = NULL;
 GO
 EXEC [app].[usp_upsert_pipeline_control]
-    @pipeline_name = 'pl_MTA.MTA_EVENT',
+    @pipeline_name = 'pl_ingest_mto',
     @source_system = 'MTOPROD',
     @source_entity = 'MTA.MTA_EVENT',
     @source_connection_string = 'nrkdb02.bcgov:1521/mtoprod.nrs.bcgov',
