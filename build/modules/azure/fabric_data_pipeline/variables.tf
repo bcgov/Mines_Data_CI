@@ -89,8 +89,20 @@ variable "triggered_by_default" {
 
 variable "sink_warehouse_name" {
   type        = string
-  description = "Display name of the Fabric Warehouse — used in the Lookup datasetSettings database field."
-  default     = "mines-data-platform-fabwh1"
+  description = <<-DESC
+    Display name of the Fabric Warehouse. Written into the `database` field of
+    the control-table Lookup datasets and every logging Script activity, so the
+    generic SQL connection knows which database to run against.
+
+    No default on purpose: the previous hardcoded default silently pointed at a
+    warehouse that no longer exists. Pass it from the warehouse module, e.g.
+    sink_warehouse_name = module.fabric_warehouse_01.warehouse.display_name
+  DESC
+
+  validation {
+    condition     = length(trimspace(var.sink_warehouse_name)) > 0
+    error_message = "sink_warehouse_name must be the warehouse display name, not an empty string."
+  }
 }
 
 variable "watermark_lag_days" {
