@@ -153,7 +153,7 @@ locals {
           }
 
           folderPath = {
-            value = "@concat('raw/', item().target_schema, '/', item().target_table, '/', formatDateTime(utcNow(), 'yyyy'), '/', formatDateTime(utcNow(), 'MM'), '/', formatDateTime(utcNow(), 'dd'))"
+            value = "@concat(item().target_schema, '/', item().target_table, '/', formatDateTime(utcNow(), 'yyyy'), '/', formatDateTime(utcNow(), 'MM'), '/', formatDateTime(utcNow(), 'dd'))"
             type  = "Expression"
           }
         }
