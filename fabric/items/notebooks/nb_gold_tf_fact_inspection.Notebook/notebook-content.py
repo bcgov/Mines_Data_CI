@@ -130,4 +130,3 @@ print("wrote", df.count(), "rows to", TARGET_TABLE)
 # META   "language": "python",
 # META   "language_group": "synapse_pyspark"
 # META }
-

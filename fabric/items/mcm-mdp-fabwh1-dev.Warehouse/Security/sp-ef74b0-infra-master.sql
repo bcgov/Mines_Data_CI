@@ -1,0 +1,4 @@
+CREATE USER [sp-ef74b0-infra-master] FOR EXTERNAL PROVIDER;
+
+
+GO
