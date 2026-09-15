@@ -8,6 +8,7 @@ module "pipeline_raw_to_bronze_mto" {
 
   environment                 = var.ENVIRONMENT
   workspace_id                = module.fabric_workspace_01.workspace_id
+  folder_id                   = local.fabric_item_folder_ids["pipelines"]
   display_name                = "pl_ingest_mto"
   pipeline_name_param_default = "pl_ingest_mto"
 

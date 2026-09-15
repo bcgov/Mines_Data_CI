@@ -5,6 +5,11 @@ variable "workspace_id" {
   description = "Fabric workspace ID where the Data Pipeline will be created."
 }
 
+variable "folder_id" {
+  type        = string
+  description = "Fabric workspace folder ID where the Data Pipeline will be created."
+}
+
 variable "display_name" {
   type        = string
   description = "Display name shown in the Fabric Portal."

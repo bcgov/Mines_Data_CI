@@ -33,6 +33,7 @@ resource "fabric_lakehouse" "this" {
   display_name = local.lakehouse_name
   description  = var.description
   workspace_id = var.workspace_id
+  folder_id    = var.folder_id
 
   # enable_schemas forces recreation if changed after creation — set once and leave
   configuration = var.enable_schemas ? {

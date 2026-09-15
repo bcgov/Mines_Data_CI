@@ -585,6 +585,7 @@ resource "fabric_data_pipeline" "this" {
   display_name = var.display_name
   description  = var.description
   workspace_id = var.workspace_id
+  folder_id    = var.folder_id
   format       = "Default"
 
   definition_update_enabled = true

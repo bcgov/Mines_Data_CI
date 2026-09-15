@@ -31,6 +31,12 @@ variable "workspace_id" {
   type        = string
 }
 
+variable "folder_id" {
+  description = "Optional Fabric workspace folder ID for the lakehouse."
+  type        = string
+  default     = null
+}
+
 variable "enable_schemas" {
   description = "Enable schema support on the lakehouse. WARNING: changing this after creation forces recreation of the lakehouse."
   type        = bool
