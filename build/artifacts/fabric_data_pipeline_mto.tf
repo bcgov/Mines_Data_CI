@@ -5,7 +5,6 @@ module "pipeline_raw_to_bronze_mto" {
   providers = {
     fabric.auth = fabric.auth
   }
-
   environment                 = var.ENVIRONMENT
   workspace_id                = module.fabric_workspace_01.workspace_id
   folder_id                   = local.fabric_item_folder_ids["pipelines"]
