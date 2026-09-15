@@ -17,5 +17,6 @@ resource "fabric_warehouse" "this_warehouse" {
   provider     = fabric.auth
   display_name = local.fabric_warehouse
   workspace_id = var.workspace_id
+  folder_id    = var.folder_id
 }
 

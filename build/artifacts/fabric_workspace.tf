@@ -13,3 +13,4 @@ module "fabric_workspace_01" {
   owners          = var.WORKSPACE_OWNERS
   identity_type   = "SystemAssigned"
 }
+
