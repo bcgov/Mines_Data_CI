@@ -1,21 +1,20 @@
-# Disabled example — when enabled, take IDs from module outputs instead of
-# hardcoded GUIDs (workspace_id / lakehouse_id shown below).
-# module "pipeline_raw_to_bronze" {
-#   source = "../modules/azure/fabric_data_pipeline"
 
-#   providers = {
-#     fabric.auth = fabric.auth
-#   }
+module "pipeline_raw_to_bronze" {
+  source = "../modules/azure/fabric_data_pipeline"
 
-#   environment                 = var.ENVIRONMENT
-#   workspace_id                = module.fabric_workspace_01.workspace_id
-#   display_name                = "pl_ingest_mds"
-#   pipeline_name_param_default = "pl_ingest_mds"
+  providers = {
+    fabric.auth = fabric.auth
+  }
 
-#   source_connection_id    = "21b383a1-c561-4540-980d-ce3683e89236"
-#   warehouse_connection_id = module.warehouse_mds_connection.connection_id
+  environment                 = var.ENVIRONMENT
+  workspace_id                = module.fabric_workspace_01.workspace_id
+  display_name                = "pl_ingest_mds"
+  pipeline_name_param_default = "pl_ingest_mds"
 
-#   lakehouse_name  = module.fabric_lakehouse_01.lakehouse_name
-#   lakehouse_id    = module.fabric_lakehouse_01.lakehouse_id
-#   parallel_copies = 10
-# }
+  source_connection_id    = "21b383a1-c561-4540-980d-ce3683e89236"
+  warehouse_connection_id = module.warehouse_mds_connection.connection_id
+
+  lakehouse_name  = module.fabric_lakehouse_01.lakehouse_name
+  lakehouse_id    = module.fabric_lakehouse_01.lakehouse_id
+  parallel_copies = 10
+}

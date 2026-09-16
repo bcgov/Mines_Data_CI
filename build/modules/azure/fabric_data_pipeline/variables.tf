@@ -92,3 +92,8 @@ variable "sink_warehouse_name" {
   description = "Display name of the Fabric Warehouse — used in the Lookup datasetSettings database field."
   default     = "mines-data-platform-fabwh1"
 }
+
+variable "watermark_lag_days" {
+  type    = number
+  default = 7
+}

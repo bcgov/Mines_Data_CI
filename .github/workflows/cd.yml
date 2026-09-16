@@ -122,6 +122,7 @@ jobs:
           TF_VAR_ARM_CLIENT_SECRET:   ${{ secrets.ARM_CLIENT_SECRET }}
           TF_VAR_ENVIRONMENT:         ${{ env.TF_ENV }}
           TF_VAR_GITHUB_PAT:          ${{ secrets.GITHUB_PAT }}
+          TF_VAR_mds_test_password:   ${{ secrets.MDS_PASSWORD }}
           # Optional: resolve Fabric capacity by display name (set per GitHub Environment)
           TF_VAR_FABRIC_CAPACITY_NAME: ${{ vars.FABRIC_CAPACITY_NAME }}
         run: |
