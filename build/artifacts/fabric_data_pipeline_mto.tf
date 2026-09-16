@@ -27,4 +27,5 @@ module "pipeline_raw_to_bronze_mto" {
   lakehouse_name  = module.fabric_lakehouse_01.lakehouse_name
   lakehouse_id    = module.fabric_lakehouse_01.lakehouse_id
   parallel_copies = 10
+  create_pipeline  = var.CREATE_PIPELINES
 }

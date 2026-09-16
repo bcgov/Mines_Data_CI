@@ -133,3 +133,10 @@ variable  REGISTER_POWERPLATFORM_RP {
   type        = bool
   default     = false
 }
+
+# Control toggles for optional artifacts/features
+variable "CREATE_PIPELINES" {
+  description = "When false, data pipelines will not be created. Set to true to enable pipeline creation."
+  type        = bool
+  default     = false
+}
