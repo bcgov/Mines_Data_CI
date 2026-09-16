@@ -580,7 +580,6 @@ locals {
 }
 
 resource "fabric_data_pipeline" "this" {
-  count    = var.create_pipeline ? 1 : 0
   provider = fabric.auth
 
   display_name = var.display_name

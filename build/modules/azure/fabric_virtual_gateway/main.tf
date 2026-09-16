@@ -9,11 +9,9 @@ terraform {
 }
 
 locals {
-  subscription_fragment = var.virtual_network_azure_resource.subscription_id != "" ? "-${substr(replace(var.virtual_network_azure_resource.subscription_id, "-", ""), 0, 8)}" : ""
-
   gateway_name = substr(
     replace(
-      var.gateway_name != null ? var.gateway_name : "${var.prefix}-${var.project}-fabricgw${var.instance_number}${var.env != "" ? "-${var.env}" : ""}${local.subscription_fragment}",
+      var.gateway_name != null ? var.gateway_name : "${var.prefix}-${var.project}-fabricgw${var.instance_number}${var.env != "" ? "-${var.env}" : ""}",
       " ",
       ""
     ),

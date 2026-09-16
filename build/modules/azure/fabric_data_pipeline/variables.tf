@@ -114,9 +114,3 @@ variable "watermark_lag_days" {
   type    = number
   default = 7
 }
-
-variable "create_pipeline" {
-  description = "When false, the module will not create the Fabric Data Pipeline. Useful for environments where the feature is unavailable."
-  type        = bool
-  default     = true
-}

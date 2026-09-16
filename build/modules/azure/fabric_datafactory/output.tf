@@ -1,11 +1,11 @@
 output "pipeline" {
-  value = try(fabric_data_pipeline.this[0], null)
+  value = fabric_data_pipeline.this
 }
 
 output "pipeline_id" {
-  value = try(fabric_data_pipeline.this[0].id, "")
+  value = fabric_data_pipeline.this.id
 }
 
 output "pipeline_name" {
-  value = try(fabric_data_pipeline.this[0].display_name, "")
+  value = fabric_data_pipeline.this.display_name
 }
