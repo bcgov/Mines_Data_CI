@@ -45,7 +45,7 @@ variable "GITHUB_PAT" {
 variable "ENVIRONMENT" {
   description = "Environment name (dev, test, prod). Injected by CI/CD as TF_VAR_ENVIRONMENT based on the target branch."
   type        = string
-  default     = "test"
+  default     = "prod"
 
   validation {
     condition     = contains(["dev", "test", "prod"], var.ENVIRONMENT)
@@ -84,7 +84,7 @@ variable "FABRIC_CAPACITY_NAME" {
 variable "FABRIC_CAPACITY_ID" {
   description = "Fallback Fabric capacity GUID, used only when FABRIC_CAPACITY_NAME is empty."
   type        = string
-  default     = "198C68F4-8402-45B9-8010-BDE58A729DDF"
+  default     = "F50E02B7-93B0-4045-9935-42FC79D94CD9"
 }
 
 # ── Access control ───────────────────────────────────────────────────────────
@@ -128,8 +128,8 @@ variable "NETWORK_LICENSE_PLATE" {
   default     = "ef74b0"
 }
 
-variable "REGISTER_POWERPLATFORM_RP" {
-  description = "If true, register the Microsoft.PowerPlatform resource provider on the subscription. Required for the Fabric VNet data gateway to work. Set to false if already registered."
+variable  REGISTER_POWERPLATFORM_RP {
+  description = "Whether to register the Microsoft.PowerPlatform RP in the subscription. Set to true for dev/test subscriptions, false for prod subscriptions."
   type        = bool
-  default     = true
+  default     = false
 }
