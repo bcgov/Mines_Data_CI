@@ -26,6 +26,12 @@ variable "workspace_id" {
   default     = null
 }
 
+variable "folder_id" {
+  description = "Optional Fabric workspace folder ID for the warehouse."
+  type        = string
+  default     = null
+}
+
 variable "fabric_warehouse" {
   description = "Name of fabric warehouse."
   type        = string

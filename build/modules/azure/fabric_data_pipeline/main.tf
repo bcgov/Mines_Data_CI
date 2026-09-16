@@ -153,7 +153,7 @@ locals {
           }
 
           folderPath = {
-            value = "@concat('raw/', item().target_schema, '/', item().target_table, '/', formatDateTime(utcNow(), 'yyyy'), '/', formatDateTime(utcNow(), 'MM'), '/', formatDateTime(utcNow(), 'dd'))"
+            value = "@concat(item().target_schema, '/', item().target_table, '/', formatDateTime(utcNow(), 'yyyy'), '/', formatDateTime(utcNow(), 'MM'), '/', formatDateTime(utcNow(), 'dd'))"
             type  = "Expression"
           }
         }
@@ -249,6 +249,8 @@ locals {
         ]
 
         scriptBlockExecutionTimeout = "02:00:00"
+
+        database                    = var.sink_warehouse_name
       }
 
       externalReferences = {
@@ -275,13 +277,15 @@ locals {
             type = "NonQuery"
 
             text = {
-              value = "@concat('EXEC [app].[usp_pipeline_log] @mode=''END'', @activity_run_id=''', ${local.expr_activity_run_id}, ''', @control_id=', string(item().control_id), ', @status=''FAILED'', @rows_read=', string(coalesce(activity('Copy_Incremental').output?.rowsRead, 0)), ', @rows_written=', string(coalesce(activity('Copy_Incremental').output?.rowsCopied, 0)), ', @error_message=''', replace(coalesce(activity('Copy_Incremental').output?.errors[0]?.Message, 'Copy failed'), '''', ''''''), ''', @error_code=''', replace(coalesce(activity('Copy_Incremental').output?.errors[0]?.Code, 'Unknown'), '''', ''''''), '''')"
+              value = "@concat('EXEC [app].[usp_pipeline_log] @mode=''END'', @activity_run_id=''', ${local.expr_activity_run_id}, ''', @control_id=', string(item().control_id), ', @status=''FAILED'', @rows_read=', string(coalesce(activity('Copy_Incremental').output?.rowsRead, 0)), ', @rows_written=', string(coalesce(activity('Copy_Incremental').output?.rowsCopied, 0)), ', @error_message=''', replace(string(coalesce(activity('Copy_Incremental').output?.errors[0]?.Message, 'Copy failed')), '''', ''''''), ''', @error_code=''', replace(string(coalesce(activity('Copy_Incremental').output?.errors[0]?.Code, 'Unknown')), '''', ''''''), '''')"
               type  = "Expression"
             }
           }
         ]
 
         scriptBlockExecutionTimeout = "02:00:00"
+
+        database                    = var.sink_warehouse_name
       }
 
       externalReferences = {
@@ -308,13 +312,15 @@ locals {
             type = "NonQuery"
 
             text = {
-              value = "@concat('EXEC [app].[usp_pipeline_log] @mode=''END'', @activity_run_id=''', ${local.expr_activity_run_id}, ''', @control_id=', string(item().control_id), ', @status=''FAILED'', @error_message=''', replace(coalesce(activity('Lookup_SourceMax').error?.message, 'Lookup_SourceMax failed'), '''', ''''''), ''', @error_code=''LOOKUP_SOURCE_MAX_FAILED''')"
+              value = "@concat('EXEC [app].[usp_pipeline_log] @mode=''END'', @activity_run_id=''', ${local.expr_activity_run_id}, ''', @control_id=', string(item().control_id), ', @status=''FAILED'', @error_message=''', replace(string(coalesce(activity('Lookup_SourceMax').error?.message, 'Lookup_SourceMax failed')), '''', ''''''), ''', @error_code=''LOOKUP_SOURCE_MAX_FAILED''')"
               type  = "Expression"
             }
           }
         ]
 
         scriptBlockExecutionTimeout = "02:00:00"
+
+        database                    = var.sink_warehouse_name
       }
 
       externalReferences = {
@@ -378,6 +384,8 @@ locals {
         ]
 
         scriptBlockExecutionTimeout = "02:00:00"
+
+        database                    = var.sink_warehouse_name
       }
 
       externalReferences = {
@@ -404,13 +412,15 @@ locals {
             type = "NonQuery"
 
             text = {
-              value = "@concat('EXEC [app].[usp_pipeline_log] @mode=''END'', @activity_run_id=''', ${local.expr_activity_run_id}, ''', @control_id=', string(item().control_id), ', @status=''FAILED'', @rows_read=', string(coalesce(activity('Copy_Full').output?.rowsRead, 0)), ', @rows_written=', string(coalesce(activity('Copy_Full').output?.rowsCopied, 0)), ', @error_message=''', replace(coalesce(activity('Copy_Full').output?.errors[0]?.Message, 'Copy failed'), '''', ''''''), ''', @error_code=''', replace(coalesce(activity('Copy_Full').output?.errors[0]?.Code, 'Unknown'), '''', ''''''), '''')"
+              value = "@concat('EXEC [app].[usp_pipeline_log] @mode=''END'', @activity_run_id=''', ${local.expr_activity_run_id}, ''', @control_id=', string(item().control_id), ', @status=''FAILED'', @rows_read=', string(coalesce(activity('Copy_Full').output?.rowsRead, 0)), ', @rows_written=', string(coalesce(activity('Copy_Full').output?.rowsCopied, 0)), ', @error_message=''', replace(string(coalesce(activity('Copy_Full').output?.errors[0]?.Message, 'Copy failed')), '''', ''''''), ''', @error_code=''', replace(string(coalesce(activity('Copy_Full').output?.errors[0]?.Code, 'Unknown')), '''', ''''''), '''')"
               type  = "Expression"
             }
           }
         ]
 
         scriptBlockExecutionTimeout = "02:00:00"
+
+        database                    = var.sink_warehouse_name
       }
 
       externalReferences = {
@@ -441,6 +451,8 @@ locals {
         ]
 
         scriptBlockExecutionTimeout = "02:00:00"
+
+        database                    = var.sink_warehouse_name
       }
 
       externalReferences = {
@@ -482,7 +494,13 @@ locals {
 
       typeProperties = {
         source = {
-          type            = "AzureSqlSource"
+          # Fabric normalizes a generic SQL connection (the fabric_connection
+          # module creates the warehouse connection with type/creationMethod
+          # "SQL") to SqlServerSource + SqlServerTable. Emitting that shape here
+          # means opening and publishing the pipeline in the portal produces no
+          # diff, instead of the UI rewriting it and blanking the nested
+          # connection reference.
+          type            = "SqlServerSource"
           queryTimeout    = "02:00:00"
           partitionOption = "None"
 
@@ -493,14 +511,20 @@ locals {
             type  = "Expression"
           }
 
+          # A DataWarehouseTable dataset expects a Fabric warehouse artifact
+          # reference (workspaceId/artifactId), not a SQL connection GUID —
+          # which is why the portal blanked this connection on publish and the
+          # run failed with InvalidExternalReferenceConnection. SqlServerTable
+          # matches the connection type, so the GUID sticks.
           datasetSettings = {
             annotations = []
             schema      = []
-            type        = "DataWarehouseTable"
+            type        = "SqlServerTable"
 
             typeProperties = {
-              schema = "app"
-              table  = "pipeline_control"
+              schema   = "app"
+              table    = "pipeline_control"
+              database = var.sink_warehouse_name
             }
 
             externalReferences = {
@@ -513,7 +537,7 @@ locals {
 
         datasetSettings = {
           annotations = []
-          type        = "AzureSqlTable"
+          type        = "SqlServerTable"
           schema      = []
 
           typeProperties = {
@@ -561,6 +585,7 @@ resource "fabric_data_pipeline" "this" {
   display_name = var.display_name
   description  = var.description
   workspace_id = var.workspace_id
+  folder_id    = var.folder_id
   format       = "Default"
 
   definition_update_enabled = true

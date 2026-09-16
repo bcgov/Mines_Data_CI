@@ -14,3 +14,4 @@ module "fabric_workspace_01" {
   identity_type   = "SystemAssigned"
   create_role_assignments = false
 }
+

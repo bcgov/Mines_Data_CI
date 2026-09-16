@@ -31,6 +31,12 @@ variable "workspace_id" {
   type        = string
 }
 
+variable "folder_id" {
+  description = "Optional Fabric workspace folder ID for the lakehouse."
+  type        = string
+  default     = null
+}
+
 variable "enable_schemas" {
   description = "Enable schema support on the lakehouse. WARNING: changing this after creation forces recreation of the lakehouse."
   type        = bool
@@ -52,4 +58,20 @@ variable "env" {
   description = "Environment name appended as a suffix to the lakehouse name (e.g. dev, test, prod). Empty string omits the suffix."
   type        = string
   default     = ""
+}
+
+variable "file_folders" {
+  description = <<-DESC
+    Folders to pre-create under the lakehouse Files/ area, as paths relative to
+    Files. Nested paths are fine — parents are created first.
+
+    Defaults to the medallion layers at the top level: Files/bronze,
+    Files/silver, Files/gold.
+
+    Set to [] to skip folder creation entirely. Note these are storage folders,
+    not lakehouse schemas: schemas live under Tables/ and are created when a
+    table is first written to them.
+  DESC
+  type        = list(string)
+  default     = ["bronze", "silver", "gold"]
 }

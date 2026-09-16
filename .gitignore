@@ -35,3 +35,6 @@ override.tf.json
 
 # Misc
 terraform-docs-*.tar.gz*
+
+# Fabric parameter files
+fabric/items/parameter.yml

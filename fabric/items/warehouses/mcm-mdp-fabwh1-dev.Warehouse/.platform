@@ -1,0 +1,12 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Warehouse",
+    "displayName": "mcm-mdp-fabwh1-dev",
+    "description": ""
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "7678b2e0-85e0-8f4c-419b-e924d40a0b5e"
+  }
+}

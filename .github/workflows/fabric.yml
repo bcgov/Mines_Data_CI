@@ -1,0 +1,232 @@
+name: Fabric Artifacts Deploy
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Publishes the Fabric item definitions under fabric/items/ into the workspace
+# that Terraform created for this branch's environment:
+#   dev → dev | test → test | main → prod
+#
+# Item definitions in git are bound to DEV GUIDs (lakehouse id, workspace id,
+# SQL analytics endpoint). Those are rewritten at publish time from the values
+# in the committed terraform-<env>.tfstate, using fabric/parameter.yml.tpl —
+# the same "resolve from state, render a template" idiom as providers.tf.
+#
+# Triggers:
+#   1. workflow_run — after "Terraform Apply" succeeds, so a new/changed
+#      workspace immediately gets its items.
+#   2. push to dev/test/main touching fabric/items/** — notebook or report
+#      changes deploy without re-running Terraform.
+#   3. workflow_dispatch — run it FROM the branch you want to deploy.
+#
+# Publishing is idempotent: fabric-cicd matches items by display name and
+# updates in place, so re-running is always safe.
+# ─────────────────────────────────────────────────────────────────────────────
+
+on:
+  workflow_dispatch:
+    inputs:
+      unpublish_orphans:
+        description: 'Delete workspace items that no longer exist in git'
+        type: boolean
+        default: false
+  workflow_run:
+    workflows: ["Terraform Apply"]
+    types: [completed]
+  push:
+    branches:
+      - dev
+      - test
+      - main
+    paths:
+      - 'fabric/items/**'
+      - 'fabric/parameter.yml.tpl'
+      - 'fabric/deploy.py'
+      - '.github/workflows/fabric.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: fabric-deploy-${{ github.event.workflow_run.head_branch || github.ref_name }}
+  cancel-in-progress: false
+
+jobs:
+  # ───────────────────────────────────────────────────────────────────────────
+  # JOB 1: Resolve target branch and environment
+  # ───────────────────────────────────────────────────────────────────────────
+  resolve-environment:
+    name: Resolve Environment
+    runs-on: ubuntu-latest
+    if: |
+      github.event_name != 'workflow_run' ||
+      (github.event.workflow_run.conclusion == 'success' &&
+       contains(fromJSON('["dev","test","main"]'), github.event.workflow_run.head_branch))
+    outputs:
+      branch:   ${{ steps.set-env.outputs.branch }}
+      env_name: ${{ steps.set-env.outputs.env_name }}
+      env_key:  ${{ steps.set-env.outputs.env_key }}
+
+    steps:
+      - name: Set environment name
+        id: set-env
+        run: |
+          if [[ "${{ github.event_name }}" == "workflow_run" ]]; then
+            BRANCH="${{ github.event.workflow_run.head_branch }}"
+          else
+            BRANCH="${{ github.ref_name }}"
+          fi
+
+          case "$BRANCH" in
+            main) ENV_NAME="prod" ;;
+            test) ENV_NAME="test" ;;
+            dev)  ENV_NAME="dev"  ;;
+            *)
+              echo "ERROR: Fabric deploy must run from dev, test, or main (got '$BRANCH')."
+              exit 1
+              ;;
+          esac
+
+          # Upper-case key — must match the Variable Library value set names
+          # (fabric/items/variable-libraries/vl_mdp.VariableLibrary/valueSets/)
+          # and the environment keys in fabric/parameter.yml.tpl.
+          ENV_KEY=$(echo "$ENV_NAME" | tr '[:lower:]' '[:upper:]')
+
+          echo "branch=$BRANCH"     >> $GITHUB_OUTPUT
+          echo "env_name=$ENV_NAME" >> $GITHUB_OUTPUT
+          echo "env_key=$ENV_KEY"   >> $GITHUB_OUTPUT
+          echo "Deploying Fabric items for branch '$BRANCH' → environment '$ENV_NAME' (value set '$ENV_KEY')"
+
+  # ───────────────────────────────────────────────────────────────────────────
+  # JOB 2: Publish item definitions into the workspace
+  # ───────────────────────────────────────────────────────────────────────────
+  fabric-deploy:
+    name: Fabric Deploy (${{ needs.resolve-environment.outputs.env_name }})
+    runs-on: ubuntu-latest
+    needs: [resolve-environment]
+    # GitHub Environment — env-scoped vars/secrets AND the required-reviewer
+    # approval gate for test and prod (same as cd.yml / warehouse.yml)
+    environment: ${{ needs.resolve-environment.outputs.env_name }}
+
+    env:
+      TARGET_BRANCH: ${{ needs.resolve-environment.outputs.branch }}
+      TF_ENV:        ${{ needs.resolve-environment.outputs.env_name }}
+      ENV_KEY:       ${{ needs.resolve-environment.outputs.env_key }}
+      ITEMS_DIR:     fabric/items
+
+    steps:
+      - name: Checkout target branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.resolve-environment.outputs.branch }}
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: ${{ vars.TF_VERSION || '1.11.4' }}
+          # Outputs are captured via command substitution — the wrapper's
+          # stdout noise would corrupt them (see warehouse.yml).
+          terraform_wrapper: false
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      # ── Resolve target identifiers from committed state ──────────────────────
+
+      - name: Verify state exists
+        working-directory: build/artifacts
+        run: |
+          if [[ ! -f "terraform-${TF_ENV}.tfstate" ]]; then
+            echo "ERROR: build/artifacts/terraform-${TF_ENV}.tfstate not found on '$TARGET_BRANCH'."
+            echo "Run 'Terraform Apply' first — the workspace and lakehouse must exist before items can be published."
+            exit 1
+          fi
+
+      - name: Resolve Fabric identifiers
+        id: fabric
+        working-directory: build/artifacts
+        run: |
+          STATE="terraform-${TF_ENV}.tfstate"
+          GUID_RE='^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$'
+
+          WORKSPACE_ID=$(jq -r '[.resources[] | select(.type=="fabric_workspace") | .instances[0].attributes.id] | first // empty' "$STATE")
+          LAKEHOUSE_ID=$(jq -r '[.resources[] | select(.type=="fabric_lakehouse") | .instances[0].attributes.id] | first // empty' "$STATE")
+          LAKEHOUSE_NAME=$(jq -r '[.resources[] | select(.type=="fabric_lakehouse") | .instances[0].attributes.display_name] | first // empty' "$STATE")
+          SQL_ENDPOINT_ID=$(jq -r '[.resources[] | select(.type=="fabric_lakehouse") | .instances[0].attributes.properties.sql_endpoint_properties.id] | first // empty' "$STATE")
+          SQL_ENDPOINT_HOST=$(jq -r '[.resources[] | select(.type=="fabric_lakehouse") | .instances[0].attributes.properties.sql_endpoint_properties.connection_string] | first // empty' "$STATE")
+          WAREHOUSE_NAME=$(jq -r '[.resources[] | select(.type=="fabric_warehouse") | .instances[0].attributes.display_name] | first // empty' "$STATE")
+
+          for pair in "WORKSPACE_ID:$WORKSPACE_ID" "LAKEHOUSE_ID:$LAKEHOUSE_ID" "SQL_ENDPOINT_ID:$SQL_ENDPOINT_ID"; do
+            name="${pair%%:*}"; value="${pair#*:}"
+            if [[ ! "$value" =~ $GUID_RE ]]; then
+              echo "ERROR: could not resolve a valid $name from $STATE (got '$value')."
+              exit 1
+            fi
+          done
+          if [[ -z "$SQL_ENDPOINT_HOST" || -z "$LAKEHOUSE_NAME" ]]; then
+            echo "ERROR: lakehouse name or SQL endpoint host missing from $STATE."
+            exit 1
+          fi
+
+          {
+            echo "workspace_id=$WORKSPACE_ID"
+            echo "lakehouse_id=$LAKEHOUSE_ID"
+            echo "lakehouse_name=$LAKEHOUSE_NAME"
+            echo "sql_endpoint_id=$SQL_ENDPOINT_ID"
+            echo "sql_endpoint_host_lower=$(echo "$SQL_ENDPOINT_HOST" | tr '[:upper:]' '[:lower:]')"
+            echo "sql_endpoint_host_upper=$(echo "$SQL_ENDPOINT_HOST" | tr '[:lower:]' '[:upper:]')"
+            echo "warehouse_name=$WAREHOUSE_NAME"
+          } >> $GITHUB_OUTPUT
+
+          echo "Workspace      : $WORKSPACE_ID"
+          echo "Lakehouse      : $LAKEHOUSE_NAME ($LAKEHOUSE_ID)"
+          echo "SQL endpoint   : $SQL_ENDPOINT_ID"
+          echo "Warehouse      : $WAREHOUSE_NAME"
+
+      # ── Render the parameter file for this environment ───────────────────────
+
+      - name: Render parameter.yml
+        env:
+          WORKSPACE_ID:            ${{ steps.fabric.outputs.workspace_id }}
+          LAKEHOUSE_ID:            ${{ steps.fabric.outputs.lakehouse_id }}
+          LAKEHOUSE_NAME:          ${{ steps.fabric.outputs.lakehouse_name }}
+          SQL_ENDPOINT_ID:         ${{ steps.fabric.outputs.sql_endpoint_id }}
+          SQL_ENDPOINT_HOST_LOWER: ${{ steps.fabric.outputs.sql_endpoint_host_lower }}
+          SQL_ENDPOINT_HOST_UPPER: ${{ steps.fabric.outputs.sql_endpoint_host_upper }}
+          WAREHOUSE_NAME:          ${{ steps.fabric.outputs.warehouse_name }}
+        run: |
+          envsubst < fabric/parameter.yml.tpl > "${ITEMS_DIR}/parameter.yml"
+          echo "--- rendered parameter.yml -------------------------------------"
+          cat "${ITEMS_DIR}/parameter.yml"
+          echo "----------------------------------------------------------------"
+
+      # ── Publish ──────────────────────────────────────────────────────────────
+
+      - name: Install fabric-cicd
+        run: |
+          python -m pip install --upgrade pip
+          # Pin the version — fabric-cicd is pre-1.0 and ships breaking changes.
+          pip install "fabric-cicd==0.1.33" azure-identity
+
+      - name: Publish Fabric items
+        env:
+          AZURE_TENANT_ID:     ${{ vars.ARM_TENANT_ID }}
+          AZURE_CLIENT_ID:     ${{ vars.ARM_CLIENT_ID }}
+          AZURE_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
+          FABRIC_WORKSPACE_ID: ${{ steps.fabric.outputs.workspace_id }}
+          FABRIC_ENVIRONMENT:  ${{ env.ENV_KEY }}
+          FABRIC_ITEMS_DIR:    ${{ env.ITEMS_DIR }}
+          UNPUBLISH_ORPHANS:   ${{ github.event.inputs.unpublish_orphans || 'false' }}
+        run: python fabric/deploy.py
+
+      - name: Cleanup generated files
+        if: always()
+        run: rm -f "${ITEMS_DIR}/parameter.yml"
+
+      - name: Deployment summary
+        if: success()
+        run: |
+          echo "Fabric item deployment complete"
+          echo "Environment : $TF_ENV"
+          echo "Branch      : $TARGET_BRANCH"
+          echo "Workspace   : ${{ steps.fabric.outputs.workspace_id }}"

@@ -4,6 +4,7 @@
 -- Config upsert for app.pipeline_control. Runtime watermark columns
 -- (from_date / to_date / last_watermark) are only seeded on first insert and
 -- never overwritten by subsequent config refreshes.
+-- Requires: src/tables/005_alter_pipeline_control_add_primary_key.sql
 -- =============================================================================
 CREATE OR ALTER   PROCEDURE [app].[usp_upsert_pipeline_control]
     @pipeline_name VARCHAR(200),
@@ -17,6 +18,7 @@ CREATE OR ALTER   PROCEDURE [app].[usp_upsert_pipeline_control]
     @from_date DATETIME2(6) = NULL,
     @to_date DATETIME2(6) = NULL,
     @watermark_column VARCHAR(200) = NULL,
+    @primary_key VARCHAR(500) = NULL,          -- NEW: source key column(s), comma-separated if composite
     @last_watermark VARCHAR(500) = NULL,
     @load_type VARCHAR(20) = 'INCREMENTAL',
     @load_frequency VARCHAR(50) = NULL,
@@ -49,6 +51,7 @@ BEGIN
             [key_vault_url]           = @key_vault_url,
             [source_query_template]   = @source_query_template,
             [watermark_column]        = @watermark_column,
+            [primary_key]             = @primary_key,
             [load_type]               = @load_type,
             [load_frequency]          = @load_frequency,
             [priority]                = @priority,
@@ -89,6 +92,7 @@ BEGIN
             [from_date],
             [to_date],
             [watermark_column],
+            [primary_key],
             [last_watermark],
             [load_type],
             [is_active],
@@ -116,6 +120,7 @@ BEGIN
             @from_date,         -- seed value only; pipeline owns this after first run
             @to_date,           -- seed value only; pipeline owns this after first run
             @watermark_column,
+            @primary_key,
             @last_watermark,    -- seed value only; pipeline owns this after first run
             @load_type,
             1,                  -- is_active
@@ -134,7 +139,8 @@ BEGIN
                     ISNULL(@target_table, ''), '|',
                     ISNULL(@source_query_template, ''), '|',
                     ISNULL(@load_type, ''), '|',
-                    ISNULL(@watermark_column, '')
+                    ISNULL(@watermark_column, ''), '|',
+                    ISNULL(@primary_key, '')
                 )
             ), 2),
             CAST(SYSUTCDATETIME() AS DATETIME2(6)),

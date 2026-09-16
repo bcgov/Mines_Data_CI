@@ -9,4 +9,5 @@ module "fabric_warehouse_01" {
   project         = var.PROJECT
   instance_number = 01
   workspace_id    = module.fabric_workspace_01.workspace_id
+  folder_id       = local.fabric_item_folder_ids["warehouses"]
 }
