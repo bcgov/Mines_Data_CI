@@ -17,18 +17,15 @@ data "fabric_folders" "existing" {
 }
 
 locals {
-  # normalize a display name for comparison: lower-case and replace spaces with hyphens
-  normalize = lambda(name) => lower(replace(name, " ", "-"))
-
-  # map of normalized -> original desired folder name
+  # map of normalized -> original desired folder name (normalize: lower-case, spaces->hyphens)
   fabric_item_folders_normalized = {
-    for name in local.fabric_item_folders : local.normalize(name) => name
+    for name in local.fabric_item_folders : lower(replace(name, " ", "-")) => name
   }
 
   # existing folders normalized -> id (only keep those that match desired normalized names)
   existing_fabric_folder_ids_normalized = {
-    for folder in data.fabric_folders.existing.values : local.normalize(folder.display_name) => folder.id
-    if contains(keys(local.fabric_item_folders_normalized), local.normalize(folder.display_name))
+    for folder in data.fabric_folders.existing.values : lower(replace(folder.display_name, " ", "-")) => folder.id
+    if contains(keys(local.fabric_item_folders_normalized), lower(replace(folder.display_name, " ", "-")))
   }
 }
 
