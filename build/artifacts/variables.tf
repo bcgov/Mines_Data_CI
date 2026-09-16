@@ -84,7 +84,7 @@ variable "FABRIC_CAPACITY_NAME" {
 variable "FABRIC_CAPACITY_ID" {
   description = "Fallback Fabric capacity GUID, used only when FABRIC_CAPACITY_NAME is empty."
   type        = string
-  default     = "198C68F4-8402-45B9-8010-BDE58A729DDF"
+  default     = "F50E02B7-93B0-4045-9935-42FC79D94CD9"
 }
 
 # ── Access control ───────────────────────────────────────────────────────────
