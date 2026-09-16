@@ -12,8 +12,8 @@ name: Warehouse Deploy
 # so re-running this workflow against the same environment is always safe.
 #
 # Triggers:
-#   1. workflow_run — after "Terraform Apply" succeeds on dev/test/main, so a
-#      fresh or changed infra deployment is immediately configured.
+#   1. workflow_run — after "Terraform Apply" succeeds on dev/test/main, the
+#      redispatch job re-runs this workflow ON that branch (see JOB 0).
 #   2. push to dev/test/main touching src/** — SQL-only changes (new control
 #      rows, proc updates) deploy without re-running Terraform.
 #   3. workflow_dispatch — run it FROM the branch you want to deploy.
@@ -51,17 +51,45 @@ concurrency:
 
 jobs:
   # ───────────────────────────────────────────────────────────────────────────
+  # JOB 0: Re-dispatch onto the target branch (workflow_run only)
+  #
+  # A workflow_run job always executes on the DEFAULT branch (GITHUB_REF=dev),
+  # even when Terraform Apply ran on main. The prod environment only allows
+  # deployments from `main`, so binding a deploy job to it from here fails with
+  # "Branch dev is not allowed to deploy to prod". Instead, start this same
+  # workflow via workflow_dispatch ON the branch that was applied; that run has
+  # GITHUB_REF=refs/heads/<branch> and passes the environment rule. This job
+  # uses no environment and no secrets. (GITHUB_TOKEN may trigger
+  # workflow_dispatch; it is exempt from the no-recursive-runs rule.)
+  # ───────────────────────────────────────────────────────────────────────────
+  redispatch:
+    name: Dispatch to ${{ github.event.workflow_run.head_branch }}
+    runs-on: ubuntu-latest
+    if: |
+      github.event_name == 'workflow_run' &&
+      github.event.workflow_run.conclusion == 'success' &&
+      contains(fromJSON('["dev","test","main"]'), github.event.workflow_run.head_branch)
+    permissions:
+      actions: write
+    steps:
+      - name: Run warehouse.yml on ${{ github.event.workflow_run.head_branch }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO:  ${{ github.repository }}
+          BRANCH:   ${{ github.event.workflow_run.head_branch }}
+        run: |
+          gh workflow run warehouse.yml --ref "$BRANCH"
+          echo "Dispatched warehouse.yml on '$BRANCH' (after Terraform Apply run ${{ github.event.workflow_run.id }})."
+
+  # ───────────────────────────────────────────────────────────────────────────
   # JOB 1: Resolve target branch and environment
   # ───────────────────────────────────────────────────────────────────────────
   resolve-environment:
     name: Resolve Environment
     runs-on: ubuntu-latest
-    # For workflow_run: only proceed when Terraform Apply succeeded on an
-    # environment branch. Other triggers pass straight through.
-    if: |
-      github.event_name != 'workflow_run' ||
-      (github.event.workflow_run.conclusion == 'success' &&
-       contains(fromJSON('["dev","test","main"]'), github.event.workflow_run.head_branch))
+    # workflow_run is handled by the redispatch job above; deploy only from
+    # push / workflow_dispatch, where GITHUB_REF is the environment's branch.
+    if: github.event_name != 'workflow_run'
     outputs:
       branch:   ${{ steps.set-env.outputs.branch }}
       env_name: ${{ steps.set-env.outputs.env_name }}
