@@ -12,6 +12,5 @@ module "fabric_workspace_01" {
   capacity_id     = local.fabric_capacity_id
   owners          = var.WORKSPACE_OWNERS
   identity_type   = "SystemAssigned"
-  create_role_assignments = false
 }
 
