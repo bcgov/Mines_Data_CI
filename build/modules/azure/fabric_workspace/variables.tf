@@ -104,6 +104,12 @@ variable "owners" {
   default     = []
 }
 
+variable "create_role_assignments" {
+  description = "When false, the module will not create workspace role assignments. Useful when assignments already exist and should be imported into state."
+  type        = bool
+  default     = true
+}
+
 variable "env" {
   description = "Environment name for the Fabric Workspace."
   type        = string

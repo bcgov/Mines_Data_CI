@@ -52,7 +52,7 @@ resource "fabric_workspace" "this" {
 # Grant Admin role to each owner (single, de-duplicated block)
 resource "fabric_workspace_role_assignment" "admins" {
   provider     = fabric.auth
-  for_each     = toset(var.owners)
+  for_each     = toset(var.create_role_assignments ? var.owners : [])
   workspace_id = fabric_workspace.this.id
   principal = {
     id   = each.value
