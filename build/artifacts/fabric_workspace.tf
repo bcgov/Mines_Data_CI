@@ -8,7 +8,7 @@ module "fabric_workspace_01" {
   env             = var.ENVIRONMENT
   prefix          = var.PREFIX
   project         = var.PROJECT
-  instance_number = "01"
+  instance_number = "00"
   capacity_id     = local.fabric_capacity_id
   owners          = var.WORKSPACE_OWNERS
   identity_type   = "SystemAssigned"
