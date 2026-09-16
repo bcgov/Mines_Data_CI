@@ -1,9 +1,9 @@
 terraform {
   backend "local" {
-    # test is replaced with dev/test/prod by the CI/CD workflows so each
+    # prod is replaced with dev/test/prod by the CI/CD workflows so each
     # environment branch keeps its own state file and can never read another
     # environment's state.
-    path = "terraform-test.tfstate"
+    path = "terraform-prod.tfstate"
   }
 
   required_providers {
