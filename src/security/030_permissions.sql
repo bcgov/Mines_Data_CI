@@ -6,72 +6,84 @@
 -- Idempotent: GRANT is a no-op when the permission already exists, so this
 -- file is safe to run on every deployment.
 --
--- Each principal is wrapped in TRY/CATCH so a missing/renamed principal
--- prints a warning instead of aborting the whole deployment (the runner
--- uses sqlcmd -b, which would otherwise stop at the first error).
+-- ENVIRONMENT-AGNOSTIC: the same file is used on dev, test and main. Principal
+-- names come from sqlcmd scripting variables, supplied as environment
+-- variables by .github/workflows/warehouse.yml:
+--   $(WORKSPACE_IDENTITY_NAME)  display name of this environment's Fabric
+--                               workspace (read from terraform-<env>.tfstate);
+--                               the workspace identity carries that name
+--   $(PIPELINE_SP_NAME)         GitHub Environment variable PIPELINE_SP_NAME
+-- If either is missing, sqlcmd aborts with "scripting variable not defined".
 --
--- NOTE — environment branches: principal names differ per environment (e.g.
--- the workspace identity is named after the workspace, which includes the
--- env). Since dev / test / main are independent branches in this repo, each
--- branch carries its own copy of this file with that environment's names.
+-- The two required principals below RE-THROW on failure so a missing grant
+-- fails the deployment instead of hiding behind a warning. Additional users
+-- only warn.
 -- =============================================================================
 
+PRINT 'Applying permissions: SP=[$(PIPELINE_SP_NAME)], workspace identity=[$(WORKSPACE_IDENTITY_NAME)]';
+GO
+
 -- ─────────────────────────────────────────────────────────────────────────────
--- Service principal: pipeline / infra automation
+-- Service principal: pipeline / infra automation (required)
 -- ─────────────────────────────────────────────────────────────────────────────
 
 BEGIN TRY
-    GRANT CONNECT TO [sp-ef74b0-infra-master];
-    GRANT SELECT, INSERT, UPDATE, DELETE ON SCHEMA::app TO [sp-ef74b0-infra-master];
-    GRANT EXECUTE ON SCHEMA::app TO [sp-ef74b0-infra-master];
-    GRANT ALTER   ON SCHEMA::app TO [sp-ef74b0-infra-master];
+    GRANT CONNECT TO [$(PIPELINE_SP_NAME)];
+    GRANT SELECT, INSERT, UPDATE, DELETE ON SCHEMA::app TO [$(PIPELINE_SP_NAME)];
+    GRANT EXECUTE ON SCHEMA::app TO [$(PIPELINE_SP_NAME)];
+    GRANT ALTER   ON SCHEMA::app TO [$(PIPELINE_SP_NAME)];
 
     -- Data-plane access for the medallion layers
-    GRANT SELECT, INSERT, UPDATE, DELETE ON SCHEMA::bronze TO [sp-ef74b0-infra-master];
-    GRANT SELECT, INSERT, UPDATE, DELETE ON SCHEMA::silver TO [sp-ef74b0-infra-master];
-    GRANT SELECT, INSERT, UPDATE, DELETE ON SCHEMA::gold   TO [sp-ef74b0-infra-master];
-    GRANT ALTER ON SCHEMA::bronze TO [sp-ef74b0-infra-master];
-    GRANT ALTER ON SCHEMA::silver TO [sp-ef74b0-infra-master];
-    GRANT ALTER ON SCHEMA::gold   TO [sp-ef74b0-infra-master];
+    GRANT SELECT, INSERT, UPDATE, DELETE ON SCHEMA::bronze TO [$(PIPELINE_SP_NAME)];
+    GRANT SELECT, INSERT, UPDATE, DELETE ON SCHEMA::silver TO [$(PIPELINE_SP_NAME)];
+    GRANT SELECT, INSERT, UPDATE, DELETE ON SCHEMA::gold   TO [$(PIPELINE_SP_NAME)];
+    GRANT ALTER ON SCHEMA::bronze TO [$(PIPELINE_SP_NAME)];
+    GRANT ALTER ON SCHEMA::silver TO [$(PIPELINE_SP_NAME)];
+    GRANT ALTER ON SCHEMA::gold   TO [$(PIPELINE_SP_NAME)];
 
-    PRINT 'Granted: sp-ef74b0-infra-master';
+    PRINT 'Granted: $(PIPELINE_SP_NAME)';
 END TRY
 BEGIN CATCH
-    PRINT CONCAT('WARNING: grants for [sp-ef74b0-infra-master] failed: ', ERROR_MESSAGE());
+    PRINT CONCAT('ERROR: grants for [$(PIPELINE_SP_NAME)] failed: ', ERROR_MESSAGE());
+    THROW;
 END CATCH;
 GO
 
 -- ─────────────────────────────────────────────────────────────────────────────
--- Workspace identity (system-assigned identity of the Fabric workspace,
--- used by workspace-native items like pipelines and copy jobs)
+-- Workspace identity (system-assigned identity of this environment's Fabric
+-- workspace, used by workspace-native items like pipelines and copy jobs).
+-- Required. The identity must be enabled in Workspace settings.
 -- ─────────────────────────────────────────────────────────────────────────────
 
 BEGIN TRY
-    GRANT CONNECT TO [mines-data-platform-fabricws-dev-1];
-    GRANT SELECT, INSERT, UPDATE, DELETE ON SCHEMA::app TO [mines-data-platform-fabricws-dev-1];
-    GRANT EXECUTE ON SCHEMA::app TO [mines-data-platform-fabricws-dev-1];
-    GRANT ALTER   ON SCHEMA::app TO [mines-data-platform-fabricws-dev-1];
+    GRANT CONNECT TO [$(WORKSPACE_IDENTITY_NAME)];
+    GRANT SELECT, INSERT, UPDATE, DELETE ON SCHEMA::app TO [$(WORKSPACE_IDENTITY_NAME)];
+    GRANT EXECUTE ON SCHEMA::app TO [$(WORKSPACE_IDENTITY_NAME)];
+    GRANT ALTER   ON SCHEMA::app TO [$(WORKSPACE_IDENTITY_NAME)];
 
     -- Data-plane access for the medallion layers
-    GRANT SELECT, INSERT, UPDATE, DELETE ON SCHEMA::bronze TO [mines-data-platform-fabricws-dev-1];
-    GRANT SELECT, INSERT, UPDATE, DELETE ON SCHEMA::silver TO [mines-data-platform-fabricws-dev-1];
-    GRANT SELECT, INSERT, UPDATE, DELETE ON SCHEMA::gold   TO [mines-data-platform-fabricws-dev-1];
-    GRANT ALTER ON SCHEMA::bronze TO [mines-data-platform-fabricws-dev-1];
-    GRANT ALTER ON SCHEMA::silver TO [mines-data-platform-fabricws-dev-1];
-    GRANT ALTER ON SCHEMA::gold   TO [mines-data-platform-fabricws-dev-1];
+    GRANT SELECT, INSERT, UPDATE, DELETE ON SCHEMA::bronze TO [$(WORKSPACE_IDENTITY_NAME)];
+    GRANT SELECT, INSERT, UPDATE, DELETE ON SCHEMA::silver TO [$(WORKSPACE_IDENTITY_NAME)];
+    GRANT SELECT, INSERT, UPDATE, DELETE ON SCHEMA::gold   TO [$(WORKSPACE_IDENTITY_NAME)];
+    GRANT ALTER ON SCHEMA::bronze TO [$(WORKSPACE_IDENTITY_NAME)];
+    GRANT ALTER ON SCHEMA::silver TO [$(WORKSPACE_IDENTITY_NAME)];
+    GRANT ALTER ON SCHEMA::gold   TO [$(WORKSPACE_IDENTITY_NAME)];
 
-    PRINT 'Granted: mines-data-platform-fabricws-dev-1';
+    PRINT 'Granted: $(WORKSPACE_IDENTITY_NAME)';
 END TRY
 BEGIN CATCH
-    PRINT CONCAT('WARNING: grants for [mines-data-platform-fabricws-dev-1] failed: ', ERROR_MESSAGE());
+    PRINT CONCAT('ERROR: grants for [$(WORKSPACE_IDENTITY_NAME)] failed: ', ERROR_MESSAGE());
+    PRINT 'Is the workspace identity enabled in Workspace settings for this environment?';
+    THROW;
 END CATCH;
 GO
 
 -- ─────────────────────────────────────────────────────────────────────────────
--- Additional users
+-- Additional users (optional — failures only warn)
 --
--- Add one TRY/CATCH block per user, following the pattern above. Use the
--- user's full Entra UPN as the principal name, e.g.:
+-- Add one TRY/CATCH block per user. Use the user's full Entra UPN. Grants that
+-- should apply to every environment go here directly; environment-specific
+-- users can use a sqlcmd variable in the same way as above.
 --
 -- BEGIN TRY
 --     GRANT CONNECT TO [jane.doe@gov.bc.ca];
