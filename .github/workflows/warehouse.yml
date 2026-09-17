@@ -203,8 +203,18 @@ jobs:
             exit 1
           fi
 
-          echo "workspace_id=$WORKSPACE_ID" >> $GITHUB_OUTPUT
-          echo "warehouse_id=$WAREHOUSE_ID" >> $GITHUB_OUTPUT
+          # Workspace display name = name of the workspace identity that
+          # 030_permissions.sql grants to. Read from the same state file.
+          WORKSPACE_NAME=$(jq -r --arg ws "$WORKSPACE_ID" '[.resources[] | select(.type=="fabric_workspace") | .instances[].attributes | select(.id==$ws) | .display_name] | first // empty' "$STATE")
+          if [[ -z "$WORKSPACE_NAME" ]]; then
+            echo "ERROR: could not resolve the display name of workspace $WORKSPACE_ID from $STATE."
+            exit 1
+          fi
+
+          echo "workspace_id=$WORKSPACE_ID"     >> $GITHUB_OUTPUT
+          echo "warehouse_id=$WAREHOUSE_ID"     >> $GITHUB_OUTPUT
+          echo "workspace_name=$WORKSPACE_NAME" >> $GITHUB_OUTPUT
+          echo "Resolved workspace name: $WORKSPACE_NAME"
           echo "Resolved workspace: $WORKSPACE_ID"
           echo "Resolved warehouse: $WAREHOUSE_ID"
 
@@ -234,6 +244,10 @@ jobs:
           AZURE_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
           # Explicit go-sqlcmd path — bypasses the runner's legacy ODBC sqlcmd
           SQLCMD_BIN:          /usr/local/bin/go-sqlcmd
+          # sqlcmd scripting variables for src/security/030_permissions.sql
+          # (go-sqlcmd resolves $(NAME) from environment variables)
+          WORKSPACE_IDENTITY_NAME: ${{ steps.warehouse.outputs.workspace_name }}
+          PIPELINE_SP_NAME:        ${{ vars.PIPELINE_SP_NAME || 'sp-ef74b0-infra-master' }}
         run: |
           chmod +x src/init/warehouse_init.sh
           ./src/init/warehouse_init.sh
