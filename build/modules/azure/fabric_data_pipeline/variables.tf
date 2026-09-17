@@ -31,6 +31,11 @@ variable "pipeline_name_param_default" {
 variable "warehouse_connection_id" {
   type        = string
   description = "Fabric connection ID for the warehouse (output of the fabric_connection module). Used by Script and Lookup activities to connect to app.pipeline_control and app.pipeline_log."
+
+  validation {
+    condition     = can(regex("^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$", var.warehouse_connection_id))
+    error_message = "warehouse_connection_id must be a Fabric connection GUID; an empty value would deploy a pipeline with no warehouse connection."
+  }
 }
 
 # ─── Control table + logging: Fabric Warehouse ───────────────────────────────

@@ -12,7 +12,9 @@
 # the dev workspace's SQL endpoint while asking for the <env> warehouse —
 # "Login failed … database was not found" (18456, state 126).
 #
-# WAREHOUSE_CONNECTION_ID is now only an emergency override (null by default).
+# WAREHOUSE_CONNECTION_ID is an optional override (null by default). CI passes
+# the GitHub Environment variable WAREHOUSE_CONNECTION_ID; when that is unset
+# it arrives as "", which coalesce() skips.
 # local.warehouse_connection_id uses coalesce(), which FAILS the plan/apply if
 # both the override and the state lookup are empty — an empty connection can
 # no longer reach a pipeline definition silently.
@@ -24,8 +26,8 @@ variable "WAREHOUSE_CONNECTION_ID" {
   default     = null
 
   validation {
-    condition     = var.WAREHOUSE_CONNECTION_ID == null || can(regex("^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$", var.WAREHOUSE_CONNECTION_ID))
-    error_message = "WAREHOUSE_CONNECTION_ID must be null or a GUID."
+    condition     = var.WAREHOUSE_CONNECTION_ID == null || var.WAREHOUSE_CONNECTION_ID == "" || can(regex("^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$", var.WAREHOUSE_CONNECTION_ID))
+    error_message = "WAREHOUSE_CONNECTION_ID must be empty/unset or a GUID."
   }
 }
 

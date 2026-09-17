@@ -12,12 +12,9 @@ module "pipeline_raw_to_bronze_mto" {
   pipeline_name_param_default = "pl_ingest_mto"
 
   source_connection_id    = "db3b76f3-6e18-4489-b228-38533e51ee73"
-  # Pinned to the working warehouse connection rather than
-  # module.warehouse_mds_connection.connection_id. That module resolves the ID
-  # by listing connections and matching on display name, and returns "" when the
-  # lookup misses — which is how an empty connection reached the pipeline JSON.
-  # Same pattern already used above for source_connection_id.
-  warehouse_connection_id = var.WAREHOUSE_CONNECTION_ID
+  # This environment's warehouse connection, resolved from Terraform state
+  # (see warehouse_connection.tf).
+  warehouse_connection_id = local.warehouse_connection_id
 
   # Warehouse display name, written into the Lookup datasets and every logging
   # Script activity as the `database`. Sourced from the warehouse module so it

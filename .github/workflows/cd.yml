@@ -125,6 +125,9 @@ jobs:
           TF_VAR_mds_test_password:   ${{ secrets.MDS_PASSWORD }}
           # Optional: resolve Fabric capacity by display name (set per GitHub Environment)
           TF_VAR_FABRIC_CAPACITY_NAME: ${{ vars.FABRIC_CAPACITY_NAME }}
+          # Optional: pin the warehouse connection used by the ingest pipelines.
+          # Unset = use the connection Terraform manages for this environment.
+          TF_VAR_WAREHOUSE_CONNECTION_ID: ${{ vars.WAREHOUSE_CONNECTION_ID }}
         run: |
           echo "Applying for environment: $TF_ENV..."
           terraform apply -input=false -auto-approve
