@@ -12,7 +12,7 @@ module "pipeline_raw_to_bronze" {
   display_name                = "pl_ingest_mds"
   pipeline_name_param_default = "pl_ingest_mds"
 
-  source_connection_id    = "21b383a1-c561-4540-980d-ce3683e89236"
+  source_connection_id    = "67a5f546-3911-48dd-aaf1-f5d501391517"
   # This environment's warehouse connection, resolved from Terraform state
   # (see warehouse_connection.tf).
   warehouse_connection_id = local.warehouse_connection_id
