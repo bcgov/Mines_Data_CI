@@ -9,19 +9,19 @@ table fact_now_application
 		lineageTag: ce36246d-17c9-465e-b036-f8180c2b1460
 
 	/// FYTD received: distinct now_application_id by submitted_date, status<>PCO, exclude admin. DEMO ANCHOR: latest available data date (max submitted_date, capped at today); self-heals to true FYTD once current data lands.
-	measure 'NoWs Received FYTD' = VAR _ByFY = ADDCOLUMNS(VALUES(dim_date[fiscal_year]), "@c", CALCULATE(DISTINCTCOUNT(fact_now_application[now_application_id]), fact_now_application[now_application_status_code]<>"PCO", fact_now_application[is_administrative_amendment]=0)) VAR _AnchorFY = MAXX(FILTER(_ByFY,[@c]>=50), dim_date[fiscal_year]) VAR CurrentDate = IF(ISBLANK(_AnchorFY), TODAY(), MIN(DATE(_AnchorFY+1,3,31), TODAY())) VAR FYStartYear = IF(MONTH(CurrentDate)>=4, YEAR(CurrentDate), YEAR(CurrentDate)-1) VAR FYStart = DATE(FYStartYear,4,1) RETURN CALCULATE(DISTINCTCOUNT(fact_now_application[now_application_id]), fact_now_application[submitted_date]>=FYStart, fact_now_application[submitted_date]<CurrentDate+1, fact_now_application[now_application_status_code]<>"PCO", fact_now_application[is_administrative_amendment]=0)
+	measure 'NoWs Received FYTD' = VAR CurrentDate = TODAY() VAR FYStartYear = IF(MONTH(CurrentDate)>=4, YEAR(CurrentDate), YEAR(CurrentDate)-1) VAR FYStart = DATE(FYStartYear,4,1) RETURN CALCULATE(DISTINCTCOUNT(fact_now_application[now_application_id]), fact_now_application[submitted_date]>=FYStart, fact_now_application[submitted_date]<CurrentDate+1, fact_now_application[now_application_status_code]<>"PCO", fact_now_application[is_administrative_amendment]=0)
 		formatString: #,##0
 		displayFolder: NoW Received KPIs
 		lineageTag: fee58097-18e9-4e82-9e51-3898441c1459
 
 	/// Prior-FY comparison, same window one year earlier (status<>PCO, exclude admin).
-	measure 'NoWs Received Same Time Last FY' = VAR _ByFY = ADDCOLUMNS(VALUES(dim_date[fiscal_year]), "@c", CALCULATE(DISTINCTCOUNT(fact_now_application[now_application_id]), fact_now_application[now_application_status_code]<>"PCO", fact_now_application[is_administrative_amendment]=0)) VAR _AnchorFY = MAXX(FILTER(_ByFY,[@c]>=50), dim_date[fiscal_year]) VAR CurrentDate = IF(ISBLANK(_AnchorFY), TODAY(), MIN(DATE(_AnchorFY+1,3,31), TODAY())) VAR FYStartYear = IF(MONTH(CurrentDate)>=4, YEAR(CurrentDate), YEAR(CurrentDate)-1) VAR LastFYStart = DATE(FYStartYear-1,4,1) VAR LastFYSameDate = DATE(YEAR(CurrentDate)-1, MONTH(CurrentDate), DAY(CurrentDate)) RETURN CALCULATE(DISTINCTCOUNT(fact_now_application[now_application_id]), fact_now_application[submitted_date]>=LastFYStart, fact_now_application[submitted_date]<LastFYSameDate+1, fact_now_application[now_application_status_code]<>"PCO", fact_now_application[is_administrative_amendment]=0)
+	measure 'NoWs Received Same Time Last FY' = VAR CurrentDate = TODAY() VAR FYStartYear = IF(MONTH(CurrentDate)>=4, YEAR(CurrentDate), YEAR(CurrentDate)-1) VAR LastFYStart = DATE(FYStartYear-1,4,1) VAR LastFYSameDate = DATE(YEAR(CurrentDate)-1, MONTH(CurrentDate), DAY(CurrentDate)) RETURN CALCULATE(DISTINCTCOUNT(fact_now_application[now_application_id]), fact_now_application[submitted_date]>=LastFYStart, fact_now_application[submitted_date]<LastFYSameDate+1, fact_now_application[now_application_status_code]<>"PCO", fact_now_application[is_administrative_amendment]=0)
 		formatString: #,##0
 		displayFolder: NoW Received KPIs
 		lineageTag: 6acdee05-6cfb-49e2-a550-7a5593c8ccc7
 
 	/// Last completed month up to the anchor date (status<>PCO, exclude admin).
-	measure 'NoWs Received Last Month' = VAR _ByFY = ADDCOLUMNS(VALUES(dim_date[fiscal_year]), "@c", CALCULATE(DISTINCTCOUNT(fact_now_application[now_application_id]), fact_now_application[now_application_status_code]<>"PCO", fact_now_application[is_administrative_amendment]=0)) VAR _AnchorFY = MAXX(FILTER(_ByFY,[@c]>=50), dim_date[fiscal_year]) VAR CurrentDate = IF(ISBLANK(_AnchorFY), TODAY(), MIN(DATE(_AnchorFY+1,3,31), TODAY())) VAR ThisMonthStart = DATE(YEAR(CurrentDate), MONTH(CurrentDate),1) VAR LastMonthStart = EDATE(ThisMonthStart,-1) RETURN CALCULATE(DISTINCTCOUNT(fact_now_application[now_application_id]), fact_now_application[submitted_date]>=LastMonthStart, fact_now_application[submitted_date]<ThisMonthStart, fact_now_application[now_application_status_code]<>"PCO", fact_now_application[is_administrative_amendment]=0)
+	measure 'NoWs Received Last Month' = VAR CurrentDate = TODAY() VAR ThisMonthStart = DATE(YEAR(CurrentDate), MONTH(CurrentDate),1) VAR LastMonthStart = EDATE(ThisMonthStart,-1) RETURN CALCULATE(DISTINCTCOUNT(fact_now_application[now_application_id]), fact_now_application[submitted_date]>=LastMonthStart, fact_now_application[submitted_date]<ThisMonthStart, fact_now_application[now_application_status_code]<>"PCO", fact_now_application[is_administrative_amendment]=0)
 		formatString: #,##0
 		displayFolder: NoW Received KPIs
 		lineageTag: 4567ee17-eb0d-4c0a-bdbf-7d416f9d1936
@@ -45,17 +45,17 @@ table fact_now_application
 		lineageTag: 10142e1f-5a76-4b42-b6c6-5cabc9647dbf
 
 	/// Dynamic KPI card label for FYTD (anchored to latest available data).
-	measure 'Lbl NoW Received FYTD' = VAR _ByFY = ADDCOLUMNS(VALUES(dim_date[fiscal_year]), "@c", CALCULATE(DISTINCTCOUNT(fact_now_application[now_application_id]), fact_now_application[now_application_status_code]<>"PCO", fact_now_application[is_administrative_amendment]=0)) VAR _AnchorFY = MAXX(FILTER(_ByFY,[@c]>=50), dim_date[fiscal_year]) VAR d = IF(ISBLANK(_AnchorFY), TODAY(), MIN(DATE(_AnchorFY+1,3,31), TODAY())) VAR s = IF(MONTH(d)>=4, YEAR(d), YEAR(d)-1) VAR fy = RIGHT(FORMAT(s,"0000"),2) & "/" & RIGHT(FORMAT(s+1,"0000"),2) RETURN "Number of NoWs Received FYTD " & fy & " (latest FY with data)"
+	measure 'Lbl NoW Received FYTD' = VAR d = TODAY() VAR s = IF(MONTH(d)>=4, YEAR(d), YEAR(d)-1) VAR fy = RIGHT(FORMAT(s,"0000"),2) & "/" & RIGHT(FORMAT(s+1,"0000"),2) RETURN "Number of NoWs Received FYTD " & fy & ""
 		displayFolder: NoW Received Card Labels
 		lineageTag: 69269ce3-983f-4e15-8731-bdf54f5c9d3e
 
 	/// Dynamic KPI card label for same-time-last-FY.
-	measure 'Lbl NoW Received Same Last FY' = VAR _ByFY = ADDCOLUMNS(VALUES(dim_date[fiscal_year]), "@c", CALCULATE(DISTINCTCOUNT(fact_now_application[now_application_id]), fact_now_application[now_application_status_code]<>"PCO", fact_now_application[is_administrative_amendment]=0)) VAR _AnchorFY = MAXX(FILTER(_ByFY,[@c]>=50), dim_date[fiscal_year]) VAR d = IF(ISBLANK(_AnchorFY), TODAY(), MIN(DATE(_AnchorFY+1,3,31), TODAY())) VAR s = IF(MONTH(d)>=4, YEAR(d), YEAR(d)-1) VAR fyp = FORMAT(s-1,"0000") & "/" & RIGHT(FORMAT(s,"0000"),2) RETURN "Number of NoWs Received same time Last FY " & fyp
+	measure 'Lbl NoW Received Same Last FY' = VAR d = TODAY() VAR s = IF(MONTH(d)>=4, YEAR(d), YEAR(d)-1) VAR fyp = FORMAT(s-1,"0000") & "/" & RIGHT(FORMAT(s,"0000"),2) RETURN "Number of NoWs Received same time Last FY " & fyp
 		displayFolder: NoW Received Card Labels
 		lineageTag: 5a0c873d-77f1-40b5-bb9c-aa1e796f54fc
 
 	/// Dynamic KPI card label for last completed month.
-	measure 'Lbl NoW Received Last Month' = VAR _ByFY = ADDCOLUMNS(VALUES(dim_date[fiscal_year]), "@c", CALCULATE(DISTINCTCOUNT(fact_now_application[now_application_id]), fact_now_application[now_application_status_code]<>"PCO", fact_now_application[is_administrative_amendment]=0)) VAR _AnchorFY = MAXX(FILTER(_ByFY,[@c]>=50), dim_date[fiscal_year]) VAR d = IF(ISBLANK(_AnchorFY), TODAY(), MIN(DATE(_AnchorFY+1,3,31), TODAY())) VAR s = IF(MONTH(d)>=4, YEAR(d), YEAR(d)-1) VAR fy = RIGHT(FORMAT(s,"0000"),2) & "/" & RIGHT(FORMAT(s+1,"0000"),2) VAR lm = FORMAT(EOMONTH(d,-1),"MMMM") RETURN "Number of NoWs Received Last Month " & lm & " FY " & fy
+	measure 'Lbl NoW Received Last Month' = VAR d = TODAY() VAR s = IF(MONTH(d)>=4, YEAR(d), YEAR(d)-1) VAR fy = RIGHT(FORMAT(s,"0000"),2) & "/" & RIGHT(FORMAT(s+1,"0000"),2) VAR lm = FORMAT(EOMONTH(d,-1),"MMMM") RETURN "Number of NoWs Received Last Month " & lm & " FY " & fy
 		displayFolder: NoW Received Card Labels
 		lineageTag: b046346c-2b7f-47f2-87b6-e4c8bf2e2171
 

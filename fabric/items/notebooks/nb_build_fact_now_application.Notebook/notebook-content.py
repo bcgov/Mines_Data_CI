@@ -97,6 +97,23 @@ df = spark.sql(q)
 spark.sql("CREATE SCHEMA IF NOT EXISTS gold")
 # full rebuild each run - overwrite, not an incremental load (mirrors fact_now_permit)
 df.write.format("delta").mode("overwrite").option("overwriteSchema", "true").saveAsTable("gold.fact_now_application")
+
+# ── PERSIST CHECK ──────────────────────────────────────────────────────────
+# saveAsTable has reported success WITHOUT persisting on this lakehouse family
+# (seen Aug 2026 on lh_gold). Fail loudly here rather than discovering it later
+# when a Direct Lake model refresh says the source table does not exist.
+_expected = df.count()
+_actual   = spark.table("gold.fact_now_application").count()
+print(f"gold.fact_now_application: expected={_expected} actual={_actual}")
+if _actual != _expected or _actual == 0:
+    raise RuntimeError(
+        f"gold.fact_now_application did not persist correctly (expected {_expected}, got {_actual}). "
+        "Re-write using the explicit OneLake path: "
+        "df.write.format('delta').mode('overwrite').option('overwriteSchema','true')"
+        ".save('abfss://<ws-id>@onelake.dfs.fabric.microsoft.com/<lh-id>/Tables/gold/fact_now_application')"
+    )
+print("persist check OK")
+# ───────────────────────────────────────────────────────────────────────────
 print("rows", df.count(), "cols", len(df.columns))
 
 # METADATA ********************
