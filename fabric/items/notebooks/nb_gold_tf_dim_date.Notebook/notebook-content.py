@@ -136,6 +136,14 @@ CURRENT_FY = _today.y if _today.m >= 4 else _today.y - 1
 df = df.withColumn("fiscal_year_last6",
                    F.when(F.col("fiscal_year").between(CURRENT_FY - 5, CURRENT_FY), F.col("fiscal_year_label")))
 
+# Sibling scope column for the Fiscal MONTH slicer (dim_date.fiscal_month_last6) — the month
+# slicer needs its own scope column; a slicer's member list is NOT restricted by a filter on a
+# different column. Must be a PHYSICAL column: Direct Lake rejects DAX calculated columns.
+# Was added by hand via XMLA in Aug and never scripted — that is why a PROD dim_date rebuild
+# broke the NoW Received model ("Delta protocol violation: fiscal_month_last6 not found").
+df = df.withColumn("fiscal_month_last6",
+                   F.when(F.col("fiscal_year_last6").isNotNull(), F.col("fiscal_month_label")))
+
 # Numeric sort key for fiscal_month_label (e.g. 202501 = Apr 2025, 1st month of FY2025/26). The semantic models sort
 # the month axis by this column; it used to be added by hand (ALTER TABLE) in July — now scripted.
 df = df.withColumn("fiscal_year_month_key", (F.col("fiscal_year") * 100 + F.col("fiscal_month")).cast("int"))
@@ -149,6 +157,7 @@ df.show(5)
 # CELL ********************
 
 # Drop and recreate — dim_date is always fully regenerated (no incremental needed)
+spark.sql("CREATE SCHEMA IF NOT EXISTS gold")   # new lakehouse (e.g. PROD) has no gold schema
 spark.sql(f"DROP TABLE IF EXISTS {TARGET_TABLE}")
 
 (df.write
