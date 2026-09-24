@@ -64,6 +64,27 @@ table fact_now_application
 		displayFolder: NoW Received Card Labels
 		lineageTag: 119dcdc3-ab29-4317-b994-48a37605acaf
 
+	/// Hidden 1/0 flag for the per-fiscal-year chart: the last 5 COMPLETED fiscal years (current FY excluded), rolling with TODAY(). Matches Metabase 3301 (FY2021/22-FY2025/26 on 23 Sep 2026). Visual filter: is 1.
+	measure 'Is Last 5 FY' = VAR d = TODAY() VAR s = IF ( MONTH ( d ) >= 4, YEAR ( d ), YEAR ( d ) - 1 ) VAR fy = SELECTEDVALUE ( dim_date[fiscal_year] ) RETURN IF ( NOT ISBLANK ( fy ) && fy >= s - 5 && fy <= s - 1, 1, 0 )
+		formatString: 0
+		isHidden
+		displayFolder: Chart Scope Flags
+		lineageTag: 5a646c53-ad95-476f-83ab-788a79f5fddc
+
+	/// Hidden 1/0 flag for the per-month-by-type chart: April of 3 fiscal years back up to today. Matches Metabase 3302 (Apr 2023 onward on 23 Sep 2026). Visual filter: is 1.
+	measure 'Is Last 3 FY Month' = VAR d = TODAY() VAR s = IF ( MONTH ( d ) >= 4, YEAR ( d ), YEAR ( d ) - 1 ) VAR m = MIN ( dim_date[full_date] ) RETURN IF ( NOT ISBLANK ( m ) && m >= DATE ( s - 3, 4, 1 ) && m <= d, 1, 0 )
+		formatString: 0
+		isHidden
+		displayFolder: Chart Scope Flags
+		lineageTag: 8dd27e28-39f7-42ec-b90f-41ac5875fea0
+
+	/// Hidden 1/0 flag for the per-month-by-commodity chart: April of last fiscal year up to today. Matches Metabase 3311 (Apr 2025 onward on 23 Sep 2026). Visual filter: is 1.
+	measure 'Is Last FY Month' = VAR d = TODAY() VAR s = IF ( MONTH ( d ) >= 4, YEAR ( d ), YEAR ( d ) - 1 ) VAR m = MIN ( dim_date[full_date] ) RETURN IF ( NOT ISBLANK ( m ) && m >= DATE ( s - 1, 4, 1 ) && m <= d, 1, 0 )
+		formatString: 0
+		isHidden
+		displayFolder: Chart Scope Flags
+		lineageTag: ac44d312-cc5d-407c-94ae-093c3c031f0e
+
 	column now_application_id
 		dataType: int64
 		formatString: 0

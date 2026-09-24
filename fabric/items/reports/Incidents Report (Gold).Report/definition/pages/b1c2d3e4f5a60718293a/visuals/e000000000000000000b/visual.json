@@ -1,13 +1,13 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
-  "name": "e0000000000000000007",
+  "name": "e000000000000000000b",
   "position": {
     "x": 24,
-    "y": 478,
-    "z": 7,
+    "y": 790,
+    "z": 8,
     "width": 1232,
-    "height": 300,
-    "tabOrder": 7
+    "height": 344,
+    "tabOrder": 8
   },
   "visual": {
     "visualType": "columnChart",
@@ -20,14 +20,33 @@
                 "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "dim_date"
+                      "Entity": "incident_week"
                     }
                   },
-                  "Property": "fiscal_month_label"
+                  "Property": "Week"
                 }
               },
-              "queryRef": "dim_date.fiscal_month_label",
-              "nativeQueryRef": "fiscal_month_label"
+              "queryRef": "incident_week.Week",
+              "nativeQueryRef": "Week",
+              "active": true
+            }
+          ]
+        },
+        "Series": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "incident_weekly_category"
+                    }
+                  },
+                  "Property": "Category"
+                }
+              },
+              "queryRef": "incident_weekly_category.Category",
+              "nativeQueryRef": "Category"
             }
           ]
         },
@@ -41,56 +60,32 @@
                       "Entity": "fact_mine_incident"
                     }
                   },
-                  "Property": "Incidents per Month"
+                  "Property": "Weekly Category Occurrences"
                 }
               },
-              "queryRef": "fact_mine_incident.Incidents per Month",
-              "nativeQueryRef": "Incidents per Month"
-            },
-            {
-              "field": {
-                "Measure": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "fact_mine_incident"
-                    }
-                  },
-                  "Property": "DOs per Month"
-                }
-              },
-              "queryRef": "fact_mine_incident.DOs per Month",
-              "nativeQueryRef": "DOs per Month"
-            },
-            {
-              "field": {
-                "Measure": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "fact_mine_incident"
-                    }
-                  },
-                  "Property": "Injuries per Month"
-                }
-              },
-              "queryRef": "fact_mine_incident.Injuries per Month",
-              "nativeQueryRef": "Injuries per Month"
-            },
-            {
-              "field": {
-                "Measure": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "fact_mine_incident"
-                    }
-                  },
-                  "Property": "Fatalities per Month"
-                }
-              },
-              "queryRef": "fact_mine_incident.Fatalities per Month",
-              "nativeQueryRef": "Fatalities per Month"
+              "queryRef": "fact_mine_incident.Weekly Category Occurrences",
+              "nativeQueryRef": "Weekly Category Occurrences"
             }
           ]
         }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Column": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "incident_week"
+                  }
+                },
+                "Property": "Week"
+              }
+            },
+            "direction": "Ascending"
+          }
+        ],
+        "isDefaultSort": true
       }
     },
     "visualContainerObjects": {
@@ -112,7 +107,7 @@
                       "Entity": "fact_mine_incident"
                     }
                   },
-                  "Property": "Monthly Chart Title"
+                  "Property": "Weekly Chart Title"
                 }
               }
             },
@@ -168,7 +163,7 @@
             "position": {
               "expr": {
                 "Literal": {
-                  "Value": "'Top'"
+                  "Value": "'Right'"
                 }
               }
             }
@@ -188,84 +183,10 @@
             "titleText": {
               "expr": {
                 "Literal": {
-                  "Value": "'Number of Incidents'"
+                  "Value": "'Incident-category count'"
                 }
               }
             }
-          }
-        }
-      ],
-      "dataPoint": [
-        {
-          "properties": {
-            "fill": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#013366'"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "selector": {
-            "metadata": "fact_mine_incident.Incidents per Month"
-          }
-        },
-        {
-          "properties": {
-            "fill": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#3470B1'"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "selector": {
-            "metadata": "fact_mine_incident.DOs per Month"
-          }
-        },
-        {
-          "properties": {
-            "fill": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#FCBA19'"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "selector": {
-            "metadata": "fact_mine_incident.Injuries per Month"
-          }
-        },
-        {
-          "properties": {
-            "fill": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#CE3E39'"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "selector": {
-            "metadata": "fact_mine_incident.Fatalities per Month"
           }
         }
       ],
@@ -282,7 +203,27 @@
             "fontSize": {
               "expr": {
                 "Literal": {
-                  "Value": "8D"
+                  "Value": "10D"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "totals": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "10D"
                 }
               }
             }
