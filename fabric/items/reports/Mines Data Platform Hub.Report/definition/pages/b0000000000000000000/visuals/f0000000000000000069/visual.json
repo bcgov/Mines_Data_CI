@@ -93,33 +93,6 @@
             }
           }
         }
-      ],
-      "visualLink": [
-        {
-          "properties": {
-            "show": {
-              "expr": {
-                "Literal": {
-                  "Value": "true"
-                }
-              }
-            },
-            "type": {
-              "expr": {
-                "Literal": {
-                  "Value": "'PageNavigation'"
-                }
-              }
-            },
-            "navigationSection": {
-              "expr": {
-                "Literal": {
-                  "Value": "'b0000000000000000004'"
-                }
-              }
-            }
-          }
-        }
       ]
     }
   }
