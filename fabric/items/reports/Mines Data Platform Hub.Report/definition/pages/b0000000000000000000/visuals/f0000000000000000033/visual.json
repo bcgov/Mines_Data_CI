@@ -107,14 +107,14 @@
             "type": {
               "expr": {
                 "Literal": {
-                  "Value": "'PageNavigation'"
+                  "Value": "'WebUrl'"
                 }
               }
             },
-            "navigationSection": {
+            "webUrl": {
               "expr": {
                 "Literal": {
-                  "Value": "'b0000000000000000002'"
+                  "Value": "'https://app.powerbi.com/groups/e397b5cc-924d-40a5-b101-f6efb41a5423/orgapps/ed8de927-f577-43a6-90e0-d5ecfab02a94/report/87c25b91-cecd-40ff-8faf-5835190cf2b1/b1c2d3e4f5a60718293a?experience=power-bi'"
                 }
               }
             }
