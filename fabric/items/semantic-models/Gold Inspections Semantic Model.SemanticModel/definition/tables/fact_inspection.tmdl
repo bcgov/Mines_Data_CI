@@ -188,6 +188,16 @@ table fact_inspection
 		displayFolder: Hub
 		lineageTag: 78d606ad-e120-4944-92b6-828091f23aae
 
+	/// Trust state for the NoW Received card in the hub.
+	measure 'Hub Trust NoW Received' = [Hub Badge Provisional]
+		displayFolder: Hub
+		lineageTag: 2bf97aac-8f38-493f-90c0-c1d11e52949d
+
+	/// Footer line on the NoW Received card in the hub.
+	measure 'Hub Updated NoW Received' = "Monthly corporate report"
+		displayFolder: Hub
+		lineageTag: 5a309977-46c2-43a6-968e-1957086220e4
+
 	/// Footer line on the Permit turnaround card.
 	measure 'Hub Updated Permit Turnaround' = "In design"
 		displayFolder: Hub
