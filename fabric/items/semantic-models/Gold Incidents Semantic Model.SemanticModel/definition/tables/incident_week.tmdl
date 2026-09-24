@@ -1,0 +1,28 @@
+table incident_week
+	lineageTag: 2f99b4b2-6332-4e89-9657-a45dc4647b7e
+
+	/// Week of the reporting month, Rajneesh's rule: days 1-7, 8-14, 15-21, 22 to month end.
+	column Week
+		dataType: string
+		lineageTag: d3f32971-3414-43e4-854e-046cce3b13f1
+		summarizeBy: none
+		sourceColumn: [Week]
+		sortByColumn: 'Week No'
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Week No'
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: f692f5c6-b8d1-4e04-afdf-f97e3d30cc3e
+		summarizeBy: none
+		sourceColumn: [Week No]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition incident_week = calculated
+		mode: import
+		source = DATATABLE ( "Week", STRING, "Week No", INTEGER, { { "Week 1", 1 }, { "Week 2", 2 }, { "Week 3", 3 }, { "Week 4", 4 } } )
+
+	annotation PBI_Id = 2db81055fb6d4ec8bf243809ae49143a

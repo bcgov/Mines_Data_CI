@@ -159,6 +159,66 @@ table fact_mine_incident
 		isHidden
 		lineageTag: 35fe75f7-7354-4650-88cb-63529f8ec926
 
+	/// Chart 4. Incident-category occurrences per week of LAST COMPLETED month, top 4 categories per week plus Others. Mirrors Metabase 3326 exactly: reported date (not effective), weeks = days 1-7, 8-14, 15-21, 22-end, one row per incident-category pair (an incident with two categories counts twice), Other/Unknown codes always go to Others, ties broken alphabetically, and blank when last month falls in the previous fiscal year (April view), as in Metabase. Axis incident_week[Week], legend incident_weekly_category[Category]. Verified 23 Sep 2026: all 20 August values equal Metabase.
+	measure 'Weekly Category Occurrences' = ```
+			VAR wk = SELECTEDVALUE ( incident_week[Week No] )
+			VAR cat = SELECTEDVALUE ( incident_weekly_category[Category] )
+			VAR d = TODAY ()
+			VAR mStart = EOMONTH ( d, -2 ) + 1
+			VAR mEnd = EOMONTH ( d, -1 )
+			VAR fyStart = DATE ( YEAR ( d ) - IF ( MONTH ( d ) >= 4, 0, 1 ), 4, 1 )
+			VAR dFrom = mStart + ( wk - 1 ) * 7
+			VAR dTo = IF ( wk = 4, mEnd, mStart + wk * 7 - 1 )
+			VAR occ =
+			    CALCULATETABLE (
+			        SUMMARIZE ( bridge_incident_category, bridge_incident_category[mine_incident_id], bridge_incident_category[mine_incident_category_code] ),
+			        REMOVEFILTERS ( dim_date ),
+			        fact_mine_incident[reported_date] >= dFrom,
+			        fact_mine_incident[reported_date] <= dTo,
+			        bridge_incident_category[is_uncategorised] = 0
+			    )
+			VAR grp =
+			    ADDCOLUMNS (
+			        occ,
+			        "@g",
+			            VAR c = bridge_incident_category[mine_incident_category_code]
+			            RETURN
+			                SWITCH (
+			                    TRUE (),
+			                    c IN { "GT1", "FOG", "USF", "IRD" }, "Geotechnical",
+			                    c IN { "DMD", "COS", "UES", "LOF", "WOE", "OSD" }, "Dam/Dike",
+			                    c IN { "MBE", "CLN", "OOC", "RLO", "FR1", "ASA", "OVI" }, "Mobile Equipment",
+			                    c IN { "DFG", "NEG", "CHM", "EXP" }, "Dust, Fumes & Gasses",
+			                    c IN { "BLT", "FEX", "MSF", "UCB" }, "Blasting",
+			                    c IN { "PVB", "FPB" }, "Pressure Vessel or Boiler",
+			                    c IN { "FNE", "UGF", "FTH" }, "Fire (not electrical/mobile equipment)",
+			                    c IN { "ELC", "SHK", "FR2", "AFH" }, "Electrical",
+			                    c IN { "EQP", "CDR" }, "Equipment",
+			                    c IN { "WAH", "FOJ", "FWK" }, "Working at Height",
+			                    c IN { "VNT", "STP", "SMK", "CCL", "SGR" }, "Ventilation",
+			                    c IN { "HSP", "AHP" }, "Hoisting Plant",
+			                    c IN { "EV1", "WTR", "WAN", "AOS", "FLD" }, "Environmental",
+			                    c = "OTH", "Other",
+			                    "Unknown"
+			                )
+			    )
+			VAR counts = GROUPBY ( FILTER ( grp, NOT [@g] IN { "Other", "Unknown" } ), [@g], "@n", SUMX ( CURRENTGROUP (), 1 ) )
+			VAR ranked = ADDCOLUMNS ( counts, "@r", COUNTROWS ( FILTER ( counts, [@n] > EARLIER ( [@n] ) || ( [@n] = EARLIER ( [@n] ) && [@g] < EARLIER ( [@g] ) ) ) ) + 1 )
+			VAR nAll = COUNTROWS ( grp )
+			VAR nTop = SUMX ( FILTER ( ranked, [@r] <= 4 ), [@n] )
+			VAR nCat = SUMX ( FILTER ( ranked, [@g] = cat && [@r] <= 4 ), [@n] )
+			VAR res = IF ( cat = "Others", nAll - nTop, nCat )
+			RETURN IF ( ISBLANK ( wk ) || mStart < fyStart || res = 0, BLANK (), res )
+			```
+		formatString: #,##0
+		displayFolder: By Category
+		lineageTag: b7ec9b7a-1653-4d1f-9126-a931fd6c7d85
+
+	/// Chart 4 title, names the month shown.
+	measure 'Weekly Chart Title' = "Incidents by category per week, " & FORMAT ( EOMONTH ( TODAY (), -2 ) + 1, "MMMM yyyy" ) & " (top 4 each week, rest in Others)"
+		displayFolder: Card Labels
+		lineageTag: 7c832f6a-811f-4105-a446-b843a23e82dd
+
 	column mine_incident_id
 		dataType: int64
 		formatString: 0

@@ -90,7 +90,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Number of NoWs issued per fiscal month by type'"
+                  "Value": "'Number of Permits issued per fiscal month by type'"
                 }
               }
             }
@@ -146,7 +146,20 @@
             "titleText": {
               "expr": {
                 "Literal": {
-                  "Value": "'NoWs Issued'"
+                  "Value": "'Permits Issued'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "totals": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
                 }
               }
             }
