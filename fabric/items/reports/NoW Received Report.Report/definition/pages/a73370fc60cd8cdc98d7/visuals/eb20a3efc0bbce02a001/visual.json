@@ -46,7 +46,8 @@
                 }
               },
               "queryRef": "fact_now_application.NoWs Received New Permits",
-              "nativeQueryRef": "NoWs Received New Permits"
+              "nativeQueryRef": "NoWs Received New Permits",
+              "displayName": "New Permits"
             },
             {
               "field": {
@@ -60,7 +61,8 @@
                 }
               },
               "queryRef": "fact_now_application.NoWs Received Amendments",
-              "nativeQueryRef": "NoWs Received Amendments"
+              "nativeQueryRef": "NoWs Received Amendments",
+              "displayName": "Amendments"
             }
           ]
         }
