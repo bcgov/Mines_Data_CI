@@ -66,10 +66,10 @@ data "external" "cidr" {
   program = ["python3", "${path.module}/next_free_subnet.py"]
 
   query = {
-    vnet_cidr        = data.azurerm_virtual_network.vnet.address_space[0]
-    used_cidrs       = local.existing_cidrs
-    prefix_length    = tostring(each.value.prefix_length)
-    offset_index     = tostring(index(var.subnets[*].name, each.key))
+    vnet_cidr     = data.azurerm_virtual_network.vnet.address_space[0]
+    used_cidrs    = local.existing_cidrs
+    prefix_length = tostring(each.value.prefix_length)
+    offset_index  = tostring(index(var.subnets[*].name, each.key))
     sibling_prefixes = join(",", [
       for s in var.subnets : tostring(s.prefix_length)
       if index(var.subnets[*].name, s.name) < index(var.subnets[*].name, each.key)
@@ -224,7 +224,7 @@ resource "azapi_resource" "subnet" {
 
   body = {
     properties = {
-      addressPrefixes  = [data.external.cidr[each.key].result["cidr"]]
+      addressPrefixes = [data.external.cidr[each.key].result["cidr"]]
       serviceEndpoints = [
         for ep in coalesce(each.value.service_endpoints, []) : { service = ep }
       ]

@@ -59,7 +59,7 @@ resource "azurerm_container_group" "tunnel" {
   }]
 
   container {
-    name   = "vscode-tunnel"
+    name = "vscode-tunnel"
     # Ubuntu 22.04 from MCR — has full glibc required by cli-linux-x64.
     # azure-cli image is CBL-Mariner (musl-based) and cannot run glibc binaries.
     image  = "mcr.microsoft.com/mirror/docker/library/ubuntu:22.04"
@@ -80,9 +80,9 @@ resource "azurerm_container_group" "tunnel" {
 
     environment_variables = merge(
       {
-        TUNNEL_NAME                    = var.tunnel_name
-        KEY_VAULT_URI                  = var.key_vault_uri
-        ENVIRONMENT                    = var.environment
+        TUNNEL_NAME                         = var.tunnel_name
+        KEY_VAULT_URI                       = var.key_vault_uri
+        ENVIRONMENT                         = var.environment
         VSCODE_CLI_DISABLE_KEYCHAIN_ENCRYPT = "1"
       },
       var.extra_environment_variables

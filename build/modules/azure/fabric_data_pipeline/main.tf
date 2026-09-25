@@ -250,7 +250,7 @@ locals {
 
         scriptBlockExecutionTimeout = "02:00:00"
 
-        database                    = var.sink_warehouse_name
+        database = var.sink_warehouse_name
       }
 
       externalReferences = {
@@ -285,7 +285,7 @@ locals {
 
         scriptBlockExecutionTimeout = "02:00:00"
 
-        database                    = var.sink_warehouse_name
+        database = var.sink_warehouse_name
       }
 
       externalReferences = {
@@ -320,7 +320,7 @@ locals {
 
         scriptBlockExecutionTimeout = "02:00:00"
 
-        database                    = var.sink_warehouse_name
+        database = var.sink_warehouse_name
       }
 
       externalReferences = {
@@ -385,7 +385,7 @@ locals {
 
         scriptBlockExecutionTimeout = "02:00:00"
 
-        database                    = var.sink_warehouse_name
+        database = var.sink_warehouse_name
       }
 
       externalReferences = {
@@ -420,7 +420,7 @@ locals {
 
         scriptBlockExecutionTimeout = "02:00:00"
 
-        database                    = var.sink_warehouse_name
+        database = var.sink_warehouse_name
       }
 
       externalReferences = {
@@ -452,7 +452,7 @@ locals {
 
         scriptBlockExecutionTimeout = "02:00:00"
 
-        database                    = var.sink_warehouse_name
+        database = var.sink_warehouse_name
       }
 
       externalReferences = {

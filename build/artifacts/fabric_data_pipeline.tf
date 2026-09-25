@@ -12,7 +12,7 @@ module "pipeline_raw_to_bronze" {
   display_name                = "pl_ingest_mds"
   pipeline_name_param_default = "pl_ingest_mds"
 
-  source_connection_id    = "21b383a1-c561-4540-980d-ce3683e89236"
+  source_connection_id = "21b383a1-c561-4540-980d-ce3683e89236"
   # Pinned to the working warehouse connection rather than
   # module.warehouse_mds_connection.connection_id. That module resolves the ID
   # by listing connections and matching on display name, and returns "" when the

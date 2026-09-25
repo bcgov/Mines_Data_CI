@@ -4,7 +4,7 @@ locals {
   name = substr(
     replace(
       var.acr_name == null ? "${var.prefix}-${var.project}-${var.suffix}${var.instance_number}" : var.acr_name,
-      "-", ""  # ACR names cannot contain hyphens
+      "-", "" # ACR names cannot contain hyphens
     ),
     0, 50
   )
