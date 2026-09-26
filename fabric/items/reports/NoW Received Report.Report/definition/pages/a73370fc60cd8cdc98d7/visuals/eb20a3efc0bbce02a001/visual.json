@@ -46,7 +46,8 @@
                 }
               },
               "queryRef": "fact_now_application.NoWs Received New Permits",
-              "nativeQueryRef": "NoWs Received New Permits"
+              "nativeQueryRef": "NoWs Received New Permits",
+              "displayName": "New Permits"
             },
             {
               "field": {
@@ -60,7 +61,8 @@
                 }
               },
               "queryRef": "fact_now_application.NoWs Received Amendments",
-              "nativeQueryRef": "NoWs Received Amendments"
+              "nativeQueryRef": "NoWs Received Amendments",
+              "displayName": "Amendments"
             }
           ]
         }
@@ -158,87 +160,6 @@
   "filterConfig": {
     "filters": [
       {
-        "name": "1ec6c586629093ea019a",
-        "field": {
-          "Column": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "dim_date"
-              }
-            },
-            "Property": "fiscal_year_label"
-          }
-        },
-        "type": "Categorical",
-        "filter": {
-          "Version": 2,
-          "From": [
-            {
-              "Name": "d",
-              "Entity": "dim_date",
-              "Type": 0
-            }
-          ],
-          "Where": [
-            {
-              "Condition": {
-                "In": {
-                  "Expressions": [
-                    {
-                      "Column": {
-                        "Expression": {
-                          "SourceRef": {
-                            "Source": "d"
-                          }
-                        },
-                        "Property": "fiscal_year_label"
-                      }
-                    }
-                  ],
-                  "Values": [
-                    [
-                      {
-                        "Literal": {
-                          "Value": "'FY2021/22'"
-                        }
-                      }
-                    ],
-                    [
-                      {
-                        "Literal": {
-                          "Value": "'FY2017/18'"
-                        }
-                      }
-                    ],
-                    [
-                      {
-                        "Literal": {
-                          "Value": "'FY2018/19'"
-                        }
-                      }
-                    ],
-                    [
-                      {
-                        "Literal": {
-                          "Value": "'FY2019/20'"
-                        }
-                      }
-                    ],
-                    [
-                      {
-                        "Literal": {
-                          "Value": "'FY2020/21'"
-                        }
-                      }
-                    ]
-                  ]
-                }
-              }
-            }
-          ]
-        }
-      },
-      {
         "name": "194f92a20a68b170e093",
         "field": {
           "Measure": {
@@ -265,6 +186,54 @@
           }
         },
         "type": "Advanced"
+      },
+      {
+        "name": "b9a2959613fa447c91d2",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "fact_now_application"
+              }
+            },
+            "Property": "Is Last 5 FY"
+          }
+        },
+        "type": "Advanced",
+        "filter": {
+          "Version": 2,
+          "From": [
+            {
+              "Name": "f",
+              "Entity": "fact_now_application",
+              "Type": 0
+            }
+          ],
+          "Where": [
+            {
+              "Condition": {
+                "Comparison": {
+                  "ComparisonKind": 0,
+                  "Left": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Source": "f"
+                        }
+                      },
+                      "Property": "Is Last 5 FY"
+                    }
+                  },
+                  "Right": {
+                    "Literal": {
+                      "Value": "1L"
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        }
       }
     ]
   }
