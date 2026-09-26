@@ -178,7 +178,7 @@ resource "azurerm_container_group" "aci" {
     dynamic "liveness_probe" {
       for_each = length(var.liveness_probe_exec) > 0 ? [1] : []
       content {
-        exec = var.liveness_probe_exec   # list of strings, e.g. ["/bin/sh", "-c", "exit 0"]
+        exec                  = var.liveness_probe_exec # list of strings, e.g. ["/bin/sh", "-c", "exit 0"]
         initial_delay_seconds = var.liveness_probe_initial_delay
         period_seconds        = var.liveness_probe_period
       }

@@ -30,7 +30,7 @@ locals {
       type            = "PostgreSQL"
       creation_method = "PostgreSql"
       parameters = [
-        { dataType = "Text", name = "server",   value = var.server != null ? var.server : "" },
+        { dataType = "Text", name = "server", value = var.server != null ? var.server : "" },
         { dataType = "Text", name = "database", value = var.database != null ? var.database : "" }
       ]
     }
@@ -39,7 +39,7 @@ locals {
       creation_method = "Oracle.Database"
       parameters = concat(
         [
-          { dataType = "Text", name = "server",   value = var.server != null ? var.server : "" },
+          { dataType = "Text", name = "server", value = var.server != null ? var.server : "" },
           { dataType = "Text", name = "database", value = var.database != null ? var.database : "" }
         ],
         var.port != null ? [{ dataType = "Text", name = "port", value = tostring(var.port) }] : []
@@ -49,7 +49,7 @@ locals {
       type            = "SQL"
       creation_method = "SQL"
       parameters = [
-        { dataType = "Text", name = "server",   value = var.server != null ? var.server : "" },
+        { dataType = "Text", name = "server", value = var.server != null ? var.server : "" },
         { dataType = "Text", name = "database", value = var.database != null ? var.database : "" }
       ]
     }
@@ -72,7 +72,7 @@ locals {
       skipTestConnection   = var.skip_test_connection
       credentials          = { credentialType = "WorkspaceIdentity" }
     }
-  }) : jsonencode({
+    }) : jsonencode({
     displayName      = var.display_name
     connectivityType = var.connectivity_type
     privacyLevel     = var.privacy_level
@@ -105,7 +105,7 @@ resource "null_resource" "fabric_connection" {
   }
 
   provisioner "local-exec" {
-    command = <<-BASH
+    command     = <<-BASH
       set -e
 
       az login --service-principal \
@@ -151,8 +151,8 @@ print(cid)
   }
 
   provisioner "local-exec" {
-    when    = destroy
-    command = <<-BASH
+    when        = destroy
+    command     = <<-BASH
       set -e
       az login --service-principal \
         --username "$ARM_CLIENT_ID" \
@@ -207,7 +207,7 @@ resource "null_resource" "connection_role_assignment" {
   }
 
   provisioner "local-exec" {
-    command = <<-BASH
+    command     = <<-BASH
       set -e
       CONNECTION_ID="${data.external.connection_id.result.id}"
       [ -z "$CONNECTION_ID" ] && echo "No connection ID — skipping" && exit 0

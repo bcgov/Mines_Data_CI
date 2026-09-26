@@ -68,11 +68,11 @@ resource "null_resource" "schedule" {
     interpreter = ["bash", "-c"]
 
     environment = {
-      WORKSPACE_ID      = var.workspace_id
-      ITEM_ID           = var.item_id
-      JOB_TYPE          = var.job_type
-      SCHEDULE_PAYLOAD  = local.schedule_body
-      SCHEDULE_LABEL    = var.label
+      WORKSPACE_ID     = var.workspace_id
+      ITEM_ID          = var.item_id
+      JOB_TYPE         = var.job_type
+      SCHEDULE_PAYLOAD = local.schedule_body
+      SCHEDULE_LABEL   = var.label
     }
   }
 
