@@ -3,10 +3,10 @@
   "name": "e0000000000000000009",
   "position": {
     "x": 24,
-    "y": 678,
+    "y": 1142,
     "z": 1,
     "width": 1232,
-    "height": 40,
+    "height": 64,
     "tabOrder": 1
   },
   "visual": {
@@ -20,6 +20,17 @@
                 "textRuns": [
                   {
                     "value": "Top 5 parent categories, 21 May 2018 onward — categories were not recorded before then. An incident with two categories counts once in each bar; do not add the bars together.",
+                    "textStyle": {
+                      "fontSize": "11px",
+                      "color": "#605E5C"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "Weekly chart: last completed month on the reported date, weeks are days 1-7, 8-14, 15-21 and 22 to month end. It counts incident-category pairs, so an incident with two categories appears in both. Top 4 categories each week, the rest plus Other and Unknown go into Others.",
                     "textStyle": {
                       "fontSize": "11px",
                       "color": "#605E5C"

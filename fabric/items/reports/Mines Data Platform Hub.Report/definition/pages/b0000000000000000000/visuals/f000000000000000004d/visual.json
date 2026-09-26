@@ -19,10 +19,17 @@
               {
                 "textRuns": [
                   {
-                    "value": "Mineral Titles extract  \u2192",
+                    "value": "Mineral Titles extract",
                     "textStyle": {
                       "fontSize": "21px",
                       "color": "#252423"
+                    }
+                  },
+                  {
+                    "value": " \u00b7 Coming soon",
+                    "textStyle": {
+                      "fontSize": "15px",
+                      "color": "#8A6100"
                     }
                   }
                 ],
