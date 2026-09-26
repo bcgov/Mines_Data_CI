@@ -19,7 +19,7 @@
               {
                 "textRuns": [
                   {
-                    "value": "Open this view  \u2192",
+                    "value": "Open this view  →",
                     "textStyle": {
                       "fontSize": "21px",
                       "color": "#FFFFFF",
@@ -42,7 +42,7 @@
             "show": {
               "expr": {
                 "Literal": {
-                  "Value": "true"
+                  "Value": "false"
                 }
               }
             },

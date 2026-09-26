@@ -124,22 +124,22 @@ table fact_inspection
 		lineageTag: ee5f6af2-7120-4f63-87e1-dbb4f5ac4d2b
 
 	/// Footer line on the Incidents report card in the hub.
-	measure 'Hub Updated Incidents' = "Not yet published"
+	measure 'Hub Updated Incidents' = "Monthly corporate report"
 		displayFolder: Hub
 		lineageTag: 3070ba27-16dd-4a15-a360-37ce0f613d4c
 
 	/// Footer line on the Notice of Work report card in the hub.
-	measure 'Hub Updated NoW' = "Source extract stale"
+	measure 'Hub Updated NoW' = "Monthly corporate report"
 		displayFolder: Hub
 		lineageTag: 7573e029-7a1b-496b-a6fa-13b328678615
 
 	/// Hub 'what changed' text for Incidents. Honest placeholder rather than an empty card.
-	measure 'Hub Changed Incidents' = "Report not yet built. Commentary lands with the Incidents build - no figures are shown until they can be validated."
+	measure 'Hub Changed Incidents' = "Now live. Incidents by effective date (24-hour rule), with dangerous occurrences, injuries and fatalities by month - open the report for current figures."
 		displayFolder: Hub
 		lineageTag: 76758f22-8a28-445b-86a1-c586681836ac
 
 	/// Hub 'what changed' text for Notice of Work. Honest placeholder rather than an empty card.
-	measure 'Hub Changed NoW' = "Permitting logic is built and matches the corporate report, but the now_application source extract has not landed since April 2025. Figures publish once the full extract is refreshed."
+	measure 'Hub Changed NoW' = "Now live. New permits and amendments issued by fiscal year and month, excluding administrative amendments - open the report for current figures."
 		displayFolder: Hub
 		lineageTag: b40ef8d5-d493-4287-aa9b-c141ff10a9b4
 
@@ -188,6 +188,16 @@ table fact_inspection
 		displayFolder: Hub
 		lineageTag: 78d606ad-e120-4944-92b6-828091f23aae
 
+	/// Trust state for the NoW Received card in the hub.
+	measure 'Hub Trust NoW Received' = [Hub Badge Provisional]
+		displayFolder: Hub
+		lineageTag: 2bf97aac-8f38-493f-90c0-c1d11e52949d
+
+	/// Footer line on the NoW Received card in the hub.
+	measure 'Hub Updated NoW Received' = "Monthly corporate report"
+		displayFolder: Hub
+		lineageTag: 5a309977-46c2-43a6-968e-1957086220e4
+
 	/// Footer line on the Permit turnaround card.
 	measure 'Hub Updated Permit Turnaround' = "In design"
 		displayFolder: Hub
@@ -214,7 +224,7 @@ table fact_inspection
 		lineageTag: a03f3563-517c-4a8f-b414-7d2abac1a518
 
 	/// Hub what-changed line for Notice of Work, written for permitting staff.
-	measure 'Hub Changed NoW Permitting' = "Permitting logic is built and matches the corporate report, counting distinct permit_id on permit-side ACT status. Figures publish once the now_application extract is current."
+	measure 'Hub Changed NoW Permitting' = "Now live. New permits and amendments issued by fiscal year and month, excluding administrative amendments - open the report for current figures."
 		displayFolder: Hub
 		lineageTag: 3e46207b-14a6-448c-8cdd-d7d913482227
 

@@ -46,7 +46,8 @@
                 }
               },
               "queryRef": "fact_now_permit.NoWs New Permits",
-              "nativeQueryRef": "NoWs New Permits"
+              "nativeQueryRef": "NoWs New Permits",
+              "displayName": "New Permits"
             },
             {
               "field": {
@@ -60,7 +61,8 @@
                 }
               },
               "queryRef": "fact_now_permit.NoWs Amendments",
-              "nativeQueryRef": "NoWs Amendments"
+              "nativeQueryRef": "NoWs Amendments",
+              "displayName": "Amendments"
             }
           ]
         }
@@ -90,7 +92,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Number of NoWs issued per fiscal month by type'"
+                  "Value": "'Number of Permits issued per fiscal month by type'"
                 }
               }
             }
@@ -123,6 +125,31 @@
                   "Value": "0D"
                 }
               }
+            },
+            "enableBackground": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "backgroundColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#FFFFFF'"
+                    }
+                  }
+                }
+              }
+            },
+            "backgroundTransparency": {
+              "expr": {
+                "Literal": {
+                  "Value": "25D"
+                }
+              }
             }
           }
         }
@@ -146,7 +173,20 @@
             "titleText": {
               "expr": {
                 "Literal": {
-                  "Value": "'NoWs Issued'"
+                  "Value": "'Permits Issued'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "totals": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
                 }
               }
             }
