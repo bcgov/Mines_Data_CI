@@ -1,0 +1,28 @@
+table incident_weekly_category
+	lineageTag: 95b6b770-8684-48e4-8987-d99a1b2576a8
+
+	/// Legend for the weekly category chart. Groups copied from Rajneesh's Metabase question 3326 (CASE on mine_incident_category_code), plus Others.
+	column Category
+		dataType: string
+		lineageTag: a42d6823-3827-4599-ace2-96c6d4512907
+		summarizeBy: none
+		sourceColumn: [Category]
+		sortByColumn: 'Category Order'
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Category Order'
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: b68bf632-42c1-448b-8ecb-fc60ff017ca5
+		summarizeBy: none
+		sourceColumn: [Category Order]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition incident_weekly_category = calculated
+		mode: import
+		source = DATATABLE ( "Category", STRING, "Category Order", INTEGER, { { "Mobile Equipment", 1 }, { "Geotechnical", 2 }, { "Dam/Dike", 3 }, { "Dust, Fumes & Gasses", 4 }, { "Blasting", 5 }, { "Pressure Vessel or Boiler", 6 }, { "Fire (not electrical/mobile equipment)", 7 }, { "Electrical", 8 }, { "Equipment", 9 }, { "Working at Height", 10 }, { "Ventilation", 11 }, { "Hoisting Plant", 12 }, { "Environmental", 13 }, { "Others", 99 } } )
+
+	annotation PBI_Id = e77ed6a4e1ae4c7397f4af3f281136ba

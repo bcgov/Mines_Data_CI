@@ -19,11 +19,10 @@
               {
                 "textRuns": [
                   {
-                    "value": "Open  \u2192",
+                    "value": "Coming soon",
                     "textStyle": {
-                      "fontSize": "21px",
-                      "color": "#013366",
-                      "fontWeight": "bold"
+                      "fontSize": "15px",
+                      "color": "#8A6100"
                     }
                   }
                 ],

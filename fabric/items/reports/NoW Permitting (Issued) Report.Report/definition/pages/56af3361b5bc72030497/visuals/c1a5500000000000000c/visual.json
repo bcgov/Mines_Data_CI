@@ -32,7 +32,7 @@
               {
                 "textRuns": [
                   {
-                    "value": "NoWs Issued FYTD",
+                    "value": "Permits Issued FYTD",
                     "textStyle": {
                       "fontSize": "11px",
                       "color": "#013366",
@@ -53,7 +53,7 @@
               {
                 "textRuns": [
                   {
-                    "value": "NoWs Issued same period prior FY",
+                    "value": "Permits Issued same period prior FY",
                     "textStyle": {
                       "fontSize": "11px",
                       "color": "#013366",
@@ -74,7 +74,7 @@
               {
                 "textRuns": [
                   {
-                    "value": "NoWs Issued last month",
+                    "value": "Permits Issued last month",
                     "textStyle": {
                       "fontSize": "11px",
                       "color": "#013366",

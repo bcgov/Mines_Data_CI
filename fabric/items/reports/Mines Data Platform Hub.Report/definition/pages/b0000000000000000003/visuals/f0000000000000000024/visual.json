@@ -23,11 +23,11 @@
                       "Entity": "fact_inspection"
                     }
                   },
-                  "Property": "Hub Updated Permit Turnaround"
+                  "Property": "Hub Updated NoW Received"
                 }
               },
-              "queryRef": "fact_inspection.Hub Updated Permit Turnaround",
-              "nativeQueryRef": "Hub Updated Permit Turnaround"
+              "queryRef": "fact_inspection.Hub Updated NoW Received",
+              "nativeQueryRef": "Hub Updated NoW Received"
             }
           ]
         }
