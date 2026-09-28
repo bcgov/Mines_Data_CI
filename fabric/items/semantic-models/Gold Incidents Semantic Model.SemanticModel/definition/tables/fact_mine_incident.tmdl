@@ -9,13 +9,13 @@ table fact_mine_incident
 		lineageTag: a2c06b29-29e2-4ecd-a7db-82a219aada07
 
 	/// KPI card 1. Current BC fiscal year (1 Apr -> today inclusive) on the EFFECTIVE date: Rajneesh's rule - if an incident was reported more than 24h after it happened, the incident time is used instead of the reported time. Mirrors Metabase question 3284.
-	measure 'Incidents FYTD' = VAR d = TODAY() VAR fyStart = IF ( MONTH ( d ) >= 4, YEAR ( d ), YEAR ( d ) - 1 ) RETURN CALCULATE ( DISTINCTCOUNT ( fact_mine_incident[mine_incident_id] ), fact_mine_incident[effective_date] >= DATE ( fyStart, 4, 1 ), fact_mine_incident[effective_date] < d + 1 )
+	measure 'Incidents FYTD' = VAR d = TODAY() VAR fyStart = IF ( MONTH ( d ) >= 4, YEAR ( d ), YEAR ( d ) - 1 ) RETURN CALCULATE ( DISTINCTCOUNT ( fact_mine_incident[mine_incident_id] ), fact_mine_incident[effective_date] >= DATE ( fyStart, 4, 1 ), fact_mine_incident[effective_date] < d )
 		formatString: #,##0
 		displayFolder: Incidents KPIs
 		lineageTag: df06b020-8c0e-4571-824f-e1abe7370aa8
 
 	/// KPI card 2. Previous FY from 1 Apr to the same calendar day one year ago, effective date. Mirrors Metabase 3285 but uses the fiscal-year-safe window (the Metabase version mis-computes the window from January to March).
-	measure 'Incidents Same Time Last FY' = VAR d = TODAY() VAR fyStart = IF ( MONTH ( d ) >= 4, YEAR ( d ), YEAR ( d ) - 1 ) VAR lastStart = DATE ( fyStart - 1, 4, 1 ) VAR lastSame = DATE ( YEAR ( d ) - 1, MONTH ( d ), DAY ( d ) ) RETURN CALCULATE ( DISTINCTCOUNT ( fact_mine_incident[mine_incident_id] ), fact_mine_incident[effective_date] >= lastStart, fact_mine_incident[effective_date] < lastSame + 1 )
+	measure 'Incidents Same Time Last FY' = VAR d = TODAY() VAR fyStart = IF ( MONTH ( d ) >= 4, YEAR ( d ), YEAR ( d ) - 1 ) RETURN CALCULATE ( DISTINCTCOUNT ( fact_mine_incident[mine_incident_id] ), fact_mine_incident[effective_date] >= DATE ( fyStart - 1, 4, 1 ), fact_mine_incident[effective_date] < EDATE ( d, -12 ) )
 		formatString: #,##0
 		displayFolder: Incidents KPIs
 		lineageTag: c30f3a35-310c-40c7-80c4-10bb48140be0
