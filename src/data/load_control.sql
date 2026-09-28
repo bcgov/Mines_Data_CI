@@ -1297,8 +1297,11 @@ WHERE update_timestamp >= ''@from_date''
     @priority = 100,
     @dependency_on = NULL;
 GO
+-- nris.inspection: daily FULL load inside pl_ingest_mds. The table has no
+-- update_timestamp column (INCREMENTAL fails at Lookup_SourceMax) and no
+-- pipeline runs the old 'pl_ingest_mds_nris' name. ~15k rows.
 EXEC [app].[usp_upsert_pipeline_control]
-    @pipeline_name = 'pl_ingest_mds_nris',
+    @pipeline_name = 'pl_ingest_mds',
     @source_system = 'mds',
     @source_entity = 'nris.inspection',
     @source_connection_string = NULL,
@@ -1307,9 +1310,9 @@ EXEC [app].[usp_upsert_pipeline_control]
     @target_table = 'nris_inspection',
     @source_query_template = 'SELECT *
 FROM nris.inspection',
-    @watermark_column = 'update_timestamp',
+    @watermark_column = '',
     @primary_key = NULL,
-    @load_type = 'INCREMENTAL',
+    @load_type = 'FULL',
     @load_frequency = NULL,
     @priority = 100,
     @dependency_on = NULL;
