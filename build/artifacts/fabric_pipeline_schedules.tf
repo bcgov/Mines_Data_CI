@@ -1,6 +1,12 @@
 # ─────────────────────────────────────────────────────────────────────────────
 # Pipeline schedules — daily at 08:00 and 17:00 Pacific.
 #
+# Only pl_daily_load is scheduled. It runs pl_ingest_mds + pl_ingest_mto and
+# then pl_bronze_to_gold (see fabric_data_pipeline_daily_load.tf), so the
+# reports refresh with no manual step. The ingest pipelines keep their
+# schedule objects but they are switched OFF (enabled = false) so the ingest
+# does not run twice; flip them back on if pl_daily_load is ever removed.
+#
 # "Pacific Standard Time" is the Windows time zone ID and follows daylight
 # saving on its own, so the runs stay at 8am / 5pm local across the PST ↔ PDT
 # switch (i.e. 16:00/01:00 UTC in winter, 15:00/00:00 UTC in summer).
@@ -25,7 +31,7 @@ module "schedule_pipeline_mds" {
 
   times              = ["08:00", "17:00"]
   local_time_zone_id = "Pacific Standard Time"
-  enabled            = true
+  enabled            = false # runs inside pl_daily_load
 }
 
 module "schedule_pipeline_mto" {
@@ -35,6 +41,19 @@ module "schedule_pipeline_mto" {
   item_id      = module.pipeline_raw_to_bronze_mto.pipeline_id
   job_type     = "Pipeline"
   label        = "pl_ingest_mto"
+
+  times              = ["08:00", "17:00"]
+  local_time_zone_id = "Pacific Standard Time"
+  enabled            = false # runs inside pl_daily_load
+}
+
+module "schedule_pipeline_daily_load" {
+  source = "../modules/azure/fabric_item_schedule"
+
+  workspace_id = module.fabric_workspace_01.workspace_id
+  item_id      = fabric_data_pipeline.daily_load.id
+  job_type     = "Pipeline"
+  label        = "pl_daily_load"
 
   times              = ["08:00", "17:00"]
   local_time_zone_id = "Pacific Standard Time"
@@ -48,5 +67,6 @@ output "pipeline_schedule_ids" {
   value = {
     pl_ingest_mds = module.schedule_pipeline_mds.schedule_id
     pl_ingest_mto = module.schedule_pipeline_mto.schedule_id
+    pl_daily_load = module.schedule_pipeline_daily_load.schedule_id
   }
 }
