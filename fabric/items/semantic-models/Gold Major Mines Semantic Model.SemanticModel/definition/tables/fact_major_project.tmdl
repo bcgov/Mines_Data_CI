@@ -1,0 +1,245 @@
+table fact_major_project
+	lineageTag: 9597bc03-b3d8-4091-bdd6-3fb2e963f9b3
+	sourceLineageTag: [gold].[fact_major_project]
+
+	/// Metabase 3387. Every project in project_summary, counted once. 107 on 2 Oct 2026.
+	measure 'Total Major Projects' = DISTINCTCOUNT ( fact_major_project[project_summary_id] )
+		formatString: #,##0
+		displayFolder: Project KPIs
+		lineageTag: 3efb820a-78ad-412f-998b-a12fa2a7131a
+
+	/// Metabase 3388. Projects authorized under the Mines Act and not the EMA. 33 on 2 Oct 2026.
+	measure 'Projects Mines Act Only' = CALCULATE ( DISTINCTCOUNT ( fact_major_project[project_summary_id] ), fact_major_project[act_group] = "Mines Act only" )
+		formatString: #,##0
+		displayFolder: Project KPIs
+		lineageTag: 661af7b8-69d5-43c6-81f6-1b6400e56a12
+
+	/// Metabase 3389. Projects authorized under the Environmental Management Act and not the Mines Act. 33 on 2 Oct 2026.
+	measure 'Projects EMA Only' = CALCULATE ( DISTINCTCOUNT ( fact_major_project[project_summary_id] ), fact_major_project[act_group] = "EMA only" )
+		formatString: #,##0
+		displayFolder: Project KPIs
+		lineageTag: e3e4cbaa-1658-4c64-b058-b98744966b89
+
+	/// Metabase 3390. Projects authorized under both the Mines Act and the EMA. 24 on 2 Oct 2026.
+	measure 'Projects Both Acts' = CALCULATE ( DISTINCTCOUNT ( fact_major_project[project_summary_id] ), fact_major_project[act_group] = "Both" )
+		formatString: #,##0
+		displayFolder: Project KPIs
+		lineageTag: daf7c553-4da2-4676-aa37-03515504214d
+
+	/// Metabase 3391. Projects under neither Act. 17 on 2 Oct 2026. The four buckets sum to Total Major Projects.
+	measure 'Projects Other Acts' = CALCULATE ( DISTINCTCOUNT ( fact_major_project[project_summary_id] ), fact_major_project[act_group] = "Other" )
+		formatString: #,##0
+		displayFolder: Project KPIs
+		lineageTag: 40b9518a-20fa-424e-b479-7dc4a4900b37
+
+	/// Projects under the Mines Act, the EMA, or both. The base for the 3 and 6 month cards (Raj, 5 Oct 2026).
+	measure 'Projects MA or EMA' = CALCULATE ( DISTINCTCOUNT ( fact_major_project[project_summary_id] ), fact_major_project[is_ma_or_ema] = 1 )
+		formatString: #,##0
+		displayFolder: Project KPIs
+		lineageTag: a07c314b-7f76-465b-befb-cf9c71ff1c29
+
+	/// MA or EMA projects submitted in the last 3 months, rolling from today on submission_date. Raj, 5 Oct 2026.
+	measure 'Projects Last 3 Months' = VAR d = TODAY() RETURN CALCULATE ( DISTINCTCOUNT ( fact_major_project[project_summary_id] ), fact_major_project[is_ma_or_ema] = 1, fact_major_project[submission_date] > EDATE ( d, -3 ), fact_major_project[submission_date] <= d )
+		formatString: #,##0
+		displayFolder: Project KPIs
+		lineageTag: e4e95b46-4da9-4188-b2ff-22bfac87915f
+
+	/// MA or EMA projects submitted in the last 6 months, rolling from today on submission_date. Raj, 5 Oct 2026.
+	measure 'Projects Last 6 Months' = VAR d = TODAY() RETURN CALCULATE ( DISTINCTCOUNT ( fact_major_project[project_summary_id] ), fact_major_project[is_ma_or_ema] = 1, fact_major_project[submission_date] > EDATE ( d, -6 ), fact_major_project[submission_date] <= d )
+		formatString: #,##0
+		displayFolder: Project KPIs
+		lineageTag: cdd78abb-9f98-4de8-9dfe-1f5fab7445a3
+
+	/// The 3 months before the last 3, for the delta on the 3-month card.
+	measure 'Projects Prior 3 Months' = VAR d = TODAY() RETURN CALCULATE ( DISTINCTCOUNT ( fact_major_project[project_summary_id] ), fact_major_project[is_ma_or_ema] = 1, fact_major_project[submission_date] > EDATE ( d, -6 ), fact_major_project[submission_date] <= EDATE ( d, -3 ) )
+		formatString: #,##0
+		displayFolder: Project KPIs
+		lineageTag: c704969e-dd3d-4d47-8d16-a1b0ffc54615
+
+	/// Last 3 months minus the 3 before that.
+	measure 'Projects Last 3 Months Delta' = [Projects Last 3 Months] - [Projects Prior 3 Months]
+		formatString: +#,##0;-#,##0;0
+		displayFolder: Project KPIs
+		lineageTag: 0e9df427-c986-40fc-b6d1-b860c0d8b6d2
+
+	/// MA or EMA projects by submission month, trailing 24 months. Axis: dim_date[fiscal_month_label].
+	measure 'Projects per Month' = VAR d = TODAY() RETURN CALCULATE ( DISTINCTCOUNT ( fact_major_project[project_summary_id] ), fact_major_project[is_ma_or_ema] = 1, fact_major_project[submission_date] >= DATE ( YEAR ( d ) - 2, MONTH ( d ), 1 ), fact_major_project[submission_date] <= d )
+		formatString: #,##0
+		displayFolder: Project Trend
+		lineageTag: a16c544d-e862-43b5-ad8a-f41d9feba0a2
+
+	/// Header strip. Latest submission date not in the future.
+	measure 'Project Data As Of Label' = VAR latest = CALCULATE ( MAX ( fact_major_project[submission_date] ), fact_major_project[submission_date] <= TODAY() ) RETURN "Project data current through " & FORMAT ( latest, "d MMM yyyy" )
+		displayFolder: Labels
+		lineageTag: 1f0fb1fa-247d-4983-a922-b6bbc88a5fe7
+
+	/// Card subtitle for the 3-month window.
+	measure 'Last 3 Months Label' = VAR d = TODAY() RETURN "Projects submitted " & FORMAT ( EDATE ( d, -3 ) + 1, "d MMM" ) & " to " & FORMAT ( d, "d MMM yyyy" )
+		displayFolder: Labels
+		lineageTag: e059448e-102d-4d9e-b675-7eaa7fa52c4d
+
+	/// Card subtitle for the 6-month window.
+	measure 'Last 6 Months Label' = VAR d = TODAY() RETURN "Projects submitted " & FORMAT ( EDATE ( d, -6 ) + 1, "d MMM" ) & " to " & FORMAT ( d, "d MMM yyyy" )
+		displayFolder: Labels
+		lineageTag: 183b4612-5c7f-4ed2-8de7-944bf83bc5b6
+
+	/// Hidden 1/0 flag for the trend axis: months within the trailing 24 months.
+	measure 'Is Last 24 Months' = VAR d = TODAY() VAR firstDay = MIN ( dim_date[full_date] ) RETURN IF ( NOT ISBLANK ( firstDay ) && firstDay >= DATE ( YEAR ( d ) - 2, MONTH ( d ), 1 ) && firstDay <= d, 1, 0 )
+		formatString: 0
+		displayFolder: Filters
+		lineageTag: 7a291ea9-fe2e-4a6b-94cc-2352e376713f
+
+
+	column project_summary_id
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 804a36bd-b29d-4fa8-b828-9ebe2ac26aa1
+		sourceLineageTag: project_summary_id
+		summarizeBy: none
+		sourceColumn: project_summary_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column project_summary_guid
+		dataType: string
+		isHidden
+		displayFolder: Keys
+		sourceProviderType: varchar(8000)
+		lineageTag: 7d8ca480-2a27-491c-9557-c9dae0ebe186
+		sourceLineageTag: project_summary_guid
+		summarizeBy: none
+		sourceColumn: project_summary_guid
+
+		annotation SummarizationSetBy = Automatic
+
+	column project_summary_title
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: ae2fe1bb-5445-4701-9977-297e3ff6a4ae
+		sourceLineageTag: project_summary_title
+		summarizeBy: none
+		sourceColumn: project_summary_title
+
+		annotation SummarizationSetBy = Automatic
+
+	column status_code
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: 22bc4660-63f3-4e5f-a392-be0e5b05ee25
+		sourceLineageTag: status_code
+		summarizeBy: none
+		sourceColumn: status_code
+
+		annotation SummarizationSetBy = Automatic
+
+	column Mine_SK
+		dataType: int64
+		isHidden
+		formatString: 0
+		displayFolder: Keys
+		sourceProviderType: bigint
+		lineageTag: 3947423c-e254-46b6-9172-6e7676f208c0
+		sourceLineageTag: Mine_SK
+		summarizeBy: none
+		sourceColumn: Mine_SK
+
+		annotation SummarizationSetBy = Automatic
+
+	column Submission_Date_SK
+		dataType: int64
+		isHidden
+		formatString: 0
+		displayFolder: Keys
+		sourceProviderType: int
+		lineageTag: f12bcece-a7f4-4dd0-a04f-fe4fc8078adc
+		sourceLineageTag: Submission_Date_SK
+		summarizeBy: none
+		sourceColumn: Submission_Date_SK
+
+		annotation SummarizationSetBy = Automatic
+
+	column submission_date
+		dataType: dateTime
+		formatString: Short Date
+		sourceProviderType: date
+		lineageTag: e0aa9a0b-04e3-483d-981b-209f551c8d66
+		sourceLineageTag: submission_date
+		summarizeBy: none
+		sourceColumn: submission_date
+
+		annotation SummarizationSetBy = Automatic
+
+	column create_date
+		dataType: dateTime
+		formatString: Short Date
+		sourceProviderType: date
+		lineageTag: 4b311cd5-8311-4bbb-ac1c-97eba9688fde
+		sourceLineageTag: create_date
+		summarizeBy: none
+		sourceColumn: create_date
+
+		annotation SummarizationSetBy = Automatic
+
+	column has_mines_act
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: eea4b6c0-082d-4553-8458-f298a52824ff
+		sourceLineageTag: has_mines_act
+		summarizeBy: none
+		sourceColumn: has_mines_act
+
+		annotation SummarizationSetBy = Automatic
+
+	column has_ema
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: b5b962ce-0bef-4e60-806e-179c3782f233
+		sourceLineageTag: has_ema
+		summarizeBy: none
+		sourceColumn: has_ema
+
+		annotation SummarizationSetBy = Automatic
+
+	column act_group
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: cbbff5c1-4b3a-4128-afea-0efe825aa977
+		sourceLineageTag: act_group
+		summarizeBy: none
+		sourceColumn: act_group
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_ma_or_ema
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 811d22e9-b55b-45c9-9929-6aafc352c439
+		sourceLineageTag: is_ma_or_ema
+		summarizeBy: none
+		sourceColumn: is_ma_or_ema
+
+		annotation SummarizationSetBy = Automatic
+
+	column deleted_ind
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		sourceProviderType: bit
+		lineageTag: 20072467-5576-412f-9b90-8c0815affeb4
+		sourceLineageTag: deleted_ind
+		summarizeBy: none
+		sourceColumn: deleted_ind
+
+		annotation SummarizationSetBy = Automatic
+
+	partition fact_major_project = entity
+		mode: directLake
+		source
+			entityName: fact_major_project
+			schemaName: gold
+			expressionSource: DatabaseQuery
+
+	annotation PBI_ResultType = Table
