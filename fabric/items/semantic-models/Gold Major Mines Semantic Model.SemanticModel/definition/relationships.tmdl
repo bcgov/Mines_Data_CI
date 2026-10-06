@@ -1,0 +1,15 @@
+relationship fact_major_project_Mine_SK_dim_mine_Mine_SK
+	fromColumn: fact_major_project.Mine_SK
+	toColumn: dim_mine.Mine_SK
+
+relationship fact_major_project_Submission_Date_SK_dim_date_Date_SK
+	fromColumn: fact_major_project.Submission_Date_SK
+	toColumn: dim_date.Date_SK
+
+relationship fact_permit_bond_Mine_SK_dim_mine_Mine_SK
+	fromColumn: fact_permit_bond.Mine_SK
+	toColumn: dim_mine.Mine_SK
+
+relationship fact_permit_bond_Permit_Issue_Date_SK_dim_date_Date_SK
+	fromColumn: fact_permit_bond.Permit_Issue_Date_SK
+	toColumn: dim_date.Date_SK
