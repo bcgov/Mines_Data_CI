@@ -13,3 +13,12 @@ relationship fact_permit_bond_Mine_SK_dim_mine_Mine_SK
 relationship fact_permit_bond_Permit_Issue_Date_SK_dim_date_Date_SK
 	fromColumn: fact_permit_bond.Permit_Issue_Date_SK
 	toColumn: dim_date.Date_SK
+
+relationship fact_major_mine_permit_Mine_SK_dim_mine_Mine_SK
+	fromColumn: fact_major_mine_permit.Mine_SK
+	toColumn: dim_mine.Mine_SK
+
+relationship fact_major_mine_permit_Permit_Issue_Date_SK_dim_date_Date_SK
+	fromColumn: fact_major_mine_permit.Permit_Issue_Date_SK
+	toColumn: dim_date.Date_SK
+
