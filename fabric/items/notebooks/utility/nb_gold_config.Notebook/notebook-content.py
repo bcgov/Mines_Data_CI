@@ -71,6 +71,7 @@ GOLD_BUILD = [
     # MMO / Major Mines corporate report (Metabase dashboard 393) — added 2026-10-06
     _node("fact_major_project", "reload_fact", "full", business_keys="project_summary_id"),
     _node("fact_permit_bond", "reload_fact", "full", business_keys="permit_id"),
+    _node("fact_major_mine_permit", "reload_fact", "full", business_keys="permit_id,mine_guid"),
 ]
 
 # DAG edges: node -> parent nodes (must finish first). Roots are omitted.
@@ -80,6 +81,7 @@ GOLD_DEPENDENCY = {
     "bridge_incident_category": "dim_incident_category",
     "fact_major_project": "dim_mine",                # also reads gold.dim_date (standalone)
     "fact_permit_bond": "dim_mine",                  # also reads gold.dim_date (standalone)
+    "fact_major_mine_permit": "dim_mine",            # also reads gold.dim_date (standalone)
 }
 print(f"nb_gold_config | standalone={len(STANDALONE_NOTEBOOKS)} dag_nodes={len(GOLD_BUILD)}")
 
