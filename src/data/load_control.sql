@@ -2184,12 +2184,10 @@ EXEC [app].[usp_upsert_pipeline_control]
     @target_schema = 'raw/parquet',
     @target_table = 'project_summary_authorization',
     @source_query_template = 'SELECT *
-FROM public.project_summary_authorization
-WHERE update_timestamp >= ''@from_date''
-  AND update_timestamp < ''@to_date''',
-    @watermark_column = 'update_timestamp',
+FROM public.project_summary_authorization',
+    @watermark_column = '',
     @primary_key = 'project_summary_authorization_guid',
-    @load_type = 'INCREMENTAL',
+    @load_type = 'FULL',
     @load_frequency = NULL,
     @priority = 100,
     @dependency_on = NULL;
@@ -2804,12 +2802,10 @@ EXEC [app].[usp_upsert_pipeline_control]
     @target_schema = 'raw/parquet',
     @target_table = 'project_summary',
     @source_query_template = 'SELECT *
-FROM public.project_summary
-WHERE update_timestamp >= ''@from_date''
-  AND update_timestamp < ''@to_date''',
-    @watermark_column = 'update_timestamp',
+FROM public.project_summary',
+    @watermark_column = '',
     @primary_key = 'project_summary_guid',
-    @load_type = 'INCREMENTAL',
+    @load_type = 'FULL',
     @load_frequency = NULL,
     @priority = 100,
     @dependency_on = NULL;
