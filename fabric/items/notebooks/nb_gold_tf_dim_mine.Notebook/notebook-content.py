@@ -78,6 +78,10 @@ spark.table("silver.mine_region_code").createOrReplaceTempView("src_mine_region_
 spark.table("silver.mine_status").createOrReplaceTempView("src_mine_status")
 spark.table("silver.mine_status_xref").createOrReplaceTempView("src_mine_status_xref")
 spark.table("silver.mine_operation_status_code").createOrReplaceTempView("src_mine_op_status")
+# MMO report (2026-10-09): reason / sub-reason of the current status, and coal vs metal tenure
+spark.table("silver.mine_operation_status_reason_code").createOrReplaceTempView("src_mine_op_reason")
+spark.table("silver.mine_operation_status_sub_reason_code").createOrReplaceTempView("src_mine_op_sub_reason")
+spark.table("silver.mine_type").createOrReplaceTempView("src_mine_type")
 
 # Build mine column list for projection (drop all CTRL/lineage columns).
 mine_cols = [c for c in spark.table("src_mine").columns if c not in CTRL]
@@ -123,6 +127,8 @@ df = spark.sql(f"""
             ms.mine_guid,
             msx.mine_operation_status_code,
             mosc.description AS mine_operation_status_desc,
+            rsn.description  AS mine_operation_status_reason_desc,
+            srs.description  AS mine_operation_status_sub_reason_desc,
             ROW_NUMBER() OVER (
                 PARTITION BY ms.mine_guid
                 ORDER BY ms.status_date DESC, ms.create_timestamp DESC
@@ -132,12 +138,44 @@ df = spark.sql(f"""
             ON ms.mine_status_xref_guid = msx.mine_status_xref_guid
         LEFT JOIN src_mine_op_status mosc
             ON msx.mine_operation_status_code = mosc.mine_operation_status_code
+        LEFT JOIN src_mine_op_reason rsn
+            ON msx.mine_operation_status_reason_code = rsn.mine_operation_status_reason_code
+        LEFT JOIN src_mine_op_sub_reason srs
+            ON msx.mine_operation_status_sub_reason_code = srs.mine_operation_status_sub_reason_code
+    ),
+    -- One commodity group per mine from its active tenures: coal wins over mineral,
+    -- mineral over placer, placer over sand & gravel (MMO wireframes: Coal vs Metal).
+    tenure AS (
+        SELECT
+            mt.mine_guid,
+            CASE MIN(CASE mt.mine_tenure_type_code
+                         WHEN 'COL' THEN 1 WHEN 'MIN' THEN 2 WHEN 'PLR' THEN 3 WHEN 'BCL' THEN 4 ELSE 9 END)
+                 WHEN 1 THEN 'Coal' WHEN 2 THEN 'Metal' WHEN 3 THEN 'Placer'
+                 WHEN 4 THEN 'Sand & gravel' ELSE 'Other' END AS commodity_group
+        FROM src_mine_type mt
+        WHERE mt.active_ind = true
+        GROUP BY mt.mine_guid
     )
     SELECT
         {MINE_SEL},
         mrc.description            AS mine_region_desc,
         cs.mine_operation_status_code,
         cs.mine_operation_status_desc,
+        cs.mine_operation_status_reason_desc,
+        cs.mine_operation_status_sub_reason_desc,
+        -- Life-stage label for the MMO pages: reason, plus sub-reason when there is one.
+        -- A closed mine with no usable reason is "Status not recorded" (wireframe wording).
+        CASE
+            WHEN cs.mine_operation_status_desc = 'Closed'
+                 AND (cs.mine_operation_status_reason_desc IS NULL
+                      OR cs.mine_operation_status_reason_desc = 'Unknown')
+                THEN 'Status not recorded'
+            WHEN cs.mine_operation_status_sub_reason_desc IS NOT NULL
+                THEN concat(cs.mine_operation_status_reason_desc, ', ',
+                            lower(cs.mine_operation_status_sub_reason_desc))
+            ELSE coalesce(cs.mine_operation_status_reason_desc, cs.mine_operation_status_desc)
+        END                        AS mine_life_stage,
+        coalesce(tn.commodity_group, 'Not recorded') AS commodity_group,
         -- MMO report (2026-10-06): readable major-mine label from mine.major_mine_ind,
         -- same rule as mine_summary_view.major_mine_d in Metabase dashboard 393.
         CASE WHEN m.major_mine_ind = true THEN 'Major Mine' ELSE 'Regional Mine' END
@@ -147,6 +185,8 @@ df = spark.sql(f"""
         ON m.mine_region = mrc.mine_region_code
     LEFT JOIN current_status cs
         ON m.mine_guid = cs.mine_guid AND cs.rn = 1
+    LEFT JOIN tenure tn
+        ON m.mine_guid = tn.mine_guid
 """)
 print("built dataframe:", df.count(), "rows,", len(df.columns), "cols")
 

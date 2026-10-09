@@ -37,6 +37,7 @@ STANDALONE_NOTEBOOKS = [
     "nb_gold_dim_inspection_type",    # gold.dim_inspection_type
     "nb_build_fact_now_permit",       # gold.fact_now_permit       (NoW Permitting report)
     "nb_build_fact_now_application",  # gold.fact_now_application  (NoW Received report)
+    "nb_gold_ref_mmo_published",      # gold.ref_mmo_published     (MMO report: published figures not in MDS)
 ]
 
 
