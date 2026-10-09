@@ -1,0 +1,66 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
+  "name": "50466b7a0661e0fc3cee",
+  "position": {
+    "x": 24,
+    "y": 66,
+    "z": 2,
+    "width": 760,
+    "height": 30,
+    "tabOrder": 2
+  },
+  "visual": {
+    "visualType": "textbox",
+    "objects": {
+      "general": [
+        {
+          "properties": {
+            "paragraphs": [
+              {
+                "textRuns": [
+                  {
+                    "value": "1  What we oversee",
+                    "textStyle": {
+                      "fontSize": "11px",
+                      "color": "#013366",
+                      "fontWeight": "bold"
+                    }
+                  },
+                  {
+                    "value": "      ",
+                    "textStyle": {
+                      "fontSize": "11px",
+                      "color": "#605E5C"
+                    }
+                  },
+                  {
+                    "value": "2  What's coming",
+                    "textStyle": {
+                      "fontSize": "11px",
+                      "color": "#605E5C"
+                    }
+                  },
+                  {
+                    "value": "      ",
+                    "textStyle": {
+                      "fontSize": "11px",
+                      "color": "#605E5C"
+                    }
+                  },
+                  {
+                    "value": "3  Where the risk sits",
+                    "textStyle": {
+                      "fontSize": "11px",
+                      "color": "#605E5C"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}
