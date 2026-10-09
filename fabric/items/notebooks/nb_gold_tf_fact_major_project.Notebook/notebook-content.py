@@ -81,7 +81,13 @@ spark.table("silver.project_summary").createOrReplaceTempView("src_project_summa
 spark.table("silver.project_summary_authorization").createOrReplaceTempView("src_psa")
 spark.table("silver.project_summary_authorization_type").createOrReplaceTempView("src_psat")
 
-spark.table("gold.dim_mine").createOrReplaceTempView("gold_dim_mine")
+# one current row per mine_guid, so the mine join cannot fan out a project (488 rows vs 420 projects, 9 Oct 2026)
+spark.sql("""
+    SELECT mine_guid, MAX(Mine_SK) AS Mine_SK, 1 AS dl_iscurrent
+    FROM gold.dim_mine
+    WHERE dl_iscurrent = 1
+    GROUP BY mine_guid
+""").createOrReplaceTempView("gold_dim_mine")
 spark.table("gold.dim_date").createOrReplaceTempView("gold_dim_date")
 
 print("notebook:", NOTEBOOK_NAME, "-> target:", TARGET_TABLE)
