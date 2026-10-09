@@ -4735,3 +4735,21 @@ WHERE update_timestamp >= ''@from_date''
     @priority = 100,
     @dependency_on = NULL;
 GO
+-- MMO report (Metabase 393): mine + permit view used by fact_permit_bond and fact_major_mine_permit
+EXEC [app].[usp_upsert_pipeline_control]
+    @pipeline_name = 'pl_ingest_mds',
+    @source_system = 'mds',
+    @source_entity = 'public.mine_summary_view',
+    @source_connection_string = NULL,
+    @key_vault_url = 'https://mines-fabric-kv01.vault.azure.net',
+    @target_schema = 'raw/parquet',
+    @target_table = 'mine_summary_view',
+    @source_query_template = 'SELECT *
+FROM public.mine_summary_view',
+    @watermark_column = '',
+    @primary_key = NULL,
+    @load_type = 'FULL',
+    @load_frequency = NULL,
+    @priority = 100,
+    @dependency_on = NULL;
+GO

@@ -1,0 +1,219 @@
+table fact_major_mine_permit
+	lineageTag: 9a2fca9d-95b1-4c5e-ad39-294a02c8ba28
+	sourceLineageTag: [gold].[fact_major_mine_permit]
+
+	/// Metabase 3392 row count. Major Mine permit rows where the mine is Closed, Not Started or Operating. 205 on 7 Oct 2026.
+	measure 'Major Mine Permits' = CALCULATE ( COUNTROWS ( fact_major_mine_permit ), fact_major_mine_permit[is_in_report_scope] = 1 )
+		formatString: #,##0
+		displayFolder: Major Mines KPIs
+		lineageTag: 96dcc5ff-c319-492e-9680-1b1ce3be79be
+
+	/// Distinct Major Mines in the 3392 scope (Closed, Not Started, Operating).
+	measure 'Major Mines' = CALCULATE ( DISTINCTCOUNT ( fact_major_mine_permit[mine_guid] ), fact_major_mine_permit[is_in_report_scope] = 1 )
+		formatString: #,##0
+		displayFolder: Major Mines KPIs
+		lineageTag: 205ffe68-b0eb-478d-9b01-d14223b5d203
+
+	/// Distinct Major Mines with operation status Operating.
+	measure 'Major Mines Operating' = CALCULATE ( DISTINCTCOUNT ( fact_major_mine_permit[mine_guid] ), fact_major_mine_permit[is_in_report_scope] = 1, fact_major_mine_permit[mine_operation_status_desc] = "Operating" )
+		formatString: #,##0
+		displayFolder: Major Mines KPIs
+		lineageTag: 95ea46b2-6ecf-4bb1-8a68-7aaee35586e7
+
+	/// Distinct Major Mines with operation status Closed.
+	measure 'Major Mines Closed' = CALCULATE ( DISTINCTCOUNT ( fact_major_mine_permit[mine_guid] ), fact_major_mine_permit[is_in_report_scope] = 1, fact_major_mine_permit[mine_operation_status_desc] = "Closed" )
+		formatString: #,##0
+		displayFolder: Major Mines KPIs
+		lineageTag: be736d8f-64e8-4256-9e22-7ccc470002dd
+
+	/// Distinct Major Mines with operation status Not Started.
+	measure 'Major Mines Not Started' = CALCULATE ( DISTINCTCOUNT ( fact_major_mine_permit[mine_guid] ), fact_major_mine_permit[is_in_report_scope] = 1, fact_major_mine_permit[mine_operation_status_desc] = "Not Started" )
+		formatString: #,##0
+		displayFolder: Major Mines KPIs
+		lineageTag: a31f2a75-5d4b-43e4-8e0c-800c91108b1c
+
+	/// Major Mine permit rows in scope with permit status Open.
+	measure 'Major Mine Permits Open' = CALCULATE ( COUNTROWS ( fact_major_mine_permit ), fact_major_mine_permit[is_in_report_scope] = 1, fact_major_mine_permit[permit_status_code] = "O" )
+		formatString: #,##0
+		displayFolder: Major Mines KPIs
+		lineageTag: cb5f7bd9-f419-453a-80b7-43354c6388cb
+
+	/// Major Mine permit rows in scope with permit status Closed.
+	measure 'Major Mine Permits Closed' = CALCULATE ( COUNTROWS ( fact_major_mine_permit ), fact_major_mine_permit[is_in_report_scope] = 1, fact_major_mine_permit[permit_status_code] = "C" )
+		formatString: #,##0
+		displayFolder: Major Mines KPIs
+		lineageTag: 19063341-6056-496e-84d4-7110a4f84488
+
+
+	column permit_id
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 0b110d3b-7a3c-4c7c-9796-db0e5ac235a9
+		sourceLineageTag: permit_id
+		summarizeBy: none
+		sourceColumn: permit_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column permit_no
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: 6076445b-7683-40c5-9464-d984bf50486b
+		sourceLineageTag: permit_no
+		summarizeBy: none
+		sourceColumn: permit_no
+
+		annotation SummarizationSetBy = Automatic
+
+	column Mine_SK
+		dataType: int64
+		isHidden
+		formatString: 0
+		displayFolder: Keys
+		sourceProviderType: bigint
+		lineageTag: 514e601e-2e7e-45b8-8ff7-9c950039e8fd
+		sourceLineageTag: Mine_SK
+		summarizeBy: none
+		sourceColumn: Mine_SK
+
+		annotation SummarizationSetBy = Automatic
+
+	column Permit_Issue_Date_SK
+		dataType: int64
+		isHidden
+		formatString: 0
+		displayFolder: Keys
+		sourceProviderType: int
+		lineageTag: 8f02366d-2ff8-41df-8406-97d43918efa7
+		sourceLineageTag: Permit_Issue_Date_SK
+		summarizeBy: none
+		sourceColumn: Permit_Issue_Date_SK
+
+		annotation SummarizationSetBy = Automatic
+
+	column mine_guid
+		dataType: string
+		isHidden
+		displayFolder: Keys
+		sourceProviderType: varchar(8000)
+		lineageTag: 2dd973b4-510b-4777-8c44-02b28cf32d9d
+		sourceLineageTag: mine_guid
+		summarizeBy: none
+		sourceColumn: mine_guid
+
+		annotation SummarizationSetBy = Automatic
+
+	column mine_name
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: 8d409a34-1798-4a86-aa7a-ddeba5fbac75
+		sourceLineageTag: mine_name
+		summarizeBy: none
+		sourceColumn: mine_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column mine_number
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: 7596e5db-f2e1-4202-b0df-481c631b6b78
+		sourceLineageTag: mine_number
+		summarizeBy: none
+		sourceColumn: mine_number
+
+		annotation SummarizationSetBy = Automatic
+
+	column mine_region
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: 45d930ce-77ac-4aaa-9a7b-b34429ccc0ef
+		sourceLineageTag: mine_region
+		summarizeBy: none
+		sourceColumn: mine_region
+
+		annotation SummarizationSetBy = Automatic
+
+	column operation_status
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: 6088079b-060f-442b-ba76-2b2c03b01a59
+		sourceLineageTag: operation_status
+		summarizeBy: none
+		sourceColumn: operation_status
+
+		annotation SummarizationSetBy = Automatic
+
+	column major_mine_desc
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: 4c432f98-aeb0-4698-a9c4-3233650523ec
+		sourceLineageTag: major_mine_desc
+		summarizeBy: none
+		sourceColumn: major_mine_desc
+
+		annotation SummarizationSetBy = Automatic
+
+	column mine_operation_status_desc
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: 8a8e6ed4-5bbe-4666-abe5-f1293e66696b
+		sourceLineageTag: mine_operation_status_desc
+		summarizeBy: none
+		sourceColumn: mine_operation_status_desc
+
+		annotation SummarizationSetBy = Automatic
+
+	column permit_status_code
+		dataType: string
+		isHidden
+		sourceProviderType: varchar(8000)
+		lineageTag: 6652b85c-a40f-4e7b-9aff-2514e1e62c07
+		sourceLineageTag: permit_status_code
+		summarizeBy: none
+		sourceColumn: permit_status_code
+
+		annotation SummarizationSetBy = Automatic
+
+	column permit_status
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: 03d79170-f9e7-4896-9406-44a7f622916b
+		sourceLineageTag: permit_status
+		summarizeBy: none
+		sourceColumn: permit_status
+
+		annotation SummarizationSetBy = Automatic
+
+	column permit_issue_date
+		dataType: dateTime
+		formatString: Short Date
+		sourceProviderType: date
+		lineageTag: 0a8b7dbd-12ff-44f3-b63a-74039315d4c5
+		sourceLineageTag: permit_issue_date
+		summarizeBy: none
+		sourceColumn: permit_issue_date
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_in_report_scope
+		dataType: int64
+		isHidden
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: e6a57da1-0183-42d3-ba00-c174c10baa92
+		sourceLineageTag: is_in_report_scope
+		summarizeBy: none
+		sourceColumn: is_in_report_scope
+
+		annotation SummarizationSetBy = Automatic
+
+	partition fact_major_mine_permit = entity
+		mode: directLake
+		source
+			entityName: fact_major_mine_permit
+			schemaName: gold
+			expressionSource: DatabaseQuery
+
+	annotation PBI_ResultType = Table
+

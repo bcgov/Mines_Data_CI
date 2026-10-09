@@ -137,7 +137,11 @@ df = spark.sql(f"""
         {MINE_SEL},
         mrc.description            AS mine_region_desc,
         cs.mine_operation_status_code,
-        cs.mine_operation_status_desc
+        cs.mine_operation_status_desc,
+        -- MMO report (2026-10-06): readable major-mine label from mine.major_mine_ind,
+        -- same rule as mine_summary_view.major_mine_d in Metabase dashboard 393.
+        CASE WHEN m.major_mine_ind = true THEN 'Major Mine' ELSE 'Regional Mine' END
+                                   AS major_mine_desc
     FROM src_mine m
     LEFT JOIN src_mine_region_code mrc
         ON m.mine_region = mrc.mine_region_code

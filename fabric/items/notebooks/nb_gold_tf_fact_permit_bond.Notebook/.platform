@@ -1,0 +1,12 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Notebook",
+    "displayName": "nb_gold_tf_fact_permit_bond",
+    "description": "Gold transform: one row per C/M permit with active bond total and latest amendment (MMO report)"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "d892c220-973b-481a-a2f3-3efffc700ee9"
+  }
+}

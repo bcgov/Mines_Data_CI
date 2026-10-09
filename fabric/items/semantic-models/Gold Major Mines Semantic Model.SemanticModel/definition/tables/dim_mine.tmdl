@@ -1,0 +1,404 @@
+table dim_mine
+	lineageTag: 3b2125bc-0800-4631-aa08-9523fa916b75
+	sourceLineageTag: [gold].[dim_mine]
+
+	column mine_guid
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: 13c82076-8105-4024-9a74-fdfcdbc9bf7f
+		sourceLineageTag: mine_guid
+		summarizeBy: none
+		sourceColumn: mine_guid
+
+		annotation SummarizationSetBy = Automatic
+
+	column create_user
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: 165994f1-cdc0-45c8-9a74-021deacc1ece
+		sourceLineageTag: create_user
+		summarizeBy: none
+		sourceColumn: create_user
+
+		annotation SummarizationSetBy = Automatic
+
+	column create_timestamp
+		dataType: dateTime
+		formatString: General Date
+		sourceProviderType: datetime2
+		lineageTag: a3731b95-6174-4746-9725-f2f16c843816
+		sourceLineageTag: create_timestamp
+		summarizeBy: none
+		sourceColumn: create_timestamp
+
+		annotation SummarizationSetBy = Automatic
+
+	column update_user
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: c357db21-a1b6-4b55-a4c1-4e9d4f8d026c
+		sourceLineageTag: update_user
+		summarizeBy: none
+		sourceColumn: update_user
+
+		annotation SummarizationSetBy = Automatic
+
+	column update_timestamp
+		dataType: dateTime
+		formatString: General Date
+		sourceProviderType: datetime2
+		lineageTag: a2b73d31-2abd-41f5-ad44-a4e06c4ed994
+		sourceLineageTag: update_timestamp
+		summarizeBy: none
+		sourceColumn: update_timestamp
+
+		annotation SummarizationSetBy = Automatic
+
+	column mine_no
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: d2df4893-cf75-41bd-a7a6-19c94a27612f
+		sourceLineageTag: mine_no
+		summarizeBy: none
+		sourceColumn: mine_no
+
+		annotation SummarizationSetBy = Automatic
+
+	column mine_name
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: 004d3eb8-645e-46ab-8d3d-aafc9891f4e2
+		sourceLineageTag: mine_name
+		summarizeBy: none
+		sourceColumn: mine_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column mine_note
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: 548c2d2f-9efd-498e-8db8-516f0cb61c87
+		sourceLineageTag: mine_note
+		summarizeBy: none
+		sourceColumn: mine_note
+
+		annotation SummarizationSetBy = Automatic
+
+	column major_mine_ind
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		sourceProviderType: bit
+		lineageTag: 89d9b4e8-0323-425a-9bb3-306abacda6ca
+		sourceLineageTag: major_mine_ind
+		summarizeBy: none
+		sourceColumn: major_mine_ind
+
+		annotation SummarizationSetBy = Automatic
+
+	column mine_region
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: 19515c53-0c32-4bd9-8f28-69a5785fe6aa
+		sourceLineageTag: mine_region
+		summarizeBy: none
+		sourceColumn: mine_region
+
+		annotation SummarizationSetBy = Automatic
+
+	column deleted_ind
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		sourceProviderType: bit
+		lineageTag: 404b595f-483b-4398-8754-55e4934b9e5c
+		sourceLineageTag: deleted_ind
+		summarizeBy: none
+		sourceColumn: deleted_ind
+
+		annotation SummarizationSetBy = Automatic
+
+	column union_ind
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		sourceProviderType: bit
+		lineageTag: f4906313-3c3e-4c7e-a0cc-ddb7a2457433
+		sourceLineageTag: union_ind
+		summarizeBy: none
+		sourceColumn: union_ind
+
+		annotation SummarizationSetBy = Automatic
+
+	column ohsc_ind
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		sourceProviderType: bit
+		lineageTag: 0ac87e9a-4592-4891-b41d-c5485e669ec2
+		sourceLineageTag: ohsc_ind
+		summarizeBy: none
+		sourceColumn: ohsc_ind
+
+		annotation SummarizationSetBy = Automatic
+
+	column latitude
+		dataType: double
+		sourceProviderType: decimal(38, 18)
+		lineageTag: 7636e70a-a673-497b-866b-74c4e227aa01
+		sourceLineageTag: latitude
+		summarizeBy: none
+		sourceColumn: latitude
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column longitude
+		dataType: double
+		sourceProviderType: decimal(38, 18)
+		lineageTag: 14c797c5-beee-4aac-b8ee-9e0dd700c49a
+		sourceLineageTag: longitude
+		summarizeBy: none
+		sourceColumn: longitude
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column mine_location_description
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: 7d2954c2-e526-4d09-b7e8-22c86fbfae85
+		sourceLineageTag: mine_location_description
+		summarizeBy: none
+		sourceColumn: mine_location_description
+
+		annotation SummarizationSetBy = Automatic
+
+	column legacy_mms_mine_status
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: e11783d6-8826-48eb-80e8-bb758d93a82a
+		sourceLineageTag: legacy_mms_mine_status
+		summarizeBy: none
+		sourceColumn: legacy_mms_mine_status
+
+		annotation SummarizationSetBy = Automatic
+
+	column exemption_fee_status_code
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: 3d9c01c2-5cb4-468f-9df7-8686ff505e70
+		sourceLineageTag: exemption_fee_status_code
+		summarizeBy: none
+		sourceColumn: exemption_fee_status_code
+
+		annotation SummarizationSetBy = Automatic
+
+	column exemption_fee_status_note
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: b70ea2e7-2089-47b0-936b-9c5aa167fb90
+		sourceLineageTag: exemption_fee_status_note
+		summarizeBy: none
+		sourceColumn: exemption_fee_status_note
+
+		annotation SummarizationSetBy = Automatic
+
+	column mms_alias
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: 74e37b3d-a998-41de-a51e-2be03bffcf83
+		sourceLineageTag: mms_alias
+		summarizeBy: none
+		sourceColumn: mms_alias
+
+		annotation SummarizationSetBy = Automatic
+
+	column mine_no_sequence
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 010040a5-6f03-4169-93cb-8e78be52b054
+		sourceLineageTag: mine_no_sequence
+		summarizeBy: none
+		sourceColumn: mine_no_sequence
+
+		annotation SummarizationSetBy = Automatic
+
+	column government_agency_type_code
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: d224cbc7-af4e-48e6-9b11-f7eee0b03c74
+		sourceLineageTag: government_agency_type_code
+		summarizeBy: none
+		sourceColumn: government_agency_type_code
+
+		annotation SummarizationSetBy = Automatic
+
+	column number_of_contractors
+		dataType: double
+		sourceProviderType: decimal(38, 18)
+		lineageTag: 2bb9cc42-d15f-4fcc-9a99-7ffd72a45333
+		sourceLineageTag: number_of_contractors
+		summarizeBy: none
+		sourceColumn: number_of_contractors
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column number_of_mine_employees
+		dataType: double
+		sourceProviderType: decimal(38, 18)
+		lineageTag: a6551fe1-9965-48c2-a693-d8f86f6b2dfc
+		sourceLineageTag: number_of_mine_employees
+		summarizeBy: none
+		sourceColumn: number_of_mine_employees
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column mine_timezone
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: b63ee7fa-c584-4752-83a3-4f483460eb96
+		sourceLineageTag: mine_timezone
+		summarizeBy: none
+		sourceColumn: mine_timezone
+
+		annotation SummarizationSetBy = Automatic
+
+	column geom
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: b8c46c0b-a368-42f0-806c-e9a22e51e452
+		sourceLineageTag: geom
+		summarizeBy: none
+		sourceColumn: geom
+
+		annotation SummarizationSetBy = Automatic
+
+	column mine_region_desc
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: 77ec3655-5711-498f-82ec-eb02881d32aa
+		sourceLineageTag: mine_region_desc
+		summarizeBy: none
+		sourceColumn: mine_region_desc
+
+		annotation SummarizationSetBy = Automatic
+
+	column mine_operation_status_code
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: 8760e1ec-733b-4ec3-868a-54864c00c170
+		sourceLineageTag: mine_operation_status_code
+		summarizeBy: none
+		sourceColumn: mine_operation_status_code
+
+		annotation SummarizationSetBy = Automatic
+
+	column mine_operation_status_desc
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: ad8da6c3-481a-40bc-add1-2de032a42ad2
+		sourceLineageTag: mine_operation_status_desc
+		summarizeBy: none
+		sourceColumn: mine_operation_status_desc
+
+		annotation SummarizationSetBy = Automatic
+
+	column dl_rowhash
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: 52a8ade6-4abb-4199-9b1c-47be2292cef6
+		sourceLineageTag: dl_rowhash
+		summarizeBy: none
+		sourceColumn: dl_rowhash
+
+		annotation SummarizationSetBy = Automatic
+
+	column dl_transform_id
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 1cfc3380-fc68-4be2-a9a5-8be5e2933e00
+		sourceLineageTag: dl_transform_id
+		summarizeBy: none
+		sourceColumn: dl_transform_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column Mine_SK
+		dataType: int64
+		formatString: 0
+		sourceProviderType: bigint
+		lineageTag: 574f272a-f1e0-4a01-baf2-38ef9dcc0133
+		sourceLineageTag: Mine_SK
+		summarizeBy: none
+		sourceColumn: Mine_SK
+
+		annotation SummarizationSetBy = Automatic
+
+	column dl_iscurrent
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		sourceProviderType: bit
+		lineageTag: 3b82b231-6cd0-44fb-9c6b-f78b4f0c7591
+		sourceLineageTag: dl_iscurrent
+		summarizeBy: none
+		sourceColumn: dl_iscurrent
+
+		annotation SummarizationSetBy = Automatic
+
+	column dl_isdeleted
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		sourceProviderType: bit
+		lineageTag: e0ea03ba-39d2-43ca-b1ae-fc24d04789e0
+		sourceLineageTag: dl_isdeleted
+		summarizeBy: none
+		sourceColumn: dl_isdeleted
+
+		annotation SummarizationSetBy = Automatic
+
+	column dl_recordstartdateutc
+		dataType: dateTime
+		formatString: General Date
+		sourceProviderType: datetime2
+		lineageTag: 83588309-a06f-4b0f-a20f-f5349d2858b3
+		sourceLineageTag: dl_recordstartdateutc
+		summarizeBy: none
+		sourceColumn: dl_recordstartdateutc
+
+		annotation SummarizationSetBy = Automatic
+
+	column dl_recordenddateutc
+		dataType: dateTime
+		formatString: General Date
+		sourceProviderType: datetime2
+		lineageTag: 306dcaa3-8657-4133-bcbd-20ca555b7cd2
+		sourceLineageTag: dl_recordenddateutc
+		summarizeBy: none
+		sourceColumn: dl_recordenddateutc
+
+		annotation SummarizationSetBy = Automatic
+
+	column major_mine_desc
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: 59c5acc5-f556-4c5b-b9f6-9977d5edc3ea
+		sourceLineageTag: major_mine_desc
+		summarizeBy: none
+		sourceColumn: major_mine_desc
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dim_mine = entity
+		mode: directLake
+		source
+			entityName: dim_mine
+			schemaName: gold
+			expressionSource: DatabaseQuery
+
+	annotation PBI_ResultType = Table
+
