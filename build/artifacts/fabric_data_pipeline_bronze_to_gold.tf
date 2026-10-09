@@ -39,6 +39,7 @@ locals {
     Refresh_Inspections    = "Gold Inspections Semantic Model"
     Refresh_NoW_Permitting = "Gold NoW Permitting Semantic Model"
     Refresh_NoW_Received   = "Gold NoW Received Semantic Model"
+    Refresh_Major_Mines    = "Gold Major Mines Semantic Model"
   }
 
   semantic_model_connection_name = "semanticmodel-${var.PREFIX}-${var.PROJECT}-${var.ENVIRONMENT}"

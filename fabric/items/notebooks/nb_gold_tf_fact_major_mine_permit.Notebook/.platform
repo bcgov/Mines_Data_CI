@@ -1,0 +1,12 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Notebook",
+    "displayName": "nb_gold_tf_fact_major_mine_permit",
+    "description": "Gold transform: one row per Major Mine permit from mine_summary_view (MMO report, Metabase 3392)"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "e4d2d694-bc6a-48d3-a424-e5954cf0cfce"
+  }
+}
