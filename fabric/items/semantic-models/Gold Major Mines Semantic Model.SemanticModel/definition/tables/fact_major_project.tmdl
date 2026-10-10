@@ -90,6 +90,12 @@ table fact_major_project
 		lineageTag: 7a291ea9-fe2e-4a6b-94cc-2352e376713f
 
 
+	/// Projects that need a Mines Act permit: Mines Act only plus both Acts.
+	measure 'Projects Need Mines Act' = [Projects Mines Act Only] + [Projects Both Acts]
+		formatString: #,##0
+		displayFolder: Project KPIs
+		lineageTag: 31be6270-c868-4ee5-84eb-73eafc375378
+
 	column project_summary_id
 		dataType: int64
 		formatString: 0

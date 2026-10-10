@@ -1,0 +1,125 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
+  "name": "095d94d3fe110db1d891",
+  "position": {
+    "x": 24,
+    "y": 538,
+    "z": 30,
+    "width": 1232,
+    "height": 136,
+    "tabOrder": 30
+  },
+  "visual": {
+    "visualType": "textbox",
+    "objects": {
+      "general": [
+        {
+          "properties": {
+            "paragraphs": [
+              {
+                "textRuns": [
+                  {
+                    "value": "DRILL THROUGH TO ONE MINE",
+                    "textStyle": {
+                      "fontSize": "12px",
+                      "color": "#013366",
+                      "fontWeight": "bold"
+                    }
+                  },
+                  {
+                    "value": "   Next phase",
+                    "textStyle": {
+                      "fontSize": "11px",
+                      "color": "#CE3E39",
+                      "fontWeight": "bold"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "The wireframe adds a mine profile page: inspections, orders, incidents and security for one mine, reached by right-clicking any mine. Our Inspections and Incidents Gold tables already carry the mine, and dim_mine now carries the Major flag.",
+                    "textStyle": {
+                      "fontSize": "11px",
+                      "color": "#252423"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "Needs a shared mine page across the four reports, so it is scoped as the next step rather than part of this release.",
+                    "textStyle": {
+                      "fontSize": "11px",
+                      "color": "#605E5C"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true,
+    "visualContainerObjects": {
+      "background": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "color": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#FFFFFF'"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      ],
+      "border": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "color": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#F3F2F1'"
+                    }
+                  }
+                }
+              }
+            },
+            "radius": {
+              "expr": {
+                "Literal": {
+                  "Value": "4D"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

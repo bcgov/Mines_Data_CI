@@ -18,4 +18,5 @@ ref table dim_mine
 ref table fact_major_project
 ref table fact_permit_bond
 ref table fact_major_mine_permit
+ref table ref_mmo_published
 

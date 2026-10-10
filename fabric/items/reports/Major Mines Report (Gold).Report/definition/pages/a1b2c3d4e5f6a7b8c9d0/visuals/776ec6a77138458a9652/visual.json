@@ -1,0 +1,37 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
+  "name": "776ec6a77138458a9652",
+  "position": {
+    "x": 24,
+    "y": 682,
+    "z": 90,
+    "width": 1232,
+    "height": 36,
+    "tabOrder": 90
+  },
+  "visual": {
+    "visualType": "textbox",
+    "objects": {
+      "general": [
+        {
+          "properties": {
+            "paragraphs": [
+              {
+                "textRuns": [
+                  {
+                    "value": "Source: MDS (mine, mine_status, mine_type) via the Mines Data Platform \u00b7 Gold Major Mines Semantic Model \u00b7 Published figures: CIM & CPO annual report 2024/25 \u00b7 Contact: Raj Gulati, Nhung Nguyen",
+                    "textStyle": {
+                      "fontSize": "10px",
+                      "color": "#605E5C"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}
