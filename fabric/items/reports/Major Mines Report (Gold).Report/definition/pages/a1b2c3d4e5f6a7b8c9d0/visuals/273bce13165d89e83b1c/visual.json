@@ -56,13 +56,13 @@
                 "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "dim_mine"
+                      "Entity": "fact_major_mine_permit"
                     }
                   },
                   "Property": "mine_operation_status_desc"
                 }
               },
-              "queryRef": "dim_mine.mine_operation_status_desc",
+              "queryRef": "fact_major_mine_permit.mine_operation_status_desc",
               "nativeQueryRef": "mine_operation_status_desc"
             }
           ]
@@ -151,6 +151,131 @@
                 }
               }
             }
+          }
+        }
+      ],
+      "dataPoint": [
+        {
+          "properties": {
+            "fill": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#013366'"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "selector": {
+            "data": [
+              {
+                "scopeId": {
+                  "Comparison": {
+                    "ComparisonKind": 0,
+                    "Left": {
+                      "Column": {
+                        "Expression": {
+                          "SourceRef": {
+                            "Entity": "fact_major_mine_permit"
+                          }
+                        },
+                        "Property": "mine_operation_status_desc"
+                      }
+                    },
+                    "Right": {
+                      "Literal": {
+                        "Value": "'Operating'"
+                      }
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        },
+        {
+          "properties": {
+            "fill": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#FCBA19'"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "selector": {
+            "data": [
+              {
+                "scopeId": {
+                  "Comparison": {
+                    "ComparisonKind": 0,
+                    "Left": {
+                      "Column": {
+                        "Expression": {
+                          "SourceRef": {
+                            "Entity": "fact_major_mine_permit"
+                          }
+                        },
+                        "Property": "mine_operation_status_desc"
+                      }
+                    },
+                    "Right": {
+                      "Literal": {
+                        "Value": "'Closed'"
+                      }
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        },
+        {
+          "properties": {
+            "fill": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#3470B1'"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "selector": {
+            "data": [
+              {
+                "scopeId": {
+                  "Comparison": {
+                    "ComparisonKind": 0,
+                    "Left": {
+                      "Column": {
+                        "Expression": {
+                          "SourceRef": {
+                            "Entity": "fact_major_mine_permit"
+                          }
+                        },
+                        "Property": "mine_operation_status_desc"
+                      }
+                    },
+                    "Right": {
+                      "Literal": {
+                        "Value": "'Not Started'"
+                      }
+                    }
+                  }
+                }
+              }
+            ]
           }
         }
       ]
