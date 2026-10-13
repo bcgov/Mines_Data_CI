@@ -1,13 +1,13 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
-  "name": "5b4d747c456f749ea6af",
+  "name": "cdc7ce98b169c2ce35cc",
   "position": {
     "x": 24,
-    "y": 538,
-    "z": 30,
+    "y": 100,
+    "z": 3,
     "width": 1232,
-    "height": 136,
-    "tabOrder": 30
+    "height": 62,
+    "tabOrder": 3
   },
   "visual": {
     "visualType": "textbox",
@@ -19,38 +19,19 @@
               {
                 "textRuns": [
                   {
-                    "value": "PROJECTS TO WATCH",
+                    "value": "Every major project on record, one row each. This is the list behind the counts on What's coming.",
                     "textStyle": {
-                      "fontSize": "12px",
+                      "fontSize": "13px",
                       "color": "#013366",
                       "fontWeight": "bold"
                     }
-                  },
-                  {
-                    "value": "   Placeholder \u00b7 needs MMO input",
-                    "textStyle": {
-                      "fontSize": "11px",
-                      "color": "#CE3E39",
-                      "fontWeight": "bold"
-                    }
                   }
                 ]
               },
               {
                 "textRuns": [
                   {
-                    "value": "The wireframe shows a table of named projects with region, stage and days in stage. Stage and days in stage need MMO to confirm which project_summary fields to use.",
-                    "textStyle": {
-                      "fontSize": "11px",
-                      "color": "#252423"
-                    }
-                  }
-                ]
-              },
-              {
-                "textRuns": [
-                  {
-                    "value": "Until then this section is layout only. Project names, titles and submission dates are already in the model (fact_major_project) and can be added as soon as the stage field is agreed.",
+                    "value": "Source: MDS project_summary via the Mines Data Platform. Use the filters to narrow the list; the count on the right follows the filters.",
                     "textStyle": {
                       "fontSize": "11px",
                       "color": "#605E5C"
