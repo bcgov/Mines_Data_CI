@@ -20,18 +20,35 @@
                 "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "dim_mine"
+                      "Entity": "dim_date"
                     }
                   },
-                  "Property": "mine_region_desc"
+                  "Property": "fiscal_year_label"
                 }
               },
-              "queryRef": "dim_mine.mine_region_desc",
-              "nativeQueryRef": "mine_region_desc",
+              "queryRef": "dim_date.fiscal_year_label",
+              "nativeQueryRef": "fiscal_year_label",
               "active": true
             }
           ]
         }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Column": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "dim_date"
+                  }
+                },
+                "Property": "fiscal_year_label"
+              }
+            },
+            "direction": "Descending"
+          }
+        ]
       }
     },
     "objects": {
@@ -61,7 +78,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Region'"
+                  "Value": "'Submitted in fiscal year'"
                 }
               }
             },
