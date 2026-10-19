@@ -27,7 +27,8 @@
                 }
               },
               "queryRef": "dim_incident_category.category_group",
-              "nativeQueryRef": "category_group"
+              "nativeQueryRef": "category_group",
+              "displayName": "Type"
             },
             {
               "field": {
@@ -41,7 +42,8 @@
                 }
               },
               "queryRef": "fact_mine_incident.Incidents Last 4 Weeks by Type",
-              "nativeQueryRef": "Incidents Last 4 Weeks by Type"
+              "nativeQueryRef": "Incidents Last 4 Weeks by Type",
+              "displayName": "Last 4 wks"
             },
             {
               "field": {
@@ -55,7 +57,8 @@
                 }
               },
               "queryRef": "fact_mine_incident.Incidents Previous 4 Weeks by Type",
-              "nativeQueryRef": "Incidents Previous 4 Weeks by Type"
+              "nativeQueryRef": "Incidents Previous 4 Weeks by Type",
+              "displayName": "Prev 4 wks"
             },
             {
               "field": {
@@ -69,7 +72,8 @@
                 }
               },
               "queryRef": "fact_mine_incident.4 Week Change by Type",
-              "nativeQueryRef": "4 Week Change by Type"
+              "nativeQueryRef": "4 Week Change by Type",
+              "displayName": "Change"
             }
           ]
         }
@@ -118,6 +122,13 @@
                   "Value": "'#FFFFFF'"
                 }
               }
+            },
+            "autoSizeColumnWidth": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
             }
           }
         }
@@ -136,6 +147,19 @@
               "expr": {
                 "Literal": {
                   "Value": "'#000000'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "total": [
+        {
+          "properties": {
+            "totals": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
                 }
               }
             }
@@ -169,13 +193,13 @@
           }
         }
       ],
-      "columnFormatting": [
+      "columnWidth": [
         {
           "properties": {
-            "displayName": {
+            "value": {
               "expr": {
                 "Literal": {
-                  "Value": "'Type'"
+                  "Value": "200D"
                 }
               }
             }
@@ -186,10 +210,10 @@
         },
         {
           "properties": {
-            "displayName": {
+            "value": {
               "expr": {
                 "Literal": {
-                  "Value": "'Last 4 wks'"
+                  "Value": "68D"
                 }
               }
             }
@@ -200,10 +224,10 @@
         },
         {
           "properties": {
-            "displayName": {
+            "value": {
               "expr": {
                 "Literal": {
-                  "Value": "'Prev 4 wks'"
+                  "Value": "68D"
                 }
               }
             }
@@ -214,10 +238,10 @@
         },
         {
           "properties": {
-            "displayName": {
+            "value": {
               "expr": {
                 "Literal": {
-                  "Value": "'Change'"
+                  "Value": "68D"
                 }
               }
             }
