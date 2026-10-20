@@ -6,7 +6,7 @@
     "y": 182,
     "z": 38,
     "width": 216,
-    "height": 50,
+    "height": 58,
     "tabOrder": 38
   },
   "visual": {
@@ -23,11 +23,11 @@
                       "Entity": "fact_mine_incident"
                     }
                   },
-                  "Property": "Injuries FYTD"
+                  "Property": "Injuries Value"
                 }
               },
-              "queryRef": "fact_mine_incident.Injuries FYTD",
-              "nativeQueryRef": "Injuries FYTD"
+              "queryRef": "fact_mine_incident.Injuries Value",
+              "nativeQueryRef": "Injuries Value"
             }
           ]
         }
@@ -41,7 +41,7 @@
             "fontSize": {
               "expr": {
                 "Literal": {
-                  "Value": "28D"
+                  "Value": "24D"
                 }
               }
             },

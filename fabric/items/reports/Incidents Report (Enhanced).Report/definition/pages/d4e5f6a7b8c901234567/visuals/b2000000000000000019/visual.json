@@ -6,7 +6,7 @@
     "y": 182,
     "z": 25,
     "width": 216,
-    "height": 50,
+    "height": 58,
     "tabOrder": 25
   },
   "visual": {
@@ -23,11 +23,11 @@
                       "Entity": "fact_mine_incident"
                     }
                   },
-                  "Property": "Incidents Rolling 30 Days"
+                  "Property": "Rolling 30 Value"
                 }
               },
-              "queryRef": "fact_mine_incident.Incidents Rolling 30 Days",
-              "nativeQueryRef": "Incidents Rolling 30 Days"
+              "queryRef": "fact_mine_incident.Rolling 30 Value",
+              "nativeQueryRef": "Rolling 30 Value"
             }
           ]
         }
@@ -41,7 +41,7 @@
             "fontSize": {
               "expr": {
                 "Literal": {
-                  "Value": "28D"
+                  "Value": "24D"
                 }
               }
             },
