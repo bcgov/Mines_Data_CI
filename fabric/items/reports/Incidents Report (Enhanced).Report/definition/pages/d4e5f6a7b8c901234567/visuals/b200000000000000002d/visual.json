@@ -3,10 +3,10 @@
   "name": "b200000000000000002d",
   "position": {
     "x": 1030,
-    "y": 184,
+    "y": 180,
     "z": 45,
     "width": 216,
-    "height": 50,
+    "height": 62,
     "tabOrder": 45
   },
   "visual": {
@@ -41,7 +41,7 @@
             "fontSize": {
               "expr": {
                 "Literal": {
-                  "Value": "28D"
+                  "Value": "26D"
                 }
               }
             },
