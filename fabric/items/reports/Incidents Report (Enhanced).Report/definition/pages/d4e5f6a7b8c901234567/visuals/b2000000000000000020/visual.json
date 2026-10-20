@@ -23,11 +23,11 @@
                       "Entity": "fact_mine_incident"
                     }
                   },
-                  "Property": "DOs FYTD"
+                  "Property": "DOs Value"
                 }
               },
-              "queryRef": "fact_mine_incident.DOs FYTD",
-              "nativeQueryRef": "DOs FYTD"
+              "queryRef": "fact_mine_incident.DOs Value",
+              "nativeQueryRef": "DOs Value"
             }
           ]
         }
