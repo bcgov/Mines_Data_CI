@@ -23,11 +23,11 @@
                       "Entity": "fact_mine_incident"
                     }
                   },
-                  "Property": "Fatalities FYTD"
+                  "Property": "Fatalities Value"
                 }
               },
-              "queryRef": "fact_mine_incident.Fatalities FYTD",
-              "nativeQueryRef": "Fatalities FYTD"
+              "queryRef": "fact_mine_incident.Fatalities Value",
+              "nativeQueryRef": "Fatalities Value"
             }
           ]
         }
