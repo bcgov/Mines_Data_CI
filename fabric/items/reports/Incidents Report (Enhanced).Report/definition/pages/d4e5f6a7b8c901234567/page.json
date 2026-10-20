@@ -1,7 +1,7 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/page/2.1.0/schema.json",
   "name": "d4e5f6a7b8c901234567",
-  "displayName": "Incidents (Enhanced)",
+  "displayName": "Incidents",
   "displayOption": "FitToPage",
   "height": 896,
   "width": 1280,
