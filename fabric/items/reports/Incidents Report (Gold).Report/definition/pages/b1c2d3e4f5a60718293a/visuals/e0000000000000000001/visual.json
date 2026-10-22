@@ -5,7 +5,7 @@
     "x": 188,
     "y": 24,
     "z": 0,
-    "width": 1068,
+    "width": 816,
     "height": 36,
     "tabOrder": 0
   },
@@ -27,7 +27,7 @@
                     }
                   },
                   {
-                    "value": "   —   Incidents Corporate Report",
+                    "value": "   \u2014   Incidents Corporate Report",
                     "textStyle": {
                       "fontSize": "14px",
                       "color": "#605E5C"
