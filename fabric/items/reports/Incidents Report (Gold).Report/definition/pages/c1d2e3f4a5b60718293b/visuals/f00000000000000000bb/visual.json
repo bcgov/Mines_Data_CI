@@ -237,33 +237,6 @@
             }
           }
         }
-      ],
-      "visualLink": [
-        {
-          "properties": {
-            "show": {
-              "expr": {
-                "Literal": {
-                  "Value": "true"
-                }
-              }
-            },
-            "type": {
-              "expr": {
-                "Literal": {
-                  "Value": "'WebUrl'"
-                }
-              }
-            },
-            "webUrl": {
-              "expr": {
-                "Literal": {
-                  "Value": "'https://app.fabric.microsoft.com/groups/e397b5cc-924d-40a5-b101-f6efb41a5423/reports/ff907fac-14e5-4bb6-a172-71ff0268ce12/d4e5f6a7b8c901234567'"
-                }
-              }
-            }
-          }
-        }
       ]
     },
     "drillFilterOtherVisuals": true,
@@ -288,6 +261,33 @@
               "expr": {
                 "Literal": {
                   "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "visualLink": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "type": {
+              "expr": {
+                "Literal": {
+                  "Value": "'WebUrl'"
+                }
+              }
+            },
+            "webUrl": {
+              "expr": {
+                "Literal": {
+                  "Value": "'https://app.fabric.microsoft.com/groups/e397b5cc-924d-40a5-b101-f6efb41a5423/reports/ff907fac-14e5-4bb6-a172-71ff0268ce12/d4e5f6a7b8c901234567'"
                 }
               }
             }
