@@ -438,6 +438,473 @@ table fact_inspection
 		displayFolder: Object
 		lineageTag: 0b1e0026-0000-4000-8000-000000000026
 
+	/// Start year of the current BC fiscal year (Apr-Mar), from today.
+	measure 'Enh Current FY' = VAR d = TODAY() VAR fy = IF ( MONTH ( d ) >= 4, YEAR ( d ), YEAR ( d ) - 1 ) VAR fys = DATE ( fy, 4, 1 ) RETURN fy
+		formatString: 0
+		isHidden
+		displayFolder: Enhanced
+		lineageTag: 2d67ea19-4830-5bb6-96e3-9bb36a3b310d
+
+	/// Fiscal month number of today (Apr = 1).
+	measure 'Enh Current Fiscal Month' = VAR d = TODAY() RETURN MOD ( MONTH ( d ) - 4, 12 ) + 1
+		formatString: 0
+		isHidden
+		displayFolder: Enhanced
+		lineageTag: 076e6d8a-4ab6-5fa5-9fda-8e4ca390c4b2
+
+	/// 1 on dim_date rows in the current fiscal year. Visual filter for the month charts.
+	measure 'Enh Is Current FY' = IF ( MAX ( dim_date[fiscal_year] ) = [Enh Current FY], 1, 0 )
+		formatString: 0
+		isHidden
+		displayFolder: Enhanced
+		lineageTag: b261c524-8097-5170-94ad-83fdaefda238
+
+	/// Inspections this fiscal year to date (Apr 1 to today). Ignores date filters.
+	measure 'Enh FYTD' = CALCULATE ( [Inspections FYTD], REMOVEFILTERS ( dim_date ) )
+		formatString: #,0
+		displayFolder: Enhanced
+		lineageTag: 19d345f4-d576-5253-9e75-edf19a4f8dab
+
+	/// Inspections last fiscal year from Apr 1 to the same day one year ago.
+	measure 'Enh LY Same Point' = CALCULATE ( [Inspections Same Time Last FY], REMOVEFILTERS ( dim_date ) )
+		formatString: #,0
+		displayFolder: Enhanced
+		lineageTag: 03bcb9dc-5358-519b-b963-fcfa14eaac13
+
+	/// Inspections in the whole of last fiscal year.
+	measure 'Enh LY Total' = CALCULATE ( [Inspections Prev FY Total], REMOVEFILTERS ( dim_date ) )
+		formatString: #,0
+		displayFolder: Enhanced
+		lineageTag: b5010bd5-d856-5e8c-bb4a-331e42c34201
+
+	/// Service Plan measure 2a: at least 1,600 inspections a year.
+	measure 'Enh Target' = [Inspections Service Plan Target]
+		formatString: #,0
+		displayFolder: Enhanced
+		lineageTag: a54862c1-65ac-5abf-82c3-cb59259a1b26
+
+	measure 'Enh FYTD Change %' = DIVIDE ( [Enh FYTD] - [Enh LY Same Point], [Enh LY Same Point] )
+		formatString: 0%
+		displayFolder: Enhanced
+		lineageTag: 32b50a55-dfc6-5f23-b6d8-add66cbb52a6
+
+	/// Inspections so far in the current calendar month.
+	measure 'Enh Month To Date' = VAR d = TODAY() RETURN CALCULATE ( DISTINCTCOUNT ( fact_inspection[inspection_id] ), REMOVEFILTERS ( dim_date ), fact_inspection[inspection_date] >= DATE ( YEAR ( d ), MONTH ( d ), 1 ), fact_inspection[inspection_date] < d + 1 )
+		formatString: #,0
+		displayFolder: Enhanced
+		lineageTag: fe55a52e-1fc6-557f-95ac-15973e102c01
+
+	/// Inspections in the same whole month last year.
+	measure 'Enh Same Month LY' = VAR d = TODAY() VAR s = DATE ( YEAR ( d ) - 1, MONTH ( d ), 1 ) RETURN CALCULATE ( DISTINCTCOUNT ( fact_inspection[inspection_id] ), REMOVEFILTERS ( dim_date ), fact_inspection[inspection_date] >= s, fact_inspection[inspection_date] < EDATE ( s, 1 ) )
+		formatString: #,0
+		displayFolder: Enhanced
+		lineageTag: e71e521a-ecda-58d3-be5f-72dff99f6036
+
+	measure 'Enh Month Change %' = DIVIDE ( [Enh Month To Date] - [Enh Same Month LY], [Enh Same Month LY] )
+		formatString: 0%
+		displayFolder: Enhanced
+		lineageTag: db64b605-0222-5b4b-9197-433b53ddcaad
+
+	/// Year-end projection: this year so far, scaled by last year's full-year to same-point ratio.
+	measure 'Enh Projected Year End' = ROUND ( DIVIDE ( [Enh FYTD] * [Enh LY Total], [Enh LY Same Point] ), 0 )
+		formatString: #,0
+		displayFolder: Enhanced
+		lineageTag: 0d6bfa5e-0379-511c-8140-f1f891c1aec2
+
+	/// Projected year end minus 1,600.
+	measure 'Enh Projected Gap' = [Enh Projected Year End] - [Enh Target]
+		formatString: +#,0;-#,0;0
+		displayFolder: Enhanced
+		lineageTag: 90ac5bea-1d4e-573f-ac1a-7c0cb8aa6055
+
+	measure 'Enh Months Left' = 12 - [Enh Current Fiscal Month]
+		formatString: 0
+		isHidden
+		displayFolder: Enhanced
+		lineageTag: 25ffa263-aeee-5cd9-8f00-8da908ded026
+
+	/// Inspections needed each remaining month to reach 1,600.
+	measure 'Enh Needed Per Month' = VAR left = [Enh Months Left] RETURN IF ( left > 0, ROUNDUP ( DIVIDE ( MAX ( 0, [Enh Target] - [Enh FYTD] ), left ), 0 ) )
+		formatString: #,0
+		displayFolder: Enhanced
+		lineageTag: 8a67098d-85b3-5e19-b904-d8adff59beac
+
+	/// Last year's average per month over the same remaining months.
+	measure 'Enh LY Per Month Same Stretch' = VAR d = TODAY() VAR fy = IF ( MONTH ( d ) >= 4, YEAR ( d ), YEAR ( d ) - 1 ) VAR fys = DATE ( fy, 4, 1 ) VAR left = [Enh Months Left] VAR cfm = [Enh Current Fiscal Month] VAR lys = DATE ( fy - 1, 4, 1 ) VAR n = CALCULATE ( DISTINCTCOUNT ( fact_inspection[inspection_id] ), REMOVEFILTERS ( dim_date ), fact_inspection[inspection_date] >= EDATE ( lys, cfm ), fact_inspection[inspection_date] < fys ) RETURN IF ( left > 0, ROUND ( DIVIDE ( n, left ), 0 ) )
+		formatString: #,0
+		displayFolder: Enhanced
+		lineageTag: 1bd6af8a-2268-59da-9cd3-b07a97fad3b5
+
+	measure 'Enh Pace Status' = VAR r = DIVIDE ( [Enh Projected Year End], [Enh Target] ) RETURN IF ( r >= 1, "On track", IF ( r >= 0.95, "Slightly behind", "Behind" ) )
+		displayFolder: Enhanced
+		lineageTag: ad0f442e-328c-5c55-9b74-468333075453
+
+	measure 'Enh K1 Value' = FORMAT ( [Enh FYTD], "#,0" )
+		displayFolder: Enhanced
+		lineageTag: aaab507d-0ec1-53eb-8f4f-78b03cdec0dd
+
+	measure 'Enh K1 Pill' = VAR v = [Enh FYTD Change %] RETURN IF ( ISBLANK ( v ), BLANK (), IF ( v >= 0, UNICHAR ( 9650 ) & " " & FORMAT ( ABS ( v ), "0%" ) & " higher", UNICHAR ( 9660 ) & " " & FORMAT ( ABS ( v ), "0%" ) & " lower" ) )
+		displayFolder: Enhanced
+		lineageTag: 3cf42f63-9ff1-5dd0-86cf-f11bcb4997ae
+
+	measure 'Enh K1 Pill Color' = IF ( [Enh FYTD Change %] >= 0, "#1E7B4A", "#A4262C" )
+		isHidden
+		displayFolder: Enhanced
+		lineageTag: 4475a617-acc5-5718-8594-752ed163bfab
+
+	measure 'Enh K1 Pill Tint' = IF ( [Enh FYTD Change %] >= 0, "#E3F2E8", "#FBE7E8" )
+		isHidden
+		displayFolder: Enhanced
+		lineageTag: ecd7a594-4e3a-5a7c-8448-7ed7c20c57c4
+
+	measure 'Enh K1 Compare' = "than " & FORMAT ( [Enh LY Same Point], "#,0" ) & " at this point last year"
+		displayFolder: Enhanced
+		lineageTag: b9cd9299-369d-5e55-af12-9b44224b4840
+
+	measure 'Enh K2 Title' = "IN " & UPPER ( FORMAT ( TODAY (), "MMMM" ) )
+		displayFolder: Enhanced
+		lineageTag: ca8f22eb-0483-5108-a967-010aadb6850c
+
+	measure 'Enh K2 Value' = FORMAT ( [Enh Month To Date], "#,0" )
+		displayFolder: Enhanced
+		lineageTag: 693028ef-41db-517b-ba67-b631a1727d38
+
+	measure 'Enh K2 Pill' = VAR v = [Enh Month Change %] RETURN IF ( ISBLANK ( v ), BLANK (), IF ( v >= 0, UNICHAR ( 9650 ) & " " & FORMAT ( ABS ( v ), "0%" ) & " higher", UNICHAR ( 9660 ) & " " & FORMAT ( ABS ( v ), "0%" ) & " lower" ) )
+		displayFolder: Enhanced
+		lineageTag: 7f6b3a5a-5750-59ea-9101-24eb201bf0cb
+
+	measure 'Enh K2 Pill Color' = IF ( [Enh Month Change %] >= 0, "#1E7B4A", "#A4262C" )
+		isHidden
+		displayFolder: Enhanced
+		lineageTag: b28df502-e35c-5394-82b2-d5c05345fb6c
+
+	measure 'Enh K2 Pill Tint' = IF ( [Enh Month Change %] >= 0, "#E3F2E8", "#FBE7E8" )
+		isHidden
+		displayFolder: Enhanced
+		lineageTag: b2f2afc9-fe20-50f1-8814-bc85941a9c8d
+
+	measure 'Enh K2 Compare' = "than " & FORMAT ( [Enh Same Month LY], "#,0" ) & " in " & FORMAT ( EDATE ( TODAY (), -12 ), "MMMM yyyy" ) & ". Still filling in."
+		displayFolder: Enhanced
+		lineageTag: 92e78e39-be77-5599-834e-ed769cf46732
+
+	measure 'Enh K3 Value' = FORMAT ( [Enh Projected Year End], "#,0" )
+		displayFolder: Enhanced
+		lineageTag: 8bd5391f-9723-5eb6-83ea-f1123764a066
+
+	measure 'Enh K3 Pill' = VAR g = [Enh Projected Gap] RETURN IF ( g >= 0, FORMAT ( g, "#,0" ) & " over", FORMAT ( -g, "#,0" ) & " short" )
+		displayFolder: Enhanced
+		lineageTag: 19117fcf-72ad-547b-a1cb-c12cc30f5da1
+
+	measure 'Enh K3 Pill Color' = IF ( [Enh Projected Gap] >= 0, "#1E7B4A", "#A4262C" )
+		isHidden
+		displayFolder: Enhanced
+		lineageTag: 7348cf02-b05c-5b16-8299-9f47468c48f9
+
+	measure 'Enh K3 Pill Tint' = IF ( [Enh Projected Gap] >= 0, "#E3F2E8", "#FBE7E8" )
+		isHidden
+		displayFolder: Enhanced
+		lineageTag: c6eb3951-052d-5136-b936-93d8b407dd29
+
+	measure 'Enh K3 Compare' = "of " & FORMAT ( [Enh Target], "#,0" ) & ", following last year's pattern"
+		displayFolder: Enhanced
+		lineageTag: 32ff8261-9fb7-5dc7-b836-f3feaa1e44aa
+
+	measure 'Enh K4 Value' = IF ( [Enh Months Left] > 0, FORMAT ( [Enh Needed Per Month], "#,0" ), "–" )
+		displayFolder: Enhanced
+		lineageTag: 8338c06e-8e5f-5152-9fd6-d0ae68784e5f
+
+	measure 'Enh K4 Pill' = VAR g = [Enh Needed Per Month] - [Enh LY Per Month Same Stretch] RETURN IF ( [Enh Months Left] = 0, BLANK (), IF ( g > 0, FORMAT ( g, "#,0" ) & " more a month", IF ( g < 0, FORMAT ( -g, "#,0" ) & " fewer a month", "same as last year" ) ) )
+		displayFolder: Enhanced
+		lineageTag: 1dcd02cd-0322-5f1a-82f1-2b491c781d0b
+
+	measure 'Enh K4 Pill Color' = IF ( [Enh Needed Per Month] > [Enh LY Per Month Same Stretch], "#6B4E00", "#1E7B4A" )
+		isHidden
+		displayFolder: Enhanced
+		lineageTag: 6361e4e8-67b4-5b5a-81f6-6e5e5ea7e8ee
+
+	measure 'Enh K4 Pill Tint' = IF ( [Enh Needed Per Month] > [Enh LY Per Month Same Stretch], "#FFF4D6", "#E3F2E8" )
+		isHidden
+		displayFolder: Enhanced
+		lineageTag: 1dcc00b7-c948-53d3-9b7d-25ae0a38f2f4
+
+	measure 'Enh K4 Compare' = "than last year's " & FORMAT ( [Enh LY Per Month Same Stretch], "#,0" ) & " over the same months"
+		displayFolder: Enhanced
+		lineageTag: 6fbd0a91-bc1b-5b59-8e5d-cbd1215281d8
+
+	/// Running total of inspections this fiscal year, by month.
+	measure 'Enh Cum This Year' = VAR d = TODAY() VAR fy = IF ( MONTH ( d ) >= 4, YEAR ( d ), YEAR ( d ) - 1 ) VAR fys = DATE ( fy, 4, 1 ) VAR mm = MAX ( dim_date[fiscal_month] ) VAR cfm = [Enh Current Fiscal Month] RETURN IF ( mm <= cfm, CALCULATE ( DISTINCTCOUNT ( fact_inspection[inspection_id] ), REMOVEFILTERS ( dim_date ), fact_inspection[inspection_date] >= fys, fact_inspection[inspection_date] < MIN ( EDATE ( fys, mm ), d + 1 ) ) )
+		formatString: #,0
+		displayFolder: Enhanced
+		lineageTag: 06839a54-7d33-5eca-8ee3-435d9f660f38
+
+	/// Share of last year's total done by the end of this fiscal month last year.
+	measure 'Enh LY Cum Share' = VAR d = TODAY() VAR fy = IF ( MONTH ( d ) >= 4, YEAR ( d ), YEAR ( d ) - 1 ) VAR fys = DATE ( fy, 4, 1 ) VAR lys = DATE ( fy - 1, 4, 1 ) VAR mm = MAX ( dim_date[fiscal_month] ) VAR lyc = CALCULATE ( DISTINCTCOUNT ( fact_inspection[inspection_id] ), REMOVEFILTERS ( dim_date ), fact_inspection[inspection_date] >= lys, fact_inspection[inspection_date] < EDATE ( lys, mm ) ) RETURN DIVIDE ( lyc, [Enh LY Total] )
+		formatString: 0.0%
+		isHidden
+		displayFolder: Enhanced
+		lineageTag: a2348c3a-dcf3-592b-8d6b-a2dece0db853
+
+	/// 1,600 spread over the year in last year's monthly pattern.
+	measure 'Enh Pace for 1600' = ROUND ( [Enh Target] * [Enh LY Cum Share], 0 )
+		formatString: #,0
+		displayFolder: Enhanced
+		lineageTag: c0150150-7c50-5734-a648-c6bc799ecb8e
+
+	/// Projected running total from today to year end, following last year's pattern.
+	measure 'Enh Projected Cum' = VAR mm = MAX ( dim_date[fiscal_month] ) VAR cfm = [Enh Current Fiscal Month] VAR shareCur = DIVIDE ( [Enh LY Same Point], [Enh LY Total] ) VAR sh = [Enh LY Cum Share] VAR f = [Enh FYTD] RETURN IF ( mm = cfm, f, IF ( mm > cfm, ROUND ( f + ( [Enh Projected Year End] - f ) * DIVIDE ( MAX ( 0, sh - shareCur ), 1 - shareCur ), 0 ) ) )
+		formatString: #,0
+		displayFolder: Enhanced
+		lineageTag: 2598dc2a-27fe-5549-a939-b677d6a11268
+
+	/// Inspections ahead (+) or behind (-) the 1,600 pace at each month end; March shows the projected year end.
+	measure 'Enh Pace Gap Bar' = VAR mm = MAX ( dim_date[fiscal_month] ) VAR cfm = [Enh Current Fiscal Month] RETURN IF ( mm < cfm, [Enh Cum This Year] - [Enh Pace for 1600], IF ( mm = cfm, [Enh FYTD] - ROUND ( [Enh Target] * DIVIDE ( [Enh LY Same Point], [Enh LY Total] ), 0 ), IF ( mm = 12, [Enh Projected Gap] ) ) )
+		formatString: +#,0;-#,0;0
+		displayFolder: Enhanced
+		lineageTag: 9c56e742-b954-504a-a32c-5022c586d3bf
+
+	measure 'Enh Pace Gap Color' = VAR mm = MAX ( dim_date[fiscal_month] ) VAR cfm = [Enh Current Fiscal Month] VAR g = [Enh Pace Gap Bar] RETURN IF ( mm > cfm, IF ( g >= 0, "#9FD3AE", "#E8A3A0" ), IF ( g >= 0, "#2E8540", "#CE3E39" ) )
+		isHidden
+		displayFolder: Enhanced
+		lineageTag: 30d83ddb-976f-5f00-a233-72844521fd75
+
+	measure 'Enh Coverage Label' = "FY2019/20 to FY" & [Enh Current FY] & "/" & RIGHT ( [Enh Current FY] + 1, 2 ) & " to date"
+		displayFolder: Enhanced
+		lineageTag: 8e907493-b9bd-5cc0-ab84-81abb57dfcb2
+
+	measure 'Enh Alert Label' = "! Some " & FORMAT ( TODAY (), "MMMM" ) & " inspections may still be being entered in NRIS, so the last few weeks may go up a little. Data current through " & FORMAT ( CALCULATE ( MAX ( fact_inspection[inspection_date] ), REMOVEFILTERS () ), "d MMM yyyy" ) & "."
+		displayFolder: Enhanced
+		lineageTag: f1e9d1b4-8b5d-56cd-8d85-111de816bb36
+
+	measure 'Enh H1' = FORMAT ( [Enh FYTD], "#,0" ) & " inspections so far. On last year's curve that lands around " & FORMAT ( [Enh Projected Year End], "#,0" ) & ", which is " & IF ( [Enh Projected Gap] >= 0, FORMAT ( [Enh Projected Gap], "#,0" ) & " over ", FORMAT ( - [Enh Projected Gap], "#,0" ) & " short of " ) & FORMAT ( [Enh Target], "#,0" ) & "."
+		displayFolder: Enhanced
+		lineageTag: accb2cec-c70b-5750-96fa-ce00aef4feb0
+
+	measure 'Enh H1 Sub' = IF ( [Enh Months Left] > 0, "Getting there means about " & FORMAT ( [Enh Needed Per Month], "#,0" ) & " a month from here. Last year we did " & FORMAT ( [Enh LY Per Month Same Stretch], "#,0" ) & " a month over the same stretch.", "Last month of the fiscal year." )
+		displayFolder: Enhanced
+		lineageTag: 4339c6eb-4fda-5885-9f40-2208562e786f
+
+	/// Published inspection totals (reference values from the report design; OCI to confirm).
+	measure 'Enh Published 1' = SWITCH ( SELECTEDVALUE ( dim_date[fiscal_year_label] ), "FY2025/26", 1526, "FY2024/25", 1851, "FY2023/24", 1886 )
+		formatString: #,0
+		isHidden
+		displayFolder: Enhanced
+		lineageTag: 79a45120-4e0f-50c6-98cd-d3892776a6cc
+
+	measure 'Enh Published 2' = SWITCH ( SELECTEDVALUE ( dim_date[fiscal_year_label] ), "FY2024/25", 1878 )
+		formatString: #,0
+		isHidden
+		displayFolder: Enhanced
+		lineageTag: 992deec0-292b-5165-aa48-699a7dda1cfc
+
+	measure 'Enh Has Published' = IF ( NOT ISBLANK ( [Enh Published 1] ), 1, 0 )
+		formatString: 0
+		isHidden
+		displayFolder: Enhanced
+		lineageTag: bf32e125-8574-5eb9-8a7c-abc8f45cdfc3
+
+	measure 'Enh This Report' = IF ( [Enh Has Published] = 1, [Inspections Total] )
+		formatString: #,0
+		displayFolder: Enhanced
+		lineageTag: 41f60936-f037-587f-afbc-fdf6eee39775
+
+	measure 'Enh Published' = IF ( [Enh Has Published] = 1, FORMAT ( [Enh Published 1], "#,0" ) & IF ( NOT ISBLANK ( [Enh Published 2] ), " / " & FORMAT ( [Enh Published 2], "#,0" ) ) )
+		displayFolder: Enhanced
+		lineageTag: 2ecbb3c4-a8f8-50e9-b213-b0d6b0afbc01
+
+	measure 'Enh Published Where' = SWITCH ( SELECTEDVALUE ( dim_date[fiscal_year_label] ), "FY2025/26", "Annual Service Plan Report, Aug 2026", "FY2024/25", "Chief Inspector's annual report / Annual Service Plan Report", "FY2023/24", "Annual Service Plan Report" )
+		displayFolder: Enhanced
+		lineageTag: 957cf299-6cae-5008-b4af-367787909511
+
+	measure 'Enh Published Gap' = VAR t = [Inspections Total] VAR p1 = [Enh Published 1] VAR p2 = [Enh Published 2] VAR g1 = IF ( t < p1, FORMAT ( p1 - t, "#,0" ) & " fewer", IF ( t > p1, FORMAT ( t - p1, "#,0" ) & " more", "same" ) ) VAR g2 = IF ( t < p2, FORMAT ( p2 - t, "#,0" ) & " fewer", IF ( t > p2, FORMAT ( t - p2, "#,0" ) & " more", "same" ) ) RETURN IF ( [Enh Has Published] = 1, g1 & IF ( NOT ISBLANK ( p2 ), " / " & g2 ) )
+		displayFolder: Enhanced
+		lineageTag: 21f3c376-6ef7-5424-8312-247ebe756f0e
+
+	measure 'Enh Published Note' = VAR t = [Inspections Total] VAR p1 = [Enh Published 1] VAR pct = DIVIDE ( ABS ( t - p1 ), p1 ) RETURN IF ( [Enh Has Published] = 1, IF ( NOT ISBLANK ( [Enh Published 2] ), "Two published numbers. OCI to confirm which one counts.", IF ( pct <= 0.003, "Within " & FORMAT ( pct, "0.0%" ), "Checking late NRIS entries" ) ) )
+		displayFolder: Enhanced
+		lineageTag: 6a1c137f-160b-5099-876a-7faf4851f903
+
+	measure 'Enh Published Note Color' = IF ( NOT ISBLANK ( [Enh Published 2] ), "#A4262C", IF ( DIVIDE ( ABS ( [Inspections Total] - [Enh Published 1] ), [Enh Published 1] ) <= 0.003, "#1E7B4A", "#6B4E00" ) )
+		isHidden
+		displayFolder: Enhanced
+		lineageTag: 7f184200-a703-5032-b0e6-a70c270f6ec0
+
+	measure 'Enh LY Published' = CALCULATE ( [Enh Published 1], FILTER ( ALL ( dim_date[fiscal_year_label] ), dim_date[fiscal_year_label] = "FY" & ( [Enh Current FY] - 1 ) & "/" & RIGHT ( [Enh Current FY], 2 ) ) )
+		formatString: #,0
+		isHidden
+		displayFolder: Enhanced
+		lineageTag: 92649584-39f3-5b4b-b5b5-15dd83855ff2
+
+	measure 'Enh LY Published Gap' = [Enh LY Total] - [Enh LY Published]
+		formatString: +#,0;-#,0;0
+		isHidden
+		displayFolder: Enhanced
+		lineageTag: c9e80b58-8204-5d5d-bb03-cd4b9cb8cceb
+
+	measure 'Enh H2' = VAR g = ABS ( [Enh LY Published Gap] ) RETURN IF ( ISBLANK ( [Enh LY Published] ), "No published figure for last year yet.", "Last year's total is " & FORMAT ( g, "#,0" ) & " off the published figure." & IF ( DIVIDE ( g, [Enh LY Published] ) <= 0.01, " Close. But in a briefing, quote the published one.", " In a briefing, quote the published one." ) )
+		displayFolder: Enhanced
+		lineageTag: a9c3a8b0-a059-5204-9d2e-b3e41549e94e
+
+	/// Inspections this fiscal year at major mines.
+	measure 'Enh FYTD Major' = CALCULATE ( [Enh FYTD], dim_mine[major_mine_ind] = TRUE () )
+		formatString: #,0
+		displayFolder: Enhanced
+		lineageTag: c2adeb5b-3a59-5771-883a-5e12e1a24bbc
+
+	/// Inspections this fiscal year at regional (non-major) sites.
+	measure 'Enh FYTD Regional' = CALCULATE ( [Enh FYTD], dim_mine[major_mine_ind] = FALSE () )
+		formatString: #,0
+		displayFolder: Enhanced
+		lineageTag: 99603116-dc79-5e7e-9622-4cf64025e747
+
+	measure 'Enh Regional Share' = DIVIDE ( [Enh FYTD Regional], [Enh FYTD Major] + [Enh FYTD Regional] )
+		formatString: 0%
+		displayFolder: Enhanced
+		lineageTag: 7b5e839a-cde1-5dca-b8ac-d569ef1b3438
+
+	measure 'Enh Top Type' = VAR t = TOPN ( 1, VALUES ( dim_inspection_type[inspection_type_name] ), [Enh FYTD], DESC ) RETURN MAXX ( t, dim_inspection_type[inspection_type_name] )
+		displayFolder: Enhanced
+		lineageTag: d7277b6a-19b1-5152-98dc-825c965cd9c7
+
+	measure 'Enh H3' = VAR s = [Enh Regional Share] VAR w = IF ( s >= 0.72 && s <= 0.78, "Nearly three in four", IF ( s >= 0.62 && s < 0.72, "About two in three", FORMAT ( s, "0%" ) & " of" ) ) RETURN w & " inspections this year were at regional sites. " & [Enh Top Type] & " inspections were the biggest share."
+		displayFolder: Enhanced
+		lineageTag: 07cfa6bc-f575-5e34-a6f7-02b2b4c06b04
+
+	/// Major mines in the CORE register with status Operating.
+	measure 'Enh Major Sites Active' = CALCULATE ( COUNTROWS ( dim_mine ), dim_mine[dl_iscurrent] = TRUE (), dim_mine[mine_operation_status_code] = "OP", dim_mine[major_mine_ind] = TRUE () )
+		formatString: #,0
+		displayFolder: Enhanced
+		lineageTag: d1825ae5-365d-5ab1-a7cd-4975d8f6558a
+
+	/// Operating major mines with at least one inspection in the last 12 months.
+	measure 'Enh Major Sites Visited' = VAR d = TODAY() RETURN CALCULATE ( DISTINCTCOUNT ( fact_inspection[Mine_SK] ), REMOVEFILTERS ( dim_date ), dim_mine[dl_iscurrent] = TRUE (), dim_mine[mine_operation_status_code] = "OP", dim_mine[major_mine_ind] = TRUE (), fact_inspection[inspection_date] >= d - 365, fact_inspection[inspection_date] < d + 1 )
+		formatString: #,0
+		displayFolder: Enhanced
+		lineageTag: e2439e71-0c78-5c9d-8e42-305fde4a715e
+
+	measure 'Enh Major Sites Visited %' = DIVIDE ( [Enh Major Sites Visited], [Enh Major Sites Active] )
+		formatString: 0%
+		displayFolder: Enhanced
+		lineageTag: 12f707da-b246-56d0-aca2-48c408310efb
+
+	measure 'Enh Major Sites Label' = FORMAT ( [Enh Major Sites Visited], "#,0" ) & " of " & FORMAT ( [Enh Major Sites Active], "#,0" )
+		displayFolder: Enhanced
+		lineageTag: 1a673e90-991e-5659-8088-1f3d510a5acb
+
+	/// Operating major sites with no inspection in the last 12 months.
+	measure 'Enh Major Sites Not Visited' = [Enh Major Sites Active] - [Enh Major Sites Visited]
+		formatString: #,0
+		isHidden
+		displayFolder: Enhanced
+		lineageTag: d08ebb31-752e-5ed3-8f7c-dd43346cc1f3
+
+	/// Regional mines in the CORE register with status Operating.
+	measure 'Enh Regional Sites Active' = CALCULATE ( COUNTROWS ( dim_mine ), dim_mine[dl_iscurrent] = TRUE (), dim_mine[mine_operation_status_code] = "OP", dim_mine[major_mine_ind] = FALSE () )
+		formatString: #,0
+		displayFolder: Enhanced
+		lineageTag: 74a65f8a-c5d1-51de-a3fd-54eb67ae3bf4
+
+	/// Operating regional mines with at least one inspection in the last 12 months.
+	measure 'Enh Regional Sites Visited' = VAR d = TODAY() RETURN CALCULATE ( DISTINCTCOUNT ( fact_inspection[Mine_SK] ), REMOVEFILTERS ( dim_date ), dim_mine[dl_iscurrent] = TRUE (), dim_mine[mine_operation_status_code] = "OP", dim_mine[major_mine_ind] = FALSE (), fact_inspection[inspection_date] >= d - 365, fact_inspection[inspection_date] < d + 1 )
+		formatString: #,0
+		displayFolder: Enhanced
+		lineageTag: 32c8b2ac-cd75-5295-a6f4-6b74ed4069b2
+
+	measure 'Enh Regional Sites Visited %' = DIVIDE ( [Enh Regional Sites Visited], [Enh Regional Sites Active] )
+		formatString: 0%
+		displayFolder: Enhanced
+		lineageTag: fb6ec855-f944-5ce4-967e-2e9fc11e1e3e
+
+	measure 'Enh Regional Sites Label' = FORMAT ( [Enh Regional Sites Visited], "#,0" ) & " of " & FORMAT ( [Enh Regional Sites Active], "#,0" )
+		displayFolder: Enhanced
+		lineageTag: 154fef36-aa69-5975-a6a2-204ce7cf2516
+
+	/// Operating regional sites with no inspection in the last 12 months.
+	measure 'Enh Regional Sites Not Visited' = [Enh Regional Sites Active] - [Enh Regional Sites Visited]
+		formatString: #,0
+		isHidden
+		displayFolder: Enhanced
+		lineageTag: 80b1cd31-293c-535a-9538-0b9487b2febe
+
+	/// Inspections this fiscal year old enough (10+ days) for the 7-business-day report rule to apply.
+	measure 'Enh Reports Due FYTD' = VAR s = DATE ( IF ( MONTH ( TODAY () ) >= 4, YEAR ( TODAY () ), YEAR ( TODAY () ) - 1 ), 4, 1 ) VAR e = TODAY () - 9 RETURN CALCULATE ( DISTINCTCOUNT ( fact_inspection[inspection_id] ), REMOVEFILTERS ( dim_date ), fact_inspection[inspection_date] >= s, fact_inspection[inspection_date] < e )
+		formatString: #,0
+		displayFolder: Enhanced
+		lineageTag: 18d7a754-1543-5349-b617-538e264954e2
+
+	/// Of those, reports sent within 7 business days of the inspection (weekends excluded, stat holidays not).
+	measure 'Enh Reports On Time FYTD' = VAR s = DATE ( IF ( MONTH ( TODAY () ) >= 4, YEAR ( TODAY () ), YEAR ( TODAY () ) - 1 ), 4, 1 ) VAR e = TODAY () - 9 RETURN CALCULATE ( SUMX ( FILTER ( fact_inspection, NOT ISBLANK ( fact_inspection[inspection_report_sent_date] ) ), VAR a = fact_inspection[inspection_date] VAR b = fact_inspection[inspection_report_sent_date] RETURN IF ( NETWORKDAYS ( DATE ( YEAR ( a ), MONTH ( a ), DAY ( a ) ), DATE ( YEAR ( b ), MONTH ( b ), DAY ( b ) ) ) - 1 <= 7, 1, 0 ) ), REMOVEFILTERS ( dim_date ), fact_inspection[inspection_date] >= s, fact_inspection[inspection_date] < e )
+		formatString: #,0
+		displayFolder: Enhanced
+		lineageTag: 81c9c6d0-994f-5de5-be92-d64fd596f122
+
+	measure 'Enh Reports Due LY' = VAR s = DATE ( IF ( MONTH ( TODAY () ) >= 4, YEAR ( TODAY () ), YEAR ( TODAY () ) - 1 ) - 1, 4, 1 ) VAR e = DATE ( IF ( MONTH ( TODAY () ) >= 4, YEAR ( TODAY () ), YEAR ( TODAY () ) - 1 ), 4, 1 ) RETURN CALCULATE ( DISTINCTCOUNT ( fact_inspection[inspection_id] ), REMOVEFILTERS ( dim_date ), fact_inspection[inspection_date] >= s, fact_inspection[inspection_date] < e )
+		formatString: #,0
+		isHidden
+		displayFolder: Enhanced
+		lineageTag: c5fc6cf9-05cb-53ce-bcc6-cfce46fb4632
+
+	measure 'Enh Reports On Time LY' = VAR s = DATE ( IF ( MONTH ( TODAY () ) >= 4, YEAR ( TODAY () ), YEAR ( TODAY () ) - 1 ) - 1, 4, 1 ) VAR e = DATE ( IF ( MONTH ( TODAY () ) >= 4, YEAR ( TODAY () ), YEAR ( TODAY () ) - 1 ), 4, 1 ) RETURN CALCULATE ( SUMX ( FILTER ( fact_inspection, NOT ISBLANK ( fact_inspection[inspection_report_sent_date] ) ), VAR a = fact_inspection[inspection_date] VAR b = fact_inspection[inspection_report_sent_date] RETURN IF ( NETWORKDAYS ( DATE ( YEAR ( a ), MONTH ( a ), DAY ( a ) ), DATE ( YEAR ( b ), MONTH ( b ), DAY ( b ) ) ) - 1 <= 7, 1, 0 ) ), REMOVEFILTERS ( dim_date ), fact_inspection[inspection_date] >= s, fact_inspection[inspection_date] < e )
+		formatString: #,0
+		isHidden
+		displayFolder: Enhanced
+		lineageTag: f9bee8db-1ee2-54d7-a0fc-9ed4b820a7c1
+
+	measure 'Enh Reports On Time %' = DIVIDE ( [Enh Reports On Time FYTD], [Enh Reports Due FYTD] )
+		formatString: 0%
+		displayFolder: Enhanced
+		lineageTag: ed26ec79-fdbd-57c7-87ce-e5474fc463d3
+
+	measure 'Enh Reports On Time LY %' = DIVIDE ( [Enh Reports On Time LY], [Enh Reports Due LY] )
+		formatString: 0%
+		displayFolder: Enhanced
+		lineageTag: a43bbc5a-3d6c-58e2-8625-c8379d9a0e59
+
+	measure 'Enh R Value' = FORMAT ( [Enh Reports On Time %], "0%" )
+		displayFolder: Enhanced
+		lineageTag: 9363a069-59cd-5727-9a54-7482cb919454
+
+	measure 'Enh R Pill' = VAR v = ROUND ( ( [Enh Reports On Time %] - [Enh Reports On Time LY %] ) * 100, 0 ) RETURN IF ( ISBLANK ( v ), BLANK (), IF ( v >= 0, UNICHAR ( 9650 ) & " " & FORMAT ( ABS ( v ), "#,0" ) & " points", UNICHAR ( 9660 ) & " " & FORMAT ( ABS ( v ), "#,0" ) & " points" ) )
+		displayFolder: Enhanced
+		lineageTag: 6de80290-77ec-5822-b348-9705351d467f
+
+	measure 'Enh R Pill Color' = IF ( ROUND ( ( [Enh Reports On Time %] - [Enh Reports On Time LY %] ) * 100, 0 ) >= 0, "#1E7B4A", "#A4262C" )
+		isHidden
+		displayFolder: Enhanced
+		lineageTag: 6f9ab3a0-9b2c-5aad-a071-2c2e096d2da9
+
+	measure 'Enh R Pill Tint' = IF ( ROUND ( ( [Enh Reports On Time %] - [Enh Reports On Time LY %] ) * 100, 0 ) >= 0, "#E3F2E8", "#FBE7E8" )
+		isHidden
+		displayFolder: Enhanced
+		lineageTag: 031ad4e4-4749-5fd1-a5e4-332cb18d1d2c
+
+	measure 'Enh R Compare' = FORMAT ( [Enh Reports On Time FYTD], "#,0" ) & " of " & FORMAT ( [Enh Reports Due FYTD], "#,0" ) & ". Last year: " & FORMAT ( [Enh Reports On Time LY %], "0%" ) & "."
+		displayFolder: Enhanced
+		lineageTag: bc0fbcc6-4ddc-552a-b9fd-33142533bc07
+
+	measure 'Enh H4' = FORMAT ( [Enh Reports On Time %], "0%" ) & " of inspection reports went out within 7 business days this year. Last year it was " & FORMAT ( [Enh Reports On Time LY %], "0%" ) & "."
+		displayFolder: Enhanced
+		lineageTag: 174b8fd5-4451-5c64-892f-8b0dd606d6ac
+
+	measure 'Enh Short Version' = SWITCH ( [Enh Current Fiscal Month], 1, "One month", 2, "Two months", 3, "Three months", 4, "Four months", 5, "Five months", 6, "Six months", 7, "Seven months", 8, "Eight months", 9, "Nine months", 10, "Ten months", 11, "Eleven months", "Twelve months" ) & " into the fiscal year, we're " & IF ( [Enh Pace Status] = "On track", "on track for ", LOWER ( [Enh Pace Status] ) & " the pace for " ) & FORMAT ( [Enh Target], "#,0" ) & ". " & FORMAT ( [Enh Reports On Time %], "0%" ) & " of reports went out within 7 business days, and " & FORMAT ( [Enh Regional Share], "0%" ) & " of inspections were at regional sites."
+		displayFolder: Enhanced
+		lineageTag: 80e683dd-9268-503e-b603-0f1bec8f6527
+
+	measure 'Enh S1' = [Enh Pace Status] & ". Heading for about " & FORMAT ( [Enh Projected Year End], "#,0" ) & "."
+		displayFolder: Enhanced
+		lineageTag: 039c5f4a-c909-56a3-93e3-b4bcfb7ab532
+
+	measure 'Enh S2' = IF ( ISBLANK ( [Enh LY Published] ), "No published figure yet.", "Last year's total is " & FORMAT ( ABS ( [Enh LY Published Gap] ), "#,0" ) & " off the published one." )
+		displayFolder: Enhanced
+		lineageTag: 8457364e-c0c9-573c-a0e1-46ac79d19e84
+
+	measure 'Enh S3' = FORMAT ( [Enh Regional Share], "0%" ) & " of inspections at regional sites."
+		displayFolder: Enhanced
+		lineageTag: 6baa3687-2694-5882-828a-654cec9fedc1
+
+	measure 'Enh S4' = FORMAT ( [Enh Reports On Time %], "0%" ) & " of reports sent within 7 business days."
+		displayFolder: Enhanced
+		lineageTag: a8c16636-92da-5ab7-a659-e98ea81d6ced
+
 	column inspection_id
 		dataType: int64
 		formatString: 0
