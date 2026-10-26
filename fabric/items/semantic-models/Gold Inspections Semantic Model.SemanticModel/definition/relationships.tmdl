@@ -10,3 +10,26 @@ relationship fact_inspection_inspection_date_key_dim_date_full_date
 	fromColumn: fact_inspection.inspection_date_key
 	toColumn: dim_date.full_date
 
+relationship ec437a56-3dc7-57be-8dd7-4d7c4bd29f33
+	fromColumn: fact_inspection_order.Mine_SK
+	toColumn: dim_mine.Mine_SK
+
+relationship 322acd15-351f-5208-ac6b-5d0279c231db
+	fromColumn: fact_inspection_order.inspection_type_id
+	toColumn: dim_inspection_type.inspection_type_id
+
+relationship 525ce5fc-56bb-51e9-9c89-afd15c66eba9
+	fromColumn: fact_inspection_order.inspection_date_key
+	toColumn: dim_date.full_date
+
+relationship 17117c78-bc3a-57fd-945c-885d6429cbb4
+	fromColumn: fact_inspection_accompanied.Mine_SK
+	toColumn: dim_mine.Mine_SK
+
+relationship 8c8687cd-b643-55c8-b9fb-286dccd3077a
+	fromColumn: fact_inspection_accompanied.inspection_type_id
+	toColumn: dim_inspection_type.inspection_type_id
+
+relationship 85cdce98-52e1-5dfe-aeac-cf3e818c7a8c
+	fromColumn: fact_inspection_accompanied.inspection_date_key
+	toColumn: dim_date.full_date
