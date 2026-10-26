@@ -19,7 +19,7 @@
               {
                 "textRuns": [
                   {
-                    "value": "Incident",
+                    "value": "Reportable incident",
                     "textStyle": {
                       "fontSize": "11px",
                       "color": "#013366",

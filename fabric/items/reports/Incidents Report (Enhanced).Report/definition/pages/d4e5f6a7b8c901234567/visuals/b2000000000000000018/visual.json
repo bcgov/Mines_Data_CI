@@ -19,7 +19,7 @@
               {
                 "textRuns": [
                   {
-                    "value": "ROLLING 30 DAYS",
+                    "value": "REPORTABLE INCIDENTS \u2014 LAST 30 DAYS",
                     "textStyle": {
                       "fontSize": "8px",
                       "color": "#605E5C",

@@ -19,7 +19,7 @@
               {
                 "textRuns": [
                   {
-                    "value": "Top 5 incident types",
+                    "value": "Top 5 reportable incident types",
                     "textStyle": {
                       "fontSize": "11px",
                       "color": "#013366",

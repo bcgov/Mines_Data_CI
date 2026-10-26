@@ -19,7 +19,7 @@
               {
                 "textRuns": [
                   {
-                    "value": "Incidents per 100 active mines",
+                    "value": "Reportable incidents per 100 active mines",
                     "textStyle": {
                       "fontSize": "10px",
                       "color": "#1F2933",
@@ -32,7 +32,7 @@
               {
                 "textRuns": [
                   {
-                    "value": "Incidents FYTD \u00f7 active mines \u00d7 100",
+                    "value": "Reportable incidents FYTD \u00f7 active mines \u00d7 100",
                     "textStyle": {
                       "fontSize": "8px",
                       "color": "#605E5C",
