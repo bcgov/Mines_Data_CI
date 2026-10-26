@@ -4749,3 +4749,151 @@ FROM public.mine_summary_view',
     @priority = 100,
     @dependency_on = NULL;
 GO
+
+-- NRIS orders + attendees (Inspections Enhanced report, Oct 2026).
+-- Small tables with no update_timestamp, so daily FULL loads like nris.inspection.
+-- Orders link to inspections through inspected_location; attendee_type 8 = First Nations.
+-- nris.inspected_location: links each order to its inspection
+EXEC [app].[usp_upsert_pipeline_control]
+    @pipeline_name = 'pl_ingest_mds',
+    @source_system = 'mds',
+    @source_entity = 'nris.inspected_location',
+    @source_connection_string = NULL,
+    @key_vault_url = 'https://mines-fabric-kv01.vault.azure.net',
+    @target_schema = 'raw/parquet',
+    @target_table = 'nris_inspected_location',
+    @source_query_template = 'SELECT *
+FROM nris.inspected_location',
+    @watermark_column = '',
+    @primary_key = 'inspected_location_id',
+    @load_type = 'FULL',
+    @load_frequency = NULL,
+    @priority = 100,
+    @dependency_on = NULL;
+GO
+-- nris.order_stop_detail: stop orders: status, response, completion date
+EXEC [app].[usp_upsert_pipeline_control]
+    @pipeline_name = 'pl_ingest_mds',
+    @source_system = 'mds',
+    @source_entity = 'nris.order_stop_detail',
+    @source_connection_string = NULL,
+    @key_vault_url = 'https://mines-fabric-kv01.vault.azure.net',
+    @target_schema = 'raw/parquet',
+    @target_table = 'nris_order_stop_detail',
+    @source_query_template = 'SELECT *
+FROM nris.order_stop_detail',
+    @watermark_column = '',
+    @primary_key = 'order_stop_detail_id',
+    @load_type = 'FULL',
+    @load_frequency = NULL,
+    @priority = 100,
+    @dependency_on = NULL;
+GO
+-- nris.order_warning_detail: warning orders
+EXEC [app].[usp_upsert_pipeline_control]
+    @pipeline_name = 'pl_ingest_mds',
+    @source_system = 'mds',
+    @source_entity = 'nris.order_warning_detail',
+    @source_connection_string = NULL,
+    @key_vault_url = 'https://mines-fabric-kv01.vault.azure.net',
+    @target_schema = 'raw/parquet',
+    @target_table = 'nris_order_warning_detail',
+    @source_query_template = 'SELECT *
+FROM nris.order_warning_detail',
+    @watermark_column = '',
+    @primary_key = 'order_warning_detail_id',
+    @load_type = 'FULL',
+    @load_frequency = NULL,
+    @priority = 100,
+    @dependency_on = NULL;
+GO
+-- nris.order_advisory_detail: advisory orders
+EXEC [app].[usp_upsert_pipeline_control]
+    @pipeline_name = 'pl_ingest_mds',
+    @source_system = 'mds',
+    @source_entity = 'nris.order_advisory_detail',
+    @source_connection_string = NULL,
+    @key_vault_url = 'https://mines-fabric-kv01.vault.azure.net',
+    @target_schema = 'raw/parquet',
+    @target_table = 'nris_order_advisory_detail',
+    @source_query_template = 'SELECT *
+FROM nris.order_advisory_detail',
+    @watermark_column = '',
+    @primary_key = 'order_advisory_detail_id',
+    @load_type = 'FULL',
+    @load_frequency = NULL,
+    @priority = 100,
+    @dependency_on = NULL;
+GO
+-- nris.order_request_detail: request orders: response, respond date
+EXEC [app].[usp_upsert_pipeline_control]
+    @pipeline_name = 'pl_ingest_mds',
+    @source_system = 'mds',
+    @source_entity = 'nris.order_request_detail',
+    @source_connection_string = NULL,
+    @key_vault_url = 'https://mines-fabric-kv01.vault.azure.net',
+    @target_schema = 'raw/parquet',
+    @target_table = 'nris_order_request_detail',
+    @source_query_template = 'SELECT *
+FROM nris.order_request_detail',
+    @watermark_column = '',
+    @primary_key = 'order_request_detail_id',
+    @load_type = 'FULL',
+    @load_frequency = NULL,
+    @priority = 100,
+    @dependency_on = NULL;
+GO
+-- nris.noncompliance_legislation: non-compliance against legislation (stop orders)
+EXEC [app].[usp_upsert_pipeline_control]
+    @pipeline_name = 'pl_ingest_mds',
+    @source_system = 'mds',
+    @source_entity = 'nris.noncompliance_legislation',
+    @source_connection_string = NULL,
+    @key_vault_url = 'https://mines-fabric-kv01.vault.azure.net',
+    @target_schema = 'raw/parquet',
+    @target_table = 'nris_noncompliance_legislation',
+    @source_query_template = 'SELECT *
+FROM nris.noncompliance_legislation',
+    @watermark_column = '',
+    @primary_key = 'noncompliance_legislation_id',
+    @load_type = 'FULL',
+    @load_frequency = NULL,
+    @priority = 100,
+    @dependency_on = NULL;
+GO
+-- nris.attendee: inspection attendees: First Nations = accompanied
+EXEC [app].[usp_upsert_pipeline_control]
+    @pipeline_name = 'pl_ingest_mds',
+    @source_system = 'mds',
+    @source_entity = 'nris.attendee',
+    @source_connection_string = NULL,
+    @key_vault_url = 'https://mines-fabric-kv01.vault.azure.net',
+    @target_schema = 'raw/parquet',
+    @target_table = 'nris_attendee',
+    @source_query_template = 'SELECT *
+FROM nris.attendee',
+    @watermark_column = '',
+    @primary_key = 'attendee_id',
+    @load_type = 'FULL',
+    @load_frequency = NULL,
+    @priority = 100,
+    @dependency_on = NULL;
+GO
+-- nris.attendee_type: attendee type lookup
+EXEC [app].[usp_upsert_pipeline_control]
+    @pipeline_name = 'pl_ingest_mds',
+    @source_system = 'mds',
+    @source_entity = 'nris.attendee_type',
+    @source_connection_string = NULL,
+    @key_vault_url = 'https://mines-fabric-kv01.vault.azure.net',
+    @target_schema = 'raw/parquet',
+    @target_table = 'nris_attendee_type',
+    @source_query_template = 'SELECT *
+FROM nris.attendee_type',
+    @watermark_column = '',
+    @primary_key = 'attendee_type_id',
+    @load_type = 'FULL',
+    @load_frequency = NULL,
+    @priority = 100,
+    @dependency_on = NULL;
+GO
