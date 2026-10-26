@@ -378,7 +378,7 @@ table fact_mine_incident
 		lineageTag: 2632cc33-ef58-4eed-b424-8668ad50dff2
 
 	/// Grey text beside the pill.
-	measure 'DOs Period' = FORMAT ( [DO Share FYTD %], "0%" ) & " of incidents"
+	measure 'DOs Period' = FORMAT ( [DO Share FYTD %], "0%" ) & " of reportable incidents"
 		displayFolder: Enhanced
 		lineageTag: 1ac9fea0-7402-4fd8-b622-39233ac40b4c
 
@@ -488,7 +488,7 @@ table fact_mine_incident
 		lineageTag: 9f5dc21b-227d-4c32-b8a7-080ccc468181
 
 	/// Trend chart title.
-	measure 'Trend Title' = "Incidents and Dangerous Occurrences"
+	measure 'Trend Title' = "Reportable incidents and dangerous occurrences"
 		displayFolder: Enhanced
 		lineageTag: 1d971d4c-eeb0-4a3a-a052-fe39aac9cb26
 
@@ -542,7 +542,7 @@ table fact_mine_incident
 		lineageTag: c3962bf0-ca83-4b25-9639-2d1affec2b6f
 
 	/// Panel title.
-	measure 'Top 5 Title' = "Top 5 incident types"
+	measure 'Top 5 Title' = "Top 5 reportable incident types"
 		displayFolder: Enhanced
 		lineageTag: f75b50a7-843b-42fe-b50b-b619cf694764
 
@@ -559,7 +559,7 @@ table fact_mine_incident
 		lineageTag: 321a7cb6-8cb1-42d7-865f-cc95113044d2
 
 	/// Region chart title.
-	measure 'Region Title' = VAR d = TODAY() VAR fyStart = IF ( MONTH ( d ) >= 4, YEAR ( d ), YEAR ( d ) - 1 ) RETURN "Incidents and DOs by region"
+	measure 'Region Title' = VAR d = TODAY() VAR fyStart = IF ( MONTH ( d ) >= 4, YEAR ( d ), YEAR ( d ) - 1 ) RETURN "Reportable incidents and DOs by region"
 		displayFolder: Enhanced
 		lineageTag: bd2a9851-f592-4ebd-a3e6-96988b9885d2
 
