@@ -4898,3 +4898,78 @@ FROM nris.attendee_type',
     @priority = 100,
     @dependency_on = NULL;
 GO
+
+-- NRIS order-category lookups (Inspections Enhanced report, Oct 2026). Small FULL loads.
+-- noncompliance_legislation joins legislation_act / legislation_act_section / compliance article.
+-- nris.noncompliance_permit: permit-condition non-compliance on stop orders
+EXEC [app].[usp_upsert_pipeline_control]
+    @pipeline_name = 'pl_ingest_mds',
+    @source_system = 'mds',
+    @source_entity = 'nris.noncompliance_permit',
+    @source_connection_string = NULL,
+    @key_vault_url = 'https://mines-fabric-kv01.vault.azure.net',
+    @target_schema = 'raw/parquet',
+    @target_table = 'nris_noncompliance_permit',
+    @source_query_template = 'SELECT *
+FROM nris.noncompliance_permit',
+    @watermark_column = '',
+    @primary_key = 'noncompliance_permit_id',
+    @load_type = 'FULL',
+    @load_frequency = NULL,
+    @priority = 100,
+    @dependency_on = NULL;
+GO
+-- nris.legislation_act: act names (Mines Act, Code)
+EXEC [app].[usp_upsert_pipeline_control]
+    @pipeline_name = 'pl_ingest_mds',
+    @source_system = 'mds',
+    @source_entity = 'nris.legislation_act',
+    @source_connection_string = NULL,
+    @key_vault_url = 'https://mines-fabric-kv01.vault.azure.net',
+    @target_schema = 'raw/parquet',
+    @target_table = 'nris_legislation_act',
+    @source_query_template = 'SELECT *
+FROM nris.legislation_act',
+    @watermark_column = '',
+    @primary_key = 'legislation_act_id',
+    @load_type = 'FULL',
+    @load_frequency = NULL,
+    @priority = 100,
+    @dependency_on = NULL;
+GO
+-- nris.legislation_act_section: act sections
+EXEC [app].[usp_upsert_pipeline_control]
+    @pipeline_name = 'pl_ingest_mds',
+    @source_system = 'mds',
+    @source_entity = 'nris.legislation_act_section',
+    @source_connection_string = NULL,
+    @key_vault_url = 'https://mines-fabric-kv01.vault.azure.net',
+    @target_schema = 'raw/parquet',
+    @target_table = 'nris_legislation_act_section',
+    @source_query_template = 'SELECT *
+FROM nris.legislation_act_section',
+    @watermark_column = '',
+    @primary_key = 'legislation_act_section_id',
+    @load_type = 'FULL',
+    @load_frequency = NULL,
+    @priority = 100,
+    @dependency_on = NULL;
+GO
+-- nris.legislation_compliance_article: code articles, used to group orders by category
+EXEC [app].[usp_upsert_pipeline_control]
+    @pipeline_name = 'pl_ingest_mds',
+    @source_system = 'mds',
+    @source_entity = 'nris.legislation_compliance_article',
+    @source_connection_string = NULL,
+    @key_vault_url = 'https://mines-fabric-kv01.vault.azure.net',
+    @target_schema = 'raw/parquet',
+    @target_table = 'nris_legislation_compliance_article',
+    @source_query_template = 'SELECT *
+FROM nris.legislation_compliance_article',
+    @watermark_column = '',
+    @primary_key = 'legislation_compliance_article_id',
+    @load_type = 'FULL',
+    @load_frequency = NULL,
+    @priority = 100,
+    @dependency_on = NULL;
+GO
