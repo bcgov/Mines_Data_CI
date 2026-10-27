@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
   "name": "a1e5f0c0d0e0f0a00026",
   "position": {
-    "x": 24,
-    "y": 328,
+    "x": 21,
+    "y": 325,
     "z": 38,
-    "width": 24,
-    "height": 24,
+    "width": 30,
+    "height": 30,
     "tabOrder": 38
   },
   "visual": {
@@ -21,7 +21,7 @@
                   {
                     "value": "1",
                     "textStyle": {
-                      "fontSize": "11px",
+                      "fontSize": "10px",
                       "color": "#FFFFFF",
                       "fontFamily": "Segoe UI",
                       "fontWeight": "bold"
@@ -92,7 +92,7 @@
             "radius": {
               "expr": {
                 "Literal": {
-                  "Value": "12D"
+                  "Value": "15D"
                 }
               }
             }

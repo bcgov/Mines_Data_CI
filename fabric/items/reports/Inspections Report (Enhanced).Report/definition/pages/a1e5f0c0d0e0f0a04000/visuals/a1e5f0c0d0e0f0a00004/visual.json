@@ -45,19 +45,7 @@
               {
                 "textRuns": [
                   {
-                    "value": "Office of the Chief Inspector (OCI)",
-                    "textStyle": {
-                      "fontSize": "8px",
-                      "color": "#605E5C",
-                      "fontFamily": "Segoe UI"
-                    }
-                  }
-                ]
-              },
-              {
-                "textRuns": [
-                  {
-                    "value": "Contact: Raj Gulati, Nhung Nguyen",
+                    "value": "OCI · Raj Gulati, Nhung Nguyen",
                     "textStyle": {
                       "fontSize": "8px",
                       "color": "#605E5C",
