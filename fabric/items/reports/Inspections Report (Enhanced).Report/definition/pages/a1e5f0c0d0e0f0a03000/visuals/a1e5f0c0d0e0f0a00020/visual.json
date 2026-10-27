@@ -89,6 +89,13 @@
                   "Value": "9D"
                 }
               }
+            },
+            "maxMarginFactor": {
+              "expr": {
+                "Literal": {
+                  "Value": "45D"
+                }
+              }
             }
           }
         }

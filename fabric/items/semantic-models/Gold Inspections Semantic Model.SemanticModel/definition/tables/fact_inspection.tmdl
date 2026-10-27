@@ -897,7 +897,7 @@ table fact_inspection
 		displayFolder: Enhanced
 		lineageTag: 039c5f4a-c909-56a3-93e3-b4bcfb7ab532
 
-	measure 'Enh S2' = IF ( ISBLANK ( [Enh LY Published] ), "No published figure yet.", "Last year's total is " & FORMAT ( ABS ( [Enh LY Published Gap] ), "#,0" ) & " off the published one." )
+	measure 'Enh S2' = IF ( ISBLANK ( [Enh LY Published] ), "No published figure yet.", FORMAT ( ABS ( [Enh LY Published Gap] ), "#,0" ) & " off last year's published total." )
 		displayFolder: Enhanced
 		lineageTag: 8457364e-c0c9-573c-a0e1-46ac79d19e84
 
