@@ -1,0 +1,241 @@
+/// NRIS order items (Stop = formal orders; Warning, Request, Advisory for context), linked to the inspection. Inspections (Enhanced) report.
+table fact_inspection_order
+	lineageTag: ceaf7533-44bf-53a6-8c3c-4508ffe2d8c6
+	sourceLineageTag: [gold].[fact_inspection_order]
+
+	column order_key
+		dataType: string
+		lineageTag: 579eb064-1f10-5115-8953-f55fb4012ce0
+		sourceLineageTag: order_key
+		summarizeBy: none
+		sourceColumn: order_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column order_type
+		dataType: string
+		lineageTag: 058a90d9-1c4c-5f68-905a-4c10b54a248b
+		sourceLineageTag: order_type
+		summarizeBy: none
+		sourceColumn: order_type
+
+		annotation SummarizationSetBy = Automatic
+
+	column order_detail_id
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: fbdc57b7-0623-50b6-863b-a715b1ff3bca
+		sourceLineageTag: order_detail_id
+		summarizeBy: none
+		sourceColumn: order_detail_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column inspected_location_id
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: a5cd7389-226a-5c9b-8157-e00873c88050
+		sourceLineageTag: inspected_location_id
+		summarizeBy: none
+		sourceColumn: inspected_location_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column inspection_id
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: dcf9e77d-5ed8-5c45-bb08-d1e3af0b354a
+		sourceLineageTag: inspection_id
+		summarizeBy: none
+		sourceColumn: inspection_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column order_number
+		dataType: string
+		lineageTag: 55deeceb-a842-5304-8022-79c78b6c4537
+		sourceLineageTag: order_number
+		summarizeBy: none
+		sourceColumn: order_number
+
+		annotation SummarizationSetBy = Automatic
+
+	column stop_type
+		dataType: string
+		lineageTag: fbc6e766-6073-5f48-8035-7c4ca59b0c8e
+		sourceLineageTag: stop_type
+		summarizeBy: none
+		sourceColumn: stop_type
+
+		annotation SummarizationSetBy = Automatic
+
+	column stop_status
+		dataType: string
+		lineageTag: d4dbc48c-6c76-5d78-8991-a17d18f541ab
+		sourceLineageTag: stop_status
+		summarizeBy: none
+		sourceColumn: stop_status
+
+		annotation SummarizationSetBy = Automatic
+
+	column response_status
+		dataType: string
+		lineageTag: e1c966e1-12d7-5a5f-96e9-d8a25f365584
+		sourceLineageTag: response_status
+		summarizeBy: none
+		sourceColumn: response_status
+
+		annotation SummarizationSetBy = Automatic
+
+	column response_received
+		dataType: dateTime
+		formatString: Short Date
+		lineageTag: 25e403b6-de9c-59f7-a213-ef7defe2083d
+		sourceLineageTag: response_received
+		summarizeBy: none
+		sourceColumn: response_received
+
+		annotation SummarizationSetBy = Automatic
+
+	column due_date
+		dataType: dateTime
+		formatString: Short Date
+		lineageTag: de2fe76d-7731-54b1-ad0a-671e779f11d0
+		sourceLineageTag: due_date
+		summarizeBy: none
+		sourceColumn: due_date
+
+		annotation SummarizationSetBy = Automatic
+
+	column order_category
+		dataType: string
+		lineageTag: 14b8a4ad-c58d-5aca-ba3a-07c371e91871
+		sourceLineageTag: order_category
+		summarizeBy: none
+		sourceColumn: order_category
+
+		annotation SummarizationSetBy = Automatic
+
+	column code_section
+		dataType: string
+		lineageTag: d0a4bf70-7a82-5631-aed8-d441394ed439
+		sourceLineageTag: code_section
+		summarizeBy: none
+		sourceColumn: code_section
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_open
+		dataType: int64
+		formatString: 0
+		lineageTag: 885da041-e094-5f01-9af6-5f8124973317
+		sourceLineageTag: is_open
+		summarizeBy: none
+		sourceColumn: is_open
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_closed
+		dataType: int64
+		formatString: 0
+		lineageTag: 62f2794e-6bf4-5cd6-ba5d-7c2c800d2ac4
+		sourceLineageTag: is_closed
+		summarizeBy: none
+		sourceColumn: is_closed
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_response_overdue
+		dataType: int64
+		formatString: 0
+		lineageTag: 2478b230-bc64-5e3d-80ac-22167c7072db
+		sourceLineageTag: is_response_overdue
+		summarizeBy: none
+		sourceColumn: is_response_overdue
+
+		annotation SummarizationSetBy = Automatic
+
+	column days_overdue
+		dataType: int64
+		formatString: 0
+		lineageTag: 3f9de2a2-8dd9-5656-aa3d-eee6afe70dc2
+		sourceLineageTag: days_overdue
+		summarizeBy: none
+		sourceColumn: days_overdue
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_response_on_time
+		dataType: int64
+		formatString: 0
+		lineageTag: b8ff1b11-e934-5f16-8d17-ab2e8b5ec1a4
+		sourceLineageTag: is_response_on_time
+		summarizeBy: none
+		sourceColumn: is_response_on_time
+
+		annotation SummarizationSetBy = Automatic
+
+	column days_to_response
+		dataType: int64
+		formatString: 0
+		lineageTag: 81ce410c-6c18-56f3-a1a8-3085be9d9813
+		sourceLineageTag: days_to_response
+		summarizeBy: none
+		sourceColumn: days_to_response
+
+		annotation SummarizationSetBy = Automatic
+
+	column inspection_date
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 493b07bf-ee78-5616-8ecc-51c3c2236a01
+		sourceLineageTag: inspection_date
+		summarizeBy: none
+		sourceColumn: inspection_date
+
+		annotation SummarizationSetBy = Automatic
+
+	column inspection_date_key
+		dataType: dateTime
+		isHidden
+		formatString: Short Date
+		lineageTag: e72a017b-f34c-524b-b7f8-6feefa79f1ce
+		sourceLineageTag: inspection_date_key
+		summarizeBy: none
+		sourceColumn: inspection_date_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column Mine_SK
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 54ccf0c6-90be-5f55-b40a-62c8b3d22dfa
+		sourceLineageTag: Mine_SK
+		summarizeBy: none
+		sourceColumn: Mine_SK
+
+		annotation SummarizationSetBy = Automatic
+
+	column inspection_type_id
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 2b5541cc-cf53-5120-b22e-db268812f5f0
+		sourceLineageTag: inspection_type_id
+		summarizeBy: none
+		sourceColumn: inspection_type_id
+
+		annotation SummarizationSetBy = Automatic
+
+	partition fact_inspection_order = entity
+		mode: directLake
+		source
+			entityName: fact_inspection_order
+			schemaName: gold
+			expressionSource: DatabaseQuery
+
+	annotation PBI_ResultType = Table

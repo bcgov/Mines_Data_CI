@@ -1,0 +1,77 @@
+/// Inspections with at least one First Nations attendee (accompanied inspections). Inspections (Enhanced) report.
+table fact_inspection_accompanied
+	lineageTag: 193cd3e1-e6d4-5b1b-899f-e846d537e00e
+	sourceLineageTag: [gold].[fact_inspection_accompanied]
+
+	column inspection_id
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 24c83bf2-f0a9-5aca-b93d-1052a221db4a
+		sourceLineageTag: inspection_id
+		summarizeBy: none
+		sourceColumn: inspection_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column first_nations_attendees
+		dataType: int64
+		formatString: 0
+		lineageTag: 49847472-24aa-5814-b1b8-7d3088dd7912
+		sourceLineageTag: first_nations_attendees
+		summarizeBy: none
+		sourceColumn: first_nations_attendees
+
+		annotation SummarizationSetBy = Automatic
+
+	column inspection_date
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 6ec96093-f4bd-57a3-b373-5fe3b2c7f55e
+		sourceLineageTag: inspection_date
+		summarizeBy: none
+		sourceColumn: inspection_date
+
+		annotation SummarizationSetBy = Automatic
+
+	column inspection_date_key
+		dataType: dateTime
+		isHidden
+		formatString: Short Date
+		lineageTag: 10af3dc0-b1db-5784-8e33-1214fbb14344
+		sourceLineageTag: inspection_date_key
+		summarizeBy: none
+		sourceColumn: inspection_date_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column Mine_SK
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 6f546cdc-a34f-55bd-907b-8e031f9e9b7d
+		sourceLineageTag: Mine_SK
+		summarizeBy: none
+		sourceColumn: Mine_SK
+
+		annotation SummarizationSetBy = Automatic
+
+	column inspection_type_id
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 922dd796-9db6-5e98-9454-2ec5b0774206
+		sourceLineageTag: inspection_type_id
+		summarizeBy: none
+		sourceColumn: inspection_type_id
+
+		annotation SummarizationSetBy = Automatic
+
+	partition fact_inspection_accompanied = entity
+		mode: directLake
+		source
+			entityName: fact_inspection_accompanied
+			schemaName: gold
+			expressionSource: DatabaseQuery
+
+	annotation PBI_ResultType = Table
