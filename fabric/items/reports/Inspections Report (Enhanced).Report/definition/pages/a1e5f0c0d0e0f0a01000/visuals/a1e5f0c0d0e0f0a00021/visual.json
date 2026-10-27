@@ -3,7 +3,7 @@
   "name": "a1e5f0c0d0e0f0a00021",
   "position": {
     "x": 994,
-    "y": 254,
+    "y": 256,
     "z": 33,
     "width": 254,
     "height": 44,
@@ -41,7 +41,7 @@
             "fontSize": {
               "expr": {
                 "Literal": {
-                  "Value": "10D"
+                  "Value": "9D"
                 }
               }
             },
