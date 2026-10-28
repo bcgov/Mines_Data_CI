@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
   "name": "a1e5f0c0d0e0f0a00020",
   "position": {
-    "x": 808,
-    "y": 660,
+    "x": 1000,
+    "y": 638,
     "z": 32,
-    "width": 180,
-    "height": 24,
+    "width": 160,
+    "height": 44,
     "tabOrder": 32
   },
   "visual": {
@@ -23,11 +23,11 @@
                       "Entity": "fact_inspection"
                     }
                   },
-                  "Property": "Enh Regional Sites Label"
+                  "Property": "Enh Regional Sites Visited %"
                 }
               },
-              "queryRef": "fact_inspection.Enh Regional Sites Label",
-              "nativeQueryRef": "Enh Regional Sites Label"
+              "queryRef": "fact_inspection.Enh Regional Sites Visited %",
+              "nativeQueryRef": "Enh Regional Sites Visited %"
             }
           ]
         }
@@ -41,7 +41,7 @@
             "fontSize": {
               "expr": {
                 "Literal": {
-                  "Value": "8D"
+                  "Value": "20D"
                 }
               }
             },
@@ -50,7 +50,7 @@
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#605E5C'"
+                      "Value": "'#013366'"
                     }
                   }
                 }
@@ -59,7 +59,7 @@
             "bold": {
               "expr": {
                 "Literal": {
-                  "Value": "false"
+                  "Value": "true"
                 }
               }
             }

@@ -2,18 +2,18 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
   "name": "a1e5f0c0d0e0f0a0001d",
   "position": {
-    "x": 990,
+    "x": 1000,
     "y": 574,
     "z": 29,
-    "width": 500,
+    "width": 160,
     "height": 44,
     "tabOrder": 29
   },
   "visual": {
-    "visualType": "hundredPercentStackedBarChart",
+    "visualType": "card",
     "query": {
       "queryState": {
-        "Y": {
+        "Values": {
           "projections": [
             {
               "field": {
@@ -23,27 +23,11 @@
                       "Entity": "fact_inspection"
                     }
                   },
-                  "Property": "Enh Major Sites Visited"
+                  "Property": "Enh Major Sites Visited %"
                 }
               },
-              "queryRef": "fact_inspection.Enh Major Sites Visited",
-              "nativeQueryRef": "Enh Major Sites Visited",
-              "displayName": "Visited"
-            },
-            {
-              "field": {
-                "Measure": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "fact_inspection"
-                    }
-                  },
-                  "Property": "Enh Major Sites Not Visited"
-                }
-              },
-              "queryRef": "fact_inspection.Enh Major Sites Not Visited",
-              "nativeQueryRef": "Enh Major Sites Not Visited",
-              "displayName": "Not visited"
+              "queryRef": "fact_inspection.Enh Major Sites Visited %",
+              "nativeQueryRef": "Enh Major Sites Visited %"
             }
           ]
         }
@@ -51,62 +35,17 @@
     },
     "drillFilterOtherVisuals": true,
     "objects": {
-      "legend": [
-        {
-          "properties": {
-            "show": {
-              "expr": {
-                "Literal": {
-                  "Value": "false"
-                }
-              }
-            }
-          }
-        }
-      ],
       "labels": [
         {
           "properties": {
-            "show": {
+            "fontSize": {
               "expr": {
                 "Literal": {
-                  "Value": "false"
+                  "Value": "20D"
                 }
               }
-            }
-          }
-        }
-      ],
-      "categoryAxis": [
-        {
-          "properties": {
-            "show": {
-              "expr": {
-                "Literal": {
-                  "Value": "false"
-                }
-              }
-            }
-          }
-        }
-      ],
-      "valueAxis": [
-        {
-          "properties": {
-            "show": {
-              "expr": {
-                "Literal": {
-                  "Value": "false"
-                }
-              }
-            }
-          }
-        }
-      ],
-      "dataPoint": [
-        {
-          "properties": {
-            "fill": {
+            },
+            "color": {
               "solid": {
                 "color": {
                   "expr": {
@@ -116,28 +55,40 @@
                   }
                 }
               }
-            }
-          },
-          "selector": {
-            "metadata": "fact_inspection.Enh Major Sites Visited"
-          }
-        },
-        {
-          "properties": {
-            "fill": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#E6EBF0'"
-                    }
-                  }
+            },
+            "bold": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
                 }
               }
             }
-          },
-          "selector": {
-            "metadata": "fact_inspection.Enh Major Sites Not Visited"
+          }
+        }
+      ],
+      "categoryLabels": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "wordWrap": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
           }
         }
       ]
@@ -157,19 +108,6 @@
         }
       ],
       "border": [
-        {
-          "properties": {
-            "show": {
-              "expr": {
-                "Literal": {
-                  "Value": "false"
-                }
-              }
-            }
-          }
-        }
-      ],
-      "title": [
         {
           "properties": {
             "show": {

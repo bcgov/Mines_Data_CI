@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
   "name": "a1e5f0c0d0e0f0a00024",
   "position": {
-    "x": 1080,
-    "y": 290,
+    "x": 1330,
+    "y": 246,
     "z": 36,
-    "width": 200,
-    "height": 26,
+    "width": 230,
+    "height": 44,
     "tabOrder": 36
   },
   "visual": {
@@ -23,11 +23,11 @@
                       "Entity": "fact_inspection"
                     }
                   },
-                  "Property": "Enh Orders Closed Label"
+                  "Property": "Enh Orders Open Label"
                 }
               },
-              "queryRef": "fact_inspection.Enh Orders Closed Label",
-              "nativeQueryRef": "Enh Orders Closed Label"
+              "queryRef": "fact_inspection.Enh Orders Open Label",
+              "nativeQueryRef": "Enh Orders Open Label"
             }
           ]
         }
@@ -41,7 +41,7 @@
             "fontSize": {
               "expr": {
                 "Literal": {
-                  "Value": "10D"
+                  "Value": "16D"
                 }
               }
             },
@@ -50,7 +50,7 @@
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#2E8540'"
+                      "Value": "'#6B4E00'"
                     }
                   }
                 }
