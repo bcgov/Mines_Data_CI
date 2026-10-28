@@ -2,146 +2,38 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
   "name": "a1e5f0c0d0e0f0a00021",
   "position": {
-    "x": 990,
-    "y": 638,
+    "x": 812,
+    "y": 680,
     "z": 33,
-    "width": 500,
-    "height": 44,
+    "width": 750,
+    "height": 26,
     "tabOrder": 33
   },
   "visual": {
-    "visualType": "hundredPercentStackedBarChart",
-    "query": {
-      "queryState": {
-        "Y": {
-          "projections": [
-            {
-              "field": {
-                "Measure": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "fact_inspection"
-                    }
-                  },
-                  "Property": "Enh Regional Sites Visited"
-                }
-              },
-              "queryRef": "fact_inspection.Enh Regional Sites Visited",
-              "nativeQueryRef": "Enh Regional Sites Visited",
-              "displayName": "Visited"
-            },
-            {
-              "field": {
-                "Measure": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "fact_inspection"
-                    }
-                  },
-                  "Property": "Enh Regional Sites Not Visited"
-                }
-              },
-              "queryRef": "fact_inspection.Enh Regional Sites Not Visited",
-              "nativeQueryRef": "Enh Regional Sites Not Visited",
-              "displayName": "Not visited"
-            }
-          ]
-        }
-      }
-    },
-    "drillFilterOtherVisuals": true,
+    "visualType": "textbox",
     "objects": {
-      "legend": [
+      "general": [
         {
           "properties": {
-            "show": {
-              "expr": {
-                "Literal": {
-                  "Value": "false"
-                }
-              }
-            }
-          }
-        }
-      ],
-      "labels": [
-        {
-          "properties": {
-            "show": {
-              "expr": {
-                "Literal": {
-                  "Value": "false"
-                }
-              }
-            }
-          }
-        }
-      ],
-      "categoryAxis": [
-        {
-          "properties": {
-            "show": {
-              "expr": {
-                "Literal": {
-                  "Value": "false"
-                }
-              }
-            }
-          }
-        }
-      ],
-      "valueAxis": [
-        {
-          "properties": {
-            "show": {
-              "expr": {
-                "Literal": {
-                  "Value": "false"
-                }
-              }
-            }
-          }
-        }
-      ],
-      "dataPoint": [
-        {
-          "properties": {
-            "fill": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#013366'"
+            "paragraphs": [
+              {
+                "textRuns": [
+                  {
+                    "value": "Share of operating sites in the CORE mine register that got at least one inspection.",
+                    "textStyle": {
+                      "fontSize": "8px",
+                      "color": "#605E5C",
+                      "fontFamily": "Segoe UI"
                     }
                   }
-                }
+                ]
               }
-            }
-          },
-          "selector": {
-            "metadata": "fact_inspection.Enh Regional Sites Visited"
-          }
-        },
-        {
-          "properties": {
-            "fill": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#E6EBF0'"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "selector": {
-            "metadata": "fact_inspection.Enh Regional Sites Not Visited"
+            ]
           }
         }
       ]
     },
+    "drillFilterOtherVisuals": true,
     "visualContainerObjects": {
       "background": [
         {
@@ -169,13 +61,34 @@
           }
         }
       ],
-      "title": [
+      "padding": [
         {
           "properties": {
-            "show": {
+            "top": {
               "expr": {
                 "Literal": {
-                  "Value": "false"
+                  "Value": "0D"
+                }
+              }
+            },
+            "bottom": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
+                }
+              }
+            },
+            "left": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
+                }
+              }
+            },
+            "right": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
                 }
               }
             }

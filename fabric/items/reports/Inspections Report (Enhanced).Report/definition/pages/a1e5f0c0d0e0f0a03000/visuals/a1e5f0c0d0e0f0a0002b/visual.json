@@ -2,39 +2,97 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
   "name": "a1e5f0c0d0e0f0a0002b",
   "position": {
-    "x": 58,
-    "y": 594,
+    "x": 54,
+    "y": 614,
     "z": 43,
-    "width": 800,
-    "height": 32,
+    "width": 1520,
+    "height": 36,
     "tabOrder": 43
   },
   "visual": {
-    "visualType": "textbox",
+    "visualType": "card",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fact_inspection"
+                    }
+                  },
+                  "Property": "Enh H5"
+                }
+              },
+              "queryRef": "fact_inspection.Enh H5",
+              "nativeQueryRef": "Enh H5"
+            }
+          ]
+        }
+      }
+    },
+    "drillFilterOtherVisuals": true,
     "objects": {
-      "general": [
+      "labels": [
         {
           "properties": {
-            "paragraphs": [
-              {
-                "textRuns": [
-                  {
-                    "value": "ACCOMPANIED",
-                    "textStyle": {
-                      "fontSize": "9px",
-                      "color": "#013366",
-                      "fontFamily": "Segoe UI",
-                      "fontWeight": "bold"
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "17D"
+                }
+              }
+            },
+            "color": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#013366'"
                     }
                   }
-                ]
+                }
               }
-            ]
+            },
+            "bold": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "categoryLabels": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "wordWrap": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
           }
         }
       ]
     },
-    "drillFilterOtherVisuals": true,
     "visualContainerObjects": {
       "background": [
         {
