@@ -2,18 +2,18 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
   "name": "a1e5f0c0d0e0f0a00023",
   "position": {
-    "x": 1084,
-    "y": 244,
+    "x": 1080,
+    "y": 246,
     "z": 35,
-    "width": 476,
+    "width": 230,
     "height": 44,
     "tabOrder": 35
   },
   "visual": {
-    "visualType": "hundredPercentStackedBarChart",
+    "visualType": "card",
     "query": {
       "queryState": {
-        "Y": {
+        "Values": {
           "projections": [
             {
               "field": {
@@ -23,27 +23,11 @@
                       "Entity": "fact_inspection"
                     }
                   },
-                  "Property": "Enh Orders Closed FYTD"
+                  "Property": "Enh Orders Closed Label"
                 }
               },
-              "queryRef": "fact_inspection.Enh Orders Closed FYTD",
-              "nativeQueryRef": "Enh Orders Closed FYTD",
-              "displayName": "Closed"
-            },
-            {
-              "field": {
-                "Measure": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "fact_inspection"
-                    }
-                  },
-                  "Property": "Enh Orders Open FYTD"
-                }
-              },
-              "queryRef": "fact_inspection.Enh Orders Open FYTD",
-              "nativeQueryRef": "Enh Orders Open FYTD",
-              "displayName": "Open"
+              "queryRef": "fact_inspection.Enh Orders Closed Label",
+              "nativeQueryRef": "Enh Orders Closed Label"
             }
           ]
         }
@@ -51,62 +35,17 @@
     },
     "drillFilterOtherVisuals": true,
     "objects": {
-      "legend": [
-        {
-          "properties": {
-            "show": {
-              "expr": {
-                "Literal": {
-                  "Value": "false"
-                }
-              }
-            }
-          }
-        }
-      ],
       "labels": [
         {
           "properties": {
-            "show": {
+            "fontSize": {
               "expr": {
                 "Literal": {
-                  "Value": "false"
+                  "Value": "16D"
                 }
               }
-            }
-          }
-        }
-      ],
-      "categoryAxis": [
-        {
-          "properties": {
-            "show": {
-              "expr": {
-                "Literal": {
-                  "Value": "false"
-                }
-              }
-            }
-          }
-        }
-      ],
-      "valueAxis": [
-        {
-          "properties": {
-            "show": {
-              "expr": {
-                "Literal": {
-                  "Value": "false"
-                }
-              }
-            }
-          }
-        }
-      ],
-      "dataPoint": [
-        {
-          "properties": {
-            "fill": {
+            },
+            "color": {
               "solid": {
                 "color": {
                   "expr": {
@@ -116,28 +55,40 @@
                   }
                 }
               }
-            }
-          },
-          "selector": {
-            "metadata": "fact_inspection.Enh Orders Closed FYTD"
-          }
-        },
-        {
-          "properties": {
-            "fill": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#FCBA19'"
-                    }
-                  }
+            },
+            "bold": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
                 }
               }
             }
-          },
-          "selector": {
-            "metadata": "fact_inspection.Enh Orders Open FYTD"
+          }
+        }
+      ],
+      "categoryLabels": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "wordWrap": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
           }
         }
       ]
@@ -157,19 +108,6 @@
         }
       ],
       "border": [
-        {
-          "properties": {
-            "show": {
-              "expr": {
-                "Literal": {
-                  "Value": "false"
-                }
-              }
-            }
-          }
-        }
-      ],
-      "title": [
         {
           "properties": {
             "show": {
