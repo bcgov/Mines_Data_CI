@@ -632,37 +632,37 @@ table fact_inspection
 		lineageTag: 6fbd0a91-bc1b-5b59-8e5d-cbd1215281d8
 
 	/// Running total of inspections this fiscal year, by month.
-	measure 'Enh Cum This Year' = VAR d = TODAY() VAR fy = IF ( MONTH ( d ) >= 4, YEAR ( d ), YEAR ( d ) - 1 ) VAR fys = DATE ( fy, 4, 1 ) VAR mm = MAX ( dim_date[fiscal_month] ) VAR cfm = [Enh Current Fiscal Month] RETURN IF ( mm <= cfm, CALCULATE ( DISTINCTCOUNT ( fact_inspection[inspection_id] ), REMOVEFILTERS ( dim_date ), fact_inspection[inspection_date] >= fys, fact_inspection[inspection_date] < MIN ( EDATE ( fys, mm ), d + 1 ) ) )
+	measure 'Enh Cum This Year' = IF ( MAX ( dim_date[fiscal_year] ) <> [Enh Current FY], BLANK (), VAR d = TODAY() VAR fy = IF ( MONTH ( d ) >= 4, YEAR ( d ), YEAR ( d ) - 1 ) VAR fys = DATE ( fy, 4, 1 ) VAR mm = MAX ( dim_date[fiscal_month] ) VAR cfm = [Enh Current Fiscal Month] RETURN IF ( mm <= cfm, CALCULATE ( DISTINCTCOUNT ( fact_inspection[inspection_id] ), REMOVEFILTERS ( dim_date ), DATESBETWEEN ( dim_date[full_date], fys, MIN ( EDATE ( fys, mm ) - 1, d ) ) ) ) )
 		formatString: #,0
 		displayFolder: Enhanced
 		lineageTag: 06839a54-7d33-5eca-8ee3-435d9f660f38
 
 	/// Share of last year's total done by the end of this fiscal month last year.
-	measure 'Enh LY Cum Share' = VAR d = TODAY() VAR fy = IF ( MONTH ( d ) >= 4, YEAR ( d ), YEAR ( d ) - 1 ) VAR fys = DATE ( fy, 4, 1 ) VAR lys = DATE ( fy - 1, 4, 1 ) VAR mm = MAX ( dim_date[fiscal_month] ) VAR lyc = CALCULATE ( DISTINCTCOUNT ( fact_inspection[inspection_id] ), REMOVEFILTERS ( dim_date ), fact_inspection[inspection_date] >= lys, fact_inspection[inspection_date] < EDATE ( lys, mm ) ) RETURN DIVIDE ( lyc, [Enh LY Total] )
+	measure 'Enh LY Cum Share' = VAR d = TODAY() VAR fy = IF ( MONTH ( d ) >= 4, YEAR ( d ), YEAR ( d ) - 1 ) VAR fys = DATE ( fy, 4, 1 ) VAR lys = DATE ( fy - 1, 4, 1 ) VAR mm = MAX ( dim_date[fiscal_month] ) VAR lyc = CALCULATE ( DISTINCTCOUNT ( fact_inspection[inspection_id] ), REMOVEFILTERS ( dim_date ), DATESBETWEEN ( dim_date[full_date], lys, EDATE ( lys, mm ) - 1 ) ) RETURN DIVIDE ( lyc, [Enh LY Total] )
 		formatString: 0.0%
 		isHidden
 		displayFolder: Enhanced
 		lineageTag: a2348c3a-dcf3-592b-8d6b-a2dece0db853
 
 	/// 1,600 spread over the year in last year's monthly pattern.
-	measure 'Enh Pace for 1600' = ROUND ( [Enh Target] * [Enh LY Cum Share], 0 )
+	measure 'Enh Pace for 1600' = IF ( MAX ( dim_date[fiscal_year] ) <> [Enh Current FY], BLANK (), ROUND ( [Enh Target] * [Enh LY Cum Share], 0 ) )
 		formatString: #,0
 		displayFolder: Enhanced
 		lineageTag: c0150150-7c50-5734-a648-c6bc799ecb8e
 
 	/// Projected running total from today to year end, following last year's pattern.
-	measure 'Enh Projected Cum' = VAR mm = MAX ( dim_date[fiscal_month] ) VAR cfm = [Enh Current Fiscal Month] VAR shareCur = DIVIDE ( [Enh LY Same Point], [Enh LY Total] ) VAR sh = [Enh LY Cum Share] VAR f = [Enh FYTD] RETURN IF ( mm = cfm, f, IF ( mm > cfm, ROUND ( f + ( [Enh Projected Year End] - f ) * DIVIDE ( MAX ( 0, sh - shareCur ), 1 - shareCur ), 0 ) ) )
+	measure 'Enh Projected Cum' = IF ( MAX ( dim_date[fiscal_year] ) <> [Enh Current FY], BLANK (), VAR mm = MAX ( dim_date[fiscal_month] ) VAR cfm = [Enh Current Fiscal Month] VAR shareCur = DIVIDE ( [Enh LY Same Point], [Enh LY Total] ) VAR sh = [Enh LY Cum Share] VAR f = [Enh FYTD] RETURN IF ( mm = cfm, f, IF ( mm > cfm, ROUND ( f + ( [Enh Projected Year End] - f ) * DIVIDE ( MAX ( 0, sh - shareCur ), 1 - shareCur ), 0 ) ) ) )
 		formatString: #,0
 		displayFolder: Enhanced
 		lineageTag: 2598dc2a-27fe-5549-a939-b677d6a11268
 
 	/// Inspections ahead (+) or behind (-) the 1,600 pace at each month end; March shows the projected year end.
-	measure 'Enh Pace Gap Bar' = VAR mm = MAX ( dim_date[fiscal_month] ) VAR cfm = [Enh Current Fiscal Month] RETURN IF ( mm < cfm, [Enh Cum This Year] - [Enh Pace for 1600], IF ( mm = cfm, [Enh FYTD] - ROUND ( [Enh Target] * DIVIDE ( [Enh LY Same Point], [Enh LY Total] ), 0 ), IF ( mm = 12, [Enh Projected Gap] ) ) )
+	measure 'Enh Pace Gap Bar' = IF ( MAX ( dim_date[fiscal_year] ) <> [Enh Current FY], BLANK (), VAR mm = MAX ( dim_date[fiscal_month] ) VAR cfm = [Enh Current Fiscal Month] RETURN IF ( mm < cfm, [Enh Cum This Year] - [Enh Pace for 1600], IF ( mm = cfm, [Enh FYTD] - ROUND ( [Enh Target] * DIVIDE ( [Enh LY Same Point], [Enh LY Total] ), 0 ), IF ( mm = 12, [Enh Projected Gap] ) ) ) )
 		formatString: +#,0;-#,0;0
 		displayFolder: Enhanced
 		lineageTag: 9c56e742-b954-504a-a32c-5022c586d3bf
 
-	measure 'Enh Pace Gap Color' = VAR mm = MAX ( dim_date[fiscal_month] ) VAR cfm = [Enh Current Fiscal Month] VAR g = [Enh Pace Gap Bar] RETURN IF ( mm > cfm, IF ( g >= 0, "#9FD3AE", "#E8A3A0" ), IF ( g >= 0, "#2E8540", "#CE3E39" ) )
+	measure 'Enh Pace Gap Color' = IF ( MAX ( dim_date[fiscal_year] ) <> [Enh Current FY], BLANK (), VAR mm = MAX ( dim_date[fiscal_month] ) VAR cfm = [Enh Current Fiscal Month] VAR g = [Enh Pace Gap Bar] RETURN IF ( mm > cfm, IF ( g >= 0, "#9FD3AE", "#E8A3A0" ), IF ( g >= 0, "#2E8540", "#CE3E39" ) ) )
 		isHidden
 		displayFolder: Enhanced
 		lineageTag: 30d83ddb-976f-5f00-a233-72844521fd75
