@@ -3,10 +3,10 @@
   "name": "a1e5f0c0d0e0f0a00028",
   "position": {
     "x": 1084,
-    "y": 420,
+    "y": 428,
     "z": 40,
     "width": 476,
-    "height": 1,
+    "height": 146,
     "tabOrder": 40
   },
   "visual": {
@@ -19,7 +19,51 @@
               {
                 "textRuns": [
                   {
-                    "value": " "
+                    "value": "WHEN IT WENT FURTHER · FY 2024/25",
+                    "textStyle": {
+                      "fontSize": "8px",
+                      "color": "#605E5C",
+                      "fontFamily": "Segoe UI",
+                      "fontWeight": "bold"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "8 penalty decisions, $616,683 in total",
+                    "textStyle": {
+                      "fontSize": "11px",
+                      "color": "#1F2933",
+                      "fontFamily": "Segoe UI",
+                      "fontWeight": "bold"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "18 investigations opened",
+                    "textStyle": {
+                      "fontSize": "11px",
+                      "color": "#1F2933",
+                      "fontFamily": "Segoe UI",
+                      "fontWeight": "bold"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "From the Chief Inspector's annual report (values from the report design; OCI to confirm). This year's figures come out next spring.",
+                    "textStyle": {
+                      "fontSize": "8px",
+                      "color": "#605E5C",
+                      "fontFamily": "Segoe UI"
+                    }
                   }
                 ]
               }
@@ -36,25 +80,7 @@
             "show": {
               "expr": {
                 "Literal": {
-                  "Value": "true"
-                }
-              }
-            },
-            "color": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#D8DDE3'"
-                    }
-                  }
-                }
-              }
-            },
-            "transparency": {
-              "expr": {
-                "Literal": {
-                  "Value": "0D"
+                  "Value": "false"
                 }
               }
             }
@@ -68,6 +94,40 @@
               "expr": {
                 "Literal": {
                   "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "padding": [
+        {
+          "properties": {
+            "top": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
+                }
+              }
+            },
+            "bottom": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
+                }
+              }
+            },
+            "left": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
+                }
+              }
+            },
+            "right": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
                 }
               }
             }

@@ -2,97 +2,38 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
   "name": "a1e5f0c0d0e0f0a00025",
   "position": {
-    "x": 1360,
-    "y": 290,
+    "x": 1084,
+    "y": 312,
     "z": 37,
-    "width": 200,
-    "height": 26,
+    "width": 476,
+    "height": 34,
     "tabOrder": 37
   },
   "visual": {
-    "visualType": "card",
-    "query": {
-      "queryState": {
-        "Values": {
-          "projections": [
-            {
-              "field": {
-                "Measure": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "fact_inspection"
-                    }
-                  },
-                  "Property": "Enh Orders Open Label"
-                }
-              },
-              "queryRef": "fact_inspection.Enh Orders Open Label",
-              "nativeQueryRef": "Enh Orders Open Label"
-            }
-          ]
-        }
-      }
-    },
-    "drillFilterOtherVisuals": true,
+    "visualType": "textbox",
     "objects": {
-      "labels": [
+      "general": [
         {
           "properties": {
-            "fontSize": {
-              "expr": {
-                "Literal": {
-                  "Value": "10D"
-                }
-              }
-            },
-            "color": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#6B4E00'"
+            "paragraphs": [
+              {
+                "textRuns": [
+                  {
+                    "value": "Half of mine responses arrive within",
+                    "textStyle": {
+                      "fontSize": "10px",
+                      "color": "#605E5C",
+                      "fontFamily": "Segoe UI"
                     }
                   }
-                }
+                ]
               }
-            },
-            "bold": {
-              "expr": {
-                "Literal": {
-                  "Value": "true"
-                }
-              }
-            }
-          }
-        }
-      ],
-      "categoryLabels": [
-        {
-          "properties": {
-            "show": {
-              "expr": {
-                "Literal": {
-                  "Value": "false"
-                }
-              }
-            }
-          }
-        }
-      ],
-      "wordWrap": [
-        {
-          "properties": {
-            "show": {
-              "expr": {
-                "Literal": {
-                  "Value": "false"
-                }
-              }
-            }
+            ]
           }
         }
       ]
     },
+    "drillFilterOtherVisuals": true,
     "visualContainerObjects": {
       "background": [
         {
@@ -114,6 +55,40 @@
               "expr": {
                 "Literal": {
                   "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "padding": [
+        {
+          "properties": {
+            "top": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
+                }
+              }
+            },
+            "bottom": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
+                }
+              }
+            },
+            "left": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
+                }
+              }
+            },
+            "right": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
                 }
               }
             }

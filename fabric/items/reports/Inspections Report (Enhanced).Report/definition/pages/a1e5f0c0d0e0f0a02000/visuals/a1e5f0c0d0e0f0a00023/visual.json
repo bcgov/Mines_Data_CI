@@ -3,10 +3,10 @@
   "name": "a1e5f0c0d0e0f0a00023",
   "position": {
     "x": 812,
-    "y": 680,
+    "y": 726,
     "z": 35,
     "width": 750,
-    "height": 26,
+    "height": 154,
     "tabOrder": 35
   },
   "visual": {
@@ -19,11 +19,49 @@
               {
                 "textRuns": [
                   {
-                    "value": "Operating sites in the CORE mine register. Bar shows visited against all operating sites.",
+                    "value": "Why we went",
                     "textStyle": {
-                      "fontSize": "8px",
+                      "fontSize": "13px",
+                      "color": "#1F2933",
+                      "fontFamily": "Segoe UI",
+                      "fontWeight": "bold"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "Planned, reactive or focused. Reactive means we went because of an incident or a complaint.",
+                    "textStyle": {
+                      "fontSize": "10px",
                       "color": "#605E5C",
                       "fontFamily": "Segoe UI"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "NRIS does not record the inspection reason: the field is empty on every inspection and the reason lookup table has no rows. This needs a change in NRIS, not in the platform.",
+                    "textStyle": {
+                      "fontSize": "10px",
+                      "color": "#605E5C",
+                      "fontFamily": "Segoe UI"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "Not recorded in NRIS",
+                    "textStyle": {
+                      "fontSize": "9px",
+                      "color": "#6B4E00",
+                      "fontFamily": "Segoe UI",
+                      "fontWeight": "bold"
                     }
                   }
                 ]
@@ -55,6 +93,40 @@
               "expr": {
                 "Literal": {
                   "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "padding": [
+        {
+          "properties": {
+            "top": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
+                }
+              }
+            },
+            "bottom": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
+                }
+              }
+            },
+            "left": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
+                }
+              }
+            },
+            "right": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
                 }
               }
             }

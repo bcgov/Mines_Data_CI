@@ -3,45 +3,40 @@
   "name": "a1e5f0c0d0e0f0a00027",
   "position": {
     "x": 1084,
-    "y": 352,
+    "y": 420,
     "z": 39,
-    "width": 300,
-    "height": 62,
+    "width": 476,
+    "height": 1,
     "tabOrder": 39
   },
   "visual": {
-    "visualType": "multiRowCard",
-    "query": {
-      "queryState": {
-        "Values": {
-          "projections": [
-            {
-              "field": {
-                "Measure": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "fact_inspection"
-                    }
-                  },
-                  "Property": "Enh Median Days Label"
-                }
-              },
-              "queryRef": "fact_inspection.Enh Median Days Label",
-              "nativeQueryRef": "Enh Median Days Label"
-            }
-          ]
-        }
-      }
-    },
-    "drillFilterOtherVisuals": true,
+    "visualType": "textbox",
     "objects": {
-      "dataLabels": [
+      "general": [
         {
           "properties": {
-            "fontSize": {
+            "paragraphs": [
+              {
+                "textRuns": [
+                  {
+                    "value": " "
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true,
+    "visualContainerObjects": {
+      "background": [
+        {
+          "properties": {
+            "show": {
               "expr": {
                 "Literal": {
-                  "Value": "24D"
+                  "Value": "true"
                 }
               }
             },
@@ -50,98 +45,16 @@
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#013366'"
+                      "Value": "'#D8DDE3'"
                     }
                   }
                 }
               }
             },
-            "bold": {
-              "expr": {
-                "Literal": {
-                  "Value": "true"
-                }
-              }
-            }
-          }
-        }
-      ],
-      "categoryLabels": [
-        {
-          "properties": {
-            "show": {
-              "expr": {
-                "Literal": {
-                  "Value": "false"
-                }
-              }
-            }
-          }
-        }
-      ],
-      "cardTitle": [
-        {
-          "properties": {
-            "show": {
-              "expr": {
-                "Literal": {
-                  "Value": "false"
-                }
-              }
-            }
-          }
-        }
-      ],
-      "card": [
-        {
-          "properties": {
-            "outline": {
-              "expr": {
-                "Literal": {
-                  "Value": "'None'"
-                }
-              }
-            },
-            "outlineWeight": {
+            "transparency": {
               "expr": {
                 "Literal": {
                   "Value": "0D"
-                }
-              }
-            },
-            "barShow": {
-              "expr": {
-                "Literal": {
-                  "Value": "false"
-                }
-              }
-            },
-            "cardPadding": {
-              "expr": {
-                "Literal": {
-                  "Value": "0D"
-                }
-              }
-            },
-            "showBar": {
-              "expr": {
-                "Literal": {
-                  "Value": "false"
-                }
-              }
-            }
-          }
-        }
-      ]
-    },
-    "visualContainerObjects": {
-      "background": [
-        {
-          "properties": {
-            "show": {
-              "expr": {
-                "Literal": {
-                  "Value": "false"
                 }
               }
             }

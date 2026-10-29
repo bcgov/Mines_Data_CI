@@ -2,97 +2,38 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
   "name": "a1e5f0c0d0e0f0a0002c",
   "position": {
-    "x": 54,
-    "y": 614,
+    "x": 58,
+    "y": 646,
     "z": 44,
-    "width": 1520,
-    "height": 36,
+    "width": 1500,
+    "height": 34,
     "tabOrder": 44
   },
   "visual": {
-    "visualType": "card",
-    "query": {
-      "queryState": {
-        "Values": {
-          "projections": [
-            {
-              "field": {
-                "Measure": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "fact_inspection"
-                    }
-                  },
-                  "Property": "Enh H5"
-                }
-              },
-              "queryRef": "fact_inspection.Enh H5",
-              "nativeQueryRef": "Enh H5"
-            }
-          ]
-        }
-      }
-    },
-    "drillFilterOtherVisuals": true,
+    "visualType": "textbox",
     "objects": {
-      "labels": [
+      "general": [
         {
           "properties": {
-            "fontSize": {
-              "expr": {
-                "Literal": {
-                  "Value": "17D"
-                }
-              }
-            },
-            "color": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#013366'"
+            "paragraphs": [
+              {
+                "textRuns": [
+                  {
+                    "value": "These are inspections done alongside representatives of a First Nation, through the Accompanied Inspection Program.",
+                    "textStyle": {
+                      "fontSize": "10px",
+                      "color": "#605E5C",
+                      "fontFamily": "Segoe UI"
                     }
                   }
-                }
+                ]
               }
-            },
-            "bold": {
-              "expr": {
-                "Literal": {
-                  "Value": "true"
-                }
-              }
-            }
-          }
-        }
-      ],
-      "categoryLabels": [
-        {
-          "properties": {
-            "show": {
-              "expr": {
-                "Literal": {
-                  "Value": "false"
-                }
-              }
-            }
-          }
-        }
-      ],
-      "wordWrap": [
-        {
-          "properties": {
-            "show": {
-              "expr": {
-                "Literal": {
-                  "Value": "false"
-                }
-              }
-            }
+            ]
           }
         }
       ]
     },
+    "drillFilterOtherVisuals": true,
     "visualContainerObjects": {
       "background": [
         {
@@ -114,6 +55,40 @@
               "expr": {
                 "Literal": {
                   "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "padding": [
+        {
+          "properties": {
+            "top": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
+                }
+              }
+            },
+            "bottom": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
+                }
+              }
+            },
+            "left": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
+                }
+              }
+            },
+            "right": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
                 }
               }
             }
