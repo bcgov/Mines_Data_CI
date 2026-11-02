@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
   "name": "a1e5f0c0d0e0f0a00029",
   "position": {
-    "x": 20,
-    "y": 598,
+    "x": 1084,
+    "y": 420,
     "z": 41,
-    "width": 34,
-    "height": 34,
+    "width": 476,
+    "height": 1,
     "tabOrder": 41
   },
   "visual": {
@@ -19,16 +19,9 @@
               {
                 "textRuns": [
                   {
-                    "value": "5",
-                    "textStyle": {
-                      "fontSize": "13px",
-                      "color": "#FFFFFF",
-                      "fontFamily": "Segoe UI",
-                      "fontWeight": "bold"
-                    }
+                    "value": " "
                   }
-                ],
-                "horizontalTextAlignment": "center"
+                ]
               }
             ]
           }
@@ -52,7 +45,7 @@
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#013366'"
+                      "Value": "'#D8DDE3'"
                     }
                   }
                 }
@@ -74,59 +67,7 @@
             "show": {
               "expr": {
                 "Literal": {
-                  "Value": "true"
-                }
-              }
-            },
-            "color": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#013366'"
-                    }
-                  }
-                }
-              }
-            },
-            "radius": {
-              "expr": {
-                "Literal": {
-                  "Value": "17D"
-                }
-              }
-            }
-          }
-        }
-      ],
-      "padding": [
-        {
-          "properties": {
-            "top": {
-              "expr": {
-                "Literal": {
-                  "Value": "0D"
-                }
-              }
-            },
-            "bottom": {
-              "expr": {
-                "Literal": {
-                  "Value": "0D"
-                }
-              }
-            },
-            "left": {
-              "expr": {
-                "Literal": {
-                  "Value": "0D"
-                }
-              }
-            },
-            "right": {
-              "expr": {
-                "Literal": {
-                  "Value": "0D"
+                  "Value": "false"
                 }
               }
             }
