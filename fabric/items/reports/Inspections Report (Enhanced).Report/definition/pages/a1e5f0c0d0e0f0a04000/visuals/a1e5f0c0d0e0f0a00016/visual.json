@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
   "name": "a1e5f0c0d0e0f0a00016",
   "position": {
-    "x": 1080,
-    "y": 132,
+    "x": 820,
+    "y": 130,
     "z": 22,
-    "width": 482,
-    "height": 162,
+    "width": 352,
+    "height": 128,
     "tabOrder": 22
   },
   "visual": {
@@ -21,7 +21,7 @@
                   {
                     "value": "Service Plan target",
                     "textStyle": {
-                      "fontSize": "12px",
+                      "fontSize": "11px",
                       "color": "#013366",
                       "fontFamily": "Segoe UI",
                       "fontWeight": "bold"
@@ -34,7 +34,7 @@
                   {
                     "value": "At least 1,600 inspections a year (Service Plan measure 2a).",
                     "textStyle": {
-                      "fontSize": "10px",
+                      "fontSize": "9px",
                       "color": "#1F2933",
                       "fontFamily": "Segoe UI"
                     }
