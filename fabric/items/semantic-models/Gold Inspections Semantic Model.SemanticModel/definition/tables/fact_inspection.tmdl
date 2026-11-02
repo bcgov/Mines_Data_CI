@@ -1091,7 +1091,7 @@ table fact_inspection
 
 	column inspection_date
 		dataType: dateTime
-		formatString: General Date
+		formatString: yyyy-mm-dd
 		sourceProviderType: datetime2
 		lineageTag: 29cc5e8e-c738-4ece-be96-a6eab0401b2f
 		sourceLineageTag: inspection_date
@@ -1135,7 +1135,7 @@ table fact_inspection
 
 	column inspection_report_sent_date
 		dataType: dateTime
-		formatString: General Date
+		formatString: yyyy-mm-dd
 		sourceProviderType: datetime2
 		lineageTag: 7db7f908-7590-4e5c-9578-1902462f8e65
 		sourceLineageTag: inspection_report_sent_date
