@@ -1047,7 +1047,7 @@ table fact_inspection
 		lineageTag: f7853a64-0548-510d-b819-9fa887174f67
 
 	/// Worked example for the pace line, live.
-	measure 'Enh Ex Pace' = VAR cfm = [Enh Current Fiscal Month] VAR lys = DATE ( [Enh Current FY] - 1, 4, 1 ) VAR lyc = CALCULATE ( DISTINCTCOUNT ( fact_inspection[inspection_id] ), REMOVEFILTERS ( dim_date ), DATESBETWEEN ( dim_date[full_date], lys, EDATE ( lys, cfm ) - 1 ) ) VAR sh = DIVIDE ( lyc, [Enh LY Total] ) RETURN "By the end of " & FORMAT ( EDATE ( DATE ( 2000, 4, 1 ), cfm - 1 ), "mmmm" ) & " last year, " & FORMAT ( sh, "0%" ) & " of the year's inspections were done. So the pace for " & FORMAT ( EDATE ( DATE ( 2000, 4, 1 ), cfm - 1 ), "mmmm" ) & " is 1,600 × " & FORMAT ( sh, "0%" ) & " = " & FORMAT ( ROUND ( [Enh Target] * sh, 0 ), "#,0" ) & "."
+	measure 'Enh Ex Pace' = VAR cfm = [Enh Current Fiscal Month] VAR sh = DIVIDE ( [Enh LY Same Point], [Enh LY Total] ) RETURN "By this point last year, " & FORMAT ( sh, "0%" ) & " of the year's inspections were done. So the pace for today is 1,600 × " & FORMAT ( sh, "0%" ) & " = " & FORMAT ( ROUND ( [Enh Target] * sh, 0 ), "#,0" ) & ". At each month end the pace uses that month's share instead."
 		displayFolder: Enhanced
 		lineageTag: 17b5d783-1e2b-5d34-8d17-290ae196ca09
 
