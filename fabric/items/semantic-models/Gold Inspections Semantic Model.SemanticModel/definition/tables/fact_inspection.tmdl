@@ -488,14 +488,20 @@ table fact_inspection
 		displayFolder: Enhanced
 		lineageTag: 32b50a55-dfc6-5f23-b6d8-add66cbb52a6
 
+	/// Today, or the last day of last month when this month has under 3 days of data. Keeps month cards from showing a near-empty month.
+	measure 'Enh Focus Date' = VAR d = TODAY() VAR mstart = DATE ( YEAR ( d ), MONTH ( d ), 1 ) VAR loaded = CALCULATE ( MAX ( fact_inspection[inspection_date] ), REMOVEFILTERS () ) VAR daysIn = IF ( loaded >= mstart, DATEDIFF ( mstart, loaded, DAY ) + 1, 0 ) RETURN IF ( daysIn >= 3, d, mstart - 1 )
+		isHidden
+		displayFolder: Enhanced
+		lineageTag: 8921a439-a00b-57f2-8309-6678795b276f
+
 	/// Inspections so far in the current calendar month.
-	measure 'Enh Month To Date' = VAR d = TODAY() RETURN CALCULATE ( DISTINCTCOUNT ( fact_inspection[inspection_id] ), REMOVEFILTERS ( dim_date ), fact_inspection[inspection_date] >= DATE ( YEAR ( d ), MONTH ( d ), 1 ), fact_inspection[inspection_date] < d + 1 )
+	measure 'Enh Month To Date' = VAR d = [Enh Focus Date] RETURN CALCULATE ( DISTINCTCOUNT ( fact_inspection[inspection_id] ), REMOVEFILTERS ( dim_date ), fact_inspection[inspection_date] >= DATE ( YEAR ( d ), MONTH ( d ), 1 ), fact_inspection[inspection_date] < d + 1 )
 		formatString: #,0
 		displayFolder: Enhanced
 		lineageTag: fe55a52e-1fc6-557f-95ac-15973e102c01
 
 	/// Inspections in the same whole month last year.
-	measure 'Enh Same Month LY' = VAR d = TODAY() VAR s = DATE ( YEAR ( d ) - 1, MONTH ( d ), 1 ) RETURN CALCULATE ( DISTINCTCOUNT ( fact_inspection[inspection_id] ), REMOVEFILTERS ( dim_date ), fact_inspection[inspection_date] >= s, fact_inspection[inspection_date] < EDATE ( s, 1 ) )
+	measure 'Enh Same Month LY' = VAR d = [Enh Focus Date] VAR s = DATE ( YEAR ( d ) - 1, MONTH ( d ), 1 ) RETURN CALCULATE ( DISTINCTCOUNT ( fact_inspection[inspection_id] ), REMOVEFILTERS ( dim_date ), fact_inspection[inspection_date] >= s, fact_inspection[inspection_date] < EDATE ( s, 1 ) )
 		formatString: #,0
 		displayFolder: Enhanced
 		lineageTag: e71e521a-ecda-58d3-be5f-72dff99f6036
@@ -561,7 +567,7 @@ table fact_inspection
 		displayFolder: Enhanced
 		lineageTag: b9cd9299-369d-5e55-af12-9b44224b4840
 
-	measure 'Enh K2 Title' = "IN " & UPPER ( FORMAT ( TODAY (), "MMMM" ) )
+	measure 'Enh K2 Title' = "IN " & UPPER ( FORMAT ( [Enh Focus Date], "MMMM" ) )
 		displayFolder: Enhanced
 		lineageTag: ca8f22eb-0483-5108-a967-010aadb6850c
 
@@ -583,7 +589,7 @@ table fact_inspection
 		displayFolder: Enhanced
 		lineageTag: b2f2afc9-fe20-50f1-8814-bc85941a9c8d
 
-	measure 'Enh K2 Compare' = "than " & FORMAT ( [Enh Same Month LY], "#,0" ) & " in " & FORMAT ( EDATE ( TODAY (), -12 ), "MMMM yyyy" ) & ". Still filling in."
+	measure 'Enh K2 Compare' = "than " & FORMAT ( [Enh Same Month LY], "#,0" ) & " in " & FORMAT ( EDATE ( [Enh Focus Date], -12 ), "MMMM yyyy" ) & IF ( MONTH ( [Enh Focus Date] ) = MONTH ( TODAY () ), ". Still filling in.", ". Full month." )
 		displayFolder: Enhanced
 		lineageTag: 92e78e39-be77-5599-834e-ed769cf46732
 
@@ -632,7 +638,7 @@ table fact_inspection
 		lineageTag: 6fbd0a91-bc1b-5b59-8e5d-cbd1215281d8
 
 	/// Running total of inspections this fiscal year, by month.
-	measure 'Enh Cum This Year' = IF ( MAX ( dim_date[fiscal_year] ) <> [Enh Current FY], BLANK (), VAR d = TODAY() VAR fy = IF ( MONTH ( d ) >= 4, YEAR ( d ), YEAR ( d ) - 1 ) VAR fys = DATE ( fy, 4, 1 ) VAR mm = MAX ( dim_date[fiscal_month] ) VAR cfm = [Enh Current Fiscal Month] RETURN IF ( mm <= cfm, CALCULATE ( DISTINCTCOUNT ( fact_inspection[inspection_id] ), REMOVEFILTERS ( dim_date ), DATESBETWEEN ( dim_date[full_date], fys, MIN ( EDATE ( fys, mm ) - 1, d ) ) ) ) )
+	measure 'Enh Cum This Year' = IF ( MAX ( dim_date[fiscal_year] ) <> [Enh Current FY], BLANK (), VAR d = TODAY() VAR fy = IF ( MONTH ( d ) >= 4, YEAR ( d ), YEAR ( d ) - 1 ) VAR fys = DATE ( fy, 4, 1 ) VAR mm = MAX ( dim_date[fiscal_month] ) VAR cfm = [Enh Current Fiscal Month] VAR live = MONTH ( [Enh Focus Date] ) = MONTH ( d ) RETURN IF ( mm < cfm || ( mm = cfm && live ), CALCULATE ( DISTINCTCOUNT ( fact_inspection[inspection_id] ), REMOVEFILTERS ( dim_date ), DATESBETWEEN ( dim_date[full_date], fys, MIN ( EDATE ( fys, mm ) - 1, d ) ) ) ) )
 		formatString: #,0
 		displayFolder: Enhanced
 		lineageTag: 06839a54-7d33-5eca-8ee3-435d9f660f38
@@ -651,13 +657,13 @@ table fact_inspection
 		lineageTag: c0150150-7c50-5734-a648-c6bc799ecb8e
 
 	/// Projected running total from today to year end, following last year's pattern.
-	measure 'Enh Projected Cum' = IF ( MAX ( dim_date[fiscal_year] ) <> [Enh Current FY], BLANK (), VAR mm = MAX ( dim_date[fiscal_month] ) VAR cfm = [Enh Current Fiscal Month] VAR shareCur = DIVIDE ( [Enh LY Same Point], [Enh LY Total] ) VAR sh = [Enh LY Cum Share] VAR f = [Enh FYTD] RETURN IF ( mm = cfm, f, IF ( mm > cfm, ROUND ( f + ( [Enh Projected Year End] - f ) * DIVIDE ( MAX ( 0, sh - shareCur ), 1 - shareCur ), 0 ) ) ) )
+	measure 'Enh Projected Cum' = IF ( MAX ( dim_date[fiscal_year] ) <> [Enh Current FY], BLANK (), VAR mm = MAX ( dim_date[fiscal_month] ) VAR cfm0 = [Enh Current Fiscal Month] VAR cfm = IF ( MONTH ( [Enh Focus Date] ) = MONTH ( TODAY () ), cfm0, cfm0 - 1 ) VAR shareCur = DIVIDE ( [Enh LY Same Point], [Enh LY Total] ) VAR sh = [Enh LY Cum Share] VAR f = [Enh FYTD] RETURN IF ( mm = cfm, f, IF ( mm > cfm, ROUND ( f + ( [Enh Projected Year End] - f ) * DIVIDE ( MAX ( 0, sh - shareCur ), 1 - shareCur ), 0 ) ) ) )
 		formatString: #,0
 		displayFolder: Enhanced
 		lineageTag: 2598dc2a-27fe-5549-a939-b677d6a11268
 
 	/// Inspections ahead (+) or behind (-) the 1,600 pace at each month end; March shows the projected year end.
-	measure 'Enh Pace Gap Bar' = IF ( MAX ( dim_date[fiscal_year] ) <> [Enh Current FY], BLANK (), VAR mm = MAX ( dim_date[fiscal_month] ) VAR cfm = [Enh Current Fiscal Month] RETURN IF ( mm < cfm, [Enh Cum This Year] - [Enh Pace for 1600], IF ( mm = cfm, [Enh FYTD] - ROUND ( [Enh Target] * DIVIDE ( [Enh LY Same Point], [Enh LY Total] ), 0 ), IF ( mm = 12, [Enh Projected Gap] ) ) ) )
+	measure 'Enh Pace Gap Bar' = IF ( MAX ( dim_date[fiscal_year] ) <> [Enh Current FY], BLANK (), VAR mm = MAX ( dim_date[fiscal_month] ) VAR cfm = [Enh Current Fiscal Month] VAR live = MONTH ( [Enh Focus Date] ) = MONTH ( TODAY () ) RETURN IF ( mm < cfm, [Enh Cum This Year] - [Enh Pace for 1600], IF ( mm = cfm && live, [Enh FYTD] - ROUND ( [Enh Target] * DIVIDE ( [Enh LY Same Point], [Enh LY Total] ), 0 ), IF ( mm = 12, [Enh Projected Gap] ) ) ) )
 		formatString: +#,0;-#,0;0
 		displayFolder: Enhanced
 		lineageTag: 9c56e742-b954-504a-a32c-5022c586d3bf
