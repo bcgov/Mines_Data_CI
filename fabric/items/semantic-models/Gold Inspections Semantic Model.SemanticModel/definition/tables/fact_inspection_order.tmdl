@@ -190,7 +190,7 @@ table fact_inspection_order
 
 	column inspection_date
 		dataType: dateTime
-		formatString: General Date
+		formatString: yyyy-mm-dd
 		lineageTag: 493b07bf-ee78-5616-8ecc-51c3c2236a01
 		sourceLineageTag: inspection_date
 		summarizeBy: none
