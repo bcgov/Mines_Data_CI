@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
   "name": "a1e5f0c0d0e0f0a0001c",
   "position": {
-    "x": 559,
-    "y": 322,
+    "x": 38,
+    "y": 280,
     "z": 28,
-    "width": 482,
-    "height": 162,
+    "width": 352,
+    "height": 128,
     "tabOrder": 28
   },
   "visual": {
@@ -21,7 +21,7 @@
                   {
                     "value": "Pace for 1,600",
                     "textStyle": {
-                      "fontSize": "12px",
+                      "fontSize": "11px",
                       "color": "#013366",
                       "fontFamily": "Segoe UI",
                       "fontWeight": "bold"
@@ -34,7 +34,7 @@
                   {
                     "value": "1,600 spread across the twelve months in the same shares as last year. The ahead/behind bars compare this year's running total with that pace at each month end.",
                     "textStyle": {
-                      "fontSize": "10px",
+                      "fontSize": "9px",
                       "color": "#1F2933",
                       "fontFamily": "Segoe UI"
                     }

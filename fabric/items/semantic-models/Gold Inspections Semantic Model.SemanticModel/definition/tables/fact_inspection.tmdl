@@ -1041,6 +1041,26 @@ table fact_inspection
 		displayFolder: Enhanced
 		lineageTag: 8ddf1fdb-eb7a-54f9-9eb8-364531005c68
 
+	/// Worked example for projected year end, live.
+	measure 'Enh Ex Projected' = "This year so far " & FORMAT ( [Enh FYTD], "#,0" ) & " × ( last year's full total " & FORMAT ( [Enh LY Total], "#,0" ) & " ÷ last year at this point " & FORMAT ( [Enh LY Same Point], "#,0" ) & " ) = " & FORMAT ( [Enh Projected Year End], "#,0" )
+		displayFolder: Enhanced
+		lineageTag: f7853a64-0548-510d-b819-9fa887174f67
+
+	/// Worked example for the pace line, live.
+	measure 'Enh Ex Pace' = VAR cfm = [Enh Current Fiscal Month] VAR lys = DATE ( [Enh Current FY] - 1, 4, 1 ) VAR lyc = CALCULATE ( DISTINCTCOUNT ( fact_inspection[inspection_id] ), REMOVEFILTERS ( dim_date ), DATESBETWEEN ( dim_date[full_date], lys, EDATE ( lys, cfm ) - 1 ) ) VAR sh = DIVIDE ( lyc, [Enh LY Total] ) RETURN "By the end of " & FORMAT ( EDATE ( DATE ( 2000, 4, 1 ), cfm - 1 ), "mmmm" ) & " last year, " & FORMAT ( sh, "0%" ) & " of the year's inspections were done. So the pace for " & FORMAT ( EDATE ( DATE ( 2000, 4, 1 ), cfm - 1 ), "mmmm" ) & " is 1,600 × " & FORMAT ( sh, "0%" ) & " = " & FORMAT ( ROUND ( [Enh Target] * sh, 0 ), "#,0" ) & "."
+		displayFolder: Enhanced
+		lineageTag: 17b5d783-1e2b-5d34-8d17-290ae196ca09
+
+	/// Worked example for the ahead/behind bars, live.
+	measure 'Enh Ex Gap' = VAR cfm = [Enh Current Fiscal Month] VAR pace = ROUND ( [Enh Target] * DIVIDE ( [Enh LY Same Point], [Enh LY Total] ), 0 ) VAR g = [Enh FYTD] - pace RETURN "Running total " & FORMAT ( [Enh FYTD], "#,0" ) & " − pace " & FORMAT ( pace, "#,0" ) & " = " & FORMAT ( g, "+#,0;-#,0;0" ) & " for " & FORMAT ( EDATE ( DATE ( 2000, 4, 1 ), cfm - 1 ), "mmmm" ) & " so far. March shows the projection: " & FORMAT ( [Enh Projected Year End], "#,0" ) & " − 1,600 = " & FORMAT ( [Enh Projected Gap], "+#,0;-#,0;0" ) & "."
+		displayFolder: Enhanced
+		lineageTag: 0f94faf5-8f62-5b8d-9b52-bef31130c14f
+
+	/// Worked example for needed each month, live.
+	measure 'Enh Ex Needed' = "( 1,600 − " & FORMAT ( [Enh FYTD], "#,0" ) & " so far ) ÷ " & FORMAT ( [Enh Months Left], "0" ) & " months left = " & FORMAT ( [Enh Needed Per Month], "#,0" ) & " a month."
+		displayFolder: Enhanced
+		lineageTag: 4ca61a6a-a096-587f-81f8-96986084434e
+
 	column inspection_id
 		dataType: int64
 		formatString: 0

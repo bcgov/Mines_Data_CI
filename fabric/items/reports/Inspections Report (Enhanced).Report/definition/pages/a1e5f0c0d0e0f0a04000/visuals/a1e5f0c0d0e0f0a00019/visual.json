@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
   "name": "a1e5f0c0d0e0f0a00019",
   "position": {
-    "x": 38,
-    "y": 322,
+    "x": 1211,
+    "y": 130,
     "z": 25,
-    "width": 482,
-    "height": 162,
+    "width": 352,
+    "height": 128,
     "tabOrder": 25
   },
   "visual": {
@@ -21,7 +21,7 @@
                   {
                     "value": "Projected year end",
                     "textStyle": {
-                      "fontSize": "12px",
+                      "fontSize": "11px",
                       "color": "#013366",
                       "fontFamily": "Segoe UI",
                       "fontWeight": "bold"
@@ -34,7 +34,7 @@
                   {
                     "value": "This year so far, multiplied by last year's full-year total and divided by last year's total at the same point. It assumes the rest of the year follows last year's monthly pattern.",
                     "textStyle": {
-                      "fontSize": "10px",
+                      "fontSize": "9px",
                       "color": "#1F2933",
                       "fontFamily": "Segoe UI"
                     }
