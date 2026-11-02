@@ -287,7 +287,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Running total minus the 1,600 pace at each month end, not single months. March = projected year end. How it works: Definitions page.'"
+                  "Value": "'Running total vs the 1,600 pace, not single months. March = projected year end.'"
                 }
               }
             },
