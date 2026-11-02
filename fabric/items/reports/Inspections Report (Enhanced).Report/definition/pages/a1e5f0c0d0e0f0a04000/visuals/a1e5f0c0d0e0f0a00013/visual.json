@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
   "name": "a1e5f0c0d0e0f0a00013",
   "position": {
-    "x": 559,
-    "y": 132,
+    "x": 429,
+    "y": 130,
     "z": 19,
-    "width": 482,
-    "height": 162,
+    "width": 352,
+    "height": 128,
     "tabOrder": 19
   },
   "visual": {
@@ -21,7 +21,7 @@
                   {
                     "value": "Fiscal year",
                     "textStyle": {
-                      "fontSize": "12px",
+                      "fontSize": "11px",
                       "color": "#013366",
                       "fontFamily": "Segoe UI",
                       "fontWeight": "bold"
@@ -34,7 +34,7 @@
                   {
                     "value": "1 April to 31 March. 'So far' means 1 April to today. 'Same point last year' means 1 April last year to the same day one year ago.",
                     "textStyle": {
-                      "fontSize": "10px",
+                      "fontSize": "9px",
                       "color": "#1F2933",
                       "fontFamily": "Segoe UI"
                     }
