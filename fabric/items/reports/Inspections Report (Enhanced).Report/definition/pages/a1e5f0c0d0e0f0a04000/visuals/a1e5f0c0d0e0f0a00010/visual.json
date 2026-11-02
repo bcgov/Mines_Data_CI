@@ -3,10 +3,10 @@
   "name": "a1e5f0c0d0e0f0a00010",
   "position": {
     "x": 38,
-    "y": 132,
+    "y": 130,
     "z": 16,
-    "width": 482,
-    "height": 162,
+    "width": 352,
+    "height": 128,
     "tabOrder": 16
   },
   "visual": {
@@ -21,7 +21,7 @@
                   {
                     "value": "Inspection",
                     "textStyle": {
-                      "fontSize": "12px",
+                      "fontSize": "11px",
                       "color": "#013366",
                       "fontFamily": "Segoe UI",
                       "fontWeight": "bold"
@@ -34,7 +34,7 @@
                   {
                     "value": "A site visit, desktop review, compliance review or meeting an inspector records in NRIS. Counted once per inspection ID, on the day of the inspection, not the day the report was finished.",
                     "textStyle": {
-                      "fontSize": "10px",
+                      "fontSize": "9px",
                       "color": "#1F2933",
                       "fontFamily": "Segoe UI"
                     }

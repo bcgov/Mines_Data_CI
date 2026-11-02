@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
   "name": "a1e5f0c0d0e0f0a00022",
   "position": {
-    "x": 38,
-    "y": 512,
+    "x": 820,
+    "y": 280,
     "z": 34,
-    "width": 482,
-    "height": 162,
+    "width": 352,
+    "height": 128,
     "tabOrder": 34
   },
   "visual": {
@@ -21,7 +21,7 @@
                   {
                     "value": "Published numbers",
                     "textStyle": {
-                      "fontSize": "12px",
+                      "fontSize": "11px",
                       "color": "#013366",
                       "fontFamily": "Segoe UI",
                       "fontWeight": "bold"
@@ -34,7 +34,7 @@
                   {
                     "value": "Totals the ministry has already published (Annual Service Plan Report, Chief Inspector's annual report). Values come from the report design; OCI to confirm. In a briefing, quote the published figure.",
                     "textStyle": {
-                      "fontSize": "10px",
+                      "fontSize": "9px",
                       "color": "#1F2933",
                       "fontFamily": "Segoe UI"
                     }
