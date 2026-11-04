@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
   "name": "a1e5f0c0d0e0f0a00013",
   "position": {
-    "x": 429,
-    "y": 130,
+    "x": 415,
+    "y": 124,
     "z": 19,
-    "width": 352,
-    "height": 128,
+    "width": 380,
+    "height": 140,
     "tabOrder": 19
   },
   "visual": {
@@ -19,25 +19,7 @@
               {
                 "textRuns": [
                   {
-                    "value": "Fiscal year",
-                    "textStyle": {
-                      "fontSize": "11px",
-                      "color": "#013366",
-                      "fontFamily": "Segoe UI",
-                      "fontWeight": "bold"
-                    }
-                  }
-                ]
-              },
-              {
-                "textRuns": [
-                  {
-                    "value": "1 April to 31 March. 'So far' means 1 April to today. 'Same point last year' means 1 April last year to the same day one year ago.",
-                    "textStyle": {
-                      "fontSize": "9px",
-                      "color": "#1F2933",
-                      "fontFamily": "Segoe UI"
-                    }
+                    "value": " "
                   }
                 ]
               }
@@ -54,7 +36,25 @@
             "show": {
               "expr": {
                 "Literal": {
-                  "Value": "false"
+                  "Value": "true"
+                }
+              }
+            },
+            "color": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#FFFFFF'"
+                    }
+                  }
+                }
+              }
+            },
+            "transparency": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
                 }
               }
             }
@@ -67,41 +67,25 @@
             "show": {
               "expr": {
                 "Literal": {
-                  "Value": "false"
-                }
-              }
-            }
-          }
-        }
-      ],
-      "padding": [
-        {
-          "properties": {
-            "top": {
-              "expr": {
-                "Literal": {
-                  "Value": "0D"
+                  "Value": "true"
                 }
               }
             },
-            "bottom": {
-              "expr": {
-                "Literal": {
-                  "Value": "0D"
+            "color": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#D8DDE3'"
+                    }
+                  }
                 }
               }
             },
-            "left": {
+            "radius": {
               "expr": {
                 "Literal": {
-                  "Value": "0D"
-                }
-              }
-            },
-            "right": {
-              "expr": {
-                "Literal": {
-                  "Value": "0D"
+                  "Value": "6D"
                 }
               }
             }

@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
   "name": "a1e5f0c0d0e0f0a0002d",
   "position": {
-    "x": 806,
-    "y": 424,
+    "x": 429,
+    "y": 430,
     "z": 45,
-    "width": 4,
-    "height": 140,
+    "width": 352,
+    "height": 128,
     "tabOrder": 45
   },
   "visual": {
@@ -19,7 +19,25 @@
               {
                 "textRuns": [
                   {
-                    "value": " "
+                    "value": "Orders and mine responses",
+                    "textStyle": {
+                      "fontSize": "11px",
+                      "color": "#013366",
+                      "fontFamily": "Segoe UI",
+                      "fontWeight": "bold"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "An order is an item on a Mines Act inspection order (NRIS stop order detail). Category comes from the Code part it cites: 4, 5, 7 mechanical and electrical; 6 ground control; 10 reclamation; permits; else health and safety. On time = mine response by the order's due date. Overdue counts inspections in the last 12 months.",
+                    "textStyle": {
+                      "fontSize": "9px",
+                      "color": "#1F2933",
+                      "fontFamily": "Segoe UI"
+                    }
                   }
                 ]
               }
@@ -36,25 +54,7 @@
             "show": {
               "expr": {
                 "Literal": {
-                  "Value": "true"
-                }
-              }
-            },
-            "color": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#013366'"
-                    }
-                  }
-                }
-              }
-            },
-            "transparency": {
-              "expr": {
-                "Literal": {
-                  "Value": "0D"
+                  "Value": "false"
                 }
               }
             }
@@ -68,6 +68,40 @@
               "expr": {
                 "Literal": {
                   "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "padding": [
+        {
+          "properties": {
+            "top": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
+                }
+              }
+            },
+            "bottom": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
+                }
+              }
+            },
+            "left": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
+                }
+              }
+            },
+            "right": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
                 }
               }
             }

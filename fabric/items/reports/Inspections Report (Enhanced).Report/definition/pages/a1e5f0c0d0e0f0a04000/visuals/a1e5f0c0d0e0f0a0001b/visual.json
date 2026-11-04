@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
   "name": "a1e5f0c0d0e0f0a0001b",
   "position": {
-    "x": 24,
-    "y": 274,
+    "x": 1211,
+    "y": 130,
     "z": 27,
-    "width": 4,
-    "height": 140,
+    "width": 352,
+    "height": 128,
     "tabOrder": 27
   },
   "visual": {
@@ -19,7 +19,25 @@
               {
                 "textRuns": [
                   {
-                    "value": " "
+                    "value": "Projected year end",
+                    "textStyle": {
+                      "fontSize": "11px",
+                      "color": "#013366",
+                      "fontFamily": "Segoe UI",
+                      "fontWeight": "bold"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "This year so far, multiplied by last year's full-year total and divided by last year's total at the same point. It assumes the rest of the year follows last year's monthly pattern.",
+                    "textStyle": {
+                      "fontSize": "9px",
+                      "color": "#1F2933",
+                      "fontFamily": "Segoe UI"
+                    }
                   }
                 ]
               }
@@ -36,25 +54,7 @@
             "show": {
               "expr": {
                 "Literal": {
-                  "Value": "true"
-                }
-              }
-            },
-            "color": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#013366'"
-                    }
-                  }
-                }
-              }
-            },
-            "transparency": {
-              "expr": {
-                "Literal": {
-                  "Value": "0D"
+                  "Value": "false"
                 }
               }
             }
@@ -68,6 +68,40 @@
               "expr": {
                 "Literal": {
                   "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "padding": [
+        {
+          "properties": {
+            "top": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
+                }
+              }
+            },
+            "bottom": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
+                }
+              }
+            },
+            "left": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
+                }
+              }
+            },
+            "right": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
                 }
               }
             }

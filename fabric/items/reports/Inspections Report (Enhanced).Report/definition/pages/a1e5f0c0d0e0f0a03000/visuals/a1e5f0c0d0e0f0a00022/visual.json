@@ -2,8 +2,8 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
   "name": "a1e5f0c0d0e0f0a00022",
   "position": {
-    "x": 930,
-    "y": 206,
+    "x": 398,
+    "y": 470,
     "z": 34,
     "width": 116,
     "height": 26,
@@ -205,7 +205,7 @@
             "navigationSection": {
               "expr": {
                 "Literal": {
-                  "Value": "'a1e5f0c0d0e0f0a06000'"
+                  "Value": "'a1e5f0c0d0e0f0a07000'"
                 }
               }
             },

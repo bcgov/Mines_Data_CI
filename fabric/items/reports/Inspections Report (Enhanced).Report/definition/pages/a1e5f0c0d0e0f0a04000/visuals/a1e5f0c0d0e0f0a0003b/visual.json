@@ -3,7 +3,7 @@
   "name": "a1e5f0c0d0e0f0a0003b",
   "position": {
     "x": 296,
-    "y": 732,
+    "y": 686,
     "z": 59,
     "width": 1264,
     "height": 44,
@@ -23,11 +23,11 @@
                       "Entity": "fact_inspection"
                     }
                   },
-                  "Property": "Enh Ex Gap"
+                  "Property": "Enh Ex Pace"
                 }
               },
-              "queryRef": "fact_inspection.Enh Ex Gap",
-              "nativeQueryRef": "Enh Ex Gap"
+              "queryRef": "fact_inspection.Enh Ex Pace",
+              "nativeQueryRef": "Enh Ex Pace"
             }
           ]
         }
