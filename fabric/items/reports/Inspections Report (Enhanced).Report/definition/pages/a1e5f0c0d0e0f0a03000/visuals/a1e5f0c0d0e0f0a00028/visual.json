@@ -2,15 +2,15 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
   "name": "a1e5f0c0d0e0f0a00028",
   "position": {
-    "x": 1084,
-    "y": 344,
+    "x": 1330,
+    "y": 246,
     "z": 40,
-    "width": 300,
-    "height": 66,
+    "width": 230,
+    "height": 44,
     "tabOrder": 40
   },
   "visual": {
-    "visualType": "multiRowCard",
+    "visualType": "card",
     "query": {
       "queryState": {
         "Values": {
@@ -23,11 +23,11 @@
                       "Entity": "fact_inspection"
                     }
                   },
-                  "Property": "Enh Median Days Label"
+                  "Property": "Enh Orders Open Label"
                 }
               },
-              "queryRef": "fact_inspection.Enh Median Days Label",
-              "nativeQueryRef": "Enh Median Days Label"
+              "queryRef": "fact_inspection.Enh Orders Open Label",
+              "nativeQueryRef": "Enh Orders Open Label"
             }
           ]
         }
@@ -35,13 +35,13 @@
     },
     "drillFilterOtherVisuals": true,
     "objects": {
-      "dataLabels": [
+      "labels": [
         {
           "properties": {
             "fontSize": {
               "expr": {
                 "Literal": {
-                  "Value": "24D"
+                  "Value": "16D"
                 }
               }
             },
@@ -50,7 +50,7 @@
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#013366'"
+                      "Value": "'#6B4E00'"
                     }
                   }
                 }
@@ -79,51 +79,10 @@
           }
         }
       ],
-      "cardTitle": [
+      "wordWrap": [
         {
           "properties": {
             "show": {
-              "expr": {
-                "Literal": {
-                  "Value": "false"
-                }
-              }
-            }
-          }
-        }
-      ],
-      "card": [
-        {
-          "properties": {
-            "outline": {
-              "expr": {
-                "Literal": {
-                  "Value": "'None'"
-                }
-              }
-            },
-            "outlineWeight": {
-              "expr": {
-                "Literal": {
-                  "Value": "0D"
-                }
-              }
-            },
-            "barShow": {
-              "expr": {
-                "Literal": {
-                  "Value": "false"
-                }
-              }
-            },
-            "cardPadding": {
-              "expr": {
-                "Literal": {
-                  "Value": "0D"
-                }
-              }
-            },
-            "showBar": {
               "expr": {
                 "Literal": {
                   "Value": "false"

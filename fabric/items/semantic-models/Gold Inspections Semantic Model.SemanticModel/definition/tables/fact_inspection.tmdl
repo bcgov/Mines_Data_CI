@@ -1058,7 +1058,7 @@ table fact_inspection
 		lineageTag: 17b5d783-1e2b-5d34-8d17-290ae196ca09
 
 	/// Worked example for the ahead/behind bars, live.
-	measure 'Enh Ex Gap' = VAR cfm = [Enh Current Fiscal Month] VAR pace = ROUND ( [Enh Target] * DIVIDE ( [Enh LY Same Point], [Enh LY Total] ), 0 ) VAR g = [Enh FYTD] - pace RETURN "Running total " & FORMAT ( [Enh FYTD], "#,0" ) & " − pace " & FORMAT ( pace, "#,0" ) & " = " & FORMAT ( g, "+#,0;-#,0;0" ) & " for " & FORMAT ( EDATE ( DATE ( 2000, 4, 1 ), cfm - 1 ), "mmmm" ) & " so far. March shows the projection: " & FORMAT ( [Enh Projected Year End], "#,0" ) & " − 1,600 = " & FORMAT ( [Enh Projected Gap], "+#,0;-#,0;0" ) & "."
+	measure 'Enh Ex Gap' = VAR d = [Enh Focus Date] VAR live = MONTH ( d ) = MONTH ( TODAY () ) VAR fy = IF ( MONTH ( d ) >= 4, YEAR ( d ), YEAR ( d ) - 1 ) VAR fys = DATE ( fy, 4, 1 ) VAR run = CALCULATE ( DISTINCTCOUNT ( fact_inspection[inspection_id] ), REMOVEFILTERS ( dim_date ), fact_inspection[inspection_date] >= fys, fact_inspection[inspection_date] < d + 1 ) VAR lyPt = CALCULATE ( DISTINCTCOUNT ( fact_inspection[inspection_id] ), REMOVEFILTERS ( dim_date ), fact_inspection[inspection_date] >= EDATE ( fys, -12 ), fact_inspection[inspection_date] < EDATE ( d, -12 ) + 1 ) VAR pace = ROUND ( [Enh Target] * DIVIDE ( lyPt, [Enh LY Total] ), 0 ) VAR g = run - pace RETURN "Running total " & FORMAT ( run, "#,0" ) & " − pace " & FORMAT ( pace, "#,0" ) & " = " & FORMAT ( g, "+#,0;-#,0;0" ) & " for " & FORMAT ( d, "mmmm" ) & IF ( live, " so far. ", " (full month). " ) & "March shows the projection: " & FORMAT ( [Enh Projected Year End], "#,0" ) & " − 1,600 = " & FORMAT ( [Enh Projected Gap], "+#,0;-#,0;0" ) & "."
 		displayFolder: Enhanced
 		lineageTag: 0f94faf5-8f62-5b8d-9b52-bef31130c14f
 

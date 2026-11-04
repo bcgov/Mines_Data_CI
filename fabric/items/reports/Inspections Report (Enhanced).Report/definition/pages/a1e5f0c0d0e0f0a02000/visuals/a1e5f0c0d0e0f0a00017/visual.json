@@ -3,10 +3,10 @@
   "name": "a1e5f0c0d0e0f0a00017",
   "position": {
     "x": 58,
-    "y": 496,
+    "y": 444,
     "z": 23,
-    "width": 1500,
-    "height": 34,
+    "width": 800,
+    "height": 32,
     "tabOrder": 23
   },
   "visual": {
@@ -19,11 +19,12 @@
               {
                 "textRuns": [
                   {
-                    "value": "Major mines get a visit almost every year. Most regional sites don't, and that's how the risk-based plan is meant to work.",
+                    "value": "WHERE THE EFFORT WENT",
                     "textStyle": {
-                      "fontSize": "10px",
-                      "color": "#605E5C",
-                      "fontFamily": "Segoe UI"
+                      "fontSize": "9px",
+                      "color": "#013366",
+                      "fontFamily": "Segoe UI",
+                      "fontWeight": "bold"
                     }
                   }
                 ]

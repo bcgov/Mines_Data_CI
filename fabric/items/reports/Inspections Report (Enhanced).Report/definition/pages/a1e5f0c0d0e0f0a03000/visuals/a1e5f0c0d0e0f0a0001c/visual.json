@@ -2,41 +2,46 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
   "name": "a1e5f0c0d0e0f0a0001c",
   "position": {
-    "x": 24,
-    "y": 464,
+    "x": 30,
+    "y": 420,
     "z": 28,
-    "width": 4,
-    "height": 118,
+    "width": 488,
+    "height": 28,
     "tabOrder": 28
   },
   "visual": {
-    "visualType": "textbox",
-    "objects": {
-      "general": [
-        {
-          "properties": {
-            "paragraphs": [
-              {
-                "textRuns": [
-                  {
-                    "value": " "
-                  }
-                ]
-              }
-            ]
-          }
+    "visualType": "card",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fact_inspection"
+                    }
+                  },
+                  "Property": "Enh R2 Compare"
+                }
+              },
+              "queryRef": "fact_inspection.Enh R2 Compare",
+              "nativeQueryRef": "Enh R2 Compare"
+            }
+          ]
         }
-      ]
+      }
     },
     "drillFilterOtherVisuals": true,
-    "visualContainerObjects": {
-      "background": [
+    "objects": {
+      "labels": [
         {
           "properties": {
-            "show": {
+            "fontSize": {
               "expr": {
                 "Literal": {
-                  "Value": "true"
+                  "Value": "8D"
                 }
               }
             },
@@ -45,16 +50,57 @@
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#CE3E39'"
+                      "Value": "'#605E5C'"
                     }
                   }
                 }
               }
             },
-            "transparency": {
+            "bold": {
               "expr": {
                 "Literal": {
-                  "Value": "0D"
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "categoryLabels": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "wordWrap": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "visualContainerObjects": {
+      "background": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
                 }
               }
             }

@@ -2,49 +2,19 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
   "name": "a1e5f0c0d0e0f0a00017",
   "position": {
-    "x": 24,
-    "y": 252,
+    "x": 508,
+    "y": 184,
     "z": 23,
-    "width": 1552,
-    "height": 632,
+    "width": 290,
+    "height": 58,
     "tabOrder": 23
   },
   "visual": {
-    "visualType": "tableEx",
+    "visualType": "slicer",
     "query": {
       "queryState": {
         "Values": {
           "projections": [
-            {
-              "field": {
-                "Column": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "fact_inspection_order"
-                    }
-                  },
-                  "Property": "inspection_date"
-                }
-              },
-              "queryRef": "fact_inspection_order.inspection_date",
-              "nativeQueryRef": "inspection_date",
-              "displayName": "Inspection date"
-            },
-            {
-              "field": {
-                "Column": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "fact_inspection_order"
-                    }
-                  },
-                  "Property": "inspection_id"
-                }
-              },
-              "queryRef": "fact_inspection_order.inspection_id",
-              "nativeQueryRef": "inspection_id",
-              "displayName": "Inspection ID"
-            },
             {
               "field": {
                 "Column": {
@@ -58,431 +28,27 @@
               },
               "queryRef": "dim_mine.mine_name",
               "nativeQueryRef": "mine_name",
-              "displayName": "Mine"
-            },
-            {
-              "field": {
-                "Column": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "fact_inspection_order"
-                    }
-                  },
-                  "Property": "order_number"
-                }
-              },
-              "queryRef": "fact_inspection_order.order_number",
-              "nativeQueryRef": "order_number",
-              "displayName": "Order no."
-            },
-            {
-              "field": {
-                "Column": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "fact_inspection_order"
-                    }
-                  },
-                  "Property": "order_category"
-                }
-              },
-              "queryRef": "fact_inspection_order.order_category",
-              "nativeQueryRef": "order_category",
-              "displayName": "Category"
-            },
-            {
-              "field": {
-                "Column": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "fact_inspection_order"
-                    }
-                  },
-                  "Property": "code_section"
-                }
-              },
-              "queryRef": "fact_inspection_order.code_section",
-              "nativeQueryRef": "code_section",
-              "displayName": "Code section"
-            },
-            {
-              "field": {
-                "Column": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "fact_inspection_order"
-                    }
-                  },
-                  "Property": "stop_status"
-                }
-              },
-              "queryRef": "fact_inspection_order.stop_status",
-              "nativeQueryRef": "stop_status",
-              "displayName": "Status"
-            },
-            {
-              "field": {
-                "Column": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "fact_inspection_order"
-                    }
-                  },
-                  "Property": "due_date"
-                }
-              },
-              "queryRef": "fact_inspection_order.due_date",
-              "nativeQueryRef": "due_date",
-              "displayName": "Response due"
-            },
-            {
-              "field": {
-                "Column": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "fact_inspection_order"
-                    }
-                  },
-                  "Property": "response_received"
-                }
-              },
-              "queryRef": "fact_inspection_order.response_received",
-              "nativeQueryRef": "response_received",
-              "displayName": "Response received"
-            },
-            {
-              "field": {
-                "Column": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "fact_inspection_order"
-                    }
-                  },
-                  "Property": "days_overdue"
-                }
-              },
-              "queryRef": "fact_inspection_order.days_overdue",
-              "nativeQueryRef": "days_overdue",
-              "displayName": "Days overdue"
+              "active": true
             }
           ]
         }
-      },
-      "sortDefinition": {
-        "sort": [
-          {
-            "field": {
-              "Column": {
-                "Expression": {
-                  "SourceRef": {
-                    "Entity": "fact_inspection_order"
-                  }
-                },
-                "Property": "days_overdue"
-              }
-            },
-            "direction": "Descending"
-          }
-        ],
-        "isDefaultSort": true
       }
     },
-    "drillFilterOtherVisuals": true,
     "objects": {
-      "grid": [
+      "data": [
         {
           "properties": {
-            "gridVertical": {
+            "mode": {
               "expr": {
                 "Literal": {
-                  "Value": "false"
-                }
-              }
-            },
-            "gridHorizontal": {
-              "expr": {
-                "Literal": {
-                  "Value": "true"
-                }
-              }
-            },
-            "gridHorizontalColor": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#D8DDE3'"
-                    }
-                  }
-                }
-              }
-            },
-            "rowPadding": {
-              "expr": {
-                "Literal": {
-                  "Value": "4D"
-                }
-              }
-            },
-            "textSize": {
-              "expr": {
-                "Literal": {
-                  "Value": "9D"
+                  "Value": "'Dropdown'"
                 }
               }
             }
           }
         }
       ],
-      "columnHeaders": [
-        {
-          "properties": {
-            "fontColor": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#1F2933'"
-                    }
-                  }
-                }
-              }
-            },
-            "fontSize": {
-              "expr": {
-                "Literal": {
-                  "Value": "9D"
-                }
-              }
-            },
-            "bold": {
-              "expr": {
-                "Literal": {
-                  "Value": "true"
-                }
-              }
-            },
-            "backColor": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#FFFFFF'"
-                    }
-                  }
-                }
-              }
-            },
-            "wordWrap": {
-              "expr": {
-                "Literal": {
-                  "Value": "true"
-                }
-              }
-            }
-          }
-        }
-      ],
-      "values": [
-        {
-          "properties": {
-            "fontColor": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#1F2933'"
-                    }
-                  }
-                }
-              }
-            },
-            "fontSize": {
-              "expr": {
-                "Literal": {
-                  "Value": "9D"
-                }
-              }
-            },
-            "backColor": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#FFFFFF'"
-                    }
-                  }
-                }
-              }
-            },
-            "wordWrap": {
-              "expr": {
-                "Literal": {
-                  "Value": "false"
-                }
-              }
-            }
-          }
-        }
-      ],
-      "total": [
-        {
-          "properties": {
-            "totals": {
-              "expr": {
-                "Literal": {
-                  "Value": "false"
-                }
-              }
-            }
-          }
-        }
-      ],
-      "columnWidth": [
-        {
-          "properties": {
-            "value": {
-              "expr": {
-                "Literal": {
-                  "Value": "140D"
-                }
-              }
-            }
-          },
-          "selector": {
-            "metadata": "fact_inspection_order.inspection_date"
-          }
-        },
-        {
-          "properties": {
-            "value": {
-              "expr": {
-                "Literal": {
-                  "Value": "110D"
-                }
-              }
-            }
-          },
-          "selector": {
-            "metadata": "fact_inspection_order.inspection_id"
-          }
-        },
-        {
-          "properties": {
-            "value": {
-              "expr": {
-                "Literal": {
-                  "Value": "330D"
-                }
-              }
-            }
-          },
-          "selector": {
-            "metadata": "dim_mine.mine_name"
-          }
-        },
-        {
-          "properties": {
-            "value": {
-              "expr": {
-                "Literal": {
-                  "Value": "110D"
-                }
-              }
-            }
-          },
-          "selector": {
-            "metadata": "fact_inspection_order.order_number"
-          }
-        },
-        {
-          "properties": {
-            "value": {
-              "expr": {
-                "Literal": {
-                  "Value": "210D"
-                }
-              }
-            }
-          },
-          "selector": {
-            "metadata": "fact_inspection_order.order_category"
-          }
-        },
-        {
-          "properties": {
-            "value": {
-              "expr": {
-                "Literal": {
-                  "Value": "140D"
-                }
-              }
-            }
-          },
-          "selector": {
-            "metadata": "fact_inspection_order.code_section"
-          }
-        },
-        {
-          "properties": {
-            "value": {
-              "expr": {
-                "Literal": {
-                  "Value": "100D"
-                }
-              }
-            }
-          },
-          "selector": {
-            "metadata": "fact_inspection_order.stop_status"
-          }
-        },
-        {
-          "properties": {
-            "value": {
-              "expr": {
-                "Literal": {
-                  "Value": "130D"
-                }
-              }
-            }
-          },
-          "selector": {
-            "metadata": "fact_inspection_order.due_date"
-          }
-        },
-        {
-          "properties": {
-            "value": {
-              "expr": {
-                "Literal": {
-                  "Value": "130D"
-                }
-              }
-            }
-          },
-          "selector": {
-            "metadata": "fact_inspection_order.response_received"
-          }
-        },
-        {
-          "properties": {
-            "value": {
-              "expr": {
-                "Literal": {
-                  "Value": "100D"
-                }
-              }
-            }
-          },
-          "selector": {
-            "metadata": "fact_inspection_order.days_overdue"
-          }
-        }
-      ]
-    },
-    "visualContainerObjects": {
-      "background": [
+      "header": [
         {
           "properties": {
             "show": {
@@ -492,14 +58,51 @@
                 }
               }
             },
-            "color": {
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Mine'"
+                }
+              }
+            },
+            "textSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "9D"
+                }
+              }
+            },
+            "fontColor": {
               "solid": {
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#FFFFFF'"
+                      "Value": "'#013366'"
                     }
                   }
+                }
+              }
+            },
+            "bold": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true,
+    "visualContainerObjects": {
+      "background": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
                 }
               }
             }
@@ -512,21 +115,7 @@
             "show": {
               "expr": {
                 "Literal": {
-                  "Value": "true"
-                }
-              }
-            },
-            "color": {
-              "expr": {
-                "Literal": {
-                  "Value": "'#D8DDE3'"
-                }
-              }
-            },
-            "radius": {
-              "expr": {
-                "Literal": {
-                  "Value": "6D"
+                  "Value": "false"
                 }
               }
             }
@@ -534,57 +123,5 @@
         }
       ]
     }
-  },
-  "filterConfig": {
-    "filters": [
-      {
-        "name": "fRows7",
-        "field": {
-          "Measure": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "fact_inspection"
-              }
-            },
-            "Property": "Enh Responses Overdue"
-          }
-        },
-        "type": "Advanced",
-        "filter": {
-          "Version": 2,
-          "From": [
-            {
-              "Name": "f",
-              "Entity": "fact_inspection",
-              "Type": 0
-            }
-          ],
-          "Where": [
-            {
-              "Condition": {
-                "Comparison": {
-                  "ComparisonKind": 1,
-                  "Left": {
-                    "Measure": {
-                      "Expression": {
-                        "SourceRef": {
-                          "Source": "f"
-                        }
-                      },
-                      "Property": "Enh Responses Overdue"
-                    }
-                  },
-                  "Right": {
-                    "Literal": {
-                      "Value": "0L"
-                    }
-                  }
-                }
-              }
-            }
-          ]
-        }
-      }
-    ]
   }
 }

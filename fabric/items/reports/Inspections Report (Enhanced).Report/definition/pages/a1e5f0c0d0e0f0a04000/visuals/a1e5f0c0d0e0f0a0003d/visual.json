@@ -3,7 +3,7 @@
   "name": "a1e5f0c0d0e0f0a0003d",
   "position": {
     "x": 296,
-    "y": 778,
+    "y": 732,
     "z": 61,
     "width": 1264,
     "height": 44,
@@ -23,11 +23,11 @@
                       "Entity": "fact_inspection"
                     }
                   },
-                  "Property": "Enh Ex Needed"
+                  "Property": "Enh Ex Gap"
                 }
               },
-              "queryRef": "fact_inspection.Enh Ex Needed",
-              "nativeQueryRef": "Enh Ex Needed"
+              "queryRef": "fact_inspection.Enh Ex Gap",
+              "nativeQueryRef": "Enh Ex Gap"
             }
           ]
         }

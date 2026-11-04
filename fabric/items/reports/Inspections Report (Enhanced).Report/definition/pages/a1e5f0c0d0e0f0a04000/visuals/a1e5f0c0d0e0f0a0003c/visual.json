@@ -3,7 +3,7 @@
   "name": "a1e5f0c0d0e0f0a0003c",
   "position": {
     "x": 40,
-    "y": 782,
+    "y": 736,
     "z": 60,
     "width": 260,
     "height": 40,
@@ -19,7 +19,7 @@
               {
                 "textRuns": [
                   {
-                    "value": "Needed each month",
+                    "value": "Ahead of or behind the pace",
                     "textStyle": {
                       "fontSize": "10px",
                       "color": "#013366",
