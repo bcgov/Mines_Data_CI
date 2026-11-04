@@ -3,7 +3,7 @@
   "name": "a1e5f0c0d0e0f0a00039",
   "position": {
     "x": 296,
-    "y": 686,
+    "y": 640,
     "z": 57,
     "width": 1264,
     "height": 44,
@@ -23,11 +23,11 @@
                       "Entity": "fact_inspection"
                     }
                   },
-                  "Property": "Enh Ex Pace"
+                  "Property": "Enh Ex Projected"
                 }
               },
-              "queryRef": "fact_inspection.Enh Ex Pace",
-              "nativeQueryRef": "Enh Ex Pace"
+              "queryRef": "fact_inspection.Enh Ex Projected",
+              "nativeQueryRef": "Enh Ex Projected"
             }
           ]
         }

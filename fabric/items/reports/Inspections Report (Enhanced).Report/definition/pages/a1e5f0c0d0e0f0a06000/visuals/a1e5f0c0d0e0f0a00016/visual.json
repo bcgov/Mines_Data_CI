@@ -2,10 +2,10 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
   "name": "a1e5f0c0d0e0f0a00016",
   "position": {
-    "x": 648,
+    "x": 206,
     "y": 184,
     "z": 22,
-    "width": 300,
+    "width": 290,
     "height": 58,
     "tabOrder": 22
   },
@@ -20,14 +20,14 @@
                 "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "fact_inspection_order"
+                      "Entity": "dim_mine"
                     }
                   },
-                  "Property": "order_category"
+                  "Property": "mine_region_desc"
                 }
               },
-              "queryRef": "fact_inspection_order.order_category",
-              "nativeQueryRef": "order_category",
+              "queryRef": "dim_mine.mine_region_desc",
+              "nativeQueryRef": "mine_region_desc",
               "active": true
             }
           ]
@@ -61,7 +61,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Category'"
+                  "Value": "'Region'"
                 }
               }
             },

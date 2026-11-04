@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
   "name": "a1e5f0c0d0e0f0a0001d",
   "position": {
-    "x": 36,
-    "y": 468,
+    "x": 24,
+    "y": 464,
     "z": 29,
-    "width": 476,
-    "height": 34,
+    "width": 500,
+    "height": 118,
     "tabOrder": 29
   },
   "visual": {
@@ -19,13 +19,7 @@
               {
                 "textRuns": [
                   {
-                    "value": "RESPONSES OVERDUE RIGHT NOW",
-                    "textStyle": {
-                      "fontSize": "8px",
-                      "color": "#605E5C",
-                      "fontFamily": "Segoe UI",
-                      "fontWeight": "bold"
-                    }
+                    "value": " "
                   }
                 ]
               }
@@ -42,7 +36,25 @@
             "show": {
               "expr": {
                 "Literal": {
-                  "Value": "false"
+                  "Value": "true"
+                }
+              }
+            },
+            "color": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#FFFFFF'"
+                    }
+                  }
+                }
+              }
+            },
+            "transparency": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
                 }
               }
             }
@@ -55,41 +67,25 @@
             "show": {
               "expr": {
                 "Literal": {
-                  "Value": "false"
-                }
-              }
-            }
-          }
-        }
-      ],
-      "padding": [
-        {
-          "properties": {
-            "top": {
-              "expr": {
-                "Literal": {
-                  "Value": "0D"
+                  "Value": "true"
                 }
               }
             },
-            "bottom": {
-              "expr": {
-                "Literal": {
-                  "Value": "0D"
+            "color": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#D8DDE3'"
+                    }
+                  }
                 }
               }
             },
-            "left": {
+            "radius": {
               "expr": {
                 "Literal": {
-                  "Value": "0D"
-                }
-              }
-            },
-            "right": {
-              "expr": {
-                "Literal": {
-                  "Value": "0D"
+                  "Value": "6D"
                 }
               }
             }

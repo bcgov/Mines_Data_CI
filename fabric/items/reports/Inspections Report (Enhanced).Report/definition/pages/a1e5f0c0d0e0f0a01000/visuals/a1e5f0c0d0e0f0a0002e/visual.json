@@ -2,15 +2,15 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
   "name": "a1e5f0c0d0e0f0a0002e",
   "position": {
-    "x": 30,
-    "y": 486,
+    "x": 34,
+    "y": 434,
     "z": 46,
-    "width": 367,
-    "height": 28,
+    "width": 150,
+    "height": 62,
     "tabOrder": 46
   },
   "visual": {
-    "visualType": "card",
+    "visualType": "multiRowCard",
     "query": {
       "queryState": {
         "Values": {
@@ -23,11 +23,11 @@
                       "Entity": "fact_inspection"
                     }
                   },
-                  "Property": "Enh K1 Compare"
+                  "Property": "Enh K1 Value"
                 }
               },
-              "queryRef": "fact_inspection.Enh K1 Compare",
-              "nativeQueryRef": "Enh K1 Compare"
+              "queryRef": "fact_inspection.Enh K1 Value",
+              "nativeQueryRef": "Enh K1 Value"
             }
           ]
         }
@@ -35,13 +35,13 @@
     },
     "drillFilterOtherVisuals": true,
     "objects": {
-      "labels": [
+      "dataLabels": [
         {
           "properties": {
             "fontSize": {
               "expr": {
                 "Literal": {
-                  "Value": "8D"
+                  "Value": "24D"
                 }
               }
             },
@@ -50,7 +50,7 @@
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#605E5C'"
+                      "Value": "'#013366'"
                     }
                   }
                 }
@@ -59,7 +59,7 @@
             "bold": {
               "expr": {
                 "Literal": {
-                  "Value": "false"
+                  "Value": "true"
                 }
               }
             }
@@ -79,10 +79,51 @@
           }
         }
       ],
-      "wordWrap": [
+      "cardTitle": [
         {
           "properties": {
             "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "card": [
+        {
+          "properties": {
+            "outline": {
+              "expr": {
+                "Literal": {
+                  "Value": "'None'"
+                }
+              }
+            },
+            "outlineWeight": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
+                }
+              }
+            },
+            "barShow": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            },
+            "cardPadding": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
+                }
+              }
+            },
+            "showBar": {
               "expr": {
                 "Literal": {
                   "Value": "false"

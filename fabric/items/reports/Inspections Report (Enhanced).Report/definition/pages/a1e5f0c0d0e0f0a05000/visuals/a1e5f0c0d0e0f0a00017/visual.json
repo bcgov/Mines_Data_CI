@@ -2,10 +2,10 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
   "name": "a1e5f0c0d0e0f0a00017",
   "position": {
-    "x": 960,
+    "x": 508,
     "y": 184,
     "z": 23,
-    "width": 300,
+    "width": 290,
     "height": 58,
     "tabOrder": 23
   },
@@ -20,14 +20,14 @@
                 "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "fact_inspection"
+                      "Entity": "dim_mine"
                     }
                   },
-                  "Property": "inspector_idir"
+                  "Property": "mine_name"
                 }
               },
-              "queryRef": "fact_inspection.inspector_idir",
-              "nativeQueryRef": "inspector_idir",
+              "queryRef": "dim_mine.mine_name",
+              "nativeQueryRef": "mine_name",
               "active": true
             }
           ]
@@ -61,7 +61,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Inspector'"
+                  "Value": "'Mine'"
                 }
               }
             },
