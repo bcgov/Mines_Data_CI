@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
   "name": "a1e5f0c0d0e0f0a0001c",
   "position": {
-    "x": 38,
-    "y": 280,
+    "x": 24,
+    "y": 274,
     "z": 28,
-    "width": 352,
-    "height": 128,
+    "width": 380,
+    "height": 140,
     "tabOrder": 28
   },
   "visual": {
@@ -19,25 +19,7 @@
               {
                 "textRuns": [
                   {
-                    "value": "Pace for 1,600",
-                    "textStyle": {
-                      "fontSize": "11px",
-                      "color": "#013366",
-                      "fontFamily": "Segoe UI",
-                      "fontWeight": "bold"
-                    }
-                  }
-                ]
-              },
-              {
-                "textRuns": [
-                  {
-                    "value": "1,600 spread across the twelve months in the same shares as last year. The ahead/behind bars compare this year's running total with that pace at each month end.",
-                    "textStyle": {
-                      "fontSize": "9px",
-                      "color": "#1F2933",
-                      "fontFamily": "Segoe UI"
-                    }
+                    "value": " "
                   }
                 ]
               }
@@ -54,7 +36,25 @@
             "show": {
               "expr": {
                 "Literal": {
-                  "Value": "false"
+                  "Value": "true"
+                }
+              }
+            },
+            "color": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#FFFFFF'"
+                    }
+                  }
+                }
+              }
+            },
+            "transparency": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
                 }
               }
             }
@@ -67,41 +67,25 @@
             "show": {
               "expr": {
                 "Literal": {
-                  "Value": "false"
-                }
-              }
-            }
-          }
-        }
-      ],
-      "padding": [
-        {
-          "properties": {
-            "top": {
-              "expr": {
-                "Literal": {
-                  "Value": "0D"
+                  "Value": "true"
                 }
               }
             },
-            "bottom": {
-              "expr": {
-                "Literal": {
-                  "Value": "0D"
+            "color": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#D8DDE3'"
+                    }
+                  }
                 }
               }
             },
-            "left": {
+            "radius": {
               "expr": {
                 "Literal": {
-                  "Value": "0D"
-                }
-              }
-            },
-            "right": {
-              "expr": {
-                "Literal": {
-                  "Value": "0D"
+                  "Value": "6D"
                 }
               }
             }

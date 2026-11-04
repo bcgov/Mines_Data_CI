@@ -2,7 +2,7 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
   "name": "a1e5f0c0d0e0f0a00039",
   "position": {
-    "x": 860,
+    "x": 144,
     "y": 828,
     "z": 57,
     "width": 350,
@@ -19,7 +19,7 @@
               {
                 "textRuns": [
                   {
-                    "value": "Pace for 1,600",
+                    "value": "Inspection",
                     "textStyle": {
                       "fontSize": "9px",
                       "color": "#013366",
@@ -32,7 +32,7 @@
               {
                 "textRuns": [
                   {
-                    "value": "1,600 spread across the year in last year's monthly pattern.",
+                    "value": "A site visit, desktop review, compliance review or meeting an inspector records in NRIS.",
                     "textStyle": {
                       "fontSize": "8px",
                       "color": "#605E5C",

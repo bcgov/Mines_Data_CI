@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
   "name": "a1e5f0c0d0e0f0a00037",
   "position": {
-    "x": 144,
-    "y": 828,
+    "x": 40,
+    "y": 844,
     "z": 55,
-    "width": 350,
-    "height": 64,
+    "width": 90,
+    "height": 36,
     "tabOrder": 55
   },
   "visual": {
@@ -19,24 +19,12 @@
               {
                 "textRuns": [
                   {
-                    "value": "Inspection",
+                    "value": "Definitions",
                     "textStyle": {
-                      "fontSize": "9px",
+                      "fontSize": "11px",
                       "color": "#013366",
                       "fontFamily": "Segoe UI",
                       "fontWeight": "bold"
-                    }
-                  }
-                ]
-              },
-              {
-                "textRuns": [
-                  {
-                    "value": "A site visit, desktop review, compliance review or meeting an inspector records in NRIS.",
-                    "textStyle": {
-                      "fontSize": "8px",
-                      "color": "#605E5C",
-                      "fontFamily": "Segoe UI"
                     }
                   }
                 ]
