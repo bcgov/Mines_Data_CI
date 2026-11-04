@@ -205,7 +205,7 @@
             "webUrl": {
               "expr": {
                 "Literal": {
-                  "Value": "'https://app.powerbi.com/groups/me/apps/ed8de927-f577-43a6-90e0-d5ecfab02a94'"
+                  "Value": "'https://app.powerbi.com/groups/e397b5cc-924d-40a5-b101-f6efb41a5423/orgapps/ed8de927-f577-43a6-90e0-d5ecfab02a94?experience=power-bi'"
                 }
               }
             }
