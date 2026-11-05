@@ -5,7 +5,7 @@
     "x": 36,
     "y": 160,
     "z": 18,
-    "width": 212,
+    "width": 276,
     "height": 38,
     "tabOrder": 18
   },
@@ -19,7 +19,7 @@
               {
                 "textRuns": [
                   {
-                    "value": "REPORTABLE INCIDENTS \u2014 FYTD",
+                    "value": "INCIDENTS \u2014 FISCAL YEAR TO DATE",
                     "textStyle": {
                       "fontSize": "8px",
                       "color": "#605E5C",
