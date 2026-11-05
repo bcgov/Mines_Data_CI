@@ -5,7 +5,7 @@
     "x": 24,
     "y": 596,
     "z": 55,
-    "width": 456,
+    "width": 560,
     "height": 206,
     "tabOrder": 55
   },
@@ -336,7 +336,7 @@
             "value": {
               "expr": {
                 "Literal": {
-                  "Value": "214D"
+                  "Value": "300D"
                 }
               }
             }

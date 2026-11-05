@@ -2,10 +2,10 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
   "name": "b200000000000000003e",
   "position": {
-    "x": 504,
+    "x": 612,
     "y": 710,
     "z": 62,
-    "width": 220,
+    "width": 300,
     "height": 54,
     "tabOrder": 62
   },
@@ -19,7 +19,7 @@
               {
                 "textRuns": [
                   {
-                    "value": "Reportable incidents per 100 active mines",
+                    "value": "Incidents per 100 active mines",
                     "textStyle": {
                       "fontSize": "10px",
                       "color": "#1F2933",
@@ -32,7 +32,7 @@
               {
                 "textRuns": [
                   {
-                    "value": "Reportable incidents FYTD \u00f7 active mines \u00d7 100",
+                    "value": "Incidents FYTD \u00f7 active mines \u00d7 100",
                     "textStyle": {
                       "fontSize": "8px",
                       "color": "#605E5C",
