@@ -23,11 +23,11 @@
                       "Entity": "fact_mine_incident"
                     }
                   },
-                  "Property": "status_code"
+                  "Property": "status_description"
                 }
               },
-              "queryRef": "fact_mine_incident.status_code",
-              "nativeQueryRef": "status_code",
+              "queryRef": "fact_mine_incident.status_description",
+              "nativeQueryRef": "status_description",
               "active": true
             }
           ]

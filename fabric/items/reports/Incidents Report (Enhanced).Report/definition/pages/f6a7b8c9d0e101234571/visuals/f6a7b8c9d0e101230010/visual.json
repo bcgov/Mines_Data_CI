@@ -23,11 +23,11 @@
                       "Entity": "fact_mine_incident"
                     }
                   },
-                  "Property": "determination_type_code"
+                  "Property": "determination_description"
                 }
               },
-              "queryRef": "fact_mine_incident.determination_type_code",
-              "nativeQueryRef": "determination_type_code",
+              "queryRef": "fact_mine_incident.determination_description",
+              "nativeQueryRef": "determination_description",
               "active": true
             }
           ]

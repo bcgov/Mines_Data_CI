@@ -83,11 +83,11 @@
                       "Entity": "fact_mine_incident"
                     }
                   },
-                  "Property": "determination_type_code"
+                  "Property": "determination_description"
                 }
               },
-              "queryRef": "fact_mine_incident.determination_type_code",
-              "nativeQueryRef": "determination_type_code",
+              "queryRef": "fact_mine_incident.determination_description",
+              "nativeQueryRef": "determination_description",
               "displayName": "Determination"
             },
             {
@@ -143,11 +143,11 @@
                       "Entity": "fact_mine_incident"
                     }
                   },
-                  "Property": "status_code"
+                  "Property": "status_description"
                 }
               },
-              "queryRef": "fact_mine_incident.status_code",
-              "nativeQueryRef": "status_code",
+              "queryRef": "fact_mine_incident.status_description",
+              "nativeQueryRef": "status_description",
               "displayName": "Status"
             },
             {
@@ -344,7 +344,7 @@
             "value": {
               "expr": {
                 "Literal": {
-                  "Value": "130D"
+                  "Value": "110D"
                 }
               }
             }
@@ -372,7 +372,7 @@
             "value": {
               "expr": {
                 "Literal": {
-                  "Value": "380D"
+                  "Value": "300D"
                 }
               }
             }
@@ -400,13 +400,13 @@
             "value": {
               "expr": {
                 "Literal": {
-                  "Value": "150D"
+                  "Value": "200D"
                 }
               }
             }
           },
           "selector": {
-            "metadata": "fact_mine_incident.determination_type_code"
+            "metadata": "fact_mine_incident.determination_description"
           }
         },
         {
@@ -456,13 +456,13 @@
             "value": {
               "expr": {
                 "Literal": {
-                  "Value": "110D"
+                  "Value": "190D"
                 }
               }
             }
           },
           "selector": {
-            "metadata": "fact_mine_incident.status_code"
+            "metadata": "fact_mine_incident.status_description"
           }
         },
         {
@@ -470,7 +470,7 @@
             "value": {
               "expr": {
                 "Literal": {
-                  "Value": "130D"
+                  "Value": "110D"
                 }
               }
             }
