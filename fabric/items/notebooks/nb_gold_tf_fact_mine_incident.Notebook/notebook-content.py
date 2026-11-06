@@ -44,6 +44,12 @@
 #
 #   effective_timestamp (date part)  -> dim_date  (Effective_Date_SK)   [added 2026-09-03]
 #
+# PLAIN-LANGUAGE CODES (added 2026-11-06, Colin's ask at the 5 Nov sprint review):
+#   determination_description <- silver.mine_incident_determination_type (DO/NDO/PEN).
+#     Core's own text is Yes/No/Pending, so it is reworded to read on its own.
+#   status_description        <- silver.mine_incident_status_code, Core's wording as is.
+#   Missing codes read "Not determined" / "Not recorded".
+#
 # DO flag (Dangerous Occurrence): determination_type_code = 'DO'. Matches the
 #   Metabase corporate report (questions 3287 / 3289). No category join needed.
 #
@@ -104,6 +110,10 @@ spark.table("silver.mine_incident").createOrReplaceTempView("src_mine_incident")
 spark.table("gold.dim_mine").createOrReplaceTempView("gold_dim_mine")
 spark.table("gold.dim_date").createOrReplaceTempView("gold_dim_date")
 spark.table("gold.dim_party").createOrReplaceTempView("gold_dim_party")
+
+# Code lookups for plain-language determination and status (added 2026-11-06).
+spark.table("silver.mine_incident_determination_type").createOrReplaceTempView("src_determination_type")
+spark.table("silver.mine_incident_status_code").createOrReplaceTempView("src_incident_status")
 
 print("notebook:", NOTEBOOK_NAME, "-> target:", TARGET_TABLE)
 print("mine_incident source rows:", spark.table("src_mine_incident").count())
@@ -192,7 +202,14 @@ df = spark.sql("""
         i.followup_inspection,
         i.followup_investigation_type_code,
         i.determination_type_code,
+        CASE i.determination_type_code
+            WHEN 'DO'  THEN 'Dangerous occurrence'
+            WHEN 'NDO' THEN 'Not a dangerous occurrence'
+            WHEN 'PEN' THEN 'Pending determination'
+            ELSE COALESCE(dt.description, 'Not determined')
+        END                           AS determination_description,
         i.status_code,
+        COALESCE(sc.description, 'Not recorded') AS status_description,
         i.incident_location,
         i.incident_timezone,
 
@@ -218,6 +235,12 @@ df = spark.sql("""
     -- Date keys: effective date (corporate-report KPI rule)
     LEFT JOIN gold_dim_date edd
         ON edd.full_date = CAST(i.effective_timestamp AS DATE)
+
+    -- Plain-language code lookups (added 2026-11-06)
+    LEFT JOIN src_determination_type dt
+        ON i.determination_type_code = dt.mine_incident_determination_type_code
+    LEFT JOIN src_incident_status sc
+        ON i.status_code = sc.mine_incident_status_code
 
     -- Party roles (3 FKs)
     LEFT JOIN gold_dim_party dp_rpt
