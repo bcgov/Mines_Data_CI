@@ -664,7 +664,7 @@ table fact_mine_incident
 		annotation SummarizationSetBy = Automatic
 	column reported_date
 		dataType: dateTime
-		formatString: General Date
+		formatString: yyyy-mm-dd
 		sourceProviderType: date
 		lineageTag: 180f51e9-6c36-48c0-8ba0-aee7e453095a
 		sourceLineageTag: reported_date
@@ -684,7 +684,7 @@ table fact_mine_incident
 		annotation SummarizationSetBy = Automatic
 	column effective_date
 		dataType: dateTime
-		formatString: General Date
+		formatString: yyyy-mm-dd
 		sourceProviderType: date
 		lineageTag: bb62c974-1224-441f-90b3-e5355f915d00
 		sourceLineageTag: effective_date
@@ -731,6 +731,28 @@ table fact_mine_incident
 		sourceColumn: determination_type_code
 
 		annotation SummarizationSetBy = Automatic
+	/// Plain-language determination: Dangerous occurrence, Not a dangerous occurrence, Pending determination, Not determined.
+	column determination_description
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: 9fa812ef-8f42-45de-9315-7c4c0e883055
+		sourceLineageTag: determination_description
+		summarizeBy: none
+		sourceColumn: determination_description
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Plain-language incident status from Core (e.g. Closed, Written Notice Submitted).
+	column status_description
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: c0e7825a-1666-4dbc-a4df-e34fa584c273
+		sourceLineageTag: status_description
+		summarizeBy: none
+		sourceColumn: status_description
+
+		annotation SummarizationSetBy = Automatic
+
 	column status_code
 		dataType: string
 		sourceProviderType: varchar(8000)

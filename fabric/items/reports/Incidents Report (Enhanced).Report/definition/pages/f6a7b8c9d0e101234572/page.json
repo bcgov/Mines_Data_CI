@@ -92,7 +92,7 @@
                 "Entity": "fact_mine_incident"
               }
             },
-            "Property": "determination_type_code"
+            "Property": "determination_description"
           }
         },
         "type": "Categorical",
