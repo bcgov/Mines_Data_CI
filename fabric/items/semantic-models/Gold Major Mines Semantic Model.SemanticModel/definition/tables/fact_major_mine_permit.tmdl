@@ -45,6 +45,30 @@ table fact_major_mine_permit
 		lineageTag: 19063341-6056-496e-84d4-7110a4f84488
 
 
+	/// Producing major mines (published, CIM & CPO 2024/25).
+	measure 'Producing' = [Pub Producing Mines]
+		formatString: #,##0
+		displayFolder: Life stage
+		lineageTag: 7dd5a1b7-f374-4131-b7c0-62345fd15d6b
+
+	/// Status Operating in MDS but not counted as producing: construction, seasonal, industrial sites.
+	measure 'Operating in MDS, not producing' = [Major Mines Operating] - [Pub Producing Mines]
+		formatString: #,##0
+		displayFolder: Life stage
+		lineageTag: 654fbc57-c710-43df-b87f-d46328e962d9
+
+	/// Major mines with status Not Started.
+	measure 'Not started' = [Major Mines Not Started]
+		formatString: #,##0
+		displayFolder: Life stage
+		lineageTag: ed527c86-d8e7-4012-9622-cd7ed9a651c1
+
+	/// Closed major mines in care and maintenance.
+	measure 'Could Restart (Care & Maintenance)' = CALCULATE ( [Major Mines Closed], KEEPFILTERS ( CONTAINSSTRING ( dim_mine[mine_life_stage], "Care" ) ) )
+		formatString: #,##0
+		displayFolder: Life stage
+		lineageTag: d67adc60-c830-426d-8bcc-b7492ac38326
+
 	column permit_id
 		dataType: int64
 		formatString: 0

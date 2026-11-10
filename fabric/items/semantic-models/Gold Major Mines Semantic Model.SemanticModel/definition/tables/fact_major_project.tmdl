@@ -90,6 +90,134 @@ table fact_major_project
 		lineageTag: 7a291ea9-fe2e-4a6b-94cc-2352e376713f
 
 
+	/// Projects that need a Mines Act permit: Mines Act only plus both Acts.
+	measure 'Projects Need Mines Act' = [Projects Mines Act Only] + [Projects Both Acts]
+		formatString: #,##0
+		displayFolder: Project KPIs
+		lineageTag: 31be6270-c868-4ee5-84eb-73eafc375378
+
+	/// Projects not complete and not withdrawn (proxy stage). Overview card and stage bar.
+	measure 'Enh Open Projects' = CALCULATE ( DISTINCTCOUNT ( fact_major_project[project_summary_id] ), fact_major_project[is_open] = 1, fact_major_project[deleted_ind] = FALSE )
+		formatString: #,##0
+		displayFolder: Enhanced
+		lineageTag: 4c139ed9-4f3f-40ce-bde3-2d287c700983
+
+	/// Mines with at least one open project.
+	measure 'Enh Open Mines' = CALCULATE ( DISTINCTCOUNT ( fact_major_project[Mine_SK] ), fact_major_project[is_open] = 1, fact_major_project[deleted_ind] = FALSE, NOT ISBLANK ( fact_major_project[Mine_SK] ) )
+		formatString: #,##0
+		displayFolder: Enhanced
+		lineageTag: de2e9031-101f-4996-97fe-ea4293a31320
+
+	/// Projects whose major mine application reached Complete, counted in the year it completed (dim_date[year] on the axis). Core has no decision date, so application complete is the proxy.
+	measure 'Enh Completed' = VAR yrs = VALUES ( dim_date[year] ) RETURN CALCULATE ( DISTINCTCOUNT ( fact_major_project[project_summary_id] ), REMOVEFILTERS ( dim_date ), fact_major_project[deleted_ind] = FALSE, FILTER ( ALL ( fact_major_project[application_complete_date] ), NOT ISBLANK ( fact_major_project[application_complete_date] ) && YEAR ( fact_major_project[application_complete_date] ) IN yrs ) )
+		formatString: #,##0
+		displayFolder: Enhanced
+		lineageTag: 9e993dd0-a0cb-4133-801e-baf70b24af45
+
+	/// Applications completed this calendar year.
+	measure 'Enh Completed This Year' = CALCULATE ( [Enh Completed], dim_date[year] = YEAR ( TODAY () ) )
+		formatString: #,##0
+		displayFolder: Enhanced
+		lineageTag: 360bdcef-2839-47b6-bf75-0ca1cf582089
+
+	/// Median days from project submission to application complete, for projects completed in the year(s) in context.
+	measure 'Enh Median Days To Complete' = VAR yrs = VALUES ( dim_date[year] ) VAR t = CALCULATETABLE ( FILTER ( fact_major_project, NOT ISBLANK ( fact_major_project[application_complete_date] ) && NOT ISBLANK ( fact_major_project[submission_date] ) && YEAR ( fact_major_project[application_complete_date] ) IN yrs ), REMOVEFILTERS ( dim_date ), fact_major_project[deleted_ind] = FALSE ) RETURN MEDIANX ( t, DATEDIFF ( fact_major_project[submission_date], fact_major_project[application_complete_date], DAY ) )
+		formatString: #,##0
+		displayFolder: Enhanced
+		lineageTag: c9bc1ceb-9fd0-4982-b9cd-4ff6cdf17a5f
+
+	/// Open projects in application review, submitted more than a year ago.
+	measure 'Enh Reviews Over A Year' = CALCULATE ( DISTINCTCOUNT ( fact_major_project[project_summary_id] ), fact_major_project[is_open] = 1, fact_major_project[deleted_ind] = FALSE, fact_major_project[proxy_stage] = "Application review", fact_major_project[days_since_submission] > 365 )
+		formatString: #,##0
+		displayFolder: Enhanced
+		lineageTag: f431ee2a-3037-46f6-b48c-382608ec1354
+
+	/// Open projects submitted more than a year ago, any stage.
+	measure 'Enh Open Over A Year' = CALCULATE ( DISTINCTCOUNT ( fact_major_project[project_summary_id] ), fact_major_project[is_open] = 1, fact_major_project[deleted_ind] = FALSE, fact_major_project[days_since_submission] > 365 )
+		formatString: #,##0
+		displayFolder: Enhanced
+		lineageTag: a8a7ccca-b67c-483f-8d93-ec0871534530
+
+	/// Open projects with no project lead assigned in Core.
+	measure 'Enh Open No Lead' = CALCULATE ( DISTINCTCOUNT ( fact_major_project[project_summary_id] ), fact_major_project[is_open] = 1, fact_major_project[deleted_ind] = FALSE, ISBLANK ( fact_major_project[project_lead_name] ) )
+		formatString: #,##0
+		displayFolder: Enhanced
+		lineageTag: c6dc3f44-d37c-4f32-8092-cff843525af7
+
+	/// Open projects with no submission date, so days open cannot be counted (mostly drafts).
+	measure 'Enh Open No Submission Date' = CALCULATE ( DISTINCTCOUNT ( fact_major_project[project_summary_id] ), fact_major_project[is_open] = 1, fact_major_project[deleted_ind] = FALSE, ISBLANK ( fact_major_project[submission_date] ) )
+		formatString: #,##0
+		displayFolder: Enhanced
+		lineageTag: 88be936a-e125-4c1c-95e6-5f249f41d250
+
+	/// Days since submission for the row (open projects only).
+	measure 'Enh Days Open' = MAX ( fact_major_project[days_since_submission] )
+		formatString: #,##0
+		displayFolder: Enhanced
+		lineageTag: a6e6e39a-f9ce-4097-bf26-411844214ec0
+
+	/// Mine and days of the longest-open project.
+	measure 'Enh Longest Open Label' = VAR t = CALCULATETABLE ( fact_major_project, fact_major_project[is_open] = 1, fact_major_project[deleted_ind] = FALSE, NOT ISBLANK ( fact_major_project[days_since_submission] ) ) VAR top1 = TOPN ( 1, t, fact_major_project[days_since_submission], DESC ) VAR d = MAXX ( top1, fact_major_project[days_since_submission] ) VAR m = MAXX ( top1, RELATED ( dim_mine[mine_name] ) ) RETURN IF ( ISBLANK ( d ), "", m & ", at " & FORMAT ( d, "#,##0" ) & " days" )
+		displayFolder: Enhanced
+		lineageTag: 46dec41c-b439-452e-9935-26adfd8dceb9
+
+	/// Overview page headline sentence.
+	measure 'Enh Overview Headline' = VAR o = [Enh Open Projects] VAR m = [Enh Open Mines] VAR c = [Enh Completed This Year] VAR d = CALCULATE ( [Enh Median Days To Complete], dim_date[year] = YEAR ( TODAY () ) ) RETURN FORMAT ( o, "#,##0" ) & " projects are open across " & FORMAT ( m, "#,##0" ) & " mines. " & FORMAT ( c, "#,##0" ) & " applications were completed in " & YEAR ( TODAY () ) & IF ( ISBLANK ( d ), ".", ", at a median of " & FORMAT ( d, "#,##0" ) & " days from submission." )
+		displayFolder: Enhanced
+		lineageTag: eab2a31a-0406-4c4f-bd18-62ec2e688388
+
+	/// Open projects page headline sentence.
+	measure 'Enh Open Headline' = VAR n = [Enh Open Over A Year] RETURN FORMAT ( n, "#,##0" ) & " open projects were submitted over a year ago. The longest is " & [Enh Longest Open Label] & "."
+		displayFolder: Enhanced
+		lineageTag: ba85f42b-8b31-40bd-bdbd-3d50a7a9ecc1
+
+	/// Subtitle for the completed card.
+	measure 'Enh Completed Card Note' = VAR y = YEAR ( TODAY () ) VAR p = CALCULATE ( [Enh Completed], dim_date[year] = y - 1 ) RETURN "Application marked complete. " & FORMAT ( p, "#,##0" ) & " in " & ( y - 1 ) & "."
+		displayFolder: Enhanced
+		lineageTag: 2838242c-fa11-42ce-b56e-a31416eac506
+
+	/// Data gap panel text on the Open projects page.
+	measure 'Enh Data Gap Note' = "Core records the current stage only, not when a project entered it. Days count from the project's submission date. " & FORMAT ( [Enh Open No Submission Date], "#,##0" ) & " open projects have no submission date and " & FORMAT ( [Enh Open No Lead], "#,##0" ) & " have no lead."
+		displayFolder: Enhanced
+		lineageTag: 95eb7aac-0b02-48d5-894c-5de9ecd1733b
+
+	/// Hidden 1/0 flag: years from the first completed application to this year. Chart filter.
+	measure 'Enh Project Year In Range' = VAR y = MAX ( dim_date[year] ) VAR f = YEAR ( CALCULATE ( MIN ( fact_major_project[application_complete_date] ), REMOVEFILTERS ( dim_date ), fact_major_project[deleted_ind] = FALSE ) ) RETURN IF ( NOT ISBLANK ( f ) && y >= f && y <= YEAR ( TODAY () ), 1, 0 )
+		formatString: 0
+		displayFolder: Enhanced
+		lineageTag: 9941d063-e38e-4021-95b0-7c3af8c9c62f
+
+	/// Disclaimer text (Nhung, 10 Nov 2026).
+	measure 'Enh Disclaimer' = "Not in Core yet, so not shown: decision date, fee level, project director, initiated by, stage dates and review rounds. 'Complete' means the major mine application is marked complete in Core. Days open count from the project's submission date."
+		displayFolder: Enhanced
+		lineageTag: 47b2a5d0-46b1-4eeb-8169-ae2af830c052
+
+	/// Subtitle for the open projects card.
+	measure 'Enh Open Note' = "Across " & FORMAT ( [Enh Open Mines], "#,##0" ) & " mines, from draft to application review"
+		displayFolder: Enhanced
+		lineageTag: 931c2a0c-c197-4396-91be-52bff0c00cb7
+
+	/// Median days submission to application complete, for applications completed this year.
+	measure 'Enh Median Days This Year' = CALCULATE ( [Enh Median Days To Complete], dim_date[year] = YEAR ( TODAY () ) )
+		formatString: #,##0
+		displayFolder: Enhanced
+		lineageTag: 51bc3c82-cad1-4cb2-8e71-e254047543de
+
+	/// Subtitle for the median card.
+	measure 'Enh Median Note' = VAR y = YEAR ( TODAY () ) VAR p = CALCULATE ( [Enh Median Days To Complete], dim_date[year] = y - 1 ) RETURN "Submission to application complete. " & IF ( ISBLANK ( p ), "", FORMAT ( p, "#,##0" ) & " days in " & ( y - 1 ) & "." )
+		displayFolder: Enhanced
+		lineageTag: 3d5439df-4c07-4861-bec1-b2c436268bd0
+
+	/// Subtitle for the over-a-year card.
+	measure 'Enh Longest Note' = "Longest: " & [Enh Longest Open Label]
+		displayFolder: Enhanced
+		lineageTag: e6856f56-ddec-4997-9495-dea1130da707
+
+	/// Title for the completed card.
+	measure 'Enh Completed Title' = "APPLICATIONS COMPLETE IN " & YEAR ( TODAY () )
+		displayFolder: Enhanced
+		lineageTag: c0fdc22f-b902-4bb3-a48c-60292f0c4007
+
 	column project_summary_id
 		dataType: int64
 		formatString: 0
@@ -232,6 +360,102 @@ table fact_major_project
 		sourceLineageTag: deleted_ind
 		summarizeBy: none
 		sourceColumn: deleted_ind
+
+		annotation SummarizationSetBy = Automatic
+
+	column project_lead_name
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: 25d2f2e3-c7ec-4c1f-90ac-f00b66167548
+		sourceLineageTag: project_lead_name
+		summarizeBy: none
+		sourceColumn: project_lead_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column application_status_code
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: e136fa12-103d-4a49-a831-6402604695f5
+		sourceLineageTag: application_status_code
+		summarizeBy: none
+		sourceColumn: application_status_code
+
+		annotation SummarizationSetBy = Automatic
+
+	column application_received_date
+		dataType: dateTime
+		formatString: yyyy-mm-dd
+		sourceProviderType: date
+		lineageTag: b31aa65f-fca2-4b9c-b58a-b01125d19229
+		sourceLineageTag: application_received_date
+		summarizeBy: none
+		sourceColumn: application_received_date
+
+		annotation SummarizationSetBy = Automatic
+
+	column application_complete_date
+		dataType: dateTime
+		formatString: yyyy-mm-dd
+		sourceProviderType: date
+		lineageTag: 9c8d2112-fc5a-41c5-a779-34d89022594c
+		sourceLineageTag: application_complete_date
+		summarizeBy: none
+		sourceColumn: application_complete_date
+
+		annotation SummarizationSetBy = Automatic
+
+	column irt_status_code
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: 7df7598c-3ab9-4955-a8c6-06dc2b343607
+		sourceLineageTag: irt_status_code
+		summarizeBy: none
+		sourceColumn: irt_status_code
+
+		annotation SummarizationSetBy = Automatic
+
+	column proxy_stage
+		dataType: string
+		sortByColumn: proxy_stage_order
+		sourceProviderType: varchar(8000)
+		lineageTag: 9dfe6f0d-5888-4a66-ae1f-19a47d8a80d4
+		sourceLineageTag: proxy_stage
+		summarizeBy: none
+		sourceColumn: proxy_stage
+
+		annotation SummarizationSetBy = Automatic
+
+	column proxy_stage_order
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 9b75209b-43b4-4521-bb1a-058cdabf4fb8
+		sourceLineageTag: proxy_stage_order
+		summarizeBy: none
+		sourceColumn: proxy_stage_order
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_open
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 03c68467-a0ba-4524-a1ad-bca14197db0a
+		sourceLineageTag: is_open
+		summarizeBy: none
+		sourceColumn: is_open
+
+		annotation SummarizationSetBy = Automatic
+
+	column days_since_submission
+		dataType: int64
+		formatString: #,##0
+		sourceProviderType: int
+		lineageTag: 847a957f-4cbb-40ce-88d2-2f14cd2177ca
+		sourceLineageTag: days_since_submission
+		summarizeBy: none
+		sourceColumn: days_since_submission
 
 		annotation SummarizationSetBy = Automatic
 

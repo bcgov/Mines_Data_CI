@@ -14,20 +14,20 @@ table fact_permit_bond
 		displayFolder: Permit KPIs
 		lineageTag: 3db4c25d-54ee-4302-81f9-b8ae331412dc
 
-	/// Sum of active bonds (bond_status_code = 'ACT') across C/M permits. Matches the Metabase bond_amount column.
-	measure 'Active Bond Amount' = CALCULATE ( SUM ( fact_permit_bond[active_bond_amount] ), fact_permit_bond[has_active_bond] = 1 )
+	/// Sum of active bonds (bond_status_code = 'ACT') across C/M permits, counted once per permit (a permit shared by two mines is not doubled). Ties to Metabase 2868: 6,168,739,563 on 9 Oct 2026.
+	measure 'Active Bond Amount' = CALCULATE ( SUMX ( VALUES ( fact_permit_bond[permit_id] ), CALCULATE ( MAX ( fact_permit_bond[active_bond_amount] ) ) ), fact_permit_bond[has_active_bond] = 1 )
 		formatString: \$#,##0
 		displayFolder: Permit KPIs
 		lineageTag: 9f1bd499-78ab-4cee-9635-6bd212a63bc7
 
 	/// Liability adjustment from the LATEST amendment per permit (Raj, 5 Oct 2026). Differs from Metabase, which sums all amendments.
-	measure 'Latest Liability Adjustment' = CALCULATE ( SUM ( fact_permit_bond[latest_liability_adjustment] ), fact_permit_bond[has_active_bond] = 1 )
+	measure 'Latest Liability Adjustment' = CALCULATE ( SUMX ( VALUES ( fact_permit_bond[permit_id] ), CALCULATE ( MAX ( fact_permit_bond[latest_liability_adjustment] ) ) ), fact_permit_bond[has_active_bond] = 1 )
 		formatString: \$#,##0
 		displayFolder: Permit KPIs
 		lineageTag: daee50ee-8c5d-4a0e-9479-61aaef9322f0
 
 	/// Sum of liability adjustment over ALL amendments. Kept only to tie out with Metabase 2868; not for the report.
-	measure 'Liability Adjustment Total (Metabase)' = CALCULATE ( SUM ( fact_permit_bond[liability_adjustment_total] ), fact_permit_bond[has_active_bond] = 1 )
+	measure 'Liability Adjustment Total (Metabase)' = CALCULATE ( SUMX ( VALUES ( fact_permit_bond[permit_id] ), CALCULATE ( MAX ( fact_permit_bond[liability_adjustment_total] ) ) ), fact_permit_bond[has_active_bond] = 1 )
 		formatString: \$#,##0
 		displayFolder: Permit KPIs
 		lineageTag: b9a9898e-6c67-45e0-8db7-696b0d25d9a3
