@@ -103,8 +103,10 @@ spark.sql("""
     FROM gold.dim_mine
     WHERE dl_iscurrent = 1
     GROUP BY mine_guid
-""").createOrReplaceTempView("gold_dim_mine")
-spark.table("gold.dim_date").createOrReplaceTempView("gold_dim_date")
+""").createOrReplaceTempView("mmp_dim_mine")
+# Own view names: the orchestrator runs a level's notebooks in parallel in one Spark
+# session, and other notebooks register "gold_dim_mine" as the full dim_mine.
+spark.table("gold.dim_date").createOrReplaceTempView("mmp_dim_date")
 
 print("notebook:", NOTEBOOK_NAME, "-> target:", TARGET_TABLE)
 print("project_summary source rows:", spark.table("src_project_summary").count())
@@ -247,10 +249,10 @@ df = spark.sql("""
         ON pa.project_guid = ps.project_guid
     LEFT JOIN project_irt pi
         ON pi.project_guid = ps.project_guid
-    LEFT JOIN gold_dim_mine dm
+    LEFT JOIN mmp_dim_mine dm
         ON ps.mine_guid = dm.mine_guid
         AND dm.dl_iscurrent = 1
-    LEFT JOIN gold_dim_date sdd
+    LEFT JOIN mmp_dim_date sdd
         ON sdd.full_date = CAST(ps.submission_date AS DATE)
     WHERE ps.project_summary_id IS NOT NULL
 """)
