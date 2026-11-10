@@ -44,6 +44,18 @@
 #     Mines Act only | EMA only | Both | Other
 #   so the four buckets add up to the total (107 / 33 / 33 / 24 / 17 on 2 Oct 2026).
 #
+# Projects (Enhanced) columns, added 2026-11-10 for Romil's Major Mines Projects design:
+#   project_lead_name         project.project_lead_party_guid -> party (55% filled at source)
+#   application_status_code   best status of the project's major_mine_application rows
+#   application_received_date first application create_timestamp
+#   application_complete_date update_timestamp of a COM application (proxy: Core keeps no history)
+#   irt_status_code           information_requirements_table status, if any
+#   proxy_stage / proxy_stage_order  Core keeps current status only, so the stage is derived:
+#     Withdrawn (WDN) > Complete (summary COM or application COM) > Application review
+#     > Information requirements > Emerging (draft, DFT) > Pre-application
+#   days_since_submission     today - submission_date (open projects only)
+#   is_open                   not Complete / Withdrawn
+#
 # Date basis (R. Gulati, 5 Oct 2026): submission_date on project_summary.
 #   Report shows last 3 / last 6 months by submission_date, MA + EMA projects only.
 #   No FY-vs-last-FY delta for this report.
@@ -80,6 +92,10 @@ spark.sql(f"CREATE SCHEMA IF NOT EXISTS {STG_SCHEMA}")
 spark.table("silver.project_summary").createOrReplaceTempView("src_project_summary")
 spark.table("silver.project_summary_authorization").createOrReplaceTempView("src_psa")
 spark.table("silver.project_summary_authorization_type").createOrReplaceTempView("src_psat")
+spark.table("silver.project").createOrReplaceTempView("src_project")
+spark.table("silver.party").createOrReplaceTempView("src_party")
+spark.table("silver.major_mine_application").createOrReplaceTempView("src_application")
+spark.table("silver.information_requirements_table").createOrReplaceTempView("src_irt")
 
 # one current row per mine_guid, so the mine join cannot fan out a project (488 rows vs 420 projects, 9 Oct 2026)
 spark.sql("""
@@ -133,6 +149,35 @@ spark.sql("""
     GROUP BY ps.project_summary_id
 """).createOrReplaceTempView("project_flags")
 
+# Step 1b: application, IRT and lead per project (added 2026-11-10).
+spark.sql("""
+    SELECT
+        project_guid,
+        MIN(create_timestamp)                                              AS application_received_ts,
+        MAX(CASE WHEN status_code = 'COM' THEN update_timestamp END)       AS application_complete_ts,
+        MAX(CASE status_code WHEN 'COM' THEN 4 WHEN 'CHR' THEN 3
+                             WHEN 'UNR' THEN 2 WHEN 'SUB' THEN 1 ELSE 0 END) AS application_rank
+    FROM src_application
+    WHERE deleted_ind = 0
+    GROUP BY project_guid
+""").createOrReplaceTempView("project_application")
+
+spark.sql("""
+    SELECT project_guid, MAX(status_code) AS irt_status_code
+    FROM src_irt
+    WHERE deleted_ind = 0
+    GROUP BY project_guid
+""").createOrReplaceTempView("project_irt")
+
+spark.sql("""
+    SELECT
+        p.project_guid,
+        TRIM(CONCAT_WS(' ', pa.first_name, pa.party_name))                 AS project_lead_name
+    FROM src_project p
+    LEFT JOIN src_party pa
+        ON pa.party_guid = p.project_lead_party_guid
+""").createOrReplaceTempView("project_lead")
+
 # Step 2: attach the project attributes, date key, mine key and the act_group bucket.
 df = spark.sql("""
     SELECT
@@ -161,10 +206,47 @@ df = spark.sql("""
         CASE WHEN f.has_mines_act = 1 OR f.has_ema = 1 THEN 1 ELSE 0 END
                                                       AS is_ma_or_ema,
 
+        -- Projects (Enhanced), added 2026-11-10
+        NULLIF(pl.project_lead_name, '')              AS project_lead_name,
+        CASE pa.application_rank WHEN 4 THEN 'COM' WHEN 3 THEN 'CHR' WHEN 2 THEN 'UNR'
+                                 WHEN 1 THEN 'SUB' END
+                                                      AS application_status_code,
+        CAST(pa.application_received_ts AS DATE)      AS application_received_date,
+        CAST(pa.application_complete_ts AS DATE)      AS application_complete_date,
+        pi.irt_status_code,
+        CASE
+            WHEN ps.status_code = 'WDN'                              THEN 'Withdrawn'
+            WHEN ps.status_code = 'COM' OR pa.application_rank = 4   THEN 'Complete'
+            WHEN pa.application_rank >= 1                            THEN 'Application review'
+            WHEN pi.irt_status_code IS NOT NULL                      THEN 'Information requirements'
+            WHEN ps.status_code = 'DFT'                              THEN 'Emerging (draft)'
+            ELSE 'Pre-application'
+        END                                           AS proxy_stage,
+        CASE
+            WHEN ps.status_code = 'WDN'                              THEN 6
+            WHEN ps.status_code = 'COM' OR pa.application_rank = 4   THEN 5
+            WHEN pa.application_rank >= 1                            THEN 4
+            WHEN pi.irt_status_code IS NOT NULL                      THEN 3
+            WHEN ps.status_code = 'DFT'                              THEN 1
+            ELSE 2
+        END                                           AS proxy_stage_order,
+        CASE WHEN ps.status_code = 'WDN' OR ps.status_code = 'COM' OR pa.application_rank = 4
+             THEN 0 ELSE 1 END                        AS is_open,
+        CASE WHEN ps.status_code = 'WDN' OR ps.status_code = 'COM' OR pa.application_rank = 4
+                  OR ps.submission_date IS NULL THEN NULL
+             ELSE DATEDIFF(CURRENT_DATE(), CAST(ps.submission_date AS DATE)) END
+                                                      AS days_since_submission,
+
         ps.deleted_ind
     FROM src_project_summary ps
     JOIN project_flags f
         ON ps.project_summary_id = f.project_summary_id
+    LEFT JOIN project_lead pl
+        ON pl.project_guid = ps.project_guid
+    LEFT JOIN project_application pa
+        ON pa.project_guid = ps.project_guid
+    LEFT JOIN project_irt pi
+        ON pi.project_guid = ps.project_guid
     LEFT JOIN gold_dim_mine dm
         ON ps.mine_guid = dm.mine_guid
         AND dm.dl_iscurrent = 1
@@ -188,6 +270,14 @@ print("built dataframe:", df.count(), "rows,", len(df.columns), "cols")
 (df.write.format("delta").mode("overwrite")
    .option("overwriteSchema", "true").saveAsTable(TARGET_TABLE))
 print("wrote", df.count(), "rows to", TARGET_TABLE)
+
+# Stage tie-out (10 Nov 2026, live rows: Pre-application 68, Emerging 20, Application review 19,
+# Complete 10, Withdrawn 2, Information requirements 2; 66 of 121 with a lead)
+spark.sql(f"""
+    SELECT proxy_stage, COUNT(*) AS projects, COUNT(project_lead_name) AS with_lead
+    FROM {TARGET_TABLE} WHERE deleted_ind = 0
+    GROUP BY proxy_stage ORDER BY projects DESC
+""").show()
 
 # Quick tie-out against Metabase 3387-3391 (expected 2 Oct 2026: 107 / 33 / 33 / 24 / 17)
 spark.sql(f"""

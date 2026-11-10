@@ -73,6 +73,8 @@ GOLD_BUILD = [
     _node("fact_major_project", "reload_fact", "full", business_keys="project_summary_id"),
     _node("fact_permit_bond", "reload_fact", "full", business_keys="permit_id"),
     _node("fact_major_mine_permit", "reload_fact", "full", business_keys="permit_id,mine_guid"),
+    # Major Mines Projects (Enhanced) report - notices of departure, added 2026-11-10
+    _node("fact_notice_of_departure", "reload_fact", "full", business_keys="nod_guid"),
     # Inspections (Enhanced) report - orders + accompanied inspections from NRIS, added 2026-10-26
     _node("fact_inspection_order", "reload_fact", "full", business_keys="order_key"),
     _node("fact_inspection_accompanied", "reload_fact", "full", business_keys="inspection_id"),
@@ -86,6 +88,7 @@ GOLD_DEPENDENCY = {
     "fact_major_project": "dim_mine",                # also reads gold.dim_date (standalone)
     "fact_permit_bond": "dim_mine",                  # also reads gold.dim_date (standalone)
     "fact_major_mine_permit": "dim_mine",            # also reads gold.dim_date (standalone)
+    "fact_notice_of_departure": "dim_mine",          # also reads gold.dim_date (standalone)
     "fact_inspection_order": "fact_inspection",      # reads gold.fact_inspection for date / mine / type
     "fact_inspection_accompanied": "fact_inspection",
 }
