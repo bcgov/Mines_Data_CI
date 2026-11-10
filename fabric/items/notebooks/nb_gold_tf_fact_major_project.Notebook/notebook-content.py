@@ -174,7 +174,8 @@ spark.sql("""
 spark.sql("""
     SELECT
         p.project_guid,
-        TRIM(CONCAT_WS(' ', pa.first_name, pa.party_name))                 AS project_lead_name
+        TRIM(CONCAT_WS(' ', pa.first_name, pa.party_name))                 AS project_lead_name,
+        p.mine_guid                                                        AS project_mine_guid
     FROM src_project p
     LEFT JOIN src_party pa
         ON pa.party_guid = p.project_lead_party_guid
@@ -249,8 +250,10 @@ df = spark.sql("""
         ON pa.project_guid = ps.project_guid
     LEFT JOIN project_irt pi
         ON pi.project_guid = ps.project_guid
+    -- project_summary.mine_guid is filled for 1 of 121 projects (10 Nov 2026); project.mine_guid
+    -- is filled for every project, so use it and fall back to project_summary.
     LEFT JOIN mmp_dim_mine dm
-        ON ps.mine_guid = dm.mine_guid
+        ON COALESCE(pl.project_mine_guid, ps.mine_guid) = dm.mine_guid
         AND dm.dl_iscurrent = 1
     LEFT JOIN mmp_dim_date sdd
         ON sdd.full_date = CAST(ps.submission_date AS DATE)
