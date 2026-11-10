@@ -1,0 +1,12 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Notebook",
+    "displayName": "nb_gold_tf_fact_notice_of_departure",
+    "description": "Gold transform: one row per notice of departure (Major Mines Projects report)"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "f2666a03-eec8-47d5-8a74-1e3aa9177e0e"
+  }
+}
