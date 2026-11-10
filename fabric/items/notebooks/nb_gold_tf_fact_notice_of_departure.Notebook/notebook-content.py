@@ -77,8 +77,10 @@ spark.sql("""
     FROM gold.dim_mine
     WHERE dl_iscurrent = 1
     GROUP BY mine_guid
-""").createOrReplaceTempView("gold_dim_mine")
-spark.table("gold.dim_date").createOrReplaceTempView("gold_dim_date")
+""").createOrReplaceTempView("nod_dim_mine")
+# Own view names: the orchestrator runs a level's notebooks in parallel in one Spark
+# session, and other notebooks register "gold_dim_mine" as the full dim_mine.
+spark.table("gold.dim_date").createOrReplaceTempView("nod_dim_date")
 
 print("notebook:", NOTEBOOK_NAME, "-> target:", TARGET_TABLE)
 print("notice_of_departure source rows:", spark.table("src_nod").count())
@@ -151,9 +153,9 @@ df = spark.sql("""
 
         n.deleted_ind
     FROM src_nod n
-    LEFT JOIN gold_dim_mine dm
+    LEFT JOIN nod_dim_mine dm
         ON n.mine_guid = dm.mine_guid
-    LEFT JOIN gold_dim_date sdd
+    LEFT JOIN nod_dim_date sdd
         ON sdd.full_date = CAST(n.submission_timestamp AS DATE)
     WHERE n.nod_guid IS NOT NULL
 """)
