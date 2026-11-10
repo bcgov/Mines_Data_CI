@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Report",
+    "displayName": "Major Mines Projects (Enhanced)"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "7c3d9e21-5a4b-4f6c-8d1e-2b3a4c5d6e7f"
+  }
+}

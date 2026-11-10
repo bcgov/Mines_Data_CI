@@ -19,4 +19,5 @@ ref table fact_major_project
 ref table fact_permit_bond
 ref table fact_major_mine_permit
 ref table ref_mmo_published
+ref table fact_notice_of_departure
 

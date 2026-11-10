@@ -22,3 +22,10 @@ relationship fact_major_mine_permit_Permit_Issue_Date_SK_dim_date_Date_SK
 	fromColumn: fact_major_mine_permit.Permit_Issue_Date_SK
 	toColumn: dim_date.Date_SK
 
+relationship fact_notice_of_departure_Mine_SK_dim_mine_Mine_SK
+	fromColumn: fact_notice_of_departure.Mine_SK
+	toColumn: dim_mine.Mine_SK
+
+relationship fact_notice_of_departure_Submission_Date_SK_dim_date_Date_SK
+	fromColumn: fact_notice_of_departure.Submission_Date_SK
+	toColumn: dim_date.Date_SK
