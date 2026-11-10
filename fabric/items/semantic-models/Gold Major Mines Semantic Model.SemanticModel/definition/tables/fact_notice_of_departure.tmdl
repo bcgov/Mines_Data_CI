@@ -1,0 +1,295 @@
+table fact_notice_of_departure
+	lineageTag: 1c6d4aca-20bf-4851-87b3-2b699d5019ae
+	sourceLineageTag: [gold].[fact_notice_of_departure]
+
+	/// Notices of departure received (by submission date on the date axis).
+	measure 'Enh Notices' = CALCULATE ( COUNTROWS ( fact_notice_of_departure ), fact_notice_of_departure[deleted_ind] = FALSE )
+		formatString: #,##0
+		displayFolder: Enhanced
+		lineageTag: f2349740-946e-48e3-8dcf-4cc903170690
+
+	/// Notices determined, counted in the year decided. Decision date = last update when the status is a determination (Core has no decision date).
+	measure 'Enh Notices Decided' = VAR yrs = VALUES ( dim_date[year] ) RETURN CALCULATE ( COUNTROWS ( fact_notice_of_departure ), REMOVEFILTERS ( dim_date ), fact_notice_of_departure[deleted_ind] = FALSE, fact_notice_of_departure[is_decided] = 1, FILTER ( ALL ( fact_notice_of_departure[decision_date] ), YEAR ( fact_notice_of_departure[decision_date] ) IN yrs ) )
+		formatString: #,##0
+		displayFolder: Enhanced
+		lineageTag: d3f6af62-883e-4768-a7b3-1589022d0a74
+
+	/// Median days from submission to determination.
+	measure 'Enh Notices Median Days' = CALCULATE ( MEDIAN ( fact_notice_of_departure[days_to_decision] ), fact_notice_of_departure[deleted_ind] = FALSE, fact_notice_of_departure[is_decided] = 1 )
+		formatString: #,##0
+		displayFolder: Enhanced
+		lineageTag: 745f1cf4-66dd-4ee3-b316-f73604233a03
+
+	/// Share of determined notices found non-substantial (determined or self-determined).
+	measure 'Enh Notices Non Substantial %' = DIVIDE ( CALCULATE ( COUNTROWS ( fact_notice_of_departure ), fact_notice_of_departure[deleted_ind] = FALSE, fact_notice_of_departure[is_decided] = 1, fact_notice_of_departure[nod_status] <> "determined_substantial" ), CALCULATE ( COUNTROWS ( fact_notice_of_departure ), fact_notice_of_departure[deleted_ind] = FALSE, fact_notice_of_departure[is_decided] = 1 ) )
+		formatString: 0%
+		displayFolder: Enhanced
+		lineageTag: 57e6dbc7-e017-4ae5-a875-4552fca45ca8
+
+	/// Notices determined substantial (need a permit amendment).
+	measure 'Enh Notices Substantial' = CALCULATE ( COUNTROWS ( fact_notice_of_departure ), fact_notice_of_departure[deleted_ind] = FALSE, fact_notice_of_departure[nod_status] = "determined_substantial" )
+		formatString: #,##0
+		displayFolder: Enhanced
+		lineageTag: c0d88d9c-a6a7-47ad-9e17-fe827e8371f8
+
+	/// Notices not determined and not withdrawn.
+	measure 'Enh Notices Open' = CALCULATE ( COUNTROWS ( fact_notice_of_departure ), fact_notice_of_departure[deleted_ind] = FALSE, fact_notice_of_departure[is_open] = 1 )
+		formatString: #,##0
+		displayFolder: Enhanced
+		lineageTag: 42bbc748-b9d1-490f-bf5e-1f11bdff543c
+
+	/// Open notices received more than a year ago.
+	measure 'Enh Notices Open Over A Year' = CALCULATE ( COUNTROWS ( fact_notice_of_departure ), fact_notice_of_departure[deleted_ind] = FALSE, fact_notice_of_departure[is_open] = 1, fact_notice_of_departure[days_open] > 365 )
+		formatString: #,##0
+		displayFolder: Enhanced
+		lineageTag: c8c21898-5250-40a4-9fb7-f96a5ce79258
+
+	/// Days open for the row.
+	measure 'Enh Notices Days Open' = MAX ( fact_notice_of_departure[days_open] )
+		formatString: #,##0
+		displayFolder: Enhanced
+		lineageTag: 35f64690-abca-449c-9f73-c177dfb5ef21
+
+	/// First year with a notice.
+	measure 'Enh Notices First Year' = YEAR ( CALCULATE ( MIN ( fact_notice_of_departure[submission_date] ), fact_notice_of_departure[deleted_ind] = FALSE, REMOVEFILTERS ( dim_date ) ) )
+		formatString: 0
+		displayFolder: Enhanced
+		lineageTag: 3c2ece90-98e4-437a-92ff-765103b34b83
+
+	/// Notices page headline sentence.
+	measure 'Enh Notices Headline' = FORMAT ( [Enh Notices], "#,##0" ) & " notices tracked, " & FORMAT ( [Enh Notices Median Days], "#,##0" ) & " days to decide at the median. " & FORMAT ( [Enh Notices Open], "#,##0" ) & " are still open, " & FORMAT ( [Enh Notices Open Over A Year], "#,##0" ) & " for over a year."
+		displayFolder: Enhanced
+		lineageTag: 4ecce9e5-06bd-48be-8d93-78cce3f225b7
+
+	/// Subtitle for the % card.
+	measure 'Enh Notices Split Note' = FORMAT ( CALCULATE ( COUNTROWS ( fact_notice_of_departure ), fact_notice_of_departure[deleted_ind] = FALSE, fact_notice_of_departure[is_decided] = 1, fact_notice_of_departure[nod_status] <> "determined_substantial" ), "#,##0" ) & " non-substantial, " & FORMAT ( [Enh Notices Substantial], "#,##0" ) & " substantial"
+		displayFolder: Enhanced
+		lineageTag: 63babe63-6466-4b1b-8d08-fb06ca7293c6
+
+	/// Subtitle for the still-open card.
+	measure 'Enh Notices Open Note' = FORMAT ( [Enh Notices Open Over A Year], "#,##0" ) & " of them for more than a year"
+		displayFolder: Enhanced
+		lineageTag: 7150974a-f51d-43f6-8bde-20e72e9df72e
+
+	/// Subtitle for the tracked card.
+	measure 'Enh Notices Since Note' = "Since " & [Enh Notices First Year]
+		displayFolder: Enhanced
+		lineageTag: 0797e779-445c-4b2f-9eea-277a84d2f12a
+
+	/// Subtitle for the median card.
+	measure 'Enh Notices Decided Note' = "For the " & FORMAT ( CALCULATE ( COUNTROWS ( fact_notice_of_departure ), fact_notice_of_departure[deleted_ind] = FALSE, fact_notice_of_departure[is_decided] = 1 ), "#,##0" ) & " determined notices"
+		displayFolder: Enhanced
+		lineageTag: 5a59ccd1-b12b-4a7f-b39c-6202fe8427d7
+
+	/// Hidden 1/0 flag: years from the first notice to this year. Chart filter.
+	measure 'Enh NoD Year In Range' = VAR y = MAX ( dim_date[year] ) VAR f = [Enh Notices First Year] RETURN IF ( NOT ISBLANK ( f ) && y >= f && y <= YEAR ( TODAY () ), 1, 0 )
+		formatString: 0
+		displayFolder: Enhanced
+		lineageTag: eadabde9-371e-43d6-9311-76aa363326f5
+
+	column nod_guid
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: 8dc56c1b-6371-4160-a4f5-9eab177e9309
+		sourceLineageTag: nod_guid
+		summarizeBy: none
+		sourceColumn: nod_guid
+
+		annotation SummarizationSetBy = Automatic
+
+	column nod_no
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: 0748a1b6-5bb6-41e8-891f-c0cf3b62bd91
+		sourceLineageTag: nod_no
+		summarizeBy: none
+		sourceColumn: nod_no
+
+		annotation SummarizationSetBy = Automatic
+
+	column nod_title
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: 8412d7db-fbca-4c3f-a4de-7359cd7ac77a
+		sourceLineageTag: nod_title
+		summarizeBy: none
+		sourceColumn: nod_title
+
+		annotation SummarizationSetBy = Automatic
+
+	column nod_type
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: 9ad5481c-09cb-4f1e-a0c6-b886b8a7bc3c
+		sourceLineageTag: nod_type
+		summarizeBy: none
+		sourceColumn: nod_type
+
+		annotation SummarizationSetBy = Automatic
+
+	column nod_type_label
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: 18940eca-066e-4062-b801-9dcb00cb1972
+		sourceLineageTag: nod_type_label
+		summarizeBy: none
+		sourceColumn: nod_type_label
+
+		annotation SummarizationSetBy = Automatic
+
+	column nod_status
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: a8a9f85f-055d-4964-a113-f70984caf08b
+		sourceLineageTag: nod_status
+		summarizeBy: none
+		sourceColumn: nod_status
+
+		annotation SummarizationSetBy = Automatic
+
+	column nod_status_label
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: f31ca1c3-ab04-4b0d-9b60-341a6f3b15da
+		sourceLineageTag: nod_status_label
+		summarizeBy: none
+		sourceColumn: nod_status_label
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_decided
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: c1cd9122-f841-450b-8c4a-f09438b135fd
+		sourceLineageTag: is_decided
+		summarizeBy: none
+		sourceColumn: is_decided
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_open
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 6404f9a3-b7ae-4c10-b1d6-1587cb3774f7
+		sourceLineageTag: is_open
+		summarizeBy: none
+		sourceColumn: is_open
+
+		annotation SummarizationSetBy = Automatic
+
+	column mine_guid
+		dataType: string
+		isHidden
+		displayFolder: Keys
+		sourceProviderType: varchar(8000)
+		lineageTag: 1ae14fb9-378a-4c85-a4cd-44662cb5d028
+		sourceLineageTag: mine_guid
+		summarizeBy: none
+		sourceColumn: mine_guid
+
+		annotation SummarizationSetBy = Automatic
+
+	column permit_guid
+		dataType: string
+		isHidden
+		displayFolder: Keys
+		sourceProviderType: varchar(8000)
+		lineageTag: a3c0b709-0ec9-4a7c-9c92-727f0d60fcb7
+		sourceLineageTag: permit_guid
+		summarizeBy: none
+		sourceColumn: permit_guid
+
+		annotation SummarizationSetBy = Automatic
+
+	column Mine_SK
+		dataType: int64
+		isHidden
+		formatString: 0
+		displayFolder: Keys
+		sourceProviderType: bigint
+		lineageTag: c218e7dc-36d7-4111-b37f-e61421c2f004
+		sourceLineageTag: Mine_SK
+		summarizeBy: none
+		sourceColumn: Mine_SK
+
+		annotation SummarizationSetBy = Automatic
+
+	column Submission_Date_SK
+		dataType: int64
+		isHidden
+		formatString: 0
+		displayFolder: Keys
+		sourceProviderType: int
+		lineageTag: 5f9eab20-457e-42dd-b8b0-8cdae95292aa
+		sourceLineageTag: Submission_Date_SK
+		summarizeBy: none
+		sourceColumn: Submission_Date_SK
+
+		annotation SummarizationSetBy = Automatic
+
+	column submission_date
+		dataType: dateTime
+		formatString: yyyy-mm-dd
+		sourceProviderType: date
+		lineageTag: 8d8abaed-68f9-4e12-816a-e577140cb19e
+		sourceLineageTag: submission_date
+		summarizeBy: none
+		sourceColumn: submission_date
+
+		annotation SummarizationSetBy = Automatic
+
+	column decision_date
+		dataType: dateTime
+		formatString: yyyy-mm-dd
+		sourceProviderType: date
+		lineageTag: 72d1df6a-f05d-4c21-b6fa-55b4ea41040f
+		sourceLineageTag: decision_date
+		summarizeBy: none
+		sourceColumn: decision_date
+
+		annotation SummarizationSetBy = Automatic
+
+	column days_to_decision
+		dataType: int64
+		formatString: #,##0
+		sourceProviderType: int
+		lineageTag: afb61e33-267a-416a-8a5d-29e55914ebac
+		sourceLineageTag: days_to_decision
+		summarizeBy: none
+		sourceColumn: days_to_decision
+
+		annotation SummarizationSetBy = Automatic
+
+	column days_open
+		dataType: int64
+		formatString: #,##0
+		sourceProviderType: int
+		lineageTag: 88b47b48-09b7-40a2-ad25-e25e6401212f
+		sourceLineageTag: days_open
+		summarizeBy: none
+		sourceColumn: days_open
+
+		annotation SummarizationSetBy = Automatic
+
+	column deleted_ind
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		sourceProviderType: bit
+		lineageTag: fee3a6d1-c80d-4ad1-bc11-aa9c563562a6
+		sourceLineageTag: deleted_ind
+		summarizeBy: none
+		sourceColumn: deleted_ind
+
+		annotation SummarizationSetBy = Automatic
+
+	partition fact_notice_of_departure = entity
+		mode: directLake
+		source
+			entityName: fact_notice_of_departure
+			schemaName: gold
+			expressionSource: DatabaseQuery
+
+	annotation PBI_ResultType = Table
+

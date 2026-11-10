@@ -1,0 +1,171 @@
+table ref_mmo_published
+	lineageTag: 3d7e1092-24d6-4043-8793-581413a09867
+	sourceLineageTag: [gold].[ref_mmo_published]
+
+	/// Mines that actually produced, CIM & CPO 2024/25. Not in MDS.
+	measure 'Pub Producing Mines' = CALCULATE ( SUM ( ref_mmo_published[value] ), KEEPFILTERS ( ref_mmo_published[metric_key] = "producing_mines" ) )
+		formatString: #,##0
+		displayFolder: Published (not in MDS)
+		lineageTag: 5e3f5502-bc21-4d31-bce2-7439284835b6
+
+	/// Card subtitle for producing mines.
+	measure 'Pub Producing Split Label' = VAR m = CALCULATE ( SUM ( ref_mmo_published[value] ), ref_mmo_published[metric_key] = "producing_by_commodity", ref_mmo_published[category] = "Metal" ) VAR c = CALCULATE ( SUM ( ref_mmo_published[value] ), ref_mmo_published[metric_key] = "producing_by_commodity", ref_mmo_published[category] = "Coal" ) RETURN FORMAT ( m, "0" ) & " metal, " & FORMAT ( c, "0" ) & " coal · CIM & CPO 2024/25"
+		displayFolder: Published (not in MDS)
+		lineageTag: c2ea74ae-3aec-4545-a713-eb66310a497c
+
+	/// Major projects approved in 2025/26, annual service plan report.
+	measure 'Pub Projects Approved' = CALCULATE ( SUM ( ref_mmo_published[value] ), KEEPFILTERS ( ref_mmo_published[metric_key] = "projects_approved" ) )
+		formatString: #,##0
+		displayFolder: Published (not in MDS)
+		lineageTag: 46779d2c-e9b5-4d8e-a5ea-6fba45f8beb8
+
+	/// Major mine screening days, before vs now.
+	measure 'Pub Approval Days' = CALCULATE ( SUM ( ref_mmo_published[value] ), KEEPFILTERS ( ref_mmo_published[metric_key] = "approval_days" ) )
+		formatString: #,##0
+		displayFolder: Published (not in MDS)
+		lineageTag: c63138f5-2093-43a9-84ba-0ddda3555dff
+
+	/// Assessment and permit months, separate vs coordinated.
+	measure 'Pub Approval Months' = CALCULATE ( SUM ( ref_mmo_published[value] ), KEEPFILTERS ( ref_mmo_published[metric_key] = "approval_months" ) )
+		formatString: #,##0
+		displayFolder: Published (not in MDS)
+		lineageTag: 07e8778a-0dc4-45e8-bee1-776e2d0445d1
+
+	/// Inspections and reportable incidents, 2024/25, by major vs regional.
+	measure 'Pub Count' = CALCULATE ( SUM ( ref_mmo_published[value] ), KEEPFILTERS ( ref_mmo_published[metric_key] IN { "inspections_share", "incidents_share" } ) )
+		formatString: #,##0
+		displayFolder: Published (not in MDS)
+		lineageTag: cb709b0e-8a9d-44fc-9eef-56643e7be128
+
+	/// Inspections at major mines by discipline, 2024/25.
+	measure 'Pub Major Inspections by Discipline' = CALCULATE ( SUM ( ref_mmo_published[value] ), KEEPFILTERS ( ref_mmo_published[metric_key] = "major_insp_discipline" ) )
+		formatString: #,##0
+		displayFolder: Published (not in MDS)
+		lineageTag: 0ebef2a9-708d-48c0-a41c-f6eed99105e4
+
+	/// Share of all inspections at major mines, 2024/25.
+	measure 'Pub Major Inspection Share' = DIVIDE ( CALCULATE ( SUM ( ref_mmo_published[value] ), ref_mmo_published[metric_key] = "inspections_share", ref_mmo_published[category] = "Major mines" ), CALCULATE ( SUM ( ref_mmo_published[value] ), ref_mmo_published[metric_key] = "inspections_share" ) )
+		formatString: 0%
+		displayFolder: Published (not in MDS)
+		lineageTag: b5a79d0f-468a-4695-ac2d-5e060e9e6f9d
+
+	/// Share of reportable incidents at major mines, 2024/25.
+	measure 'Pub Major Incident Share' = DIVIDE ( CALCULATE ( SUM ( ref_mmo_published[value] ), ref_mmo_published[metric_key] = "incidents_share", ref_mmo_published[category] = "Major mines" ), CALCULATE ( SUM ( ref_mmo_published[value] ), ref_mmo_published[metric_key] = "incidents_share" ) )
+		formatString: 0%
+		displayFolder: Published (not in MDS)
+		lineageTag: 46caa89e-b2c3-4821-af3e-21529e19b589
+
+	column metric_key
+		dataType: string
+		isHidden
+		sourceProviderType: varchar(8000)
+		lineageTag: 737c2213-a421-43e6-afff-951c5d3690ef
+		sourceLineageTag: metric_key
+		summarizeBy: none
+		sourceColumn: metric_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column metric_label
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: bea9dd2c-d9ce-423e-9c38-a447131b9103
+		sourceLineageTag: metric_label
+		summarizeBy: none
+		sourceColumn: metric_label
+
+		annotation SummarizationSetBy = Automatic
+
+	column category
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: 84eb86e6-2092-43b6-8754-b60b24012b12
+		sourceLineageTag: category
+		summarizeBy: none
+		sourceColumn: category
+		sortByColumn: sort_order
+
+		annotation SummarizationSetBy = Automatic
+
+	column sort_order
+		dataType: int64
+		isHidden
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: ffcf1d3d-a4a4-4d99-a5cc-ec7f1b1cdffa
+		sourceLineageTag: sort_order
+		summarizeBy: none
+		sourceColumn: sort_order
+
+		annotation SummarizationSetBy = Automatic
+
+	column value
+		dataType: double
+		formatString: #,##0
+		sourceProviderType: float
+		lineageTag: 8e25cf0c-a697-4ebe-b66a-fe2e87f1ed48
+		sourceLineageTag: value
+		summarizeBy: sum
+		sourceColumn: value
+
+		annotation SummarizationSetBy = Automatic
+
+	column unit
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: 529d74fa-95be-494e-a809-f9c34fa81357
+		sourceLineageTag: unit
+		summarizeBy: none
+		sourceColumn: unit
+
+		annotation SummarizationSetBy = Automatic
+
+	column period
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: bbd64b82-52c9-486f-86aa-a690456cc3f8
+		sourceLineageTag: period
+		summarizeBy: none
+		sourceColumn: period
+
+		annotation SummarizationSetBy = Automatic
+
+	column source
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: ebffdb52-6323-4a9f-9a8a-1562ae46ebfa
+		sourceLineageTag: source
+		summarizeBy: none
+		sourceColumn: source
+
+		annotation SummarizationSetBy = Automatic
+
+	column note
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: d4c34746-f5a0-4ef5-893b-ca2e4d565a33
+		sourceLineageTag: note
+		summarizeBy: none
+		sourceColumn: note
+
+		annotation SummarizationSetBy = Automatic
+
+	column verified
+		dataType: boolean
+		sourceProviderType: bit
+		lineageTag: 6042e0d2-51e7-4497-b1ad-334d109ab636
+		sourceLineageTag: verified
+		summarizeBy: none
+		sourceColumn: verified
+
+		annotation SummarizationSetBy = Automatic
+
+	partition ref_mmo_published = entity
+		mode: directLake
+		source
+			entityName: ref_mmo_published
+			schemaName: gold
+			expressionSource: DatabaseQuery
+
+	annotation PBI_ResultType = Table
+

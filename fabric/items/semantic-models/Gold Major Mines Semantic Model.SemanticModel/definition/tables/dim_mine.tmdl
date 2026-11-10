@@ -393,6 +393,46 @@ table dim_mine
 
 		annotation SummarizationSetBy = Automatic
 
+	column mine_operation_status_reason_desc
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: 080a0449-fcc4-4cca-b76b-e50a677906c3
+		sourceLineageTag: mine_operation_status_reason_desc
+		summarizeBy: none
+		sourceColumn: mine_operation_status_reason_desc
+
+		annotation SummarizationSetBy = Automatic
+
+	column mine_operation_status_sub_reason_desc
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: fb71bb7c-4a82-47cd-9eef-5024ed0620e3
+		sourceLineageTag: mine_operation_status_sub_reason_desc
+		summarizeBy: none
+		sourceColumn: mine_operation_status_sub_reason_desc
+
+		annotation SummarizationSetBy = Automatic
+
+	column mine_life_stage
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: 610c322a-5a22-4e54-a66c-ad9182bccbaa
+		sourceLineageTag: mine_life_stage
+		summarizeBy: none
+		sourceColumn: mine_life_stage
+
+		annotation SummarizationSetBy = Automatic
+
+	column commodity_group
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: 9af5abd3-637b-4e19-a228-a7c24d262bdf
+		sourceLineageTag: commodity_group
+		summarizeBy: none
+		sourceColumn: commodity_group
+
+		annotation SummarizationSetBy = Automatic
+
 	partition dim_mine = entity
 		mode: directLake
 		source
