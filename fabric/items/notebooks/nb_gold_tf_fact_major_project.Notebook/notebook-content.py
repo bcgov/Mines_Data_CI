@@ -175,7 +175,8 @@ spark.sql("""
     SELECT
         p.project_guid,
         TRIM(CONCAT_WS(' ', pa.first_name, pa.party_name))                 AS project_lead_name,
-        p.mine_guid                                                        AS project_mine_guid
+        p.mine_guid                                                        AS project_mine_guid,
+        p.project_title                                                    AS project_title
     FROM src_project p
     LEFT JOIN src_party pa
         ON pa.party_guid = p.project_lead_party_guid
@@ -186,7 +187,7 @@ df = spark.sql("""
     SELECT
         ps.project_summary_id,
         ps.project_summary_guid,
-        ps.project_summary_title,
+        COALESCE(pl.project_title, ps.project_summary_title) AS project_summary_title,  -- title lives on project (10 Nov 2026)
         ps.status_code,
 
         -- Surrogate keys
