@@ -121,7 +121,7 @@ table fact_major_project
 		lineageTag: 360bdcef-2839-47b6-bf75-0ca1cf582089
 
 	/// Median days from project submission to application complete, for projects completed in the year(s) in context.
-	measure 'Enh Median Days To Complete' = VAR yrs = VALUES ( dim_date[year] ) VAR t = CALCULATETABLE ( FILTER ( fact_major_project, NOT ISBLANK ( fact_major_project[application_complete_date] ) && NOT ISBLANK ( fact_major_project[submission_date] ) && YEAR ( fact_major_project[application_complete_date] ) IN yrs ), REMOVEFILTERS ( dim_date ), fact_major_project[deleted_ind] = FALSE ) RETURN MEDIANX ( t, DATEDIFF ( fact_major_project[submission_date], fact_major_project[application_complete_date], DAY ) )
+	measure 'Enh Median Days To Complete' = VAR yrs = VALUES ( dim_date[year] ) VAR t = CALCULATETABLE ( FILTER ( fact_major_project, NOT ISBLANK ( fact_major_project[application_complete_date] ) && NOT ISBLANK ( fact_major_project[submission_date] ) && fact_major_project[application_complete_date] >= fact_major_project[submission_date] && YEAR ( fact_major_project[application_complete_date] ) IN yrs ), REMOVEFILTERS ( dim_date ), fact_major_project[deleted_ind] = FALSE ) RETURN MEDIANX ( t, DATEDIFF ( fact_major_project[submission_date], fact_major_project[application_complete_date], DAY ) )
 		formatString: #,##0
 		displayFolder: Enhanced
 		lineageTag: c9bc1ceb-9fd0-4982-b9cd-4ff6cdf17a5f
@@ -177,7 +177,7 @@ table fact_major_project
 		lineageTag: 2838242c-fa11-42ce-b56e-a31416eac506
 
 	/// Data gap panel text on the Open projects page.
-	measure 'Enh Data Gap Note' = "Core records the current stage only, not when a project entered it. Days count from the project's submission date. " & FORMAT ( [Enh Open No Submission Date], "#,##0" ) & " open projects have no submission date and " & FORMAT ( [Enh Open No Lead], "#,##0" ) & " have no lead."
+	measure 'Enh Data Gap Note' = "Core records the current stage only, not when a project entered it. Days count from the project's submission date. " & FORMAT ( [Enh Open No Submission Date], "#,##0" ) & " open projects have no submission date and " & FORMAT ( [Enh Open No Lead], "#,##0" ) & " have no lead. " & ( VAR bad = CALCULATE ( COUNTROWS ( fact_major_project ), fact_major_project[deleted_ind] = FALSE, FILTER ( ALL ( fact_major_project[submission_date], fact_major_project[application_complete_date] ), NOT ISBLANK ( fact_major_project[application_complete_date] ) && fact_major_project[application_complete_date] < fact_major_project[submission_date] ) ) RETURN IF ( bad > 0, FORMAT ( bad, "#,##0" ) & " project has an application dated before its submission date and is left out of the median.", "" ) )
 		displayFolder: Enhanced
 		lineageTag: 95eb7aac-0b02-48d5-894c-5de9ecd1733b
 
