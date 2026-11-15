@@ -3,10 +3,10 @@
   "name": "c7a1e0b0d0e0f0c0002e",
   "position": {
     "x": 288,
-    "y": 834,
+    "y": 313,
     "z": 46,
-    "width": 140,
-    "height": 30,
+    "width": 1276,
+    "height": 28,
     "tabOrder": 46
   },
   "visual": {
@@ -19,12 +19,20 @@
               {
                 "textRuns": [
                   {
-                    "value": "NOT IN CORE YET",
+                    "value": "Core has no decision date. ",
                     "textStyle": {
-                      "fontSize": "8px",
+                      "fontSize": "9px",
                       "color": "#6B4E00",
                       "fontFamily": "Segoe UI",
                       "fontWeight": "bold"
+                    }
+                  },
+                  {
+                    "value": "\"Applications complete\" and \"median days to complete\" use the date the application is marked complete in Core, not a decision.",
+                    "textStyle": {
+                      "fontSize": "9px",
+                      "color": "#6B4E00",
+                      "fontFamily": "Segoe UI"
                     }
                   }
                 ]

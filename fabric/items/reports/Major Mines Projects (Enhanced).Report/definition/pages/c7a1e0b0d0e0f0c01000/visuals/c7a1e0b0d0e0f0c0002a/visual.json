@@ -2,37 +2,18 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
   "name": "c7a1e0b0d0e0f0c0002a",
   "position": {
-    "x": 276,
-    "y": 318,
+    "x": 1270,
+    "y": 222,
     "z": 42,
-    "width": 520,
-    "height": 500,
+    "width": 170,
+    "height": 56,
     "tabOrder": 42
   },
   "visual": {
-    "visualType": "clusteredBarChart",
+    "visualType": "multiRowCard",
     "query": {
       "queryState": {
-        "Category": {
-          "projections": [
-            {
-              "field": {
-                "Column": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "fact_major_project"
-                    }
-                  },
-                  "Property": "proxy_stage"
-                }
-              },
-              "queryRef": "fact_major_project.proxy_stage",
-              "nativeQueryRef": "proxy_stage",
-              "displayName": "Stage"
-            }
-          ]
-        },
-        "Y": {
+        "Values": {
           "projections": [
             {
               "field": {
@@ -42,164 +23,36 @@
                       "Entity": "fact_major_project"
                     }
                   },
-                  "Property": "Enh Open Projects"
+                  "Property": "Enh Reviews Over A Year"
                 }
               },
-              "queryRef": "fact_major_project.Enh Open Projects",
-              "nativeQueryRef": "Enh Open Projects",
-              "displayName": "Open projects"
+              "queryRef": "fact_major_project.Enh Reviews Over A Year",
+              "nativeQueryRef": "Enh Reviews Over A Year"
             }
           ]
         }
-      },
-      "sortDefinition": {
-        "sort": [
-          {
-            "field": {
-              "Column": {
-                "Expression": {
-                  "SourceRef": {
-                    "Entity": "fact_major_project"
-                  }
-                },
-                "Property": "proxy_stage"
-              }
-            },
-            "direction": "Ascending"
-          }
-        ],
-        "isDefaultSort": true
       }
     },
     "drillFilterOtherVisuals": true,
     "objects": {
-      "categoryAxis": [
+      "dataLabels": [
         {
           "properties": {
-            "showAxisTitle": {
-              "expr": {
-                "Literal": {
-                  "Value": "false"
-                }
-              }
-            },
             "fontSize": {
               "expr": {
                 "Literal": {
-                  "Value": "8D"
-                }
-              }
-            }
-          }
-        }
-      ],
-      "valueAxis": [
-        {
-          "properties": {
-            "show": {
-              "expr": {
-                "Literal": {
-                  "Value": "false"
+                  "Value": "24D"
                 }
               }
             },
-            "showAxisTitle": {
-              "expr": {
-                "Literal": {
-                  "Value": "false"
-                }
-              }
-            }
-          }
-        }
-      ],
-      "legend": [
-        {
-          "properties": {
-            "show": {
-              "expr": {
-                "Literal": {
-                  "Value": "false"
-                }
-              }
-            }
-          }
-        }
-      ],
-      "labels": [
-        {
-          "properties": {
-            "show": {
-              "expr": {
-                "Literal": {
-                  "Value": "true"
-                }
-              }
-            },
-            "fontSize": {
-              "expr": {
-                "Literal": {
-                  "Value": "9D"
-                }
-              }
-            }
-          }
-        }
-      ],
-      "dataPoint": [
-        {
-          "properties": {
-            "fill": {
+            "color": {
               "solid": {
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#013366'"
+                      "Value": "'#6B4E00'"
                     }
                   }
-                }
-              }
-            }
-          }
-        }
-      ]
-    },
-    "visualContainerObjects": {
-      "title": [
-        {
-          "properties": {
-            "show": {
-              "expr": {
-                "Literal": {
-                  "Value": "true"
-                }
-              }
-            },
-            "text": {
-              "expr": {
-                "Literal": {
-                  "Value": "'Open projects, by stage'"
-                }
-              }
-            },
-            "fontSize": {
-              "expr": {
-                "Literal": {
-                  "Value": "13D"
-                }
-              }
-            },
-            "fontColor": {
-              "expr": {
-                "Literal": {
-                  "Value": "'#1F2933'"
-                }
-              }
-            },
-            "alignment": {
-              "expr": {
-                "Literal": {
-                  "Value": "'left'"
                 }
               }
             },
@@ -213,85 +66,95 @@
           }
         }
       ],
-      "border": [
+      "categoryLabels": [
         {
           "properties": {
             "show": {
               "expr": {
                 "Literal": {
-                  "Value": "true"
-                }
-              }
-            },
-            "color": {
-              "expr": {
-                "Literal": {
-                  "Value": "'#D8DDE3'"
-                }
-              }
-            },
-            "radius": {
-              "expr": {
-                "Literal": {
-                  "Value": "6D"
+                  "Value": "false"
                 }
               }
             }
           }
         }
       ],
+      "cardTitle": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "card": [
+        {
+          "properties": {
+            "outline": {
+              "expr": {
+                "Literal": {
+                  "Value": "'None'"
+                }
+              }
+            },
+            "outlineWeight": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
+                }
+              }
+            },
+            "barShow": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            },
+            "cardPadding": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
+                }
+              }
+            },
+            "showBar": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "visualContainerObjects": {
       "background": [
         {
           "properties": {
             "show": {
               "expr": {
                 "Literal": {
-                  "Value": "true"
-                }
-              }
-            },
-            "color": {
-              "expr": {
-                "Literal": {
-                  "Value": "'#FFFFFF'"
+                  "Value": "false"
                 }
               }
             }
           }
         }
       ],
-      "subTitle": [
+      "border": [
         {
           "properties": {
             "show": {
               "expr": {
                 "Literal": {
-                  "Value": "true"
-                }
-              }
-            },
-            "text": {
-              "expr": {
-                "Literal": {
-                  "Value": "'Click a stage to filter the whole page.'"
-                }
-              }
-            },
-            "fontSize": {
-              "expr": {
-                "Literal": {
-                  "Value": "9D"
-                }
-              }
-            },
-            "fontColor": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#605E5C'"
-                    }
-                  }
+                  "Value": "false"
                 }
               }
             }

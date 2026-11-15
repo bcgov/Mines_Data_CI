@@ -96,6 +96,17 @@ table fact_major_project
 		displayFolder: Project KPIs
 		lineageTag: 31be6270-c868-4ee5-84eb-73eafc375378
 
+	/// Days from submission to application complete for the row. Completed applications list.
+	measure 'Enh Days To Complete' = VAR s = MAX ( fact_major_project[submission_date] ) VAR c = MAX ( fact_major_project[application_complete_date] ) RETURN IF ( NOT ISBLANK ( s ) && NOT ISBLANK ( c ), DATEDIFF ( s, c, DAY ) )
+		formatString: #,##0
+		displayFolder: Enhanced
+		lineageTag: 4cf65642-7c8f-4c68-ab18-4dc27406635f
+
+	/// Row highlight for projects that look like test records in Core (title is 'test'). Nhung, 13 Nov 2026: highlight, do not hide.
+	measure 'Enh Project Test Color' = IF ( LOWER ( TRIM ( SELECTEDVALUE ( fact_major_project[project_summary_title] ) ) ) IN { "test" }, "#FCE9A8" )
+		displayFolder: Enhanced
+		lineageTag: 8c336706-d009-469c-9824-412f1a55ffb9
+
 	/// Projects not complete and not withdrawn (proxy stage). Overview card and stage bar.
 	measure 'Enh Open Projects' = CALCULATE ( DISTINCTCOUNT ( fact_major_project[project_summary_id] ), fact_major_project[is_open] = 1, fact_major_project[deleted_ind] = FALSE )
 		formatString: #,##0
@@ -188,7 +199,7 @@ table fact_major_project
 		lineageTag: 9941d063-e38e-4021-95b0-7c3af8c9c62f
 
 	/// Disclaimer text (Nhung, 10 Nov 2026).
-	measure 'Enh Disclaimer' = "Not in Core yet, so not shown: decision date, fee level, project director, initiated by, stage dates and review rounds. 'Complete' means the major mine application is marked complete in Core. Days open count from the project's submission date."
+	measure 'Enh Disclaimer' = "Not in Core yet, so not shown: decision date, fee level, project director, initiated by, stage dates and review rounds. 'Complete' means the major mine application is marked complete in Core. Days open count from the project's submission date. Data from the MMO SharePoint Excel tracker is not loaded yet."
 		displayFolder: Enhanced
 		lineageTag: 47b2a5d0-46b1-4eeb-8169-ae2af830c052
 

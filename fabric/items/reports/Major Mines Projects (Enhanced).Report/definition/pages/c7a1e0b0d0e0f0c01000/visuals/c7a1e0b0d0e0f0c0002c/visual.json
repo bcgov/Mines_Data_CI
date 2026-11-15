@@ -2,10 +2,10 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
   "name": "c7a1e0b0d0e0f0c0002c",
   "position": {
-    "x": 1406,
-    "y": 322,
+    "x": 1450,
+    "y": 238,
     "z": 44,
-    "width": 160,
+    "width": 116,
     "height": 26,
     "tabOrder": 44
   },
@@ -25,7 +25,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'See all projects →'"
+                  "Value": "'See the list →'"
                 }
               }
             },
@@ -78,7 +78,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'See all projects →'"
+                  "Value": "'See the list →'"
                 }
               }
             },
@@ -205,7 +205,7 @@
             "navigationSection": {
               "expr": {
                 "Literal": {
-                  "Value": "'c7a1e0b0d0e0f0c05000'"
+                  "Value": "'c7a1e0b0d0e0f0c08000'"
                 }
               }
             },
