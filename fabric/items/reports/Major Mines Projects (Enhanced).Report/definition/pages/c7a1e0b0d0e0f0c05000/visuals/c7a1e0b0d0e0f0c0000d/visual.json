@@ -19,7 +19,7 @@
               {
                 "textRuns": [
                   {
-                    "value": "All projects in Core, open and closed. Use the filters or click a column heading to sort.",
+                    "value": "All projects in Core, open and closed. Use the filters or click a column heading to sort. Yellow rows may be test records in Core, to be confirmed.",
                     "textStyle": {
                       "fontSize": "10px",
                       "color": "#605E5C",

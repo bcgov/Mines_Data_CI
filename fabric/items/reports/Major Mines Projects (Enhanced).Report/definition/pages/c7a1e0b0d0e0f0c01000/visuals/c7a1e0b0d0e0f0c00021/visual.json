@@ -5,7 +5,7 @@
     "x": 932,
     "y": 194,
     "z": 33,
-    "width": 4,
+    "width": 316,
     "height": 112,
     "tabOrder": 33
   },
@@ -45,7 +45,7 @@
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#2E8540'"
+                      "Value": "'#FFFFFF'"
                     }
                   }
                 }
@@ -67,7 +67,25 @@
             "show": {
               "expr": {
                 "Literal": {
-                  "Value": "false"
+                  "Value": "true"
+                }
+              }
+            },
+            "color": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#D8DDE3'"
+                    }
+                  }
+                }
+              }
+            },
+            "radius": {
+              "expr": {
+                "Literal": {
+                  "Value": "6D"
                 }
               }
             }
