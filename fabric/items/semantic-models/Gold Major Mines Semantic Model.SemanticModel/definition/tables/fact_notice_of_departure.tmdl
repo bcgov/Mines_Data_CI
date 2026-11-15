@@ -2,6 +2,11 @@ table fact_notice_of_departure
 	lineageTag: 1c6d4aca-20bf-4851-87b3-2b699d5019ae
 	sourceLineageTag: [gold].[fact_notice_of_departure]
 
+	/// Row highlight for notices that look like test records in Core. Nhung, 13 Nov 2026: highlight, do not hide.
+	measure 'Enh Notice Test Color' = IF ( LOWER ( TRIM ( SELECTEDVALUE ( fact_notice_of_departure[nod_title] ) ) ) IN { "test", "title 2", "mat test 2" }, "#FCE9A8" )
+		displayFolder: Enhanced
+		lineageTag: 1ca99e91-2350-4742-b7e9-a1da871557dc
+
 	/// Notices of departure received (by submission date on the date axis).
 	measure 'Enh Notices' = CALCULATE ( COUNTROWS ( fact_notice_of_departure ), fact_notice_of_departure[deleted_ind] = FALSE )
 		formatString: #,##0
