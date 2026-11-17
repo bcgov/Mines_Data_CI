@@ -1,0 +1,490 @@
+table FactIncident
+	lineageTag: a5cd74bb-bd1c-4716-b597-f4b80c8641d2
+
+	measure _CountOfIncidentsByHour = COUNTROWS(FactIncident)
+		formatString: 0
+		lineageTag: 3459ad61-1a68-4dc6-ab1d-e0387772d299
+
+	measure _AverageIncidentsPerHour =
+			
+			DIVIDE(
+			    COUNTROWS(FactIncident),
+			    DISTINCTCOUNT(FactIncident[_IncidentHour]),
+			    0
+			)
+		lineageTag: d8b06539-ba83-4e85-8ebd-0cc571619a8a
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	/// Total number of incidents recorded in the system
+	/// # Total_Incidents = COUNT(FactIncident[IncidentPK])
+	/// 
+	measure '# Total_Incidents' = COUNT(FactIncident[IncidentPK])
+		formatString: #,0
+		lineageTag: 6a2cee3f-9aae-4b0e-b6a4-7cdadc2c78f1
+
+	/// Total incidents recorded in the same period last year.
+	/// # Incidents_LY = 
+	/// CALCULATE(
+	///     [# Total_Incidents], 
+	///     SAMEPERIODLASTYEAR(DimIncidentDate[Date])
+	/// )
+	measure '# Incidents_LY' = ```
+			
+			CALCULATE(
+			    [# Total_Incidents], 
+			    SAMEPERIODLASTYEAR(DimIncidentDate[Date])
+			)
+			```
+		formatString: #,0
+		lineageTag: 0b635ce0-8add-4991-9789-a7c93280f71b
+
+	/// Total incidents recorded in the previous month.
+	/// 
+	/// # Incidents_PM = 
+	/// CALCULATE(
+	///     [# Total_Incidents], 
+	///     PREVIOUSMONTH(DimIncidentDate[Date])
+	/// )
+	measure '# Incidents_PM' = ```
+			
+			CALCULATE(
+			    [# Total_Incidents], 
+			    PREVIOUSMONTH(DimIncidentDate[Date])
+			)
+			```
+		formatString: #,0
+		lineageTag: dee1ae45-058d-42e1-9055-79c0c7488424
+
+	/// Total number of fatalities recorded across all incidents
+	/// # Total_Fatalities = SUM(FactIncident[NumberOfFatalities])
+	measure '# Total_Fatalities' = SUM(FactIncident[NumberOfFatalities])
+		formatString: #,0
+		lineageTag: c03cf210-b45c-42ab-a3ff-8c990a28dade
+
+	/// Total number of injuries recorded across all incidents
+	/// # Total_Injuries = SUM(FactIncident[NumberOfInjuries])
+	measure '# Total_Injuries' = SUM(FactIncident[NumberOfInjuries])
+		formatString: #,0
+		lineageTag: d8c37fed-df3c-44df-a6ef-dfa6fd3865f2
+
+	/// Total incidents recorded in the same period last year.
+	/// # Incidents_YTY = 
+	/// CALCULATE(
+	///     [# Total_Incidents], 
+	///     SAMEPERIODLASTYEAR(DimIncidentDate[Date])
+	/// )
+	measure '# Incidents_YTY' = ```
+			
+			CALCULATE(
+			    [# Total_Incidents], 
+			    SAMEPERIODLASTYEAR(DimIncidentDate[Date])
+			)
+			```
+		formatString: #,0
+		lineageTag: f18cd429-b297-4607-9191-a35217071632
+
+	/// Total incidents recorded in the previous month.
+	/// # Incidents_MTM = 
+	/// CALCULATE(
+	///     [# Total_Incidents], 
+	///     PREVIOUSMONTH(DimIncidentDate[Date])
+	/// )
+	measure '# Incidents_MTM' = ```
+			
+			CALCULATE(
+			    [# Total_Incidents], 
+			    PREVIOUSMONTH(DimIncidentDate[Date])
+			)
+			```
+		formatString: #,0
+		lineageTag: 2d6a409f-6889-4dbb-bda9-eb559a9ecdab
+
+	/// Year-over-Year (YoY) growth percentage in total incidents.
+	/// % Incidents_YTY_Growth = 
+	/// DIVIDE(
+	///     [# Total_Incidents] - [# Incidents_YTY], 
+	///     [# Incidents_YTY], 
+	///     0
+	/// )
+	measure '% Incidents_YTY_Growth' = ```
+			
+			DIVIDE(
+			    [# Total_Incidents] - [# Incidents_YTY], 
+			    [# Incidents_YTY], 
+			    0
+			)
+			```
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 8659ce7d-a754-40cc-a5c3-590f5efa2004
+
+	/// Month-over-Month (MoM) growth percentage in total incidents.
+	/// % Incidents_MTM_Growth = 
+	/// DIVIDE(
+	///     [# Total_Incidents] - [# Incidents_MTM], 
+	///     [# Incidents_MTM], 
+	///     0
+	/// )
+	measure '% Incidents_MTM_Growth' = ```
+			
+			DIVIDE(
+			    [# Total_Incidents] - [# Incidents_MTM], 
+			    [# Incidents_MTM], 
+			    0
+			)
+			```
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: e89ef2d3-646f-49fe-9959-24433c41b133
+
+	/// Total incidents recorded in the last 3 months.
+	/// # Rolling_3M_Incidents = 
+	/// CALCULATE(
+	///     [# Total_Incidents], 
+	///     DATESINPERIOD(DimIncidentDate[Date], MAX(DimIncidentDate[Date]), -3, MONTH)
+	/// )
+	measure '# Rolling_3M_Incidents' = ```
+			
+			CALCULATE(
+			    [# Total_Incidents], 
+			    DATESINPERIOD(DimIncidentDate[Date], MAX(DimIncidentDate[Date]), -3, MONTH)
+			)
+			```
+		formatString: #,0
+		lineageTag: f8d3c42f-a403-4dd7-8004-919aba3ad3f2
+
+	/// Total incidents recorded in the last 12 months.
+	/// # Rolling_12M_Incidents = 
+	/// CALCULATE(
+	///     [# Total_Incidents], 
+	///     DATESINPERIOD(DimIncidentDate[Date], MAX(DimIncidentDate[Date]), -12, MONTH)
+	/// )
+	measure '# Rolling_12M_Incidents' = ```
+			
+			CALCULATE(
+			    [# Total_Incidents], 
+			    DATESINPERIOD(DimIncidentDate[Date], MAX(DimIncidentDate[Date]), -12, MONTH)
+			)
+			```
+		formatString: #,0
+		lineageTag: d64a106f-bbec-4efe-a1c2-6bcf7a45f211
+
+	/// Total number of incidents reported since the beginning of the year.
+	/// # Cumulative_Incidents_YTD = 
+	/// CALCULATE(
+	///     [# Total_Incidents], 
+	///     DATESYTD(DimIncidentDate[Date])
+	/// )
+	measure '# Cumulative_Incidents_YTD' = ```
+			
+			CALCULATE(
+			    [# Total_Incidents], 
+			    DATESYTD(DimIncidentDate[Date])
+			)
+			```
+		formatString: #,0
+		lineageTag: 3c47cd75-a58f-40bf-b2bb-2f84bfb06baf
+
+	/// Total number of incidents reported since tracking began.
+	/// # Cumulative_Incidents_AllTime = 
+	/// CALCULATE(
+	///     [# Total_Incidents], 
+	///     FILTER(ALL(DimDate), DimDate[Date] <= MAX(DimIncidentDate[Date]))
+	/// )
+	/// 
+	measure '# Cumulative_Incidents_AllTime' = ```
+			
+			CALCULATE(
+			    [# Total_Incidents], 
+			    FILTER(ALL(DimDate), DimDate[Date] <= MAX(DimIncidentDate[Date]))
+			)
+			```
+		formatString: #,0
+		lineageTag: ec1cb6c8-0961-4e6c-90cb-0187b1553ca4
+
+	/// Counts all valid incidents from FactIncident that are marked as “Closed” (Incident_Status_Code = "CLD").
+	/// CALCULATE( [Total Incidents], KEEPFILTERS( 'DimIncidentStatus'[Incident_Status_Code] = "CLD" ) )
+	measure '# Total_Closed_Incidents' =
+			
+			CALCULATE( [# Total_Incidents], KEEPFILTERS( 'DimIncidentStatus'[Incident_Status_Code] = "CLD" ) )
+		formatString: #,0
+		lineageTag: b164458d-ff05-4be9-841d-506ba3e89e1d
+
+	/// Calculates the total closed incidents from the beginning of the current year up to the current date.
+	/// # Closed_Incidents_YTD =
+	/// CALCULATE( [# Total_Closed_Incidents], DATESYTD('DimIncidentDate'[Date]) )
+	measure '# Closed_Incidents_YTD' =
+			
+			CALCULATE( [# Total_Closed_Incidents], DATESYTD('DimIncidentDate'[Date]) )
+		formatString: #,0
+		lineageTag: 915baa30-2481-4601-af99-30d71681b630
+
+	/// Calculates the total closed incidents from the start of the current month through the selected date.
+	/// # Closed_Incidents_MTD =
+	/// CALCULATE( [# Total_Closed_Incidents], DATESMTD('CALCULATE( [# Total_Closed_Incidents], DATESMTD('DimIncidentDate'[Date]) ) 
+	/// '[Date]) ) 
+	measure '# Closed_Incidents_MTD' = ```
+			
+			CALCULATE( [# Total_Closed_Incidents], DATESMTD('DimIncidentDate'[Date]) ) 
+			```
+		formatString: #,0
+		lineageTag: 768eec28-429c-4a7f-b5e9-bf4277db8edd
+
+	/// Calculates the total closed incidents for the same period in the previous year.
+	/// # Closed_Incidents_LY =
+	/// CALCULATE( [# Total_Closed_Incidents], SAMEPERIODLASTYEAR('CALCULATE( [# Total_Closed_Incidents], SAMEPERIODLASTYEAR('DimIncidentDate'[Date]) )
+	/// '[Date]) )
+	measure '# Closed_Incidents_LY' =
+			
+			CALCULATE( [# Total_Closed_Incidents], SAMEPERIODLASTYEAR('DimIncidentDate'[Date]) )
+		formatString: #,0
+		lineageTag: df723f37-4cc0-4049-8fce-3b797452c42f
+
+	/// Computes the percentage change in closed incidents versus the same period last year.
+	/// %_Change_Closed_Incidents_vs_LY = 
+	/// DIVIDE( [# Total_Closed_Incidents] - [# Closed_Incidents_LY], [# Closed_Incidents_LY] )
+	measure %_Change_Closed_Incidents_vs_LY =
+			
+			DIVIDE( [# Total_Closed_Incidents] - [# Closed_Incidents_LY], [# Closed_Incidents_LY] )
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 4849f567-aade-485f-9a94-95034dfef8be
+
+	column IncidentType_Key
+		dataType: int64
+		formatString: 0
+		lineageTag: 336525b2-62f7-4b2f-aaf3-88f01162c652
+		summarizeBy: none
+		sourceColumn: IncidentType_Key
+
+		annotation SummarizationSetBy = Automatic
+
+	column IncidentLocation_Key
+		dataType: int64
+		formatString: 0
+		lineageTag: e00724d9-a138-480d-a5b4-adc772698bce
+		summarizeBy: none
+		sourceColumn: IncidentLocation_Key
+
+		annotation SummarizationSetBy = Automatic
+
+	column IncidentDescription_Key
+		dataType: int64
+		formatString: 0
+		lineageTag: b8a1031f-262b-40f4-88db-a1de005b98ee
+		summarizeBy: none
+		sourceColumn: IncidentDescription_Key
+
+		annotation SummarizationSetBy = Automatic
+
+	column IncidentInjuriesDescription_Key
+		dataType: int64
+		formatString: 0
+		lineageTag: 6a1dc6bf-405b-4656-b861-26eb35047781
+		summarizeBy: none
+		sourceColumn: IncidentInjuriesDescription_Key
+
+		annotation SummarizationSetBy = Automatic
+
+	column IncidentJohsc_Key
+		dataType: int64
+		formatString: 0
+		lineageTag: 3cd86527-a06a-47e3-9f30-dddfe148ca3b
+		summarizeBy: none
+		sourceColumn: IncidentJohsc_Key
+
+		annotation SummarizationSetBy = Automatic
+
+	column IncidentReporter_Key
+		dataType: int64
+		formatString: 0
+		lineageTag: f8ff76cb-1880-4916-9745-71f5f28bbaae
+		summarizeBy: none
+		sourceColumn: IncidentReporter_Key
+
+		annotation SummarizationSetBy = Automatic
+
+	column IncidentStatus_Key
+		dataType: int64
+		formatString: 0
+		lineageTag: 3e7779eb-0b9a-4273-9be1-74b28c49f837
+		summarizeBy: none
+		sourceColumn: IncidentStatus_Key
+
+		annotation SummarizationSetBy = Automatic
+
+	column IncidentDate_Key
+		dataType: int64
+		formatString: 0
+		lineageTag: 7320e7b2-5a12-47ee-b45a-75f19d51182a
+		summarizeBy: none
+		sourceColumn: IncidentDate_Key
+
+		annotation SummarizationSetBy = Automatic
+
+	column FollowUpInspectionDate_Key
+		dataType: int64
+		formatString: 0
+		lineageTag: 13d3ebcf-6c47-4188-88c4-22252fca1430
+		summarizeBy: count
+		sourceColumn: FollowUpInspectionDate_Key
+
+		annotation SummarizationSetBy = Automatic
+
+	column DeletedInd
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: d0e4432b-c13e-49da-816a-772ff4aa2567
+		summarizeBy: none
+		sourceColumn: DeletedInd
+
+		annotation SummarizationSetBy = Automatic
+
+	column IncidentTimeStamp
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 08e9ba6c-fc09-4bba-a3e8-504d494ff4d1
+		summarizeBy: none
+		sourceColumn: IncidentTimeStamp
+
+		variation Variation
+			isDefault
+			relationship: 25e472ec-5da7-45a3-a7f8-96e3fba43c68
+			defaultHierarchy: LocalDateTable_d09d0188-2475-4e9b-be51-fb5a847e623b.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column IncidentReportedTimeStamp
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 8ef1aa0a-9b84-4a91-bcc4-91390f0de8f4
+		summarizeBy: none
+		sourceColumn: IncidentReportedTimeStamp
+
+		variation Variation
+			isDefault
+			relationship: 8c974c1c-93a3-43a9-a106-ec7bbae08beb
+			defaultHierarchy: LocalDateTable_0f25a448-25de-4ea6-adb9-2dad3ac47096.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column FollowUpInspectionDate
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 164a0195-4a29-4e96-9e82-9aebf64c807a
+		summarizeBy: none
+		sourceColumn: FollowUpInspectionDate
+
+		variation Variation
+			isDefault
+			relationship: 55f3cbf0-b060-4b63-b22d-ea5cd0821dd4
+			defaultHierarchy: LocalDateTable_3608d906-8a30-4ed6-8322-1f262e654cc8.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column NumberOfFatalities
+		dataType: int64
+		formatString: 0
+		lineageTag: ee220c85-711f-44d0-a024-ca35c6a7ce63
+		summarizeBy: sum
+		sourceColumn: NumberOfFatalities
+
+		annotation SummarizationSetBy = Automatic
+
+	column NumberOfInjuries
+		dataType: int64
+		formatString: 0
+		lineageTag: ecfd0c5a-df6b-42c9-8b03-9529f59fdbc9
+		summarizeBy: sum
+		sourceColumn: NumberOfInjuries
+
+		annotation SummarizationSetBy = Automatic
+
+	column Create_Timestamp
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: bdd0d38e-545c-40ef-b435-ad712694a2f6
+		summarizeBy: none
+		sourceColumn: Create_Timestamp
+
+		variation Variation
+			isDefault
+			relationship: 56dec2b2-29d0-420c-b4bb-39ff5f5cc488
+			defaultHierarchy: LocalDateTable_f031efad-4835-4fcb-ab1f-1efb1f252b70.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column Update_Timestamp
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 942efe31-54a2-465d-b9f0-a33bff4d6741
+		summarizeBy: none
+		sourceColumn: Update_Timestamp
+
+		variation Variation
+			isDefault
+			relationship: cf9e21fa-47ae-4a42-a241-0848881d7ac6
+			defaultHierarchy: LocalDateTable_c9b0788d-2922-4672-8638-f18ed2e1068b.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column ETL_LastModified
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 9330134f-033c-4423-be63-888710d2fcde
+		summarizeBy: none
+		sourceColumn: ETL_LastModified
+
+		variation Variation
+			isDefault
+			relationship: 10b06c39-021f-4012-907f-826592f9d925
+			defaultHierarchy: LocalDateTable_abf70579-d9d3-440e-80ea-5ed8230b7197.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column MineIncidentId
+		dataType: int64
+		formatString: 0
+		lineageTag: f49515cb-9751-41ea-b814-16de33c5e40f
+		summarizeBy: none
+		sourceColumn: MineIncidentId
+
+		annotation SummarizationSetBy = Automatic
+
+	column MineExt_Key
+		dataType: int64
+		formatString: 0
+		lineageTag: 8d8e2710-c547-4d49-9753-5a99c0aa294b
+		summarizeBy: none
+		sourceColumn: MineExt_Key
+
+		annotation SummarizationSetBy = Automatic
+
+	column IncidentPK
+		dataType: int64
+		formatString: 0
+		lineageTag: e873f46b-7430-456c-be9b-8d0952215deb
+		summarizeBy: count
+		sourceColumn: IncidentPK
+
+		annotation SummarizationSetBy = User
+
+	column _IncidentHour = HOUR(FactIncident[IncidentTimeStamp])
+		formatString: 0
+		lineageTag: b1e64a18-79d0-4981-8bbc-0cb717196abc
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	partition FactIncident = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Databases("mdp-sql-server.database.windows.net"),
+				    #"MDP-DWH" = Source{[Name="MDP-DWH"]}[Data],
+				    dbo_FactIncident = #"MDP-DWH"{[Schema="dbo",Item="FactIncident"]}[Data]
+				in
+				    dbo_FactIncident
+
+	annotation PBI_ResultType = Table
+

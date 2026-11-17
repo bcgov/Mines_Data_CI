@@ -1,0 +1,91 @@
+table nris-location
+	lineageTag: 6b86e979-e6c3-4fa7-96bd-f222dabafcac
+
+	column location_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 7da2f29a-9911-43bf-85f5-409ac23b9b57
+		summarizeBy: none
+		sourceColumn: location_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column description
+		dataType: string
+		lineageTag: 71dfa78e-74cf-4dae-9037-14ebddbae817
+		summarizeBy: none
+		sourceColumn: description
+
+		annotation SummarizationSetBy = Automatic
+
+	column notes
+		dataType: string
+		lineageTag: b975801d-6afc-487f-9e8f-2b407465605e
+		summarizeBy: none
+		sourceColumn: notes
+
+		annotation SummarizationSetBy = Automatic
+
+	column latitude
+		dataType: string
+		lineageTag: fb079c54-de3c-4930-95c7-e119f761ba2c
+		summarizeBy: none
+		sourceColumn: latitude
+
+		annotation SummarizationSetBy = Automatic
+
+	column longitude
+		dataType: string
+		lineageTag: 355fcbfb-e11c-4fb4-b85e-9a2a3bbfe752
+		summarizeBy: none
+		sourceColumn: longitude
+
+		annotation SummarizationSetBy = Automatic
+
+	column utm_easting
+		dataType: string
+		lineageTag: 16dd9fcc-eda5-4652-b0ee-f7d12003929e
+		summarizeBy: none
+		sourceColumn: utm_easting
+
+		annotation SummarizationSetBy = Automatic
+
+	column utm_northing
+		dataType: string
+		lineageTag: f8f19574-c59c-4e7f-a573-8a7ac6af5e9d
+		summarizeBy: none
+		sourceColumn: utm_northing
+
+		annotation SummarizationSetBy = Automatic
+
+	column zone_number
+		dataType: string
+		lineageTag: 92e1dab0-35e1-4149-835f-2362dfd330fd
+		summarizeBy: none
+		sourceColumn: zone_number
+
+		annotation SummarizationSetBy = Automatic
+
+	column zone_letter
+		dataType: string
+		lineageTag: 9639d9f3-3942-46ad-84f6-4a477b3a5062
+		summarizeBy: none
+		sourceColumn: zone_letter
+
+		annotation SummarizationSetBy = Automatic
+
+	partition nris-location = m
+		mode: import
+		source =
+				let
+				    Source = AzureStorage.Blobs("datarepositorysa"),
+				    postgres1 = Source{[Name="postgres"]}[Data],
+				    #"https://datarepositorysa blob core windows net/postgres/_tables/parquet/nris location parquet" = postgres1{[#"Folder Path"="https://datarepositorysa.blob.core.windows.net/postgres/",Name="tables/parquet/nris.location.parquet"]}[Content],
+				    #"Imported Parquet" = Parquet.Document(#"https://datarepositorysa blob core windows net/postgres/_tables/parquet/nris location parquet")
+				in
+				    #"Imported Parquet"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

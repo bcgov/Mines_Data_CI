@@ -1,0 +1,97 @@
+table 'public permit_amendment_type_code'
+	lineageTag: 0ba3bfa4-0208-4c1f-bd7e-9a4b94f96af9
+
+	column permit_amendment_type_code
+		dataType: string
+		lineageTag: 02bd2953-bb33-4cf6-a00d-0223b0dc9c1f
+		summarizeBy: none
+		sourceColumn: permit_amendment_type_code
+
+		annotation SummarizationSetBy = Automatic
+
+	column description
+		dataType: string
+		lineageTag: 8357bce4-2cef-4c58-b28d-f17fd81801f4
+		summarizeBy: none
+		sourceColumn: description
+
+		annotation SummarizationSetBy = Automatic
+
+	column display_order
+		dataType: int64
+		formatString: 0
+		lineageTag: 6b7ae002-fa31-48aa-89d3-02a0c4bedf7f
+		summarizeBy: sum
+		sourceColumn: display_order
+
+		annotation SummarizationSetBy = Automatic
+
+	column active_ind
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: eb5603fc-195d-4ac0-8eaf-c9ce311ce83b
+		summarizeBy: none
+		sourceColumn: active_ind
+
+		annotation SummarizationSetBy = Automatic
+
+	column create_user
+		dataType: string
+		lineageTag: ca986a6b-3ac2-4e24-8fe7-c938dac03815
+		summarizeBy: none
+		sourceColumn: create_user
+
+		annotation SummarizationSetBy = Automatic
+
+	column create_timestamp
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 393697c3-51f5-43bf-b34e-560b6b338e4b
+		summarizeBy: none
+		sourceColumn: create_timestamp
+
+		variation Variation
+			isDefault
+			relationship: 4f781c77-9b8a-4af6-b298-41594ac32130
+			defaultHierarchy: LocalDateTable_4c4bc940-0d38-44c5-a62b-4448049a37af.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column update_user
+		dataType: string
+		lineageTag: c6f227a0-95e3-42a6-aabd-c7a399d62025
+		summarizeBy: none
+		sourceColumn: update_user
+
+		annotation SummarizationSetBy = Automatic
+
+	column update_timestamp
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: e5e06a3b-c504-41f3-953a-b49f71ef5ab6
+		summarizeBy: none
+		sourceColumn: update_timestamp
+
+		variation Variation
+			isDefault
+			relationship: 5e090111-7363-4cdf-b0de-a0c53e8ee64c
+			defaultHierarchy: LocalDateTable_ce51c76d-de4d-456d-9ab2-41c10f33e1c7.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'public permit_amendment_type_code' = m
+		mode: import
+		source =
+				let
+				    Source = AzureStorage.Blobs("datarepositorysa"),
+				    postgres1 = Source{[Name="postgres"]}[Data],
+				    #"Filtered Rows" = Table.SelectRows(postgres1, each [Extension] = ".parquet"),
+				    #"https://datarepositorysa blob core windows net/postgres/_tables/parquet/public permit_amendment parquet" = #"Filtered Rows"{[#"Folder Path"="https://datarepositorysa.blob.core.windows.net/postgres/",Name="tables/parquet/public.permit_amendment_type_code.parquet"]}[Content],
+				    #"Imported Parquet" = Parquet.Document(#"https://datarepositorysa blob core windows net/postgres/_tables/parquet/public permit_amendment parquet")
+				in
+				    #"Imported Parquet"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

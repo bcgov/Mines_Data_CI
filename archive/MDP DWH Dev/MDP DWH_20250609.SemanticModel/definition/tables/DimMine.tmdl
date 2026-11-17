@@ -1,0 +1,339 @@
+table DimMine
+	isHidden
+	lineageTag: 9acb8a12-3fa6-4043-b082-937f8ba7e14d
+
+	column Mine_Key
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: e8ce06b2-eac6-42ef-8548-393f4559f9ee
+		summarizeBy: count
+		sourceColumn: Mine_Key
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column Mine_Guid
+		dataType: string
+		isHidden
+		lineageTag: 36f929dc-d639-4446-bf23-20cc41fb913b
+		summarizeBy: none
+		sourceColumn: Mine_Guid
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column MineNo
+		dataType: string
+		isHidden
+		lineageTag: aa27bedb-63cd-42fc-9335-d30d0940bdba
+		summarizeBy: none
+		sourceColumn: MineNo
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column MineName
+		dataType: string
+		isHidden
+		lineageTag: 17b44e70-f2f9-41c6-93e5-52a985f79386
+		summarizeBy: none
+		sourceColumn: MineName
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column MineNote
+		dataType: string
+		isHidden
+		lineageTag: 7f27a87c-7dd0-4161-926c-dfa5d6f188a8
+		summarizeBy: none
+		sourceColumn: MineNote
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column MajorMineFlag
+		dataType: boolean
+		isHidden
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: b100e18d-7e1a-4e86-903f-19a299966653
+		summarizeBy: none
+		sourceColumn: MajorMineFlag
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column DeletedInd
+		dataType: boolean
+		isHidden
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 07c80b52-e9a4-4de1-b05a-09122f55d37f
+		summarizeBy: none
+		sourceColumn: DeletedInd
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column UnionInd
+		dataType: boolean
+		isHidden
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: c20516b7-5c11-4800-8ebe-2996d8f625b7
+		summarizeBy: none
+		sourceColumn: UnionInd
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column OhcsInd
+		dataType: boolean
+		isHidden
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: dac303c5-6be9-4939-92a8-7e04c702b649
+		summarizeBy: none
+		sourceColumn: OhcsInd
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column MineRegion
+		dataType: string
+		isHidden
+		lineageTag: d51b6ebd-b9b0-4108-b69f-81a6bbf87bea
+		summarizeBy: none
+		sourceColumn: MineRegion
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column Latitude
+		dataType: double
+		isHidden
+		lineageTag: 1b60a7e4-23e5-4288-960f-9d337fa37763
+		summarizeBy: sum
+		sourceColumn: Latitude
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Longitude
+		dataType: double
+		isHidden
+		lineageTag: 1ca056cc-f098-4b96-95a0-14ebc32e477e
+		summarizeBy: sum
+		sourceColumn: Longitude
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column MineLocationDescription
+		dataType: string
+		isHidden
+		lineageTag: 75a7d6bb-06fc-4445-a65f-d32da2a41a3a
+		summarizeBy: none
+		sourceColumn: MineLocationDescription
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column Geom
+		dataType: string
+		isHidden
+		lineageTag: 3915429e-0a15-497b-a88f-8a831d540631
+		summarizeBy: none
+		sourceColumn: Geom
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column LegacyMmsMineStatus
+		dataType: string
+		isHidden
+		lineageTag: d671a9a8-f621-4b28-aa77-024a7bf576c1
+		summarizeBy: none
+		sourceColumn: LegacyMmsMineStatus
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column ExemptionFeeStatusCode
+		dataType: string
+		isHidden
+		lineageTag: d768e4e1-e524-44c3-9a61-66fa11edabd7
+		summarizeBy: none
+		sourceColumn: ExemptionFeeStatusCode
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column ExemptionFeeStatusNote
+		dataType: string
+		isHidden
+		lineageTag: c9b050bb-d47d-45a2-a5a2-8fe0ffeeda5e
+		summarizeBy: none
+		sourceColumn: ExemptionFeeStatusNote
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column MmsAlias
+		dataType: string
+		isHidden
+		lineageTag: a71c230f-4d59-4c3a-84a1-266924a132db
+		summarizeBy: none
+		sourceColumn: MmsAlias
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column GovernmentAgencyTypeCode
+		dataType: string
+		isHidden
+		lineageTag: df539d72-e7bc-42d1-b0bc-b53fbae4c8ff
+		summarizeBy: none
+		sourceColumn: GovernmentAgencyTypeCode
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column MineNoSequence
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 79653476-e00c-4127-ba06-f1a402e52ea8
+		summarizeBy: sum
+		sourceColumn: MineNoSequence
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column NumberOfContractors
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: eae23aeb-e2ec-435f-b6ff-63484d9e88ae
+		summarizeBy: sum
+		sourceColumn: NumberOfContractors
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column NumberOfMineEmployees
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: aa3c865c-4625-4355-a738-c8aa5fbcfed1
+		summarizeBy: sum
+		sourceColumn: NumberOfMineEmployees
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column MineTimezone
+		dataType: string
+		isHidden
+		lineageTag: 39d9c100-84e5-4304-91ba-944d959fa41b
+		summarizeBy: none
+		sourceColumn: MineTimezone
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column CreateUser
+		dataType: string
+		isHidden
+		lineageTag: 2fbd5f7f-5112-47f7-b2af-48ba6afa2b65
+		summarizeBy: none
+		sourceColumn: CreateUser
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column UpdateUser
+		dataType: string
+		isHidden
+		lineageTag: 3c8e43ac-5c97-4329-8550-8cd928e45fe8
+		summarizeBy: none
+		sourceColumn: UpdateUser
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column Create_Timestamp
+		dataType: dateTime
+		isHidden
+		formatString: General Date
+		lineageTag: b343cfa2-71d0-465e-a1f9-f5c87ca86d72
+		summarizeBy: none
+		sourceColumn: Create_Timestamp
+
+		variation Variation
+			isDefault
+			relationship: d1271922-e794-4acc-876e-23e127b9133b
+			defaultHierarchy: LocalDateTable_4f1b2d6a-9ede-4452-88c5-5552b26830b6.'Date Hierarchy'
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column Update_Timestamp
+		dataType: dateTime
+		isHidden
+		formatString: General Date
+		lineageTag: 80d96677-9a3b-4ba0-ad9e-e9c09482a4ad
+		summarizeBy: none
+		sourceColumn: Update_Timestamp
+
+		variation Variation
+			isDefault
+			relationship: 36f07042-1e47-480b-bd20-a0febcc77158
+			defaultHierarchy: LocalDateTable_515ff686-1025-45d3-9169-4265899d1552.'Date Hierarchy'
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	partition DimMine = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Databases("mdp-sql-server.database.windows.net"),
+				    #"MDP-DWH" = Source{[Name="MDP-DWH"]}[Data],
+				    dbo_DimMine = #"MDP-DWH"{[Schema="dbo",Item="DimMine"]}[Data]
+				in
+				    dbo_DimMine
+
+	changedProperty = IsHidden
+
+	annotation PBI_ResultType = Table
+

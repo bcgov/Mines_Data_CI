@@ -1,0 +1,41 @@
+table DimIncidentLocation
+	lineageTag: 0cc4b377-d82e-49d7-9b57-1e24b5bfefc7
+
+	column IncidentLocation_Key
+		dataType: int64
+		formatString: 0
+		lineageTag: da531970-c5dc-487f-9156-bc7d03f1dd50
+		summarizeBy: none
+		sourceColumn: IncidentLocation_Key
+
+		annotation SummarizationSetBy = Automatic
+
+	column IncidentLocation
+		dataType: string
+		lineageTag: f5c34a63-8739-43df-967f-5ea7f33c86af
+		summarizeBy: none
+		sourceColumn: IncidentLocation
+
+		annotation SummarizationSetBy = Automatic
+
+	column Incident_location_hash
+		dataType: int64
+		formatString: 0
+		lineageTag: f472d012-9183-4fb2-add6-d54c304995a9
+		summarizeBy: sum
+		sourceColumn: Incident_location_hash
+
+		annotation SummarizationSetBy = Automatic
+
+	partition DimIncidentLocation = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Databases("mdp-sql-server.database.windows.net"),
+				    #"MDP-DWH" = Source{[Name="MDP-DWH"]}[Data],
+				    dbo_DimIncidentLocation = #"MDP-DWH"{[Schema="dbo",Item="DimIncidentLocation"]}[Data]
+				in
+				    dbo_DimIncidentLocation
+
+	annotation PBI_ResultType = Table
+

@@ -1,0 +1,10 @@
+expression WorkspaceId = "dc216c1a-9a6a-4df9-b5ab-2bd690c68432" meta [IsParameterQuery = true, IsParameterQueryRequired = false, Type = "Text"]
+	lineageTag: 76e2006f-5b41-4df1-ae81-25129bea883c
+
+	annotation PBI_ResultType = Text
+
+expression BaseUrl = "https://WABI-CANADA-CENTRAL-redirect.analysis.windows.net" meta [IsParameterQuery = true, IsParameterQueryRequired = true, Type = "Text"]
+	lineageTag: e51fad98-419b-4ec2-b705-cb9160484a96
+
+	annotation PBI_ResultType = Text
+

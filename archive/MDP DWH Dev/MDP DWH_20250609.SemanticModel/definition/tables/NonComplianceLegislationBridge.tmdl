@@ -1,0 +1,44 @@
+table NonComplianceLegislationBridge
+	lineageTag: 370d0d75-c440-48d1-963b-94430fe20934
+
+	column order_stop_detail_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 3bc7b7a5-cb1c-47a8-bfc5-203f011c662e
+		summarizeBy: none
+		sourceColumn: order_stop_detail_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column noncompliance_legislation_id
+		dataType: int64
+		formatString: 0
+		lineageTag: a9f2483e-238e-42ae-9436-4a85719b5f32
+		summarizeBy: sum
+		sourceColumn: noncompliance_legislation_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column NonComplianceLegislation_Key
+		dataType: int64
+		formatString: 0
+		lineageTag: a9c643d2-6377-49f8-bc56-a7c14e6a5065
+		summarizeBy: none
+		sourceColumn: NonComplianceLegislation_Key
+
+		annotation SummarizationSetBy = Automatic
+
+	partition NonComplianceLegislationBridge = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Databases("mdp-sql-server.database.windows.net"),
+				    #"MDP-DWH" = Source{[Name="MDP-DWH"]}[Data],
+				    dbo_v_OrderStopDetailToNonComplianceLegislationBridge = #"MDP-DWH"{[Schema="dbo",Item="v_NonComplianceLegislationBridge"]}[Data]
+				in
+				    dbo_v_OrderStopDetailToNonComplianceLegislationBridge
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

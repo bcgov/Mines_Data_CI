@@ -1,0 +1,41 @@
+table DimInspectionAuthStatus
+	lineageTag: 6dfc451a-5a3f-43e1-bb5b-90b6ade26bef
+
+	column InspectionAuthStatus_Key
+		dataType: int64
+		formatString: 0
+		lineageTag: 58078943-3da5-4569-a973-3f9f46e77f5c
+		summarizeBy: none
+		sourceColumn: InspectionAuthStatus_Key
+
+		annotation SummarizationSetBy = Automatic
+
+	column InspectionAuthStatus
+		dataType: string
+		lineageTag: d817f3df-bf20-4c05-806f-eedc79ae4cf3
+		summarizeBy: none
+		sourceColumn: InspectionAuthStatus
+
+		annotation SummarizationSetBy = Automatic
+
+	column InspectionAuthStatusHash
+		dataType: int64
+		formatString: 0
+		lineageTag: 3ab00633-8a7d-4a12-a61c-dc9cf7ef3e3d
+		summarizeBy: none
+		sourceColumn: InspectionAuthStatusHash
+
+		annotation SummarizationSetBy = Automatic
+
+	partition DimInspectionAuthStatus = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Databases("mdp-sql-server.database.windows.net"),
+				    #"MDP-DWH" = Source{[Name="MDP-DWH"]}[Data],
+				    dbo_DimInspectionAuthStatus = #"MDP-DWH"{[Schema="dbo",Item="DimInspectionAuthStatus"]}[Data]
+				in
+				    dbo_DimInspectionAuthStatus
+
+	annotation PBI_ResultType = Table
+

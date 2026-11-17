@@ -1,0 +1,83 @@
+table DimInspectedLocationDetail
+	lineageTag: 93103cbf-9333-43c0-9fd7-87db907884e4
+
+	column InspectedLocationDetail_Key
+		dataType: int64
+		formatString: #,0
+		lineageTag: 4a8f792a-9d81-4785-8b37-59846508c88d
+		summarizeBy: count
+		sourceColumn: InspectedLocationDetail_Key
+
+		annotation SummarizationSetBy = User
+
+	column inspected_location_id
+		dataType: int64
+		formatString: #,0
+		lineageTag: 3cbc6234-ee2e-41a8-bfd0-665b95a2e4c3
+		summarizeBy: count
+		sourceColumn: inspected_location_id
+
+		annotation SummarizationSetBy = User
+
+	column DetailType
+		dataType: string
+		lineageTag: f8aaf408-a860-4de7-b3fb-d9ad000b716d
+		summarizeBy: none
+		sourceColumn: DetailType
+
+		annotation SummarizationSetBy = Automatic
+
+	column Detail
+		dataType: string
+		lineageTag: fa5a948a-a166-4587-ae11-b496a7bf3edc
+		summarizeBy: none
+		sourceColumn: Detail
+
+		annotation SummarizationSetBy = Automatic
+
+	column Response
+		dataType: string
+		lineageTag: 4ed47b03-d408-4161-bc29-8908c1507711
+		summarizeBy: none
+		sourceColumn: Response
+
+		annotation SummarizationSetBy = Automatic
+
+	column RespondDate
+		dataType: dateTime
+		formatString: Short Date
+		lineageTag: e55dc3d5-25b8-4565-8ae4-ef3daa4fc057
+		summarizeBy: none
+		sourceColumn: RespondDate
+
+		variation Variation
+			isDefault
+			relationship: de7502ae-463c-4df0-a24b-f84cea188b7a
+			defaultHierarchy: LocalDateTable_5218ee18-d390-4046-9001-3705b6abd33c.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column SourceRowID
+		dataType: int64
+		formatString: #,0
+		lineageTag: e4eecba6-5cd7-43cf-bd46-cdedcbfa1fc6
+		summarizeBy: count
+		sourceColumn: SourceRowID
+
+		annotation SummarizationSetBy = Automatic
+
+	partition DimInspectedLocationDetail = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Databases("mdp-sql-server.database.windows.net"),
+				    #"MDP-DWH" = Source{[Name="MDP-DWH"]}[Data],
+				    dbo_DimInspectedLocation = #"MDP-DWH"{[Schema="dbo",Item="DimInspectedLocationDetail"]}[Data],
+				    #"Filtered Rows" = Table.SelectRows(dbo_DimInspectedLocation, each true)
+				in
+				    #"Filtered Rows"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

@@ -1,0 +1,80 @@
+table public-regions
+	lineageTag: b0cb671c-5b88-4487-a717-0fd63e589967
+
+	column regional_district_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 15ea2618-0f82-410d-bf08-b9b7708b0b65
+		summarizeBy: sum
+		sourceColumn: regional_district_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column name
+		dataType: string
+		lineageTag: 5a047e27-b36b-43d3-834e-58f929354e2e
+		summarizeBy: none
+		sourceColumn: name
+
+		annotation SummarizationSetBy = Automatic
+
+	column create_user
+		dataType: string
+		lineageTag: cd9d5365-605c-4ef4-90f5-a89b696a9683
+		summarizeBy: none
+		sourceColumn: create_user
+
+		annotation SummarizationSetBy = Automatic
+
+	column create_timestamp
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 83613f0b-9cb5-4c29-a7b4-ab0ff4e68a84
+		summarizeBy: none
+		sourceColumn: create_timestamp
+
+		variation Variation
+			isDefault
+			relationship: 22be3981-286a-47ae-8006-4b3a871365ba
+			defaultHierarchy: LocalDateTable_f8552c35-3626-4d87-a86b-b8a2361c8a69.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column update_user
+		dataType: string
+		lineageTag: b3d923fe-9893-4ac4-9459-a3079d4295df
+		summarizeBy: none
+		sourceColumn: update_user
+
+		annotation SummarizationSetBy = Automatic
+
+	column update_timestamp
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 80c32b21-5387-45bb-8eb9-e97982cdbc9c
+		summarizeBy: none
+		sourceColumn: update_timestamp
+
+		variation Variation
+			isDefault
+			relationship: 155e66db-ddbc-46f9-a502-8d5cf2c254ee
+			defaultHierarchy: LocalDateTable_a4b2574c-8be4-4f9b-8318-59defefc633c.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	partition public-regions = m
+		mode: import
+		source =
+				let
+				    Source = AzureStorage.Blobs("datarepositorysa"),
+				    postgres1 = Source{[Name="postgres"]}[Data],
+				    #"Filtered Rows" = Table.SelectRows(postgres1, each ([Extension] = ".parquet")),
+				    #"https://datarepositorysa blob core windows net/postgres/_tables/parquet/public regions parquet" = #"Filtered Rows"{[#"Folder Path"="https://datarepositorysa.blob.core.windows.net/postgres/",Name="tables/parquet/public.regions.parquet"]}[Content],
+				    #"Imported Parquet" = Parquet.Document(#"https://datarepositorysa blob core windows net/postgres/_tables/parquet/public regions parquet")
+				in
+				    #"Imported Parquet"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

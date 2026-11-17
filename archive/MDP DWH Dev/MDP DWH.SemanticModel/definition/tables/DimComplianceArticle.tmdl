@@ -1,0 +1,116 @@
+table DimComplianceArticle
+	lineageTag: 1099e068-5475-4e65-91c9-aeea19ff5b14
+
+	column ComplianceArticle_Key
+		dataType: int64
+		formatString: 0
+		lineageTag: 9ec3bd49-9d13-4d42-b0b0-5c681e47bcbe
+		summarizeBy: none
+		sourceColumn: ComplianceArticle_Key
+
+		annotation SummarizationSetBy = Automatic
+
+	column mine_incident_id
+		dataType: int64
+		formatString: 0
+		lineageTag: eb328df7-df6f-47f5-8655-019ff04778a1
+		summarizeBy: sum
+		sourceColumn: mine_incident_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column compliance_article_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 47b61436-6528-4ebd-838d-476e8e3a01e1
+		summarizeBy: sum
+		sourceColumn: compliance_article_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column ArticleActCode
+		dataType: string
+		lineageTag: 706c5d02-783c-4c7f-b1f8-b0f76e410b75
+		summarizeBy: none
+		sourceColumn: ArticleActCode
+
+		annotation SummarizationSetBy = Automatic
+
+	column Sub_paragraph
+		dataType: string
+		lineageTag: 1982f795-5345-4a6d-b41a-7ae0e3d1fcec
+		summarizeBy: none
+		sourceColumn: Sub_paragraph
+
+		annotation SummarizationSetBy = Automatic
+
+	column Description
+		dataType: string
+		lineageTag: 3e2e2cee-01cb-4be2-aa0e-cc7aee53e182
+		summarizeBy: none
+		sourceColumn: Description
+
+		annotation SummarizationSetBy = Automatic
+
+	column LongDescription
+		dataType: string
+		lineageTag: bd652df9-8ac0-4e64-ac3a-9985112e7b79
+		summarizeBy: none
+		sourceColumn: LongDescription
+
+		annotation SummarizationSetBy = Automatic
+
+	column effective_date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 9f12c89b-ae98-42dd-9474-da22821217e6
+		summarizeBy: none
+		sourceColumn: effective_date
+
+		variation Variation
+			isDefault
+			relationship: 126141ba-1d46-4bf2-a319-00dac1e25cde
+			defaultHierarchy: LocalDateTable_e7f1be24-29b3-41ed-b9ef-4ee3ae104fbc.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column expiry_date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 8e56db68-d581-49d2-b86d-58485d58c67d
+		summarizeBy: none
+		sourceColumn: expiry_date
+
+		variation Variation
+			isDefault
+			relationship: 7125624b-7324-4932-9802-4941121a1ff3
+			defaultHierarchy: LocalDateTable_6dc8efe8-6cc6-4e63-a32b-bafe7fd29cb5.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column 'Part of Code'
+		dataType: string
+		lineageTag: ac494d70-053e-4bc5-a70e-a739fa1c686b
+		summarizeBy: none
+		sourceColumn: Part of Code
+
+		annotation SummarizationSetBy = Automatic
+
+	partition DimComplianceArticle = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Database("mdp-sql-server.database.windows.net", "MDP-DWH"),
+				    dbo_DimComplianceArticle = Source{[Schema="dbo",Item="DimComplianceArticle"]}[Data],
+				    #"Merged Columns" = Table.CombineColumns(dbo_DimComplianceArticle,{"Section", "SubSection", "Paragraph"},Combiner.CombineTextByDelimiter("-", QuoteStyle.None),"Part of Code")
+				in
+				    #"Merged Columns"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

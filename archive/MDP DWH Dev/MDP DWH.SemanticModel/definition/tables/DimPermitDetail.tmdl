@@ -1,0 +1,217 @@
+table DimPermitDetail
+	lineageTag: 26d0e8a8-4a43-4b20-8528-1ddaa563a794
+
+	column PermitDetail_Key
+		dataType: int64
+		formatString: 0
+		lineageTag: 8b287f96-8f29-4ae4-a599-f9fcb96377eb
+		summarizeBy: none
+		sourceColumn: PermitDetail_Key
+
+		annotation SummarizationSetBy = Automatic
+
+	column Permit_ID
+		dataType: int64
+		formatString: 0
+		lineageTag: caa8193d-befc-4972-9d8d-4744fb5ad553
+		summarizeBy: count
+		sourceColumn: Permit_ID
+
+		annotation SummarizationSetBy = Automatic
+
+	column Permit_Guid
+		dataType: string
+		lineageTag: 7aad2d7e-1538-4e8f-8e9c-a2ef1f82ba36
+		summarizeBy: none
+		sourceColumn: Permit_Guid
+
+		annotation SummarizationSetBy = Automatic
+
+	column Permit_No
+		dataType: string
+		lineageTag: f0c745a2-c79a-4aa5-b9df-150c2ab13058
+		summarizeBy: none
+		sourceColumn: Permit_No
+
+		annotation SummarizationSetBy = Automatic
+
+	column Permit_Tenure
+		dataType: string
+		lineageTag: e44ae75f-9ff6-457f-9d8b-5419a30375ee
+		summarizeBy: none
+		sourceColumn: Permit_Tenure
+
+		annotation SummarizationSetBy = Automatic
+
+	column Permit_Tenure_Type_Code
+		dataType: string
+		lineageTag: c14700df-3fde-415c-84f2-ac88199d4279
+		summarizeBy: none
+		sourceColumn: Permit_Tenure_Type_Code
+
+		annotation SummarizationSetBy = Automatic
+
+	column Permit_Commodity
+		dataType: string
+		lineageTag: 673494a6-0395-4f35-b649-431d0ec8ab7d
+		summarizeBy: none
+		sourceColumn: Permit_Commodity
+
+		annotation SummarizationSetBy = Automatic
+
+	column Permit_Commodity_Type_Code
+		dataType: string
+		lineageTag: 75202b0f-b50c-4c77-8646-bdb49cfdbc9b
+		summarizeBy: none
+		sourceColumn: Permit_Commodity_Type_Code
+
+		annotation SummarizationSetBy = Automatic
+
+	column Permit_Disturbance
+		dataType: string
+		lineageTag: 86fa5956-0396-4584-8f53-32ecd52000ad
+		summarizeBy: none
+		sourceColumn: Permit_Disturbance
+
+		annotation SummarizationSetBy = Automatic
+
+	column Permit_Disturbance_Type_Code
+		dataType: string
+		lineageTag: c08be084-b743-4359-9992-00758307c98e
+		summarizeBy: none
+		sourceColumn: Permit_Disturbance_Type_Code
+
+		annotation SummarizationSetBy = Automatic
+
+	column Permit_Status_Code
+		dataType: string
+		lineageTag: 21c03223-1a28-492a-9a25-b79325462f51
+		summarizeBy: none
+		sourceColumn: Permit_Status_Code
+
+		annotation SummarizationSetBy = Automatic
+
+	column Permit_Status_Changed_Timestamp
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 339fcf07-6891-4089-9acd-1be671de9e9d
+		summarizeBy: none
+		sourceColumn: Permit_Status_Changed_Timestamp
+
+		variation Variation
+			isDefault
+			relationship: c5a1571e-d3d5-4cfc-97f2-a7c9a2321e06
+			defaultHierarchy: LocalDateTable_4189e34b-5327-454a-911d-d187fcdb358d.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column Permit_Exemption_Fee_Status_Code
+		dataType: string
+		lineageTag: bb39544a-74cb-4326-adbd-bb8a40b8b570
+		summarizeBy: none
+		sourceColumn: Permit_Exemption_Fee_Status_Code
+
+		annotation SummarizationSetBy = Automatic
+
+	column Permit_Exemption_Fee_Status_D
+		dataType: string
+		lineageTag: 5041db41-c9ec-4927-a659-fa63c274f5d7
+		summarizeBy: none
+		sourceColumn: Permit_Exemption_Fee_Status_D
+
+		annotation SummarizationSetBy = Automatic
+
+	column Permit_Exemption_Fee_Status_Note
+		dataType: string
+		lineageTag: 80b8d78d-7880-4ad4-9bde-868fe7fee613
+		summarizeBy: none
+		sourceColumn: Permit_Exemption_Fee_Status_Note
+
+		annotation SummarizationSetBy = Automatic
+
+	column Permittee_Party_Guid
+		dataType: string
+		lineageTag: 08f19f6c-f440-4d03-967b-6023fc0e20dc
+		summarizeBy: none
+		sourceColumn: Permittee_Party_Guid
+
+		annotation SummarizationSetBy = Automatic
+
+	column Permittee_First_Name
+		dataType: string
+		lineageTag: 3ee25dae-93e4-4e74-903f-ed8dfbf3347f
+		summarizeBy: none
+		sourceColumn: Permittee_First_Name
+
+		annotation SummarizationSetBy = Automatic
+
+	column Permittee_Name
+		dataType: string
+		lineageTag: aeecde12-6c1d-47bf-9b5c-c2f533bce8fc
+		summarizeBy: none
+		sourceColumn: Permittee_Name
+
+		annotation SummarizationSetBy = Automatic
+
+	column Permittee_Address_Suite
+		dataType: string
+		lineageTag: 9e4ebcdc-234c-4eba-8c7c-fc5822ee860a
+		summarizeBy: none
+		sourceColumn: Permittee_Address_Suite
+
+		annotation SummarizationSetBy = Automatic
+
+	column Permittee_Address_Line_1
+		dataType: string
+		lineageTag: cf6362c2-207e-4ff6-a78f-7dc0a6597684
+		summarizeBy: none
+		sourceColumn: Permittee_Address_Line_1
+
+		annotation SummarizationSetBy = Automatic
+
+	column Permittee_Address_Line_2
+		dataType: string
+		lineageTag: acbfd11b-dc39-42a3-99dd-48bd46d6cd0b
+		summarizeBy: none
+		sourceColumn: Permittee_Address_Line_2
+
+		annotation SummarizationSetBy = Automatic
+
+	column Permittee_Address_City
+		dataType: string
+		lineageTag: 7e0d819d-d1cd-412a-a186-ef9d6d099292
+		summarizeBy: none
+		sourceColumn: Permittee_Address_City
+
+		annotation SummarizationSetBy = Automatic
+
+	column Permittee_Address_Post_Code
+		dataType: string
+		lineageTag: c8758a23-afa4-4e2c-a998-977f17ad9f9e
+		summarizeBy: none
+		sourceColumn: Permittee_Address_Post_Code
+
+		annotation SummarizationSetBy = Automatic
+
+	column Permittee_Address_Prov
+		dataType: string
+		lineageTag: 22648684-1f31-4799-bcee-0d3dd13c64e3
+		summarizeBy: none
+		sourceColumn: Permittee_Address_Prov
+
+		annotation SummarizationSetBy = Automatic
+
+	partition DimPermitDetail = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Databases("mdp-sql-server.database.windows.net"),
+				    #"MDP-DWH" = Source{[Name="MDP-DWH"]}[Data],
+				    dbo_DimPermitDetail = #"MDP-DWH"{[Schema="dbo",Item="DimPermitDetail"]}[Data]
+				in
+				    dbo_DimPermitDetail
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

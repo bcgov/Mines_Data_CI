@@ -1,0 +1,125 @@
+table public-permit_status_code
+	lineageTag: 5fe037e6-1337-4496-b606-88c6bfe1afab
+
+	column permit_status_code
+		dataType: string
+		lineageTag: 9200ef8b-f4f2-4603-808c-98b73bf7e026
+		summarizeBy: none
+		sourceColumn: permit_status_code
+
+		annotation SummarizationSetBy = Automatic
+
+	column description
+		dataType: string
+		lineageTag: 32ecc710-2835-4e6a-8310-3840e7c009f9
+		summarizeBy: none
+		sourceColumn: description
+
+		annotation SummarizationSetBy = Automatic
+
+	column display_order
+		dataType: int64
+		formatString: 0
+		lineageTag: 2d41070f-7616-4629-a511-380f9acc74ef
+		summarizeBy: sum
+		sourceColumn: display_order
+
+		annotation SummarizationSetBy = Automatic
+
+	column effective_date
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 897b0ee2-2190-4c21-8d5a-2f941fa90e59
+		summarizeBy: none
+		sourceColumn: effective_date
+
+		variation Variation
+			isDefault
+			relationship: 3e56bb11-8e10-4528-8450-08b0210912a1
+			defaultHierarchy: LocalDateTable_42f3a072-7a72-45d5-bde7-acae9ff1cdc2.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column expiry_date
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 0d07f443-e481-49de-83db-b4b54dacfc0f
+		summarizeBy: none
+		sourceColumn: expiry_date
+
+		variation Variation
+			isDefault
+			relationship: a8f8e11d-f4b9-41c9-b5cb-dab17cb4f298
+			defaultHierarchy: LocalDateTable_6bfae9b0-a490-4fed-934c-6e706889c6b2.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column create_user
+		dataType: string
+		lineageTag: 10a1c459-863a-4730-8f0f-ecc18824a71d
+		summarizeBy: none
+		sourceColumn: create_user
+
+		annotation SummarizationSetBy = Automatic
+
+	column create_timestamp
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: dcb11759-7579-4989-be61-fadc347ab661
+		summarizeBy: none
+		sourceColumn: create_timestamp
+
+		variation Variation
+			isDefault
+			relationship: 38580ed8-b8a5-425f-8a93-a7ccbf2546b0
+			defaultHierarchy: LocalDateTable_8d20b24c-fb45-4f5c-8f68-9223d92cca03.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column update_user
+		dataType: string
+		lineageTag: d35305fa-21df-489c-b74f-e66f5c076d9e
+		summarizeBy: none
+		sourceColumn: update_user
+
+		annotation SummarizationSetBy = Automatic
+
+	column update_timestamp
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: a285d225-fc0b-426b-87d5-16dbf8b0c135
+		summarizeBy: none
+		sourceColumn: update_timestamp
+
+		variation Variation
+			isDefault
+			relationship: c629c738-3920-4744-a97e-b5ed93d07449
+			defaultHierarchy: LocalDateTable_bb0f7e66-1404-48dd-b1fc-ade1b2e44fce.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column active_ind
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: e4737d74-2cd7-4482-a794-5883b355b873
+		summarizeBy: none
+		sourceColumn: active_ind
+
+		annotation SummarizationSetBy = Automatic
+
+	partition public-permit_status_code = m
+		mode: import
+		source =
+				let
+				    Source = AzureStorage.Blobs("datarepositorysa"),
+				    postgres1 = Source{[Name="postgres"]}[Data],
+				    #"Filtered Rows" = Table.SelectRows(postgres1, each ([Extension] = ".parquet")),
+				    #"https://datarepositorysa blob core windows net/postgres/_tables/parquet/public permit_status_code parquet" = #"Filtered Rows"{[#"Folder Path"="https://datarepositorysa.blob.core.windows.net/postgres/",Name="tables/parquet/public.permit_status_code.parquet"]}[Content],
+				    #"Imported Parquet" = Parquet.Document(#"https://datarepositorysa blob core windows net/postgres/_tables/parquet/public permit_status_code parquet")
+				in
+				    #"Imported Parquet"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

@@ -1,0 +1,41 @@
+table DimOrderStopResponseStatus
+	lineageTag: d37015b8-64ae-4a9a-9a76-88920ea59595
+
+	column OrderStopResponseStatus_Key
+		dataType: int64
+		formatString: 0
+		lineageTag: 72bcb3b9-8ea3-445e-bda3-44c61df96af1
+		summarizeBy: none
+		sourceColumn: OrderStopResponseStatus_Key
+
+		annotation SummarizationSetBy = Automatic
+
+	column ResponseStatus
+		dataType: string
+		lineageTag: fcaf0768-bc51-4af4-9630-a5d941f2ade1
+		summarizeBy: none
+		sourceColumn: ResponseStatus
+
+		annotation SummarizationSetBy = Automatic
+
+	column ResponseStatus_Hash
+		dataType: int64
+		formatString: 0
+		lineageTag: 92b492d6-d349-44cd-9203-a69ed4064f46
+		summarizeBy: none
+		sourceColumn: ResponseStatus_Hash
+
+		annotation SummarizationSetBy = Automatic
+
+	partition DimOrderStopResponseStatus = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Databases("mdp-sql-server.database.windows.net"),
+				    #"MDP-DWH" = Source{[Name="MDP-DWH"]}[Data],
+				    dbo_DimOrderStopResponseStatus = #"MDP-DWH"{[Schema="dbo",Item="DimOrderStopResponseStatus"]}[Data]
+				in
+				    dbo_DimOrderStopResponseStatus
+
+	annotation PBI_ResultType = Table
+

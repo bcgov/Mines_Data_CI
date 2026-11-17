@@ -1,0 +1,685 @@
+relationship 51299a9d-17d0-4d1a-8119-57c26af350d9
+	joinOnDateBehavior: datePartOnly
+	fromColumn: nris-inspection.inspection_date
+	toColumn: LocalDateTable_292e3d62-c4dd-4522-8702-0b5c52056f20.Date
+
+relationship 1c9945a7-ca5c-47eb-b9ae-5b4e3d761987
+	joinOnDateBehavior: datePartOnly
+	fromColumn: nris-inspection.completed_date
+	toColumn: LocalDateTable_5db42a0e-6129-466d-8c9f-23faadbe9102.Date
+
+relationship d68b5d28-b1a9-4a4a-a36f-66d1ef3bb343
+	joinOnDateBehavior: datePartOnly
+	fromColumn: nris-inspection.inspection_report_sent_date
+	toColumn: LocalDateTable_e2fad461-8ef4-4976-a811-2c13dfba6bfa.Date
+
+relationship 468ab6b9-d70e-42df-9c4b-07ead76cba27
+	joinOnDateBehavior: datePartOnly
+	fromColumn: nris-inspection.inspection_from_date
+	toColumn: LocalDateTable_7be0fbee-6911-4d87-847a-774545b69b38.Date
+
+relationship d63a4bc5-27f5-4178-aba8-e57e815172c1
+	joinOnDateBehavior: datePartOnly
+	fromColumn: nris-inspection.inspection_to_date
+	toColumn: LocalDateTable_62e811e8-5c2d-432b-826a-e90cfabb3ffb.Date
+
+relationship 184d6a70-9d8a-41e0-86a9-16cf68232fde
+	joinOnDateBehavior: datePartOnly
+	fromColumn: nris-order_stop_detail.response_received
+	toColumn: LocalDateTable_ab628d35-4645-4cab-872f-2737efa612ee.Date
+
+relationship 14b18fc3-e2b6-4237-8f9e-fb2a2a5b30a1
+	joinOnDateBehavior: datePartOnly
+	fromColumn: nris-order_stop_detail.completion_date
+	toColumn: LocalDateTable_d10e0526-7764-4862-b9e9-37744ea6a6af.Date
+
+relationship 75986543-3c7d-4707-96f3-5b6627f31d15
+	joinOnDateBehavior: datePartOnly
+	fromColumn: idir_user_detail.create_timestamp
+	toColumn: LocalDateTable_ac7153f9-3ec4-4047-a40a-f665670b01b6.Date
+
+relationship 8d238aed-d5e1-4fa9-b25d-f32fcfad906f
+	joinOnDateBehavior: datePartOnly
+	fromColumn: idir_user_detail.update_timestamp
+	toColumn: LocalDateTable_5c788172-38ad-44f9-af1d-63770fb274f5.Date
+
+relationship 47806317-2c56-4cfa-a5c5-12c7742669a9
+	joinOnDateBehavior: datePartOnly
+	fromColumn: public-mine_incident.incident_timestamp
+	toColumn: LocalDateTable_e593c88b-2449-4ba6-b0a8-9ec66f484383.Date
+
+relationship aa5140de-e43a-4cf6-8b4a-95abf05c40e6
+	joinOnDateBehavior: datePartOnly
+	fromColumn: public-mine_incident.reported_timestamp
+	toColumn: LocalDateTable_103aff60-d17d-4e83-a8cc-b3475abca428.Date
+
+relationship 0fa7ede4-1791-4c3f-8963-f8b729a0eeca
+	joinOnDateBehavior: datePartOnly
+	fromColumn: public-mine_incident.create_timestamp
+	toColumn: LocalDateTable_1f49b1c3-03af-49f6-bccd-027d3c425555.Date
+
+relationship eddb4209-5528-4715-ba0c-69612971d973
+	joinOnDateBehavior: datePartOnly
+	fromColumn: public-mine_incident.update_timestamp
+	toColumn: LocalDateTable_bc7d55ac-e5b1-4c71-a45e-4332a917788d.Date
+
+relationship 11b00f84-4ff7-466d-a61b-6ff967adc457
+	joinOnDateBehavior: datePartOnly
+	fromColumn: public-mine_incident.followup_inspection_date
+	toColumn: LocalDateTable_a4001bf5-0c7e-4598-9efa-238d8f13eb9a.Date
+
+relationship 7038081f-a5af-4575-8e5d-0bffd1d9c4b4
+	joinOnDateBehavior: datePartOnly
+	fromColumn: public-mine_incident.johsc_worker_rep_contact_timestamp
+	toColumn: LocalDateTable_3fda8c8a-d8ed-4bad-b8f9-7d8740f5ed71.Date
+
+relationship 9ceff1eb-e583-4206-a340-4859fc4c106b
+	joinOnDateBehavior: datePartOnly
+	fromColumn: public-mine_incident.johsc_management_rep_contact_timestamp
+	toColumn: LocalDateTable_05634fb5-6222-49b9-a9b1-256077d485fd.Date
+
+relationship 072163ee-3387-4282-b044-688eb5ee8ce6
+	joinOnDateBehavior: datePartOnly
+	fromColumn: public-mine_incident.verbal_notification_timestamp
+	toColumn: LocalDateTable_d78ed72a-61a2-46a1-8cbc-257281adf15d.Date
+
+relationship 2f94f22e-e3b3-4771-9a5a-ecfe50003487
+	joinOnDateBehavior: datePartOnly
+	fromColumn: public-mine_incident_category.incident_timestamp
+	toColumn: LocalDateTable_559b9599-136d-4f3b-8eed-801334357621.Date
+
+relationship 25e997b8-722b-4f30-b76d-43abb5afea15
+	joinOnDateBehavior: datePartOnly
+	fromColumn: public-mine_incident_category.reported_timestamp
+	toColumn: LocalDateTable_9a59d976-d8b1-430e-a3af-e89bbd1a9454.Date
+
+relationship acfaf060-a242-4958-b8df-4988b1bfa5d8
+	joinOnDateBehavior: datePartOnly
+	fromColumn: public-mine_incident_category.create_timestamp
+	toColumn: LocalDateTable_e0bbfab1-7791-4bb2-ae72-ed9288849eee.Date
+
+relationship 514beda7-94f6-4b6a-a8b9-25281d287ab7
+	joinOnDateBehavior: datePartOnly
+	fromColumn: public-mine_incident_category.update_timestamp
+	toColumn: LocalDateTable_301a035b-3d91-4d2e-a347-728d65e71640.Date
+
+relationship 573bcdc2-cad2-4b46-bd65-19be0fa5f847
+	joinOnDateBehavior: datePartOnly
+	fromColumn: public-mine_incident_category.followup_inspection_date
+	toColumn: LocalDateTable_2d0f39f0-8c60-4b05-a3d2-95edab0a0f4d.Date
+
+relationship 04257806-1cc5-44ff-abb8-ba89f8b125f0
+	joinOnDateBehavior: datePartOnly
+	fromColumn: public-mine_incident_category.johsc_worker_rep_contact_timestamp
+	toColumn: LocalDateTable_199fc7b7-2677-4101-a57d-411b3639588b.Date
+
+relationship 8ac03cc0-afb2-49a9-975a-c3311d10177f
+	joinOnDateBehavior: datePartOnly
+	fromColumn: public-mine_incident_category.johsc_management_rep_contact_timestamp
+	toColumn: LocalDateTable_c8c39e86-2a27-42ea-9ed2-dec8a8bc7353.Date
+
+relationship 6925bafb-ee33-4675-9e30-c07683e48d4d
+	joinOnDateBehavior: datePartOnly
+	fromColumn: public-mine_incident_category.verbal_notification_timestamp
+	toColumn: LocalDateTable_df7b5779-9a81-4458-b1f1-1d2f52c213c3.Date
+
+relationship cda1d6ab-76a1-4473-933e-f915aa9a8ace
+	joinOnDateBehavior: datePartOnly
+	fromColumn: public-mine_region_code.create_timestamp
+	toColumn: LocalDateTable_5da3ee28-df57-4a46-8ace-6b6a02a920c4.Date
+
+relationship 8be87359-a061-4864-90fb-9af286af3f78
+	joinOnDateBehavior: datePartOnly
+	fromColumn: public-mine_region_code.update_timestamp
+	toColumn: LocalDateTable_780ae665-b494-4b68-ac74-15f7be5e5780.Date
+
+relationship 363434e6-a326-4e11-b771-7e0023c5ce14
+	joinOnDateBehavior: datePartOnly
+	fromColumn: public-mine_region_code.effective_date
+	toColumn: LocalDateTable_67d88783-1a9e-4758-86ef-a528788defdc.Date
+
+relationship c8c0dc5c-25e0-445d-b28b-798a91f838f5
+	joinOnDateBehavior: datePartOnly
+	fromColumn: public-mine_region_code.expiry_date
+	toColumn: LocalDateTable_83543d2b-6746-4f3d-b04d-8599635698fe.Date
+
+relationship c11304f5-7f5c-4c8f-ad71-6aac1fb2ba72
+	joinOnDateBehavior: datePartOnly
+	fromColumn: public-mine_report.due_date
+	toColumn: LocalDateTable_52d00f22-c9cb-497f-9802-845451571e51.Date
+
+relationship 89c7f7ce-f9a7-477e-aae4-b01de5188702
+	joinOnDateBehavior: datePartOnly
+	fromColumn: public-mine_report.received_date
+	toColumn: LocalDateTable_b2f71eaf-90a6-4b45-a067-05ce7da6c104.Date
+
+relationship c6a42071-860b-468e-9cfd-c621e0926c00
+	joinOnDateBehavior: datePartOnly
+	fromColumn: public-mine_report.create_timestamp
+	toColumn: LocalDateTable_c73eabe9-2b0b-4a39-bde7-e867c83d9a76.Date
+
+relationship 29b57760-4dfa-40fa-8fca-87dc24c43d08
+	joinOnDateBehavior: datePartOnly
+	fromColumn: public-mine_report.update_timestamp
+	toColumn: LocalDateTable_2583b286-783c-44ec-aeb4-e23087e384b6.Date
+
+relationship 07cf085b-d562-4568-8a02-de40133ada96
+	joinOnDateBehavior: datePartOnly
+	fromColumn: public-mine_report_category.create_timestamp
+	toColumn: LocalDateTable_54df91e7-d883-43be-8898-864f49ba461e.Date
+
+relationship 6aa0ba06-46c1-480e-b23a-7271bbc61b01
+	joinOnDateBehavior: datePartOnly
+	fromColumn: public-mine_report_category.update_timestamp
+	toColumn: LocalDateTable_25594cd8-0121-4674-82ef-403f8a61edd1.Date
+
+relationship d1a377f0-6d6f-478a-9b1e-21cb9708197b
+	joinOnDateBehavior: datePartOnly
+	fromColumn: public-mine_status.effective_date
+	toColumn: LocalDateTable_bac0dd1f-d159-4c89-be72-9cf0e2624a2a.Date
+
+relationship b738cc6d-0ae7-442c-9ae9-e3bf72feec3d
+	joinOnDateBehavior: datePartOnly
+	fromColumn: public-mine_status.expiry_date
+	toColumn: LocalDateTable_9c6dfe52-1b73-4285-9ab3-b59cc6852e0f.Date
+
+relationship f3ba6a78-8935-48fe-912a-9d33ca1d8394
+	joinOnDateBehavior: datePartOnly
+	fromColumn: public-mine_status.create_timestamp
+	toColumn: LocalDateTable_5ffcfb12-ca83-41f6-9132-5fb57691d804.Date
+
+relationship e4cecf14-f749-4eef-96b3-838500fd512a
+	joinOnDateBehavior: datePartOnly
+	fromColumn: public-mine_status.update_timestamp
+	toColumn: LocalDateTable_cc2af8af-8983-4997-af30-44d1ca76c8bf.Date
+
+relationship 678ff9f0-0e65-4d06-9c17-088902e13ecc
+	joinOnDateBehavior: datePartOnly
+	fromColumn: public-mine_status.status_date
+	toColumn: LocalDateTable_0b004e7c-fab0-4fc3-b026-90d227708cc4.Date
+
+relationship 9269c935-7e34-4c85-b98b-271f4a3dd43e
+	joinOnDateBehavior: datePartOnly
+	fromColumn: public-mine_type.create_timestamp
+	toColumn: LocalDateTable_b28906e5-2440-44b8-9e15-0ed715837db7.Date
+
+relationship 90342505-0663-44e9-8f52-3aa89560d1ec
+	joinOnDateBehavior: datePartOnly
+	fromColumn: public-mine_type.update_timestamp
+	toColumn: LocalDateTable_7af286e6-9a6b-424a-bb06-e4d9cf315df3.Date
+
+relationship 3e56bb11-8e10-4528-8450-08b0210912a1
+	joinOnDateBehavior: datePartOnly
+	fromColumn: public-permit_status_code.effective_date
+	toColumn: LocalDateTable_42f3a072-7a72-45d5-bde7-acae9ff1cdc2.Date
+
+relationship a8f8e11d-f4b9-41c9-b5cb-dab17cb4f298
+	joinOnDateBehavior: datePartOnly
+	fromColumn: public-permit_status_code.expiry_date
+	toColumn: LocalDateTable_6bfae9b0-a490-4fed-934c-6e706889c6b2.Date
+
+relationship 38580ed8-b8a5-425f-8a93-a7ccbf2546b0
+	joinOnDateBehavior: datePartOnly
+	fromColumn: public-permit_status_code.create_timestamp
+	toColumn: LocalDateTable_8d20b24c-fb45-4f5c-8f68-9223d92cca03.Date
+
+relationship c629c738-3920-4744-a97e-b5ed93d07449
+	joinOnDateBehavior: datePartOnly
+	fromColumn: public-permit_status_code.update_timestamp
+	toColumn: LocalDateTable_bb0f7e66-1404-48dd-b1fc-ade1b2e44fce.Date
+
+relationship 22be3981-286a-47ae-8006-4b3a871365ba
+	joinOnDateBehavior: datePartOnly
+	fromColumn: public-regions.create_timestamp
+	toColumn: LocalDateTable_f8552c35-3626-4d87-a86b-b8a2361c8a69.Date
+
+relationship 155e66db-ddbc-46f9-a502-8d5cf2c254ee
+	joinOnDateBehavior: datePartOnly
+	fromColumn: public-regions.update_timestamp
+	toColumn: LocalDateTable_a4b2574c-8be4-4f9b-8318-59defefc633c.Date
+
+relationship 90da51ea-0a0c-4517-9e14-011998b80973
+	joinOnDateBehavior: datePartOnly
+	fromColumn: public-variance.issue_date
+	toColumn: LocalDateTable_e164e6fb-691f-419f-94e3-6a46a22a36ce.Date
+
+relationship 7f0e0813-d743-4151-9901-742e5bd24c81
+	joinOnDateBehavior: datePartOnly
+	fromColumn: public-variance.received_date
+	toColumn: LocalDateTable_558c6c57-6775-48de-98e7-7cbea21084cc.Date
+
+relationship a64b1ded-d1cb-4d33-a7ab-7f40409cbdbc
+	joinOnDateBehavior: datePartOnly
+	fromColumn: public-variance.expiry_date
+	toColumn: LocalDateTable_69002925-367f-4caa-ae46-3ccd1e9af7ac.Date
+
+relationship 130960b4-7991-4ff4-91f4-cfd69ad92af4
+	joinOnDateBehavior: datePartOnly
+	fromColumn: public-variance.create_timestamp
+	toColumn: LocalDateTable_da60a36c-e0ff-4f13-99d9-d330f81d5a9f.Date
+
+relationship e7d52429-441d-4b8b-ad90-e84fe9b087c0
+	joinOnDateBehavior: datePartOnly
+	fromColumn: public-variance.update_timestamp
+	toColumn: LocalDateTable_15f3ad80-bdc6-457a-92fb-5cc923d80a9b.Date
+
+relationship 211b066e-dc0d-486c-b50d-c0ea46790627
+	joinOnDateBehavior: datePartOnly
+	fromColumn: public-variance.created_timestamp
+	toColumn: LocalDateTable_fb2937b1-d65c-4046-812e-bea230a8c08b.Date
+
+relationship 281f9f6e-0751-4fd6-a33c-0902cb296a0a
+	joinOnDateBehavior: datePartOnly
+	fromColumn: public-variance.updated_timestamp
+	toColumn: LocalDateTable_bc52a38e-45e7-4394-ade0-ceb52e51397f.Date
+
+relationship e79f8cf0-15d0-4f39-aaca-866c58ba5b24
+	joinOnDateBehavior: datePartOnly
+	fromColumn: public-mine.create_timestamp
+	toColumn: LocalDateTable_00b104ca-4a81-4d17-9b13-538c30062610.Date
+
+relationship c8a41a86-2531-4f94-8629-5a3cc03705c2
+	joinOnDateBehavior: datePartOnly
+	fromColumn: public-mine.update_timestamp
+	toColumn: LocalDateTable_88e66d4b-323e-4d74-acc6-dae7140dfcc8.Date
+
+relationship eef8a725-57ff-4091-9894-70a347c132c2
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'public mine_summary_view'.permit_status_changed_timestamp
+	toColumn: LocalDateTable_2b770500-bd69-4521-966e-e4e5a5f0df82.Date
+
+relationship b3c98d0c-b9f6-4155-a3b4-c96a35fc0477
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'public mine_summary_view'.issue_date
+	toColumn: LocalDateTable_f802abe3-e08f-40d4-8672-432925c47750.Date
+
+relationship f0be0a60-1cf4-4acc-9481-9e7f0e6037ce
+	joinOnDateBehavior: datePartOnly
+	fromColumn: nris-nris_raw_data.input_date
+	toColumn: LocalDateTable_8a240a7b-5a55-421d-bdc2-0f9c1a73f80e.Date
+
+relationship c2ac4bf3-ccba-44aa-afb4-f5c4cf76495a
+	joinOnDateBehavior: datePartOnly
+	fromColumn: nris-nris_raw_data.processed_date
+	toColumn: LocalDateTable_40883bd4-c73c-422c-912c-243e5f732e28.Date
+
+relationship d677a2f1-0d62-4468-a9e4-43f024f690fd
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'public permit_amendment'.received_date
+	toColumn: LocalDateTable_cd8f66fe-86ba-447d-a2de-54bcf04c4497.Date
+
+relationship ecf60d69-b0d3-4a7c-91e3-2a5ed0116be4
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'public permit_amendment'.issue_date
+	toColumn: LocalDateTable_1e0502ff-d7e8-405d-a2aa-d395009e0148.Date
+
+relationship 65b6d922-d0dd-4978-a1b1-0ff4e25e00cf
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'public permit_amendment'.authorization_end_date
+	toColumn: LocalDateTable_4c2ee675-6d04-4197-9004-eb91109b0e75.Date
+
+relationship 41ebccbc-5b44-413a-80f8-bf96c1b21c4a
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'public permit_amendment'.create_timestamp
+	toColumn: LocalDateTable_182939ad-bbc0-42e3-ad92-4c2ebbd23abd.Date
+
+relationship 1458c2af-fcea-4525-99bb-abbb1ccd6f94
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'public permit_amendment'.update_timestamp
+	toColumn: LocalDateTable_030731d6-1cea-418a-8c13-d055a94c4fdf.Date
+
+relationship 13f6b312-45d7-4c3e-8058-d04eaae279a5
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'public permit_amendment'.security_received_date
+	toColumn: LocalDateTable_c4a3d764-9fea-4b3f-b0e5-3f031eea88fe.Date
+
+relationship ea1faf66-1161-4394-95e6-109a5d65fe3a
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'public permit_amendment'.permit_conditions_last_updated_date
+	toColumn: LocalDateTable_603ed0d6-7ca1-421e-b38b-e73a533204cc.Date
+
+relationship 3d8c2bfc-91c7-4cba-b62e-a12a2d79026d
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'public permit_amendment_document'.create_timestamp
+	toColumn: LocalDateTable_2e2cbb93-6579-456c-a3cc-94c7fa63040d.Date
+
+relationship e11facdb-dc71-42e1-8dc1-e1c327c2d660
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'public permit_amendment_document'.update_timestamp
+	toColumn: LocalDateTable_d07417f1-e1c8-4fcb-b069-6ada8603d8bc.Date
+
+relationship 6bc1dddc-3515-4099-85ad-15b22334149b
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'public permit_amendment_document'.preamble_date
+	toColumn: LocalDateTable_256581bc-dbfc-49d5-b2f3-192f38ea8a69.Date
+
+relationship 3a3dfa1c-eb74-41f8-ab41-16247e1fa7c8
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'public permit_amendment_status_code'.create_timestamp
+	toColumn: LocalDateTable_ef7afad3-9585-415d-9f84-71d41127912b.Date
+
+relationship 2a31b46d-d8c8-4d81-9e8c-6117c2d3f2c9
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'public permit_amendment_status_code'.update_timestamp
+	toColumn: LocalDateTable_868dbdca-c23b-483b-abdd-d13642886833.Date
+
+relationship 4f781c77-9b8a-4af6-b298-41594ac32130
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'public permit_amendment_type_code'.create_timestamp
+	toColumn: LocalDateTable_4c4bc940-0d38-44c5-a62b-4448049a37af.Date
+
+relationship 5e090111-7363-4cdf-b0de-a0c53e8ee64c
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'public permit_amendment_type_code'.update_timestamp
+	toColumn: LocalDateTable_ce51c76d-de4d-456d-9ab2-41c10f33e1c7.Date
+
+relationship 73e2d947-d392-4f24-8a37-9ae1a9736146
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'public permit_condition_category'.create_timestamp
+	toColumn: LocalDateTable_02f5a1c3-5511-4197-bfc2-5c028ca1ba74.Date
+
+relationship 355b88ee-0d9c-45ca-89be-a436c9dd79c3
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'public permit_condition_category'.update_timestamp
+	toColumn: LocalDateTable_a9eb7902-3307-4050-af1d-d0eb4abafaf4.Date
+
+relationship 04b7185f-59eb-4f05-af80-438419750d01
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'public permit_condition_type'.create_timestamp
+	toColumn: LocalDateTable_fac5da37-e93a-4f12-9430-b2363ada2f44.Date
+
+relationship 4ad03e60-c943-4d96-bfbb-db45d02e5997
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'public permit_condition_type'.update_timestamp
+	toColumn: LocalDateTable_99c6fad6-30e1-4e2b-842a-ebf29df99b1a.Date
+
+relationship 48e14f72-1a8e-c9bc-344c-8d137df9d228
+	fromColumn: 'public permit_amendment'.permit_id
+	toColumn: '_public permit_amendment grouped by Permit'.permit_id
+
+relationship 567e28bb-4293-4d4f-888b-c74070b73902
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'public permit'.create_timestamp
+	toColumn: LocalDateTable_7c77f9f3-4590-4472-806d-1e59ff7e1a44.Date
+
+relationship a9cb56c2-a4b7-4d0e-8450-9b63b208eafe
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'public permit'.update_timestamp
+	toColumn: LocalDateTable_08c41eec-51f2-4c47-9d26-88053ff5d3cf.Date
+
+relationship 26dd1d1a-d7a3-4767-9c87-ac14ec80f943
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'public permit'.status_changed_timestamp
+	toColumn: LocalDateTable_d6c50ad8-fbb6-4456-a52a-4425c64f8219.Date
+
+relationship c889fb94-9780-442b-8e57-3ef1d3b397c1
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'public bond'.create_timestamp
+	toColumn: LocalDateTable_fa0c0960-a399-48b1-b148-531216188d8d.Date
+
+relationship efe85861-138a-494c-93db-775836b79989
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'public bond'.update_timestamp
+	toColumn: LocalDateTable_7706975b-7ca1-4473-83d2-a302d93e14a1.Date
+
+relationship 88363dea-12d4-4145-a8e2-cf0c64d85199
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'public bond'.issue_date
+	toColumn: LocalDateTable_76c23baa-decd-4642-9c89-8bab3082ed1a.Date
+
+relationship cb619c1b-924f-421c-915c-e8c9e97741b1
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'public bond'.closed_date
+	toColumn: LocalDateTable_cf0e8c3d-4676-4b0d-87ca-c01ae29189f8.Date
+
+relationship AutoDetected_a1b39cfa-f743-48c2-bc56-fd347bc34491
+	fromColumn: public-mine_report.permit_id
+	toColumn: 'public permit'.permit_id
+
+relationship AutoDetected_50f42445-1c75-4f75-8bed-5c4da5540945
+	fromColumn: 'public mine_summary_view'.permit_id
+	toColumn: 'public permit'.permit_id
+
+relationship AutoDetected_c78f365b-1e47-4bdb-b026-1d164b3e7b43
+	fromColumn: 'public permit_amendment'.permit_id
+	toColumn: 'public permit'.permit_id
+
+relationship AutoDetected_0788333d-b441-499d-bdce-e0a45869d3b6
+	isActive: false
+	crossFilteringBehavior: bothDirections
+	fromCardinality: one
+	fromColumn: '_public permit_amendment grouped by Permit'.permit_id
+	toColumn: 'public permit'.permit_id
+
+relationship AutoDetected_76a0fe30-0e3f-4788-8cad-89cdb8f06e9f
+	fromColumn: 'public bond_permit_xref'.permit_id
+	toColumn: 'public permit'.permit_id
+
+relationship AutoDetected_9ce18a95-ff21-42c5-b3af-c86a97f080ad
+	fromColumn: public-mine_type.permit_guid
+	toColumn: 'public permit'.permit_guid
+
+relationship AutoDetected_017dc499-c363-46e3-a2ac-3ea97f39907c
+	fromColumn: 'public permit'.permit_status_code
+	toColumn: public-permit_status_code.permit_status_code
+
+relationship AutoDetected_1bcbb080-9829-486e-a147-e9ac87b7b626
+	crossFilteringBehavior: bothDirections
+	fromCardinality: one
+	fromColumn: 'public bond_permit_xref'.bond_id
+	toColumn: 'public bond'.bond_id
+
+relationship 885561cd-1c40-4bfb-93d9-ffa214fe874c
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'public bond_type'.create_timestamp
+	toColumn: LocalDateTable_dd10925d-7c88-4c50-b4ca-c8ff83037b8a.Date
+
+relationship fd9ad027-3ca5-420a-9412-3968cf3815a3
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'public bond_type'.update_timestamp
+	toColumn: LocalDateTable_d686050b-3772-424a-b85d-963005d9ed3f.Date
+
+relationship 026437b4-9ce7-4fb3-a1ac-1e8ff0191c0f
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'public bond_status'.create_timestamp
+	toColumn: LocalDateTable_3b026336-b878-49a2-b48d-abd6bdc2d264.Date
+
+relationship 55fa5ba6-7c1d-4f36-bc7c-2f0b952b6ef5
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'public bond_status'.update_timestamp
+	toColumn: LocalDateTable_6d2f33e7-37a1-4b31-8db3-d02199982a56.Date
+
+relationship AutoDetected_87d467d7-a780-422b-968f-787aec4178be
+	fromColumn: 'public bond'.bond_type_code
+	toColumn: 'public bond_type'.bond_type_code
+
+relationship AutoDetected_11495af0-7a3e-4662-bd71-2f9be4198e13
+	fromColumn: 'public bond'.bond_status_code
+	toColumn: 'public bond_status'.bond_status_code
+
+relationship ef21c89d-e743-416b-ac26-6bc230b8512e
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'public bond_view'.issue_date
+	toColumn: LocalDateTable_1cfc96e7-a35f-45c1-8f82-a8d954485d0f.Date
+
+relationship 43cbc436-dd6e-4c0d-b15c-d2129da84248
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'public bond_view'.closed_date
+	toColumn: LocalDateTable_abc53eb0-7245-4471-99f7-a574e2982feb.Date
+
+relationship b6fa6f78-292b-47a5-b9a2-0041d3e33c2f
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'public bond_view'.update_timestamp
+	toColumn: LocalDateTable_80d80306-3274-4f3e-ab99-7339ac6e69fb.Date
+
+relationship AutoDetected_7228429f-9d93-4cc1-a69f-9d358fbd96d7
+	fromColumn: 'public bond_view'.permit_guid
+	toColumn: 'public permit'.permit_guid
+
+relationship AutoDetected_d8e0fca2-b835-4b84-b947-ddb5e8a32bb7
+	fromColumn: 'public bond_view'.bond_type_code
+	toColumn: 'public bond_type'.bond_type_code
+
+relationship AutoDetected_4acff8f4-4761-4527-b5a6-8930bd94bf64
+	fromColumn: 'public bond_view'.bond_status_code
+	toColumn: 'public bond_status'.bond_status_code
+
+relationship e33d65aa-a6b0-4f6e-9e6c-70b728929d42
+	joinOnDateBehavior: datePartOnly
+	fromColumn: nris-order_request_detail.respond_date
+	toColumn: LocalDateTable_f2c0c2d8-ffde-4636-b91d-b30a3f98faa8.Date
+
+relationship 97b23ad6-c2c4-40c6-b5c4-9a9fe1d6b75b
+	joinOnDateBehavior: datePartOnly
+	fromColumn: nris-order_warning_detail.response_received
+	toColumn: LocalDateTable_6714bf9c-6f83-4f8c-82c6-a6f2ea6fad48.Date
+
+relationship 0b778b93-c25a-468b-a7dc-6c6a49c86fef
+	joinOnDateBehavior: datePartOnly
+	fromColumn: nris-order_warning_detail.completion_date
+	toColumn: LocalDateTable_4aa014c4-72a8-4028-bf62-69c69cc9c0d2.Date
+
+relationship AutoDetected_2557a0f2-461e-4483-aa36-88f96bf61059
+	fromColumn: nris-order_request_detail.inspected_location_id
+	toColumn: nris-inspected_location.inspected_location_id
+
+relationship AutoDetected_bf7e3360-4877-4ef1-aa16-08421f2709f1
+	fromColumn: nris-order_warning_detail.inspected_location_id
+	toColumn: nris-inspected_location.inspected_location_id
+
+relationship AutoDetected_1aaf8daf-d314-4be4-8e19-5a97b9276489
+	crossFilteringBehavior: bothDirections
+	fromCardinality: one
+	fromColumn: nris-inspected_location.location_id
+	toColumn: nris-location.location_id
+
+relationship 9659a430-253f-4cb7-a2f1-52e87a4b591c
+	joinOnDateBehavior: datePartOnly
+	fromColumn: nris-order_stop_detail_document_xref.response_received
+	toColumn: LocalDateTable_5ea09399-3fda-4d7f-8813-5d20aa246f9a.Date
+
+relationship 05dc94b9-41e7-472c-881a-c4422e06b0fb
+	joinOnDateBehavior: datePartOnly
+	fromColumn: nris-order_stop_detail_document_xref.completion_date
+	toColumn: LocalDateTable_a92996a4-37cb-401d-9da2-b61d07401120.Date
+
+relationship AutoDetected_aeba0a37-3ed6-4919-b7e5-eaa8f585ded3
+	fromColumn: nris-order_stop_detail_document_xref.inspected_location_id
+	toColumn: nris-inspected_location.inspected_location_id
+
+relationship d036d97e-5acd-4636-a89a-2214e7722001
+	joinOnDateBehavior: datePartOnly
+	fromColumn: public-now_application.submitted_date
+	toColumn: LocalDateTable_b941c670-824a-48f3-9e33-4d60a1ce9c71.Date
+
+relationship 768976e2-c81e-4037-a1c9-1397e12908ed
+	joinOnDateBehavior: datePartOnly
+	fromColumn: public-now_application.received_date
+	toColumn: LocalDateTable_3d7f1768-8505-433b-90f6-112278cd59ca.Date
+
+relationship 95874159-887d-44ab-920b-24fd59fccbac
+	joinOnDateBehavior: datePartOnly
+	fromColumn: public-now_application.proposed_start_date
+	toColumn: LocalDateTable_422e4d44-c255-4dfb-b7a1-11a3ae0839ff.Date
+
+relationship deff6380-2f05-4d35-8299-a5fec22cc770
+	joinOnDateBehavior: datePartOnly
+	fromColumn: public-now_application.proposed_end_date
+	toColumn: LocalDateTable_f7475a68-b696-4774-a3f6-18567dcd63a7.Date
+
+relationship 8576276e-0090-4c41-95fe-6c290727598d
+	joinOnDateBehavior: datePartOnly
+	fromColumn: public-now_application.create_timestamp
+	toColumn: LocalDateTable_0a18e3fd-a0af-4253-ad28-4887542319ed.Date
+
+relationship 0c075d14-598b-477e-b7c8-da69cc90fe01
+	joinOnDateBehavior: datePartOnly
+	fromColumn: public-now_application.update_timestamp
+	toColumn: LocalDateTable_f67a4e60-bd7b-4319-b189-f3d02b2b8dd7.Date
+
+relationship 3f33b9c2-26e1-46d5-a632-17638d48421e
+	joinOnDateBehavior: datePartOnly
+	fromColumn: public-now_application.security_received_date
+	toColumn: LocalDateTable_9a45a291-6e43-4b25-9526-6893ab3c3e91.Date
+
+relationship b3739cd7-5823-4528-8639-75995c7ab8a1
+	joinOnDateBehavior: datePartOnly
+	fromColumn: public-now_application.status_updated_date
+	toColumn: LocalDateTable_bffe876e-2fa5-4fd3-a2a0-36efe06799f0.Date
+
+relationship b4dba127-d10c-43d4-8ad6-89fdb3049be7
+	joinOnDateBehavior: datePartOnly
+	fromColumn: public-now_application.last_updated_date
+	toColumn: LocalDateTable_34c07816-70cb-4e81-86f9-9d2a26104bca.Date
+
+relationship bf034646-2b0f-475e-8e7a-301029500615
+	joinOnDateBehavior: datePartOnly
+	fromColumn: public-now_application.imported_date
+	toColumn: LocalDateTable_50b84819-0ee3-46db-853f-b5ce808e9064.Date
+
+relationship 5d506edc-bb2d-4766-8098-593dea219951
+	joinOnDateBehavior: datePartOnly
+	fromColumn: public-now_application.original_start_date
+	toColumn: LocalDateTable_8f5542cd-1f51-4e5c-b180-f9442aa68481.Date
+
+relationship a9ff075c-8213-493a-b0c4-08416921eb22
+	joinOnDateBehavior: datePartOnly
+	fromColumn: public-now_application.verified_by_user_date
+	toColumn: LocalDateTable_28346bf1-c685-48e3-917f-3e008c081217.Date
+
+relationship a8ec9280-642f-461c-afb5-8e60923d3b46
+	joinOnDateBehavior: datePartOnly
+	fromColumn: public-now_application.decision_by_user_date
+	toColumn: LocalDateTable_01aaaebf-29c9-426d-80a0-ab17f9913efd.Date
+
+relationship 11575615-2a4f-4663-8f48-6088f9e47d2a
+	joinOnDateBehavior: datePartOnly
+	fromColumn: public-now_application.submitted_to_core_date
+	toColumn: LocalDateTable_f9c4d47b-d57e-4af9-a1da-a62a1f3d9cf3.Date
+
+relationship 0f9d7d92-9b6b-4fd0-b59a-6122d5e09707
+	joinOnDateBehavior: datePartOnly
+	fromColumn: public-applications_view.source_permit_amendment_issue_date
+	toColumn: LocalDateTable_38441861-1af4-423f-a687-502fa900f107.Date
+
+relationship ef2732ab-9b92-4933-8381-77b7736c55f8
+	joinOnDateBehavior: datePartOnly
+	fromColumn: public-applications_view.latest_response_date
+	toColumn: LocalDateTable_d02027ab-5b40-4724-bf0a-ff63dd1da24c.Date
+
+relationship 348f2373-d369-4988-a692-ecbae5c6021c
+	joinOnDateBehavior: datePartOnly
+	fromColumn: public-applications_view.received_date
+	toColumn: LocalDateTable_82f39faa-a6e9-4329-95b0-fce2c4c1fab8.Date
+
+relationship d341ff95-4ad6-4224-aa35-0815f7c6b319
+	joinOnDateBehavior: datePartOnly
+	fromColumn: public-applications_view.import_timestamp
+	toColumn: LocalDateTable_22050fde-48a7-45ca-8851-ef49a61395f7.Date
+
+relationship b4669175-0736-4b8f-9441-ebb1b9356a5f
+	joinOnDateBehavior: datePartOnly
+	fromColumn: public-applications_view.update_timestamp
+	toColumn: LocalDateTable_8782188f-8dbf-43b6-93c9-2e138a7d6efd.Date
+
+relationship 5700a79b-4f38-46a2-855b-d1170308672c
+	joinOnDateBehavior: datePartOnly
+	fromColumn: public-applications_view.decision_date
+	toColumn: LocalDateTable_8448e303-2f7e-4a21-8283-445c1676e2bb.Date
+
+relationship AutoDetected_dbd9e117-1d36-4186-b8c3-2784047678e6
+	fromColumn: public-applications_view.mine_guid
+	toColumn: public-mine.mine_guid
+
+relationship AutoDetected_c0109b52-47fc-47c8-92e5-f94f8e8e9512
+	fromColumn: public-applications_view.mine_guid
+	toColumn: 'public mine_summary_view - duplicates'.mine_guid
+
+relationship AutoDetected_0d9a3192-f643-4ba1-9d9e-9241063a53e4
+	fromColumn: public-applications_view.permit_id
+	toColumn: 'public permit'.permit_id
+
+relationship AutoDetected_d5fee57f-26c2-45bf-9079-0a258be9c879
+	fromColumn: public-applications_view.now_application_id
+	toColumn: public-now_application.now_application_id
+

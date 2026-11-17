@@ -1,0 +1,37 @@
+table DimInspection
+	lineageTag: ac86719c-c311-4046-885f-6315fd4019b0
+
+	column inspection_id
+		formatString: 0
+		lineageTag: 6f71421a-5fac-435f-abda-137ecc83d4ed
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [inspection_id]
+
+		annotation SummarizationSetBy = Automatic
+
+	column InspectionPK
+		formatString: 0
+		lineageTag: 6e06ca20-5a93-4367-b443-b324a8159728
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [InspectionPK]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition DimInspection = calculated
+		mode: import
+		source = ```
+				
+				DISTINCT (
+				    SELECTCOLUMNS (
+				        FactInspection,
+				        "inspection_id", INT ( FactInspection[inspection_id] ),
+				        "InspectionPK",  FactInspection[InspectionPK]
+				    )
+				)
+				
+				```
+
+	annotation PBI_Id = 6d7da8cee25a4f5abd8dfb0ceb972bb4
+

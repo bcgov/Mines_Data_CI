@@ -1,0 +1,252 @@
+table public-mine
+	lineageTag: 11403bcf-78d6-429e-a8b8-45cf80981d46
+
+	column mine_guid
+		dataType: string
+		lineageTag: 3d099769-2324-4815-b4c1-8e00b5ef82c8
+		summarizeBy: none
+		sourceColumn: mine_guid
+
+		annotation SummarizationSetBy = Automatic
+
+	column create_user
+		dataType: string
+		lineageTag: e19c6872-208a-4c27-bde6-53994f948409
+		summarizeBy: none
+		sourceColumn: create_user
+
+		annotation SummarizationSetBy = Automatic
+
+	column create_timestamp
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 1afac7f7-0060-4845-93ce-ad09aeeebf21
+		summarizeBy: none
+		sourceColumn: create_timestamp
+
+		variation Variation
+			isDefault
+			relationship: e79f8cf0-15d0-4f39-aaca-866c58ba5b24
+			defaultHierarchy: LocalDateTable_00b104ca-4a81-4d17-9b13-538c30062610.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column update_user
+		dataType: string
+		lineageTag: 717ff262-c351-4852-b513-062f70ae1d7f
+		summarizeBy: none
+		sourceColumn: update_user
+
+		annotation SummarizationSetBy = Automatic
+
+	column update_timestamp
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: de3ccc0c-5894-49a5-8cab-1ff409c0f970
+		summarizeBy: none
+		sourceColumn: update_timestamp
+
+		variation Variation
+			isDefault
+			relationship: c8a41a86-2531-4f94-8629-5a3cc03705c2
+			defaultHierarchy: LocalDateTable_88e66d4b-323e-4d74-acc6-dae7140dfcc8.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column mine_no
+		dataType: string
+		lineageTag: 08af442c-b3f8-458b-ab22-8c5c567d7987
+		summarizeBy: none
+		sourceColumn: mine_no
+
+		annotation SummarizationSetBy = Automatic
+
+	column mine_name
+		dataType: string
+		lineageTag: f0741c30-1f42-4fff-9f75-835499730668
+		summarizeBy: none
+		sourceColumn: mine_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column mine_note
+		dataType: string
+		lineageTag: 4572bb3f-c086-44d8-a19d-217d29f94eba
+		summarizeBy: none
+		sourceColumn: mine_note
+
+		annotation SummarizationSetBy = Automatic
+
+	column major_mine_ind
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 8ca1a162-1c4e-473e-8251-d3160e1733f0
+		summarizeBy: none
+		sourceColumn: major_mine_ind
+
+		annotation SummarizationSetBy = Automatic
+
+	column mine_region
+		dataType: string
+		lineageTag: f62c644d-9faf-4b7a-8401-3236d0608b98
+		summarizeBy: none
+		sourceColumn: mine_region
+
+		annotation SummarizationSetBy = Automatic
+
+	column deleted_ind
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: c37ada6e-8ae3-42ba-bdc8-55e357cfb9a9
+		summarizeBy: none
+		sourceColumn: deleted_ind
+
+		annotation SummarizationSetBy = Automatic
+
+	column union_ind
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 33f7fab1-6523-40d1-86fb-69b85f8bdecc
+		summarizeBy: none
+		sourceColumn: union_ind
+
+		annotation SummarizationSetBy = Automatic
+
+	column ohsc_ind
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 7828da72-cffe-4018-8ae7-3fc0166f85ef
+		summarizeBy: none
+		sourceColumn: ohsc_ind
+
+		annotation SummarizationSetBy = Automatic
+
+	column latitude
+		dataType: double
+		lineageTag: 548a5dab-514a-4b01-b37e-b9432ef4176f
+		summarizeBy: sum
+		sourceColumn: latitude
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column longitude
+		dataType: double
+		lineageTag: f8cf59eb-07b2-4811-afdc-d6f349b9aa35
+		summarizeBy: sum
+		sourceColumn: longitude
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column mine_location_description
+		dataType: string
+		lineageTag: 996a3ee4-c7cf-434e-bae7-4b96bd87e137
+		summarizeBy: none
+		sourceColumn: mine_location_description
+
+		annotation SummarizationSetBy = Automatic
+
+	column geom
+		dataType: string
+		lineageTag: 88af6f1d-dc55-4949-98b9-bf290485421a
+		summarizeBy: none
+		sourceColumn: geom
+
+		annotation SummarizationSetBy = Automatic
+
+	column legacy_mms_mine_status
+		dataType: string
+		lineageTag: 5cd8424d-bacc-4531-a9ca-e546e3e02118
+		summarizeBy: none
+		sourceColumn: legacy_mms_mine_status
+
+		annotation SummarizationSetBy = Automatic
+
+	column exemption_fee_status_code
+		dataType: string
+		lineageTag: ced08641-2717-4686-a067-124bc13a040f
+		summarizeBy: none
+		sourceColumn: exemption_fee_status_code
+
+		annotation SummarizationSetBy = Automatic
+
+	column exemption_fee_status_note
+		dataType: string
+		lineageTag: 2616bf97-4947-4b1e-9c32-b8ea28e84d68
+		summarizeBy: none
+		sourceColumn: exemption_fee_status_note
+
+		annotation SummarizationSetBy = Automatic
+
+	column mms_alias
+		dataType: string
+		lineageTag: 6fb0c08a-878e-47d5-8565-c1ae30291169
+		summarizeBy: none
+		sourceColumn: mms_alias
+
+		annotation SummarizationSetBy = Automatic
+
+	column mine_no_sequence
+		dataType: int64
+		formatString: 0
+		lineageTag: 810b5a50-1ad9-4277-861c-776d0d7c9401
+		summarizeBy: sum
+		sourceColumn: mine_no_sequence
+
+		annotation SummarizationSetBy = Automatic
+
+	column government_agency_type_code
+		dataType: string
+		lineageTag: 829c5d3a-5cd4-4eb7-80e5-4fd5bfe4f9af
+		summarizeBy: none
+		sourceColumn: government_agency_type_code
+
+		annotation SummarizationSetBy = Automatic
+
+	column number_of_contractors
+		dataType: double
+		lineageTag: 9880bd93-a471-43bd-98cc-be7e6ac7ce71
+		summarizeBy: sum
+		sourceColumn: number_of_contractors
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column number_of_mine_employees
+		dataType: double
+		lineageTag: 510a7ea1-8d84-4660-964f-3031d764e158
+		summarizeBy: sum
+		sourceColumn: number_of_mine_employees
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column mine_timezone
+		dataType: string
+		lineageTag: bdd31cc9-5e61-4ffd-b4da-207f18e762df
+		summarizeBy: none
+		sourceColumn: mine_timezone
+
+		annotation SummarizationSetBy = Automatic
+
+	partition public-mine = m
+		mode: import
+		source =
+				let
+				    Source = AzureStorage.Blobs("datarepositorysa"),
+				    postgres1 = Source{[Name="postgres"]}[Data],
+				    #"Filtered Rows" = Table.SelectRows(postgres1, each [Extension] = ".parquet"),
+				    #"https://datarepositorysa blob core windows net/postgres/_tables/parquet/public mine parquet" = #"Filtered Rows"{[#"Folder Path"="https://datarepositorysa.blob.core.windows.net/postgres/",Name="tables/parquet/public.mine.parquet"]}[Content],
+				    #"Imported Parquet" = Parquet.Document(#"https://datarepositorysa blob core windows net/postgres/_tables/parquet/public mine parquet")
+				in
+				    #"Imported Parquet"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

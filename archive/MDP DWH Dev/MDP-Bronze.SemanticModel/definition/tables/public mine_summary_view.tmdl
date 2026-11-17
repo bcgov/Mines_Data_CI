@@ -1,0 +1,464 @@
+table 'public mine_summary_view'
+	lineageTag: a6f92398-0f97-45a8-b0d0-5437346cccab
+
+	column mine_guid
+		dataType: string
+		lineageTag: 9d23398d-a523-41a7-bdee-482163f39f34
+		summarizeBy: none
+		sourceColumn: mine_guid
+
+		annotation SummarizationSetBy = Automatic
+
+	column permit_guid
+		dataType: string
+		lineageTag: fb3de05c-f760-473c-878b-ba2e5d8aee90
+		summarizeBy: none
+		sourceColumn: permit_guid
+
+		annotation SummarizationSetBy = Automatic
+
+	column permit_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 397c0bc6-cd7f-4c56-bf37-762d2a41c500
+		summarizeBy: none
+		sourceColumn: permit_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column mine_name
+		dataType: string
+		lineageTag: 15d99288-5776-43e5-97a5-8c754e6e0bfa
+		summarizeBy: none
+		sourceColumn: mine_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column mine_number
+		dataType: string
+		lineageTag: 5f42d437-796c-4c94-b67b-23728526c60a
+		summarizeBy: none
+		sourceColumn: mine_number
+
+		annotation SummarizationSetBy = Automatic
+
+	column mine_latitude
+		dataType: string
+		lineageTag: aafd1f2d-4170-4e18-9540-8b7baa4d5289
+		summarizeBy: none
+		sourceColumn: mine_latitude
+
+		annotation SummarizationSetBy = Automatic
+
+	column mine_longitude
+		dataType: string
+		lineageTag: 9de36707-6c76-4c08-b937-a7ac20b8c714
+		summarizeBy: none
+		sourceColumn: mine_longitude
+
+		annotation SummarizationSetBy = Automatic
+
+	column government_agency_type_code
+		dataType: string
+		lineageTag: c29dd57f-7757-4aa2-9843-3412501a1147
+		summarizeBy: none
+		sourceColumn: government_agency_type_code
+
+		annotation SummarizationSetBy = Automatic
+
+	column government_agency_type_d
+		dataType: string
+		lineageTag: aebc805f-1167-42ca-9919-b4cfe15695b1
+		summarizeBy: none
+		sourceColumn: government_agency_type_d
+
+		annotation SummarizationSetBy = Automatic
+
+	column mine_exemption_fee_status_note
+		dataType: string
+		lineageTag: 867ef128-5b4e-4fb6-a433-4a189ff4c96c
+		summarizeBy: none
+		sourceColumn: mine_exemption_fee_status_note
+
+		annotation SummarizationSetBy = Automatic
+
+	column mine_exemption_fee_status_code
+		dataType: string
+		lineageTag: 1271e541-3da6-4e61-a9db-1a0a69b524cb
+		summarizeBy: none
+		sourceColumn: mine_exemption_fee_status_code
+
+		annotation SummarizationSetBy = Automatic
+
+	column mine_exemption_fee_status_d
+		dataType: string
+		lineageTag: eb9b580b-3484-43d7-82cb-2065e1383001
+		summarizeBy: none
+		sourceColumn: mine_exemption_fee_status_d
+
+		annotation SummarizationSetBy = Automatic
+
+	column operation_status
+		dataType: string
+		lineageTag: 7d15ae21-2ab8-463e-a5d5-f6b34c7c3102
+		summarizeBy: none
+		sourceColumn: operation_status
+
+		annotation SummarizationSetBy = Automatic
+
+	column operation_status_code
+		dataType: string
+		lineageTag: 990ca7d2-b740-4393-bd8d-8767eba0fff8
+		summarizeBy: none
+		sourceColumn: operation_status_code
+
+		annotation SummarizationSetBy = Automatic
+
+	column mine_operation_status_code
+		dataType: string
+		lineageTag: c0dc40a9-31f0-4a52-bcb6-41cde526ec35
+		summarizeBy: none
+		sourceColumn: mine_operation_status_code
+
+		annotation SummarizationSetBy = Automatic
+
+	column mine_operation_status_reason_code
+		dataType: string
+		lineageTag: 322c05a6-4553-4296-a124-57b4568fe22d
+		summarizeBy: none
+		sourceColumn: mine_operation_status_reason_code
+
+		annotation SummarizationSetBy = Automatic
+
+	column mine_operation_status_sub_reason_code
+		dataType: string
+		lineageTag: d6f9adaa-76aa-4075-8746-683a182dcc55
+		summarizeBy: none
+		sourceColumn: mine_operation_status_sub_reason_code
+
+		annotation SummarizationSetBy = Automatic
+
+	column mine_operation_status_d
+		dataType: string
+		lineageTag: c2c7c1af-46c3-4318-8f03-4b32fd178616
+		summarizeBy: none
+		sourceColumn: mine_operation_status_d
+
+		annotation SummarizationSetBy = Automatic
+
+	column mine_operation_status_reason_d
+		dataType: string
+		lineageTag: 639e32f3-db19-432e-bcf8-04861643800d
+		summarizeBy: none
+		sourceColumn: mine_operation_status_reason_d
+
+		annotation SummarizationSetBy = Automatic
+
+	column mine_operation_status_sub_reason_d
+		dataType: string
+		lineageTag: 52d691cc-3ecf-4e7f-a653-74c06c57535b
+		summarizeBy: none
+		sourceColumn: mine_operation_status_sub_reason_d
+
+		annotation SummarizationSetBy = Automatic
+
+	column mine_date
+		dataType: string
+		lineageTag: 8f94a135-94e0-4b83-8096-74bbcb4eafd2
+		summarizeBy: none
+		sourceColumn: mine_date
+
+		annotation SummarizationSetBy = Automatic
+
+	column status_date
+		dataType: string
+		lineageTag: 484d5b48-3811-474a-9017-4b64b8e719a2
+		summarizeBy: none
+		sourceColumn: status_date
+
+		annotation SummarizationSetBy = Automatic
+
+	column mine_tenure
+		dataType: string
+		lineageTag: e5835d89-ac71-407f-945b-4e69c0e4ae21
+		summarizeBy: none
+		sourceColumn: mine_tenure
+
+		annotation SummarizationSetBy = Automatic
+
+	column mine_tenure_type_code
+		dataType: string
+		lineageTag: 5f833a7d-3b8a-4d1a-94f8-fdf316788e02
+		summarizeBy: none
+		sourceColumn: mine_tenure_type_code
+
+		annotation SummarizationSetBy = Automatic
+
+	column mine_commodity
+		dataType: string
+		lineageTag: 5dc579fb-b5af-4e13-9a03-3cc788d945d9
+		summarizeBy: none
+		sourceColumn: mine_commodity
+
+		annotation SummarizationSetBy = Automatic
+
+	column mine_commodity_type_code
+		dataType: string
+		lineageTag: 36cb1905-0e72-4301-857c-83e8181c6630
+		summarizeBy: none
+		sourceColumn: mine_commodity_type_code
+
+		annotation SummarizationSetBy = Automatic
+
+	column mine_disturbance
+		dataType: string
+		lineageTag: 6d6115dc-7092-42c8-9cb2-f7674a9e88b7
+		summarizeBy: none
+		sourceColumn: mine_disturbance
+
+		annotation SummarizationSetBy = Automatic
+
+	column mine_disturbance_type_code
+		dataType: string
+		lineageTag: 5b01b279-a6fd-4bfa-bb02-ccc535dee2e4
+		summarizeBy: none
+		sourceColumn: mine_disturbance_type_code
+
+		annotation SummarizationSetBy = Automatic
+
+	column permit_tenure
+		dataType: string
+		lineageTag: 2836c879-5370-49cf-8d2a-6c5c6ff1be6e
+		summarizeBy: none
+		sourceColumn: permit_tenure
+
+		annotation SummarizationSetBy = Automatic
+
+	column permit_tenure_type_code
+		dataType: string
+		lineageTag: a334cd91-2c6a-4484-94f4-76cb1fc5d7b6
+		summarizeBy: none
+		sourceColumn: permit_tenure_type_code
+
+		annotation SummarizationSetBy = Automatic
+
+	column permit_commodity
+		dataType: string
+		lineageTag: 7df509c4-37f5-4de8-bf8f-de39031f144b
+		summarizeBy: none
+		sourceColumn: permit_commodity
+
+		annotation SummarizationSetBy = Automatic
+
+	column permit_commodity_type_code
+		dataType: string
+		lineageTag: 8c9386c2-7c8e-4cc8-900a-4605f58b6aef
+		summarizeBy: none
+		sourceColumn: permit_commodity_type_code
+
+		annotation SummarizationSetBy = Automatic
+
+	column permit_disturbance
+		dataType: string
+		lineageTag: 778388af-a7a2-4b37-a3c3-94a70a8b3145
+		summarizeBy: none
+		sourceColumn: permit_disturbance
+
+		annotation SummarizationSetBy = Automatic
+
+	column permit_disturbance_type_code
+		dataType: string
+		lineageTag: 99238dfa-f9dd-4fb5-818d-2d9d20b9bc37
+		summarizeBy: none
+		sourceColumn: permit_disturbance_type_code
+
+		annotation SummarizationSetBy = Automatic
+
+	column mine_region
+		dataType: string
+		lineageTag: d125030d-d5f4-4ba6-a416-ca3f7b40bcb2
+		summarizeBy: none
+		sourceColumn: mine_region
+
+		annotation SummarizationSetBy = Automatic
+
+	column major_mine_ind
+		dataType: string
+		lineageTag: b10fe7ce-7f5f-4d2b-a5a5-2a4e6a5d618a
+		summarizeBy: none
+		sourceColumn: major_mine_ind
+
+		annotation SummarizationSetBy = Automatic
+
+	column bcmi_url
+		dataType: string
+		lineageTag: 9b1d8ba7-e78e-4b7d-8aac-d1c13ab58211
+		summarizeBy: none
+		sourceColumn: bcmi_url
+
+		annotation SummarizationSetBy = Automatic
+
+	column major_mine_d
+		dataType: string
+		lineageTag: 0014fbe0-d485-4676-9d1f-e34e052d4110
+		summarizeBy: none
+		sourceColumn: major_mine_d
+
+		annotation SummarizationSetBy = Automatic
+
+	column permit_no
+		dataType: string
+		lineageTag: b6d7b560-3cb8-4b82-b6cd-a6c73dcd6aa6
+		summarizeBy: none
+		sourceColumn: permit_no
+
+		annotation SummarizationSetBy = Automatic
+
+	column permit_status_code
+		dataType: string
+		lineageTag: a5e6602a-c6b0-46da-b468-35b8febd8e3c
+		summarizeBy: none
+		sourceColumn: permit_status_code
+
+		annotation SummarizationSetBy = Automatic
+
+	column permit_status_changed_timestamp
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 556d6616-57c1-44ee-af4e-47e00091c7ad
+		summarizeBy: none
+		sourceColumn: permit_status_changed_timestamp
+
+		variation Variation
+			isDefault
+			relationship: eef8a725-57ff-4091-9894-70a347c132c2
+			defaultHierarchy: LocalDateTable_2b770500-bd69-4521-966e-e4e5a5f0df82.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column issue_date
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 288662dd-2cdd-4153-8419-d4898ea1f5d8
+		summarizeBy: none
+		sourceColumn: issue_date
+
+		variation Variation
+			isDefault
+			relationship: b3c98d0c-b9f6-4155-a3b4-c96a35fc0477
+			defaultHierarchy: LocalDateTable_f802abe3-e08f-40d4-8672-432925c47750.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column permit_exemption_fee_status_code
+		dataType: string
+		lineageTag: 50604efc-3fe3-485c-ae39-1cb927da0ed0
+		summarizeBy: none
+		sourceColumn: permit_exemption_fee_status_code
+
+		annotation SummarizationSetBy = Automatic
+
+	column permit_exemption_fee_status_d
+		dataType: string
+		lineageTag: dda0fb75-8c4f-467b-a708-4b5d7d1efcf7
+		summarizeBy: none
+		sourceColumn: permit_exemption_fee_status_d
+
+		annotation SummarizationSetBy = Automatic
+
+	column permit_exemption_fee_status_note
+		dataType: string
+		lineageTag: f947d729-e155-4061-875e-4e71b325fc1d
+		summarizeBy: none
+		sourceColumn: permit_exemption_fee_status_note
+
+		annotation SummarizationSetBy = Automatic
+
+	column permittee_party_guid
+		dataType: string
+		lineageTag: 19193028-9705-4179-8d45-576adea6c2f2
+		summarizeBy: none
+		sourceColumn: permittee_party_guid
+
+		annotation SummarizationSetBy = Automatic
+
+	column permittee_first_name
+		dataType: string
+		lineageTag: 8143fb8d-909a-4b13-b3b1-57927db72d42
+		summarizeBy: none
+		sourceColumn: permittee_first_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column permittee_name
+		dataType: string
+		lineageTag: 6f075d2d-297f-4d3f-befe-05533a58b3ce
+		summarizeBy: none
+		sourceColumn: permittee_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column permittee_address_suite
+		dataType: string
+		lineageTag: 4ba1bb7c-2bd1-4a78-a279-60e28a21ec11
+		summarizeBy: none
+		sourceColumn: permittee_address_suite
+
+		annotation SummarizationSetBy = Automatic
+
+	column permittee_address_line_1
+		dataType: string
+		lineageTag: 5c7799db-089a-45a0-a015-7e2eaf66fbe2
+		summarizeBy: none
+		sourceColumn: permittee_address_line_1
+
+		annotation SummarizationSetBy = Automatic
+
+	column permittee_address_line_2
+		dataType: string
+		lineageTag: 639cadc3-907a-40e2-8ab6-2c954925d5e7
+		summarizeBy: none
+		sourceColumn: permittee_address_line_2
+
+		annotation SummarizationSetBy = Automatic
+
+	column permittee_address_city
+		dataType: string
+		lineageTag: 9251af14-fa50-45a4-8cc5-1842cee5ee45
+		summarizeBy: none
+		sourceColumn: permittee_address_city
+
+		annotation SummarizationSetBy = Automatic
+
+	column permittee_address_post_code
+		dataType: string
+		lineageTag: 2bc87bbe-192f-4790-b898-0328e35cfadd
+		summarizeBy: none
+		sourceColumn: permittee_address_post_code
+
+		annotation SummarizationSetBy = Automatic
+
+	column permittee_address_prov
+		dataType: string
+		lineageTag: 184aff15-839a-4718-801d-6e09f990eff7
+		summarizeBy: none
+		sourceColumn: permittee_address_prov
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'public mine_summary_view' = m
+		mode: import
+		source =
+				let
+				    Source = AzureStorage.Blobs("datarepositorysa"),
+				    postgres1 = Source{[Name="postgres"]}[Data],
+				    #"Filtered Rows" = Table.SelectRows(postgres1, each [Extension] = ".parquet"),
+				    #"https://datarepositorysa blob core windows net/postgres/_tables/parquet/public mine_summary_view parquet" = #"Filtered Rows"{[#"Folder Path"="https://datarepositorysa.blob.core.windows.net/postgres/",Name="tables/parquet/public.mine_summary_view.parquet"]}[Content],
+				    #"Imported Parquet" = Parquet.Document(#"https://datarepositorysa blob core windows net/postgres/_tables/parquet/public mine_summary_view parquet")
+				in
+				    #"Imported Parquet"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

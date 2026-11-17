@@ -1,0 +1,23 @@
+table ReportsCount
+
+	column TenantGuid
+		dataType: string
+		isHidden
+		sourceProviderType: varchar(36)
+		sourceColumn: TenantGuid
+
+	column Total
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		sourceColumn: Total
+
+	partition Usage_ReportsCount_V1 = query
+		dataView: full
+		source
+			query =
+				SELECT [Viewers].[Usage_ReportsCount_V1].*
+				FROM [Viewers].[Usage_ReportsCount_V1]
+				WHERE [Viewers].[Usage_ReportsCount_V1].[TenantGuid] = '6fdb5200-3d0d-4a8a-b036-d3685e359adc'
+			dataSource: bd7c0be5-4f36-44e9-bc91-20679d41615b
+

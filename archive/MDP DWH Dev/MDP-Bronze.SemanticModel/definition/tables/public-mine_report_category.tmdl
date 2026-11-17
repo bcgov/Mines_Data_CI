@@ -1,0 +1,97 @@
+table public-mine_report_category
+	lineageTag: db340ae8-8125-412a-b73f-7f3b57f9d681
+
+	column mine_report_category
+		dataType: string
+		lineageTag: 9a488a89-5c0e-47ab-ad15-bce0e07cc77c
+		summarizeBy: none
+		sourceColumn: mine_report_category
+
+		annotation SummarizationSetBy = Automatic
+
+	column description
+		dataType: string
+		lineageTag: 04c07770-d8ab-4ebd-b700-8fab614bf70d
+		summarizeBy: none
+		sourceColumn: description
+
+		annotation SummarizationSetBy = Automatic
+
+	column display_order
+		dataType: int64
+		formatString: 0
+		lineageTag: 7665fb5b-aad8-4df2-bbe4-bdb1ee7e9d73
+		summarizeBy: sum
+		sourceColumn: display_order
+
+		annotation SummarizationSetBy = Automatic
+
+	column active_ind
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 613ce405-357f-4178-a706-454068099c1b
+		summarizeBy: none
+		sourceColumn: active_ind
+
+		annotation SummarizationSetBy = Automatic
+
+	column create_user
+		dataType: string
+		lineageTag: 9faeb926-03f5-47ff-9c59-59ee401926ef
+		summarizeBy: none
+		sourceColumn: create_user
+
+		annotation SummarizationSetBy = Automatic
+
+	column create_timestamp
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 11ecaa34-8ab1-44e3-905d-2c15944816bf
+		summarizeBy: none
+		sourceColumn: create_timestamp
+
+		variation Variation
+			isDefault
+			relationship: 07cf085b-d562-4568-8a02-de40133ada96
+			defaultHierarchy: LocalDateTable_54df91e7-d883-43be-8898-864f49ba461e.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column update_user
+		dataType: string
+		lineageTag: 8dd493c4-2200-4f62-a040-d34e0410eba7
+		summarizeBy: none
+		sourceColumn: update_user
+
+		annotation SummarizationSetBy = Automatic
+
+	column update_timestamp
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 654c0ca7-1f5b-4dc1-a2b6-dbdc16e21979
+		summarizeBy: none
+		sourceColumn: update_timestamp
+
+		variation Variation
+			isDefault
+			relationship: 6aa0ba06-46c1-480e-b23a-7271bbc61b01
+			defaultHierarchy: LocalDateTable_25594cd8-0121-4674-82ef-403f8a61edd1.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	partition public-mine_report_category = m
+		mode: import
+		source =
+				let
+				    Source = AzureStorage.Blobs("datarepositorysa"),
+				    postgres1 = Source{[Name="postgres"]}[Data],
+				    #"Filtered Rows" = Table.SelectRows(postgres1, each ([Extension] = ".parquet")),
+				    #"https://datarepositorysa blob core windows net/postgres/_tables/parquet/public mine_report_category parquet" = #"Filtered Rows"{[#"Folder Path"="https://datarepositorysa.blob.core.windows.net/postgres/",Name="tables/parquet/public.mine_report_category.parquet"]}[Content],
+				    #"Imported Parquet" = Parquet.Document(#"https://datarepositorysa blob core windows net/postgres/_tables/parquet/public mine_report_category parquet")
+				in
+				    #"Imported Parquet"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

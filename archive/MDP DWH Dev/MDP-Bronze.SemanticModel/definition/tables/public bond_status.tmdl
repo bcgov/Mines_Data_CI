@@ -1,0 +1,88 @@
+table 'public bond_status'
+	lineageTag: 6a1f9c64-701e-4852-965c-05b111e8f83c
+
+	column bond_status_code
+		dataType: string
+		lineageTag: 4839f8af-9772-4072-9edf-ef1e9ca8946c
+		summarizeBy: none
+		sourceColumn: bond_status_code
+
+		annotation SummarizationSetBy = Automatic
+
+	column description
+		dataType: string
+		lineageTag: af0e7d61-36b4-49dc-aa5e-c9e4f199a257
+		summarizeBy: none
+		sourceColumn: description
+
+		annotation SummarizationSetBy = Automatic
+
+	column active_ind
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: e18513e2-4f6c-4c1d-b513-882ee6d793ea
+		summarizeBy: none
+		sourceColumn: active_ind
+
+		annotation SummarizationSetBy = Automatic
+
+	column create_user
+		dataType: string
+		lineageTag: 908343d3-5965-4d3c-b32a-ffe4c0c85790
+		summarizeBy: none
+		sourceColumn: create_user
+
+		annotation SummarizationSetBy = Automatic
+
+	column create_timestamp
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: ca081317-4b78-4755-9caf-4ca8e129176b
+		summarizeBy: none
+		sourceColumn: create_timestamp
+
+		variation Variation
+			isDefault
+			relationship: 026437b4-9ce7-4fb3-a1ac-1e8ff0191c0f
+			defaultHierarchy: LocalDateTable_3b026336-b878-49a2-b48d-abd6bdc2d264.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column update_user
+		dataType: string
+		lineageTag: f77f65bc-ab55-43f5-a7ff-50f93f512c8f
+		summarizeBy: none
+		sourceColumn: update_user
+
+		annotation SummarizationSetBy = Automatic
+
+	column update_timestamp
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 42ad5930-0d1b-4d49-8739-0ec275878e22
+		summarizeBy: none
+		sourceColumn: update_timestamp
+
+		variation Variation
+			isDefault
+			relationship: 55fa5ba6-7c1d-4f36-bc7c-2f0b952b6ef5
+			defaultHierarchy: LocalDateTable_6d2f33e7-37a1-4b31-8db3-d02199982a56.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'public bond_status' = m
+		mode: import
+		source =
+				let
+				    Source = AzureStorage.Blobs("datarepositorysa"),
+				    postgres1 = Source{[Name="postgres"]}[Data],
+				    #"Filtered Rows" = Table.SelectRows(postgres1, each [Extension] = ".parquet"),
+				    #"https://datarepositorysa blob core windows net/postgres/_tables/parquet/public bond_status parquet" = #"Filtered Rows"{[#"Folder Path"="https://datarepositorysa.blob.core.windows.net/postgres/",Name="tables/parquet/public.bond_status.parquet"]}[Content],
+				    #"Imported Parquet" = Parquet.Document(#"https://datarepositorysa blob core windows net/postgres/_tables/parquet/public bond_status parquet")
+				in
+				    #"Imported Parquet"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

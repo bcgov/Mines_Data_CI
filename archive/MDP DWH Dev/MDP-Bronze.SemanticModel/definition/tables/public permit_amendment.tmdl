@@ -1,0 +1,280 @@
+table 'public permit_amendment'
+	lineageTag: d623797c-098a-4791-aebe-e6c8e469df33
+
+	column permit_amendment_id
+		dataType: int64
+		formatString: 0
+		lineageTag: c8ea228d-50ea-4389-9cf7-247665573357
+		summarizeBy: sum
+		sourceColumn: permit_amendment_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column permit_amendment_guid
+		dataType: string
+		lineageTag: 520f8501-b89c-4f53-8983-1e1654330628
+		summarizeBy: none
+		sourceColumn: permit_amendment_guid
+
+		annotation SummarizationSetBy = Automatic
+
+	column permit_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 1e7a21bc-779a-4be8-8404-fc59ca9fd994
+		summarizeBy: none
+		sourceColumn: permit_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column received_date
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 6e393d54-b47a-4906-9784-dfc398e0cf91
+		summarizeBy: none
+		sourceColumn: received_date
+
+		variation Variation
+			isDefault
+			relationship: d677a2f1-0d62-4468-a9e4-43f024f690fd
+			defaultHierarchy: LocalDateTable_cd8f66fe-86ba-447d-a2de-54bcf04c4497.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column issue_date
+		dataType: dateTime
+		formatString: Short Date
+		lineageTag: a280c1bc-6615-49e6-ba5e-0d60bb6fa816
+		summarizeBy: none
+		sourceColumn: issue_date
+
+		variation Variation
+			isDefault
+			relationship: ecf60d69-b0d3-4a7c-91e3-2a5ed0116be4
+			defaultHierarchy: LocalDateTable_1e0502ff-d7e8-405d-a2aa-d395009e0148.'Date Hierarchy'
+
+		changedProperty = DataType
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column authorization_end_date
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 313aa588-d3e9-4477-8ad3-0419e14b4a3c
+		summarizeBy: none
+		sourceColumn: authorization_end_date
+
+		variation Variation
+			isDefault
+			relationship: 65b6d922-d0dd-4978-a1b1-0ff4e25e00cf
+			defaultHierarchy: LocalDateTable_4c2ee675-6d04-4197-9004-eb91109b0e75.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column permit_amendment_type_code
+		dataType: string
+		lineageTag: 99a7d32b-019d-439b-8194-3a6f7cf56403
+		summarizeBy: none
+		sourceColumn: permit_amendment_type_code
+
+		annotation SummarizationSetBy = Automatic
+
+	column permit_amendment_status_code
+		dataType: string
+		lineageTag: c5c6999b-f0ef-4b39-adc3-1cde7dab9aee
+		summarizeBy: none
+		sourceColumn: permit_amendment_status_code
+
+		annotation SummarizationSetBy = Automatic
+
+	column deleted_ind
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: bc8abbcc-82e4-4cd5-b7bc-4fd4f45440d2
+		summarizeBy: none
+		sourceColumn: deleted_ind
+
+		annotation SummarizationSetBy = Automatic
+
+	column create_user
+		dataType: string
+		lineageTag: aa391b5b-1720-4d91-a705-1f383ef5efc1
+		summarizeBy: none
+		sourceColumn: create_user
+
+		annotation SummarizationSetBy = Automatic
+
+	column create_timestamp
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: f910cd8a-386c-4a33-935e-80b20a5dbfa1
+		summarizeBy: none
+		sourceColumn: create_timestamp
+
+		variation Variation
+			isDefault
+			relationship: 41ebccbc-5b44-413a-80f8-bf96c1b21c4a
+			defaultHierarchy: LocalDateTable_182939ad-bbc0-42e3-ad92-4c2ebbd23abd.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column update_user
+		dataType: string
+		lineageTag: 22979823-a32e-44b6-8207-afda219c7420
+		summarizeBy: none
+		sourceColumn: update_user
+
+		annotation SummarizationSetBy = Automatic
+
+	column update_timestamp
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 28a6f86d-6779-45b8-904f-2b8c0e829b9c
+		summarizeBy: none
+		sourceColumn: update_timestamp
+
+		variation Variation
+			isDefault
+			relationship: 1458c2af-fcea-4525-99bb-abbb1ccd6f94
+			defaultHierarchy: LocalDateTable_030731d6-1cea-418a-8c13-d055a94c4fdf.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column description
+		dataType: string
+		lineageTag: 198d907d-110e-4b16-aa55-ccf5d46fe268
+		summarizeBy: none
+		sourceColumn: description
+
+		annotation SummarizationSetBy = Automatic
+
+	column liability_adjustment
+		dataType: double
+		lineageTag: 4648d350-f6e5-4792-a654-7d7a94884d8c
+		summarizeBy: sum
+		sourceColumn: liability_adjustment
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column now_application_guid
+		dataType: string
+		lineageTag: 421b1521-4888-4914-8879-a4fa45515cb5
+		summarizeBy: none
+		sourceColumn: now_application_guid
+
+		annotation SummarizationSetBy = Automatic
+
+	column mine_guid
+		dataType: string
+		lineageTag: cd34cf4d-dc29-467c-9725-bf55b583676e
+		summarizeBy: none
+		sourceColumn: mine_guid
+
+		annotation SummarizationSetBy = Automatic
+
+	column issuing_inspector_title
+		dataType: string
+		lineageTag: 63e1e1e2-a92e-4411-87cc-ea5f8edbaa82
+		summarizeBy: none
+		sourceColumn: issuing_inspector_title
+
+		annotation SummarizationSetBy = Automatic
+
+	column regional_office
+		dataType: string
+		lineageTag: 8588eb5c-9556-4866-821d-a10b39dc32eb
+		summarizeBy: none
+		sourceColumn: regional_office
+
+		annotation SummarizationSetBy = Automatic
+
+	column security_received_date
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: d895d524-b62d-41ed-9225-20a31030b803
+		summarizeBy: none
+		sourceColumn: security_received_date
+
+		variation Variation
+			isDefault
+			relationship: 13f6b312-45d7-4c3e-8058-d04eaae279a5
+			defaultHierarchy: LocalDateTable_c4a3d764-9fea-4b3f-b0e5-3f031eea88fe.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column security_not_required
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: d69ec0aa-78cc-4097-ac7a-82635a636d99
+		summarizeBy: none
+		sourceColumn: security_not_required
+
+		annotation SummarizationSetBy = Automatic
+
+	column security_not_required_reason
+		dataType: string
+		lineageTag: edc1071c-ed01-443d-89b2-d4266bdc75fc
+		summarizeBy: none
+		sourceColumn: security_not_required_reason
+
+		annotation SummarizationSetBy = Automatic
+
+	column permit_conditions_last_updated_by
+		dataType: string
+		lineageTag: 976bfecf-ca2d-425f-abad-e0846ff0458a
+		summarizeBy: none
+		sourceColumn: permit_conditions_last_updated_by
+
+		annotation SummarizationSetBy = Automatic
+
+	column permit_conditions_last_updated_date
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 6ebf2a29-14f9-4a34-ab87-9a7c8e55eef6
+		summarizeBy: none
+		sourceColumn: permit_conditions_last_updated_date
+
+		variation Variation
+			isDefault
+			relationship: ea1faf66-1161-4394-95e6-109a5d65fe3a
+			defaultHierarchy: LocalDateTable_603ed0d6-7ca1-421e-b38b-e73a533204cc.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_generated_in_core
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 8da54529-2945-4f1b-8c5b-655f2592d9d0
+		summarizeBy: none
+		sourceColumn: is_generated_in_core
+
+		annotation SummarizationSetBy = Automatic
+
+	column preamble_text
+		dataType: string
+		lineageTag: 02310f6b-a857-48dc-9324-e89348f489fb
+		summarizeBy: none
+		sourceColumn: preamble_text
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'public permit_amendment' = m
+		mode: import
+		source =
+				let
+				    Source = AzureStorage.Blobs("datarepositorysa"),
+				    postgres1 = Source{[Name="postgres"]}[Data],
+				    #"Filtered Rows" = Table.SelectRows(postgres1, each [Extension] = ".parquet"),
+				    #"https://datarepositorysa blob core windows net/postgres/_tables/parquet/public permit_amendment parquet" = #"Filtered Rows"{[#"Folder Path"="https://datarepositorysa.blob.core.windows.net/postgres/",Name="tables/parquet/public.permit_amendment.parquet"]}[Content],
+				    #"Imported Parquet" = Parquet.Document(#"https://datarepositorysa blob core windows net/postgres/_tables/parquet/public permit_amendment parquet")
+				in
+				    #"Imported Parquet"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

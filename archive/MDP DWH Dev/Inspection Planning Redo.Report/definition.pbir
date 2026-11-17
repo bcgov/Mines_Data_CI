@@ -1,0 +1,9 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definitionProperties/2.0.0/schema.json",
+  "version": "4.0",
+  "datasetReference": {
+    "byConnection": {
+      "connectionString": "Data Source=\"powerbi://api.powerbi.com/v1.0/myorg/MDP DWH Dev\";initial catalog=\"MDP DWH\";integrated security=ClaimsToken;semanticmodelid=8eeafead-480e-4580-943c-546ea48bbadc"
+    }
+  }
+}

@@ -1,0 +1,41 @@
+table DimNoticeOfWorkType
+	lineageTag: 2c6fe500-8fa5-4f4b-aeef-fa004ca4da72
+
+	column NoticeOfWorkType_Key
+		dataType: int64
+		formatString: 0
+		lineageTag: 5e963688-7672-4b4f-9331-b11ffc8d302c
+		summarizeBy: none
+		sourceColumn: NoticeOfWorkType_Key
+
+		annotation SummarizationSetBy = Automatic
+
+	column NoticeOfWorkTypeCode
+		dataType: string
+		lineageTag: c2ae221a-8c36-4cda-aebd-83c79075bff2
+		summarizeBy: none
+		sourceColumn: NoticeOfWorkTypeCode
+
+		annotation SummarizationSetBy = Automatic
+
+	column NoticeOfWorkTypeCode_Hash
+		dataType: int64
+		formatString: 0
+		lineageTag: b3af999f-1dd2-4b39-b72e-39adf4aaf351
+		summarizeBy: none
+		sourceColumn: NoticeOfWorkTypeCode_Hash
+
+		annotation SummarizationSetBy = Automatic
+
+	partition DimNoticeOfWorkType = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Databases("mdp-sql-server.database.windows.net"),
+				    #"MDP-DWH" = Source{[Name="MDP-DWH"]}[Data],
+				    dbo_DimNoticeOfWorkType = #"MDP-DWH"{[Schema="dbo",Item="DimNoticeOfWorkType"]}[Data]
+				in
+				    dbo_DimNoticeOfWorkType
+
+	annotation PBI_ResultType = Table
+

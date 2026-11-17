@@ -1,0 +1,43 @@
+table DimMineRegion
+	isHidden
+	lineageTag: d8974ad9-926c-497a-a840-c87cd3392f8c
+
+	column MineRegion_Key
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: e96ff55e-2186-4d1d-9027-b37daa834b07
+		summarizeBy: none
+		sourceColumn: MineRegion_Key
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column MineRegion
+		dataType: string
+		isHidden
+		lineageTag: 845bfb34-66ac-421a-ad09-e6994cbd3b20
+		summarizeBy: none
+		sourceColumn: MineRegion
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	partition DimMineRegion = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Databases("mdp-sql-server.database.windows.net"),
+				    #"MDP-DWH" = Source{[Name="MDP-DWH"]}[Data],
+				    dbo_DimMineRegion = #"MDP-DWH"{[Schema="dbo",Item="DimMineRegion"]}[Data]
+				in
+				    dbo_DimMineRegion
+
+	changedProperty = IsHidden
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

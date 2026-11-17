@@ -1,0 +1,33 @@
+table 'public mine_summary_view - duplicates'
+	lineageTag: 3b648631-75fe-4f9f-b67d-1946b65f65d9
+
+	column mine_guid
+		dataType: string
+		lineageTag: 34f9b629-0875-4489-b67f-10ab05275fe5
+		summarizeBy: none
+		sourceColumn: mine_guid
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Count of Dups'
+		dataType: int64
+		formatString: 0
+		lineageTag: f22c0eb6-8568-4dc9-ae28-508dcd697a03
+		summarizeBy: none
+		sourceColumn: Count of Dups
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'public mine_summary_view - duplicates' = m
+		mode: import
+		source =
+				let
+				    Source = #"public mine_summary_view",
+				    #"Grouped Rows" = Table.Group(Source, {"mine_guid"}, {{"Count of Dups", each Table.RowCount(_), Int64.Type}})
+				in
+				    #"Grouped Rows"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

@@ -1,0 +1,44 @@
+table nris-inspection_status
+	lineageTag: f8acaa5d-e4c8-4fbb-8e71-0308bce1b9a3
+
+	column inspection_status_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 1f1764d1-137a-4ec7-aa03-453ff07553a6
+		summarizeBy: sum
+		sourceColumn: inspection_status_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column inspection_status_code
+		dataType: string
+		lineageTag: 2b829626-0cfa-4c5d-9d93-c4332acb7aa1
+		summarizeBy: none
+		sourceColumn: inspection_status_code
+
+		annotation SummarizationSetBy = Automatic
+
+	column inspection_status_description
+		dataType: string
+		lineageTag: 82f74cc0-221f-46a0-b777-872092305658
+		summarizeBy: none
+		sourceColumn: inspection_status_description
+
+		annotation SummarizationSetBy = Automatic
+
+	partition nris-inspection_status = m
+		mode: import
+		source =
+				let
+				    Source = AzureStorage.Blobs("datarepositorysa"),
+				    postgres1 = Source{[Name="postgres"]}[Data],
+				    #"Filtered Rows" = Table.SelectRows(postgres1, each ([Extension] = ".parquet")),
+				    #"https://datarepositorysa blob core windows net/postgres/_tables/parquet/nris inspection_status parquet" = #"Filtered Rows"{[#"Folder Path"="https://datarepositorysa.blob.core.windows.net/postgres/",Name="tables/parquet/nris.inspection_status.parquet"]}[Content],
+				    #"Imported Parquet" = Parquet.Document(#"https://datarepositorysa blob core windows net/postgres/_tables/parquet/nris inspection_status parquet")
+				in
+				    #"Imported Parquet"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

@@ -1,0 +1,32 @@
+table DimInspectionAuthSource
+	lineageTag: a04dbb7d-5504-48db-9aec-92c5aa9cff60
+
+	column InspectionAuthSource_Key
+		dataType: int64
+		formatString: 0
+		lineageTag: 6899e089-5bd3-4670-a3a6-1e87a9c33ccf
+		summarizeBy: none
+		sourceColumn: InspectionAuthSource_Key
+
+		annotation SummarizationSetBy = Automatic
+
+	column InspectionAuthSource
+		dataType: string
+		lineageTag: a7fee0d8-a81e-467c-9a79-4f0447e26334
+		summarizeBy: none
+		sourceColumn: InspectionAuthSource
+
+		annotation SummarizationSetBy = Automatic
+
+	partition DimInspectionAuthSource = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Databases("mdp-sql-server.database.windows.net"),
+				    #"MDP-DWH" = Source{[Name="MDP-DWH"]}[Data],
+				    dbo_DimInspectionAuthSource = #"MDP-DWH"{[Schema="dbo",Item="DimInspectionAuthSource"]}[Data]
+				in
+				    dbo_DimInspectionAuthSource
+
+	annotation PBI_ResultType = Table
+

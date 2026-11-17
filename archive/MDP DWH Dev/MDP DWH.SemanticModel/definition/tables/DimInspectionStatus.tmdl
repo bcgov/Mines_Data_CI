@@ -1,0 +1,49 @@
+table DimInspectionStatus
+	lineageTag: eeae24bd-8f1c-4bf1-afb7-ba250b8b7589
+
+	column InspectionStatus_Key
+		dataType: int64
+		formatString: 0
+		lineageTag: 13d50f4c-f971-470c-bb92-51100359b5b5
+		summarizeBy: none
+		sourceColumn: InspectionStatus_Key
+
+		annotation SummarizationSetBy = Automatic
+
+	column inspection_status_Id
+		dataType: int64
+		formatString: 0
+		lineageTag: fc2b3dd5-164e-4f8a-9fee-b033999862df
+		summarizeBy: none
+		sourceColumn: inspection_status_Id
+
+		annotation SummarizationSetBy = Automatic
+
+	column InspectionStatus
+		dataType: string
+		lineageTag: b645fe6b-ecf0-4940-810d-695692dba427
+		summarizeBy: none
+		sourceColumn: InspectionStatus
+
+		annotation SummarizationSetBy = Automatic
+
+	column InspectionStatusDescription
+		dataType: string
+		lineageTag: 7ef5a716-87f5-47d0-b3a7-323f1a9e073e
+		summarizeBy: none
+		sourceColumn: InspectionStatusDescription
+
+		annotation SummarizationSetBy = Automatic
+
+	partition DimInspectionStatus = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Databases("mdp-sql-server.database.windows.net"),
+				    #"MDP-DWH" = Source{[Name="MDP-DWH"]}[Data],
+				    dbo_DimInspectionStatus = #"MDP-DWH"{[Schema="dbo",Item="DimInspectionStatus"]}[Data]
+				in
+				    dbo_DimInspectionStatus
+
+	annotation PBI_ResultType = Table
+

@@ -1,0 +1,53 @@
+table OrderStopLocationDetailBridge
+	lineageTag: bcc73b85-1ee7-4b8d-80e3-0e1fe5542207
+
+	column SourceLocationID
+		dataType: int64
+		formatString: 0
+		lineageTag: ba0427ae-4b52-4f30-bb8d-12945dd3fcc8
+		summarizeBy: count
+		sourceColumn: SourceLocationID
+
+		annotation SummarizationSetBy = Automatic
+
+	column InspectedLocationDetail_Key
+		dataType: int64
+		formatString: 0
+		lineageTag: b961d7c3-42e4-450e-8d03-841ee8cda4ba
+		summarizeBy: none
+		sourceColumn: InspectedLocationDetail_Key
+
+		annotation SummarizationSetBy = Automatic
+
+	column FactOrderStop_Key
+		dataType: int64
+		formatString: 0
+		lineageTag: 8fd6cde7-d439-427f-b33e-bd8f658aba3d
+		summarizeBy: none
+		sourceColumn: FactOrderStop_Key
+
+		annotation SummarizationSetBy = Automatic
+
+	column FactOrderStop_InspectedLocation_Key
+		dataType: int64
+		formatString: 0
+		lineageTag: 8342e81e-a6a3-46de-9776-35ef00d8296e
+		summarizeBy: count
+		sourceColumn: FactOrderStop_InspectedLocation_Key
+
+		annotation SummarizationSetBy = Automatic
+
+	partition OrderStopLocationDetailBridge = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Databases("mdp-sql-server.database.windows.net"),
+				    #"MDP-DWH" = Source{[Name="MDP-DWH"]}[Data],
+				    dbo_v_IncidentCategoryBridge = #"MDP-DWH"{[Schema="dbo",Item="v_OrderStopLocationDetailBridge"]}[Data]
+				in
+				    dbo_v_IncidentCategoryBridge
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

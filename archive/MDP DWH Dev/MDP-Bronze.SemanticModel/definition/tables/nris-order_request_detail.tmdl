@@ -1,0 +1,66 @@
+table nris-order_request_detail
+	lineageTag: 2361763a-e020-491c-9afe-c8191c4de368
+
+	column order_request_detail_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 718c7069-d87e-4542-9f90-b80d515d1f22
+		summarizeBy: sum
+		sourceColumn: order_request_detail_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column inspected_location_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 1d8d598a-f127-4d4d-840b-a29f4667c7a9
+		summarizeBy: none
+		sourceColumn: inspected_location_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column detail
+		dataType: string
+		lineageTag: e85bbba0-ed88-4f5a-a6f9-1943d48490e4
+		summarizeBy: none
+		sourceColumn: detail
+
+		annotation SummarizationSetBy = Automatic
+
+	column response
+		dataType: string
+		lineageTag: 326cc6a1-4804-4c43-8eb5-45dbed59aefd
+		summarizeBy: none
+		sourceColumn: response
+
+		annotation SummarizationSetBy = Automatic
+
+	column respond_date
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 82f46aab-8e48-4b04-a813-df57f6a32a9c
+		summarizeBy: none
+		sourceColumn: respond_date
+
+		variation Variation
+			isDefault
+			relationship: e33d65aa-a6b0-4f6e-9e6c-70b728929d42
+			defaultHierarchy: LocalDateTable_f2c0c2d8-ffde-4636-b91d-b30a3f98faa8.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	partition nris-order_request_detail = m
+		mode: import
+		source =
+				let
+				    Source = AzureStorage.Blobs("datarepositorysa"),
+				    postgres = Source{[Name="postgres"]}[Data],
+				    #"https://datarepositorysa blob core windows net/postgres/_tables/parquet/nris order_request_detail parquet" = postgres{[#"Folder Path"="https://datarepositorysa.blob.core.windows.net/postgres/",Name="tables/parquet/nris.order_request_detail.parquet"]}[Content],
+				    #"Imported Parquet" = Parquet.Document(#"https://datarepositorysa blob core windows net/postgres/_tables/parquet/nris order_request_detail parquet")
+				in
+				    #"Imported Parquet"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

@@ -1,0 +1,119 @@
+{
+  "workspaceId": "dc216c1a-9a6a-4df9-b5ab-2bd690c68432",
+  "workspaceName": "MDP DWH Dev",
+  "exportedAtUtc": "2026-11-17T17:12:45+00:00",
+  "items": [
+    {
+      "id": "55114fdb-d503-4ce4-8378-1f52ca99aea1",
+      "type": "Report",
+      "displayName": "Inspection Planning Redo",
+      "folder": "Inspection Planning Redo.Report",
+      "status": "exported",
+      "parts": 4
+    },
+    {
+      "id": "09b39598-59d3-4ee7-b1a1-7069465556f4",
+      "type": "Report",
+      "displayName": "MDP DWH",
+      "folder": "MDP DWH.Report",
+      "status": "exported",
+      "parts": 4
+    },
+    {
+      "id": "f1e415ba-67be-4444-a77a-ecb71ec97a31",
+      "type": "Report",
+      "displayName": "MDP DWH_20250609",
+      "folder": "MDP DWH_20250609.Report",
+      "status": "exported",
+      "parts": 4
+    },
+    {
+      "id": "a524d743-bddf-4a3c-a552-9bb50dc150c8",
+      "type": "Report",
+      "displayName": "MDP-Bronze",
+      "folder": "MDP-Bronze.Report",
+      "status": "exported",
+      "parts": 4
+    },
+    {
+      "id": "4007e16a-4759-4bc0-abc1-4c8908c0f26c",
+      "type": "Report",
+      "displayName": "Report Usage Metrics Report",
+      "folder": "Report Usage Metrics Report.Report",
+      "status": "exported",
+      "parts": 3
+    },
+    {
+      "id": "7098a729-41b8-43ab-81a4-f58e35d6bbe1",
+      "type": "Report",
+      "displayName": "Sector Reporting",
+      "folder": "Sector Reporting.Report",
+      "status": "exported",
+      "parts": 4
+    },
+    {
+      "id": "19fb8c60-3f33-4f73-8bcc-828c227187c7",
+      "type": "Report",
+      "displayName": "Usage Metrics Inspection Planning",
+      "folder": "Usage Metrics Inspection Planning.Report",
+      "status": "exported",
+      "parts": 8
+    },
+    {
+      "id": "45e07cc1-72a6-4a43-a300-03887dba8fa3",
+      "type": "Report",
+      "displayName": "Usage Metrics Report",
+      "folder": "Usage Metrics Report.Report",
+      "status": "exported",
+      "parts": 8
+    },
+    {
+      "id": "8eeafead-480e-4580-943c-546ea48bbadc",
+      "type": "SemanticModel",
+      "displayName": "MDP DWH",
+      "folder": "MDP DWH.SemanticModel",
+      "status": "exported",
+      "parts": 109
+    },
+    {
+      "id": "e396518c-e607-4c42-9bc8-4e3497a062ae",
+      "type": "SemanticModel",
+      "displayName": "MDP DWH_20250609",
+      "folder": "MDP DWH_20250609.SemanticModel",
+      "status": "exported",
+      "parts": 104
+    },
+    {
+      "id": "e68c97e7-5c3a-4e86-9cd4-817e4aafcd6f",
+      "type": "SemanticModel",
+      "displayName": "MDP-Bronze",
+      "folder": "MDP-Bronze.SemanticModel",
+      "status": "exported",
+      "parts": 170
+    },
+    {
+      "id": "695472e0-a202-4881-8689-c692c8e7d424",
+      "type": "SemanticModel",
+      "displayName": "MIUCaseRegistry",
+      "folder": "MIUCaseRegistry.SemanticModel",
+      "status": "exported",
+      "parts": 8
+    },
+    {
+      "id": "dfa0c9b5-f56a-4af7-abfe-c63aba3a74bf",
+      "type": "SemanticModel",
+      "displayName": "Report Usage Metrics Model",
+      "folder": "Report Usage Metrics Model.SemanticModel",
+      "status": "exported",
+      "parts": 15
+    },
+    {
+      "id": "a092873a-484a-47f7-8ad5-e440036dee99",
+      "type": "SemanticModel",
+      "displayName": "Usage Metrics Report",
+      "folder": "Usage Metrics Report.SemanticModel",
+      "status": "exported",
+      "parts": 29
+    }
+  ]
+}

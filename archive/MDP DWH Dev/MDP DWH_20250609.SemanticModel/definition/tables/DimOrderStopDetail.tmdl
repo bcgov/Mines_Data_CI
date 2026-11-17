@@ -1,0 +1,57 @@
+table DimOrderStopDetail
+	lineageTag: 6cb89ed0-259e-43de-af2a-10563a72a089
+
+	column OrderStopDetail_Key
+		dataType: int64
+		formatString: 0
+		lineageTag: 9068130e-bc5e-4817-b20d-379b7f2b5f57
+		summarizeBy: none
+		sourceColumn: OrderStopDetail_Key
+
+		annotation SummarizationSetBy = Automatic
+
+	column Detail
+		dataType: string
+		lineageTag: 375473e2-5e0a-4a70-8447-9e69c57270e7
+		summarizeBy: none
+		sourceColumn: Detail
+
+		annotation SummarizationSetBy = Automatic
+
+	column Observation
+		dataType: string
+		lineageTag: ff4be4ac-fcc0-4458-bc77-d1c324c5320d
+		summarizeBy: none
+		sourceColumn: Observation
+
+		annotation SummarizationSetBy = Automatic
+
+	column Response
+		dataType: string
+		lineageTag: cf381185-1b70-457f-b3a2-5283efcb1462
+		summarizeBy: none
+		sourceColumn: Response
+
+		annotation SummarizationSetBy = Automatic
+
+	column Detail_Observation_Response_Hash
+		dataType: int64
+		formatString: 0
+		lineageTag: bbcc86ec-c996-4c35-a35d-717337d20a5b
+		summarizeBy: none
+		sourceColumn: Detail_Observation_Response_Hash
+
+		annotation SummarizationSetBy = Automatic
+
+	partition DimOrderStopDetail = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Databases("mdp-sql-server.database.windows.net"),
+				    #"MDP-DWH" = Source{[Name="MDP-DWH"]}[Data],
+				    dbo_DimOrderStopDetail = #"MDP-DWH"{[Schema="dbo",Item="DimOrderStopDetail"]}[Data]
+				in
+				    dbo_DimOrderStopDetail
+
+	annotation PBI_ResultType = Table
+

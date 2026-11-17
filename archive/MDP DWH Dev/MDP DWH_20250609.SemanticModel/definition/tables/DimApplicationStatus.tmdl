@@ -1,0 +1,67 @@
+table DimApplicationStatus
+	lineageTag: c9581471-9eed-437c-9084-3ed755836733
+
+	column ApplicationStatus_Key
+		dataType: int64
+		formatString: 0
+		lineageTag: f5ec047b-55ee-47e5-8b16-0e82813c6945
+		summarizeBy: none
+		sourceColumn: ApplicationStatus_Key
+
+		annotation SummarizationSetBy = Automatic
+
+	column ApplicationStatusCode
+		dataType: string
+		lineageTag: fd9864f5-f296-4e74-b53a-072af21d1b1d
+		summarizeBy: none
+		sourceColumn: ApplicationStatusCode
+
+		annotation SummarizationSetBy = Automatic
+
+	column ApplicationStatusCode_hash
+		dataType: int64
+		formatString: 0
+		lineageTag: a4a07e4f-d416-4ca9-a88e-01f269a23c00
+		summarizeBy: none
+		sourceColumn: ApplicationStatusCode_hash
+
+		annotation SummarizationSetBy = Automatic
+
+	column Description
+		dataType: string
+		lineageTag: d924b789-3956-4bd0-93bf-5cce0b9e446a
+		summarizeBy: none
+		sourceColumn: Description
+
+		annotation SummarizationSetBy = Automatic
+
+	column display_order
+		dataType: int64
+		formatString: 0
+		lineageTag: c40f60aa-9b2c-4aa8-9f21-50e2c29811b3
+		summarizeBy: none
+		sourceColumn: display_order
+
+		annotation SummarizationSetBy = Automatic
+
+	column active_ind
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 932f53df-3d1c-4d14-8749-9f2643189be0
+		summarizeBy: none
+		sourceColumn: active_ind
+
+		annotation SummarizationSetBy = Automatic
+
+	partition DimApplicationStatus = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Databases("mdp-sql-server.database.windows.net"),
+				    #"MDP-DWH" = Source{[Name="MDP-DWH"]}[Data],
+				    dbo_DimApplicationStatus = #"MDP-DWH"{[Schema="dbo",Item="DimApplicationStatus"]}[Data]
+				in
+				    dbo_DimApplicationStatus
+
+	annotation PBI_ResultType = Table
+

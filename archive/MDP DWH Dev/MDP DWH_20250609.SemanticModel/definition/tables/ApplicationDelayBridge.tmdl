@@ -1,0 +1,43 @@
+table ApplicationDelayBridge
+	lineageTag: dc01d595-daf6-48fd-aea0-169912d66b39
+
+	column now_application_delay_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 721e34d2-3e46-40e6-b377-5e24a1a85cad
+		summarizeBy: sum
+		sourceColumn: now_application_delay_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column now_application_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 28ef783d-d685-4ace-ae89-efaaba39ffc6
+		summarizeBy: none
+		sourceColumn: now_application_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column ApplicationDelay_Key
+		dataType: int64
+		formatString: 0
+		lineageTag: dfb8b0d0-a544-47c0-ac4a-f7f6e5c8541d
+		summarizeBy: none
+		sourceColumn: ApplicationDelay_Key
+
+		annotation SummarizationSetBy = Automatic
+
+	partition ApplicationDelayBridge = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Database("mdp-sql-server.database.windows.net", "MDP-DWH"),
+				    dbo_v_ApplicationDelayBridge = Source{[Schema="dbo",Item="v_ApplicationDelayBridge"]}[Data]
+				in
+				    dbo_v_ApplicationDelayBridge
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

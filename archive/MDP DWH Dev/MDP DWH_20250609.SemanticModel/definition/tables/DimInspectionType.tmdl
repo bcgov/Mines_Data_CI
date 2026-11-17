@@ -1,0 +1,51 @@
+table DimInspectionType
+	lineageTag: c0f4c4ad-2383-4cf1-8290-d4c90950b33d
+
+	column InspectionType_Key
+		dataType: int64
+		formatString: 0
+		lineageTag: 2c3fa324-41be-4794-8023-1d5956c1c3ad
+		summarizeBy: none
+		sourceColumn: InspectionType_Key
+
+		annotation SummarizationSetBy = Automatic
+
+	column InspectionType
+		dataType: string
+		lineageTag: 122d2889-6240-4bf6-8c03-6203661cc2bf
+		summarizeBy: none
+		sourceColumn: InspectionType
+
+		annotation SummarizationSetBy = Automatic
+
+	column InspectionTypeDescription
+		dataType: string
+		lineageTag: 80f5c534-acbd-44fd-b485-63c4bd60948a
+		summarizeBy: none
+		sourceColumn: InspectionTypeDescription
+
+		annotation SummarizationSetBy = Automatic
+
+	column inspection_type_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 547ea15b-cf04-4cf8-8c10-ebf3a52e5097
+		summarizeBy: none
+		sourceColumn: inspection_type_id
+
+		annotation SummarizationSetBy = Automatic
+
+	partition DimInspectionType = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Databases("mdp-sql-server.database.windows.net"),
+				    #"MDP-DWH" = Source{[Name="MDP-DWH"]}[Data],
+				    dbo_DimInspectionType = #"MDP-DWH"{[Schema="dbo",Item="DimInspectionType"]}[Data]
+				in
+				    dbo_DimInspectionType
+
+	annotation PBI_ResultType = Table
+
+	annotation PBI_NavigationStepName = Navigation
+

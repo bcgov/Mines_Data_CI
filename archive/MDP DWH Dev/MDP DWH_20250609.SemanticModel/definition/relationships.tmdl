@@ -1,0 +1,505 @@
+relationship d1271922-e794-4acc-876e-23e127b9133b
+	joinOnDateBehavior: datePartOnly
+	fromColumn: DimMine.Create_Timestamp
+	toColumn: LocalDateTable_4f1b2d6a-9ede-4452-88c5-5552b26830b6.Date
+
+relationship 36f07042-1e47-480b-bd20-a0febcc77158
+	joinOnDateBehavior: datePartOnly
+	fromColumn: DimMine.Update_Timestamp
+	toColumn: LocalDateTable_515ff686-1025-45d3-9169-4265899d1552.Date
+
+relationship 34cdb5e8-f7e9-4c04-a0c1-3495306b055a
+	joinOnDateBehavior: datePartOnly
+	fromColumn: DimInspector.create_timestamp
+	toColumn: LocalDateTable_30ea7608-2e40-47a7-aa90-f533e293388a.Date
+
+relationship ee6f3d4e-7e5a-4440-92d4-98411717ad2f
+	joinOnDateBehavior: datePartOnly
+	fromColumn: DimInspector.update_timestamp
+	toColumn: LocalDateTable_7a226c14-fb7a-4b73-a8f5-2e889cbe287b.Date
+
+relationship 504ec438-7679-453a-8832-fd8179d55d45
+	fromColumn: FactInspection.InspectionAuthStatus_Key
+	toColumn: DimInspectionAuthStatus.InspectionAuthStatus_Key
+
+	annotation PBI_IsFromSource = FS
+
+relationship 9380522c-b2b2-440c-aee8-b8341b96fae5
+	fromColumn: FactInspection.InspectionAuthType_Key
+	toColumn: DimInspectionAuthType.InspectionAuthType_Key
+
+	annotation PBI_IsFromSource = FS
+
+relationship 20541f34-668a-48bc-b5c0-08ab29a39a44
+	fromColumn: FactInspection.InspectionNote_Key
+	toColumn: DimInspectionNote.InspectionNote_Key
+
+	annotation PBI_IsFromSource = FS
+
+relationship 4f4090f5-4198-4deb-b70a-ca720ebfb17b
+	fromColumn: FactInspection.InspectionStatus_Key
+	toColumn: DimInspectionStatus.InspectionStatus_Key
+
+	annotation PBI_IsFromSource = FS
+
+relationship be78b842-c8da-4af0-8fa6-177f1989a351
+	fromColumn: FactInspection.InspectionSubStatus_Key
+	toColumn: DimInspectionSubStatus.InspectionSubStatus_Key
+
+	annotation PBI_IsFromSource = FS
+
+relationship cfb67bd0-49f4-43e0-94a5-458de9eb0e17
+	fromColumn: FactInspection.InspectionType_Key
+	toColumn: DimInspectionType.InspectionType_Key
+
+	annotation PBI_IsFromSource = FS
+
+relationship adf86cdc-c428-4a8b-95e0-703b49e44492
+	fromColumn: FactInspection.User_Key
+	toColumn: DimInspector.User_Key
+
+	annotation PBI_IsFromSource = FS
+
+relationship 67559b8d-f810-4134-9d63-c244881ac644
+	joinOnDateBehavior: datePartOnly
+	fromColumn: FactInspection.InspectionDate
+	toColumn: LocalDateTable_19e5ca9b-81f4-45e4-b3df-34f483e130f9.Date
+
+relationship 0959a484-9d9a-44c5-ae00-69120665f1f2
+	joinOnDateBehavior: datePartOnly
+	fromColumn: FactInspection.CompleetedDate
+	toColumn: LocalDateTable_2ee02d71-d7fa-4336-ba88-30e648ff3df1.Date
+
+relationship 7f4c5190-8932-46a3-be74-13b9478aeffe
+	joinOnDateBehavior: datePartOnly
+	fromColumn: FactInspection.InspectionReportSentDate
+	toColumn: LocalDateTable_88f23245-7c74-4c85-a5d0-24f2bbe6c628.Date
+
+relationship df3cfbfc-5f8a-49f9-9d70-0e724c2e9909
+	joinOnDateBehavior: datePartOnly
+	fromColumn: FactInspection.InspectionFromDate
+	toColumn: LocalDateTable_df5a25e0-3e3f-4f0c-857f-afcd7911560f.Date
+
+relationship 3b3a3569-dcd8-4990-9b39-88d5668b8179
+	joinOnDateBehavior: datePartOnly
+	fromColumn: FactInspection.InspectionToDate
+	toColumn: LocalDateTable_6a2a4260-15e0-450a-8545-0ff6b58f6e92.Date
+
+relationship be972c2f-0089-4ee0-b3d0-4b00aa633277
+	joinOnDateBehavior: datePartOnly
+	fromColumn: FactInspection.ETL_LastModified
+	toColumn: LocalDateTable_a332fcf7-5965-4bd3-87c6-a6a0798f4783.Date
+
+relationship 0fdacfe3-68fa-e349-131b-4def32077752
+	fromColumn: FactInspection.InspectionAssesmentSubTyp_Key
+	toColumn: DimInspectionAssesmentSubType.InspectionAssesmentSubType_Key
+
+relationship d4ddb723-05f5-d047-4fca-815e981792ab
+	fromColumn: FactInspection.InspectionAuthSource_Key
+	toColumn: DimInspectionAuthSource.InspectionAuthSource_Key
+
+relationship 9572b754-6c37-4d01-be46-91a94b21652d
+	joinOnDateBehavior: datePartOnly
+	fromColumn: DimIncidentJohsc.JobhscWorkerRepContactTimestamp
+	toColumn: LocalDateTable_da0e8697-9217-4ce9-9a2a-552db7fdea4c.Date
+
+relationship 468c5562-dfac-4081-9049-6b3e1d7410a6
+	joinOnDateBehavior: datePartOnly
+	fromColumn: DimIncidentJohsc.JobhscManagementRepContactTimestamp
+	toColumn: LocalDateTable_83ff131e-ed9a-42c7-bfb1-5e0a27d4364e.Date
+
+relationship 1858b95c-34c0-4bab-83c5-ec008a356019
+	joinOnDateBehavior: datePartOnly
+	fromColumn: DimIncidentReporter.VerbalNotificationTimestamp
+	toColumn: LocalDateTable_9264f1ce-9fc2-4d7e-b7d3-270db2d43c9c.Date
+
+relationship 25e472ec-5da7-45a3-a7f8-96e3fba43c68
+	joinOnDateBehavior: datePartOnly
+	fromColumn: FactIncident.IncidentTimeStamp
+	toColumn: LocalDateTable_d09d0188-2475-4e9b-be51-fb5a847e623b.Date
+
+relationship 8c974c1c-93a3-43a9-a106-ec7bbae08beb
+	joinOnDateBehavior: datePartOnly
+	fromColumn: FactIncident.IncidentReportedTimeStamp
+	toColumn: LocalDateTable_0f25a448-25de-4ea6-adb9-2dad3ac47096.Date
+
+relationship 55f3cbf0-b060-4b63-b22d-ea5cd0821dd4
+	joinOnDateBehavior: datePartOnly
+	fromColumn: FactIncident.FollowUpInspectionDate
+	toColumn: LocalDateTable_3608d906-8a30-4ed6-8322-1f262e654cc8.Date
+
+relationship 56dec2b2-29d0-420c-b4bb-39ff5f5cc488
+	joinOnDateBehavior: datePartOnly
+	fromColumn: FactIncident.Create_Timestamp
+	toColumn: LocalDateTable_f031efad-4835-4fcb-ab1f-1efb1f252b70.Date
+
+relationship cf9e21fa-47ae-4a42-a241-0848881d7ac6
+	joinOnDateBehavior: datePartOnly
+	fromColumn: FactIncident.Update_Timestamp
+	toColumn: LocalDateTable_c9b0788d-2922-4672-8638-f18ed2e1068b.Date
+
+relationship 10b06c39-021f-4012-907f-826592f9d925
+	joinOnDateBehavior: datePartOnly
+	fromColumn: FactIncident.ETL_LastModified
+	toColumn: LocalDateTable_abf70579-d9d3-440e-80ea-5ed8230b7197.Date
+
+relationship 2a50c38d-ec41-44be-96dc-ccd3f7c007c2
+	fromColumn: FactIncident.IncidentDescription_Key
+	toColumn: DimIncidentDescription.IncidentDescription_Key
+
+	annotation PBI_IsFromSource = FS
+
+relationship 2f47491f-6311-4644-8a37-74a207298208
+	fromColumn: FactIncident.IncidentInjuriesDescription_Key
+	toColumn: DimIncidentInjuriesDescription.IncidentInjuriesDescription_Key
+
+	annotation PBI_IsFromSource = FS
+
+relationship ad830d55-9223-4653-a26f-f546e247bd78
+	fromColumn: FactIncident.IncidentJohsc_Key
+	toColumn: DimIncidentJohsc.IncidentJohsc_Key
+
+	annotation PBI_IsFromSource = FS
+
+relationship 71577fc5-7bb1-4c83-9328-84ded904e69c
+	fromColumn: FactIncident.IncidentLocation_Key
+	toColumn: DimIncidentLocation.IncidentLocation_Key
+
+	annotation PBI_IsFromSource = FS
+
+relationship f46f22c5-ad0f-4038-afdb-118f5d8c1489
+	fromColumn: FactIncident.IncidentReporter_Key
+	toColumn: DimIncidentReporter.IncidentReporter_Key
+
+	annotation PBI_IsFromSource = FS
+
+relationship c6b2760b-f567-4ca8-ba11-e23b1193a508
+	fromColumn: FactIncident.IncidentStatus_Key
+	toColumn: DimIncidentStatus.IncidentStatus_Key
+
+	annotation PBI_IsFromSource = FS
+
+relationship 124c9d24-0180-400d-a384-d81f3471cad2
+	fromColumn: FactIncident.IncidentType_Key
+	toColumn: DimIncidentType.IncidentType_Key
+
+	annotation PBI_IsFromSource = FS
+
+relationship 4f2eed2f-8759-13c4-c78a-3f3a63a39913
+	fromColumn: FactInspection.InspectionDate_Key
+	toColumn: DimDate.Date_Key
+
+	annotation PBI_IsFromSource = FS
+
+relationship 531a38bc-1939-4bfb-b376-c4334eda4538
+	joinOnDateBehavior: datePartOnly
+	fromColumn: DimIncidentFollowupDate.Date
+	toColumn: LocalDateTable_41a99d93-d8fa-4d14-8eba-4c44f9d52736.Date
+
+relationship 9ee1da6d-5dcd-4c97-8abc-b4c62cc3767a
+	joinOnDateBehavior: datePartOnly
+	fromColumn: DimMineExt.MineDate
+	toColumn: LocalDateTable_b56a68f8-2b32-41bc-b066-95ad9cde7a16.Date
+
+relationship d7d179df-be52-4e7b-a29a-6711e1649dbc
+	joinOnDateBehavior: datePartOnly
+	fromColumn: DimMineExt.StatusDate
+	toColumn: LocalDateTable_1baa2967-3995-491e-a09b-b03b0cce94f8.Date
+
+relationship 626e7a1d-fad0-8938-bc9f-586abef5332a
+	fromColumn: FactInspection.MineExt_Key
+	toColumn: DimMineExt.MineExt_Key
+
+relationship cc0a03a3-b0ad-4657-8009-5e135b2f8232
+	fromColumn: FactPermit.MineExt_Key
+	toColumn: DimMineExt.MineExt_Key
+
+	annotation PBI_IsFromSource = FS
+
+relationship 3c04345f-070c-46fb-936c-1a3fe04fff55
+	fromColumn: FactIncident.MineExt_Key
+	toColumn: DimMineExt.MineExt_Key
+
+	annotation PBI_IsFromSource = FS
+
+relationship c6ea4c4b-7a69-43d2-bfca-439f8cd2b02c
+	joinOnDateBehavior: datePartOnly
+	fromColumn: FactPermit.ETL_LastModified
+	toColumn: LocalDateTable_bfe7df66-4b58-45fa-9f4a-6bc6ca12bcab.Date
+
+relationship df959eef-189e-4239-8a06-fd3d3c0cfd67
+	joinOnDateBehavior: datePartOnly
+	fromColumn: FactPermit.Create_Timestamp
+	toColumn: LocalDateTable_78eb6eee-a1df-4972-b1bd-914f69349f0f.Date
+
+relationship c5a1571e-d3d5-4cfc-97f2-a7c9a2321e06
+	joinOnDateBehavior: datePartOnly
+	fromColumn: DimPermitDetail.Permit_Status_Changed_Timestamp
+	toColumn: LocalDateTable_4189e34b-5327-454a-911d-d187fcdb358d.Date
+
+relationship 2fd0c831-6cf0-486e-934f-410a8aacd988
+	fromColumn: FactPermit.PermitDetail_Key
+	toColumn: DimPermitDetail.PermitDetail_Key
+
+	annotation PBI_IsFromSource = FS
+
+relationship aff096b3-fe79-455b-a850-37c04069848c
+	joinOnDateBehavior: datePartOnly
+	fromColumn: FactPermit.FirstIssueDate
+	toColumn: LocalDateTable_3546528d-1af6-497b-b92d-2de2409dc6e8.Date
+
+relationship e2b237f1-88b3-42a4-8a80-f0e0f269de3d
+	joinOnDateBehavior: datePartOnly
+	fromColumn: FactPermit.LastIssueDate
+	toColumn: LocalDateTable_5e005b2d-c05d-4a2a-8f9e-db106f46827d.Date
+
+relationship f524f4e2-9fc8-0b14-0d80-eb7390fb880f
+	fromColumn: FactPermit.FirstIssue_Date_Key
+	toColumn: DimPermitFirstIssueDate.Date_Key
+
+relationship ed8bf37d-3b40-0037-5e29-8e2e3737e482
+	fromColumn: FactPermit.LastIssue_Date_Key
+	toColumn: DimPermitLastIssueDate.Date_Key
+
+relationship 3fec6ad8-ea75-44c1-a415-ce2a06b9aa8f
+	joinOnDateBehavior: datePartOnly
+	fromColumn: DimInspectedLocation.LastUpdatedDate
+	toColumn: LocalDateTable_694e4d3a-6134-49cd-b253-2150acd69b99.Date
+
+relationship b3a012b9-46e6-4f3c-a64f-945622656fb9
+	fromColumn: FactInspection.InspectedLocation_Key
+	toColumn: DimIncidentLocation.IncidentLocation_Key
+
+	annotation PBI_IsFromSource = FS
+
+relationship 00dd1b1d-52e6-a596-30f6-4666d9b0fac0
+	fromColumn: FactInspection.InspectedLocation_Key
+	toColumn: DimInspectedLocation.InspectedLocation_Key
+
+relationship 59d9423b-1ff8-46b2-9890-6a5b3fb60f52
+	joinOnDateBehavior: datePartOnly
+	fromColumn: FactOrderStopDetail.ResponseReceivedDateTime
+	toColumn: LocalDateTable_94eed000-7f6c-4ab3-8a46-d9787b4d3281.Date
+
+relationship 09fe9d58-bff1-426f-a017-6f7f79445969
+	joinOnDateBehavior: datePartOnly
+	fromColumn: FactOrderStopDetail.CompletionDateTime
+	toColumn: LocalDateTable_c851e053-ef68-458c-b7d8-656bc63ea2f6.Date
+
+relationship 16adb5fc-f6d5-46d6-926b-5b95a6096b14
+	joinOnDateBehavior: datePartOnly
+	fromColumn: FactOrderStopDetail.ETL_LastModified
+	toColumn: LocalDateTable_2e0cad1e-208b-4d0e-bfab-9d017018facc.Date
+
+relationship 38163899-1d91-412b-8279-09f4b5863b09
+	fromColumn: FactOrderStopDetail.OrderStopAuthorityAct_Key
+	toColumn: DimOrderStopAuthorityAct.OrderStopAuthorityAct_Key
+
+	annotation PBI_IsFromSource = FS
+
+relationship eb89966f-7dd7-4fba-b6be-86c148b6e9bc
+	fromColumn: FactOrderStopDetail.OrderStopAuthorityAct_Key
+	toColumn: DimOrderStopAuthorityActSection.OrderStopAuthorityActSection_Key
+
+	annotation PBI_IsFromSource = FS
+
+relationship 9f9e1ff4-720f-4271-b8f2-e9fdb38cc7cd
+	fromColumn: FactOrderStopDetail.OrderStopDetail_Key
+	toColumn: DimOrderStopDetail.OrderStopDetail_Key
+
+	annotation PBI_IsFromSource = FS
+
+relationship 9bdd4f15-be33-465e-b112-8c402d07d184
+	fromColumn: FactOrderStopDetail.OrderStopResponseStatus_Key
+	toColumn: DimOrderStopResponseStatus.OrderStopResponseStatus_Key
+
+	annotation PBI_IsFromSource = FS
+
+relationship 175ec727-b501-4d63-81be-242ed9370ac0
+	fromColumn: FactOrderStopDetail.OrderStopStatus_Key
+	toColumn: DimOrderStopStatus.OrderStopStatus_Key
+
+	annotation PBI_IsFromSource = FS
+
+relationship 41dbbce3-96c9-4e83-91b3-0206bb36612e
+	fromColumn: FactOrderStopDetail.OrderStopType_Key
+	toColumn: DimOrderStopType.OrderStopType_Key
+
+	annotation PBI_IsFromSource = FS
+
+relationship 914ba467-6fe9-40c7-82a4-26d2413e540a
+	fromColumn: FactOrderStopDetail.InspectedLocation_Key
+	toColumn: DimInspectedLocation.InspectedLocation_Key
+
+relationship 68cbd8b0-4ffb-6c37-81dd-9fd37862ea71
+	fromColumn: FactOrderStopDetail.CompletionDate_Key
+	toColumn: DimDate.Date_Key
+
+relationship 58fade4c-d25e-44a4-8e38-08b1d8ad1023
+	joinOnDateBehavior: datePartOnly
+	fromColumn: FactApplication.SubmittedDate
+	toColumn: LocalDateTable_639b6575-ca78-469a-9950-a9f71cc4844f.Date
+
+relationship 77506a0c-da9b-464c-8f84-8bb75971d6c3
+	joinOnDateBehavior: datePartOnly
+	fromColumn: FactApplication.ReceivedDate
+	toColumn: LocalDateTable_18a27f53-f7be-416d-b02f-b2dc3fe1d721.Date
+
+relationship f4358ad9-a00f-4a4e-8020-7c48d0715da5
+	joinOnDateBehavior: datePartOnly
+	fromColumn: FactApplication.DecisionDate
+	toColumn: LocalDateTable_bc54fc01-5a58-450f-a2ad-d2f9749c1609.Date
+
+relationship 0aa06eb6-6c4c-447b-8a5d-9ff735e3ce02
+	joinOnDateBehavior: datePartOnly
+	fromColumn: FactApplication.ProposedStartDate
+	toColumn: LocalDateTable_adce5720-2ed6-4fb9-8d98-7c4526f5670c.Date
+
+relationship 8cdc3f26-3720-46a2-b82f-daf039192473
+	joinOnDateBehavior: datePartOnly
+	fromColumn: FactApplication.ProposedEndDate
+	toColumn: LocalDateTable_205665d4-1f9d-490b-834d-4afa6e87a700.Date
+
+relationship 4b98ed6f-ff6a-417b-a809-4c430bc2624a
+	joinOnDateBehavior: datePartOnly
+	fromColumn: FactApplication.SecurityReceivedDate
+	toColumn: LocalDateTable_e7df0d4e-428e-40d7-be08-a5f80a67fba7.Date
+
+relationship 1cfcec97-98fd-4829-b95f-23cbfe8d1af6
+	joinOnDateBehavior: datePartOnly
+	fromColumn: FactApplication.ETL_LastModified
+	toColumn: LocalDateTable_21dc8973-a7aa-4673-bfc1-ec3a7e6b0861.Date
+
+relationship f109f4dc-a8c8-49e3-a47c-5fb1688265c6
+	fromColumn: FactApplication.AppSecurityNotRequiredReason_Key
+	toColumn: DimAppSecurityNotRequiredReason.AppSecurityNotRequiredReason_Key
+
+	annotation PBI_IsFromSource = FS
+
+relationship 9384f48b-712c-4d1c-9257-d74d2db774e8
+	fromColumn: FactApplication.AppStatus_Key
+	toColumn: DimApplicationStatus.ApplicationStatus_Key
+
+	annotation PBI_IsFromSource = FS
+
+relationship 9b4de73f-0cc7-4880-8e6c-356e6e785779
+	fromColumn: FactApplication.AppType_Key
+	toColumn: DimApplicationType.ApplicationType_Key
+
+	annotation PBI_IsFromSource = FS
+
+relationship 2f7497b6-1b79-401b-87d6-0af35b17f323
+	fromColumn: FactApplication.MineExt_Key
+	toColumn: DimMineExt.MineExt_Key
+
+	annotation PBI_IsFromSource = FS
+
+relationship 279fba6f-ba8d-47cc-ba5a-f0177b573adb
+	fromColumn: FactApplication.NoticeOfWorkType_Key
+	toColumn: DimNoticeOfWorkType.NoticeOfWorkType_Key
+
+	annotation PBI_IsFromSource = FS
+
+relationship 6e01310c-2c5f-d1b4-dd78-7fa526666ff9
+	fromColumn: FactApplication.DateSubmitted_Key
+	toColumn: DimDate.Date_Key
+
+relationship dbb01140-d0fb-c0a6-26ff-939b8faf0c01
+	fromColumn: IncidentCategoryBridge.IncidentCategory_Key
+	toColumn: DimIncidentCategory.IncidentCategory_Key
+
+relationship ff23fc83-fd1b-8a9c-69ef-2694267c5cb8
+	crossFilteringBehavior: bothDirections
+	fromColumn: IncidentCategoryBridge.mine_incident_id
+	toColumn: FactIncident.MineIncidentId
+
+relationship fa85558c-74ad-c505-6026-e6996d6e4605
+	fromColumn: FactInspection.MineRegion_Key
+	toColumn: DimMineRegion.MineRegion_Key
+
+relationship 016d3e54-85e1-b862-9d5e-970f5adddadb
+	fromColumn: FactInspectionTarget.MineRegion_Key
+	toColumn: DimMineRegion.MineRegion_Key
+
+relationship e5382618-71c1-a8ea-3351-ad29a0f07fc9
+	fromColumn: FactInspectionTarget.Date_Key
+	toColumn: DimDate.Date_Key
+
+relationship f6f1ae3a-2281-24c1-3dd5-cecba426d55e
+	fromColumn: FactOrderStopDetail.MineExt_Key
+	toColumn: DimMineExt.MineExt_Key
+
+relationship 126141ba-1d46-4bf2-a319-00dac1e25cde
+	joinOnDateBehavior: datePartOnly
+	fromColumn: DimComplianceArticle.effective_date
+	toColumn: LocalDateTable_e7f1be24-29b3-41ed-b9ef-4ee3ae104fbc.Date
+
+relationship 7125624b-7324-4932-9802-4941121a1ff3
+	joinOnDateBehavior: datePartOnly
+	fromColumn: DimComplianceArticle.expiry_date
+	toColumn: LocalDateTable_6dc8efe8-6cc6-4e63-a32b-bafe7fd29cb5.Date
+
+relationship e620a0cc-f353-af89-0f8b-cffcdab9edbe
+	fromColumn: IncidentComplianceArticleBridge.ComplianceArticle_Key
+	toColumn: DimComplianceArticle.ComplianceArticle_Key
+
+relationship 2a46c09b-a1bd-434a-1b78-51df620ef5eb
+	crossFilteringBehavior: bothDirections
+	fromColumn: IncidentComplianceArticleBridge.mine_incident_id
+	toColumn: FactIncident.MineIncidentId
+
+relationship 86743c3c-c961-fa12-f889-0c6dda077def
+	fromColumn: FactIncident.IncidentDate_Key
+	toColumn: DimIncidentDate.Date_Key
+
+relationship 6cff8415-979d-4832-a571-51ccbef1452a
+	joinOnDateBehavior: datePartOnly
+	fromColumn: DimApplicationDelay.StartDate
+	toColumn: LocalDateTable_0ac5133b-c462-4c2a-bfd4-70ef68817c60.Date
+
+relationship 59d898ed-1084-462f-a565-0145a3adafab
+	joinOnDateBehavior: datePartOnly
+	fromColumn: DimApplicationDelay.EndDate
+	toColumn: LocalDateTable_f7cd02d6-d9e3-4e42-9545-3d70fafa2c67.Date
+
+relationship aaf44903-fdb4-1927-b298-e5bc9d7966b2
+	fromColumn: ApplicationDelayBridge.ApplicationDelay_Key
+	toColumn: DimApplicationDelay.ApplicationDelay_Key
+
+relationship 3cb47064-5979-b9ee-6866-244fb2d4e974
+	crossFilteringBehavior: bothDirections
+	fromColumn: ApplicationDelayBridge.now_application_id
+	toColumn: FactApplication.now_application_id
+
+relationship 1174d684-94c6-7053-8763-0e9d64ea7235
+	fromColumn: FactPermit.FirstIssue_Date_Key
+	toColumn: DimDate.Date_Key
+
+relationship 93c10fe1-6c3d-95e3-670b-e1e6b463b4ef
+	crossFilteringBehavior: bothDirections
+	fromColumn: NonCompliancePermitBridge.order_stop_detail_id
+	toColumn: FactOrderStopDetail.order_stop_detail_id
+
+relationship 2a5fa14d-6fde-1196-3b35-5d4cab5d1305
+	fromColumn: NonCompliancePermitBridge.NonCompliancePermit_Key
+	toColumn: DimNonCompliancePermit.NonCompliancePermit_Key
+
+relationship 399931bd-56e3-40e6-bc7f-390bbcec0db5
+	joinOnDateBehavior: datePartOnly
+	fromColumn: DimNonComplianceLegislation.Estimated_Incident_Date
+	toColumn: LocalDateTable_781d9544-49c0-4f61-97f9-494c11346800.Date
+
+relationship ef30d7dc-8d03-6a5b-7052-a856530d5690
+	crossFilteringBehavior: bothDirections
+	fromColumn: NonComplianceLegislationBridge.order_stop_detail_id
+	toColumn: FactOrderStopDetail.order_stop_detail_id
+
+relationship 202746f5-1faa-fa40-1c88-978554fc3d87
+	fromColumn: NonComplianceLegislationBridge.NonComplianceLegislation_Key
+	toColumn: DimNonComplianceLegislation.NonComplianceLegislation_Key
+
+relationship afd6a926-d93d-4ed5-8562-5f5e78637061
+	joinOnDateBehavior: datePartOnly
+	fromColumn: FactOrderStopDetail.inspection_date
+	toColumn: LocalDateTable_ed688308-e0e3-4929-a992-e38d1eb46675.Date
+

@@ -1,0 +1,105 @@
+table DimNonComplianceLegislation
+	lineageTag: 0992605d-29d8-4b75-ae42-c9d6f3731cbd
+
+	column NonComplianceLegislation_Key
+		dataType: int64
+		formatString: 0
+		lineageTag: 9684bebb-83c3-4169-b136-8a48d7150e6b
+		summarizeBy: none
+		sourceColumn: NonComplianceLegislation_Key
+
+		annotation SummarizationSetBy = Automatic
+
+	column NonCompliance_Legislation_ID
+		dataType: int64
+		formatString: 0
+		lineageTag: 56136559-95a5-47b5-aa26-4d08ca9cec99
+		summarizeBy: count
+		sourceColumn: NonCompliance_Legislation_ID
+
+		annotation SummarizationSetBy = Automatic
+
+	column Order_Stop_Detail_ID
+		dataType: int64
+		formatString: 0
+		lineageTag: 786b30cc-5f0f-49c4-86e6-784141054913
+		summarizeBy: count
+		sourceColumn: Order_Stop_Detail_ID
+
+		annotation SummarizationSetBy = Automatic
+
+	column Estimated_Incident_Date
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 61558b6c-5776-4d1c-b561-c6035c4d0a0c
+		summarizeBy: none
+		sourceColumn: Estimated_Incident_Date
+
+		variation Variation
+			isDefault
+			relationship: 399931bd-56e3-40e6-bc7f-390bbcec0db5
+			defaultHierarchy: LocalDateTable_781d9544-49c0-4f61-97f9-494c11346800.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column Noncompliant_Description
+		dataType: string
+		lineageTag: 68e4fbf6-183c-4452-a52c-b0279445cd54
+		summarizeBy: none
+		sourceColumn: Noncompliant_Description
+
+		annotation SummarizationSetBy = Automatic
+
+	column Parent_Act_ID
+		dataType: int64
+		formatString: 0
+		lineageTag: adea9996-d37b-4aa2-b23b-fffe1d1299df
+		summarizeBy: count
+		sourceColumn: Parent_Act_ID
+
+		annotation SummarizationSetBy = Automatic
+
+	column Legislation_Act_Section_ID
+		dataType: int64
+		formatString: 0
+		lineageTag: 003d0b44-d9b8-4b1d-8c43-206d35208ddd
+		summarizeBy: count
+		sourceColumn: Legislation_Act_Section_ID
+
+		annotation SummarizationSetBy = Automatic
+
+	column Section
+		dataType: string
+		lineageTag: 941e6602-1809-4656-bb04-249f804c64d7
+		summarizeBy: none
+		sourceColumn: Section
+
+		annotation SummarizationSetBy = Automatic
+
+	column Compliance_Article_ID
+		dataType: int64
+		formatString: 0
+		lineageTag: 8fac47cb-7777-4d7c-8f7a-9f4ca7a6ed46
+		summarizeBy: count
+		sourceColumn: Compliance_Article_ID
+
+		annotation SummarizationSetBy = Automatic
+
+	column Article_Comments
+		dataType: string
+		lineageTag: c46ac42e-47c4-49c8-b9ce-4d96668b721f
+		summarizeBy: none
+		sourceColumn: Article_Comments
+
+		annotation SummarizationSetBy = Automatic
+
+	partition DimNonComplianceLegislation = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Databases("mdp-sql-server.database.windows.net"),
+				    #"MDP-DWH" = Source{[Name="MDP-DWH"]}[Data],
+				    dbo_DimNonComplianceLegislation = #"MDP-DWH"{[Schema="dbo",Item="DimNonComplianceLegislation"]}[Data]
+				in
+				    dbo_DimNonComplianceLegislation
+

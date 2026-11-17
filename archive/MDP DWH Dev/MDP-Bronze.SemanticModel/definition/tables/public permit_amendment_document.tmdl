@@ -1,0 +1,152 @@
+table 'public permit_amendment_document'
+	lineageTag: ff1befb8-a4bb-4aab-b504-665245d64935
+
+	column permit_amendment_document_guid
+		dataType: string
+		lineageTag: 46d1903b-5971-43aa-8c5d-c1baba30ce80
+		summarizeBy: none
+		sourceColumn: permit_amendment_document_guid
+
+		annotation SummarizationSetBy = Automatic
+
+	column permit_amendment_id
+		dataType: int64
+		formatString: 0
+		lineageTag: b2dae248-4461-48fe-8deb-de9db635e07d
+		summarizeBy: sum
+		sourceColumn: permit_amendment_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column mine_guid
+		dataType: string
+		lineageTag: 0659dd8d-c3c0-432e-be7f-5c3a6e82efe6
+		summarizeBy: none
+		sourceColumn: mine_guid
+
+		annotation SummarizationSetBy = Automatic
+
+	column active_ind
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 2b5dd2be-324a-463a-9cc8-39f075637c0b
+		summarizeBy: none
+		sourceColumn: active_ind
+
+		annotation SummarizationSetBy = Automatic
+
+	column create_user
+		dataType: string
+		lineageTag: 0589865d-88c2-46db-8f0f-b5d16729d120
+		summarizeBy: none
+		sourceColumn: create_user
+
+		annotation SummarizationSetBy = Automatic
+
+	column create_timestamp
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 9ff7313a-ba28-4339-929a-cd290159f747
+		summarizeBy: none
+		sourceColumn: create_timestamp
+
+		variation Variation
+			isDefault
+			relationship: 3d8c2bfc-91c7-4cba-b62e-a12a2d79026d
+			defaultHierarchy: LocalDateTable_2e2cbb93-6579-456c-a3cc-94c7fa63040d.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column update_user
+		dataType: string
+		lineageTag: 8a4cf629-d932-4db5-98eb-2f9fdb074604
+		summarizeBy: none
+		sourceColumn: update_user
+
+		annotation SummarizationSetBy = Automatic
+
+	column update_timestamp
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 7d3a9915-1c6e-40c6-90b7-d34d22e77e86
+		summarizeBy: none
+		sourceColumn: update_timestamp
+
+		variation Variation
+			isDefault
+			relationship: e11facdb-dc71-42e1-8dc1-e1c327c2d660
+			defaultHierarchy: LocalDateTable_d07417f1-e1c8-4fcb-b069-6ada8603d8bc.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column document_name
+		dataType: string
+		lineageTag: ad336ad5-48b0-4108-b7f6-d463ed09f41e
+		summarizeBy: none
+		sourceColumn: document_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column document_manager_guid
+		dataType: string
+		lineageTag: b49cf9bd-bef8-4f0a-b0ec-bab0be9fb3a5
+		summarizeBy: none
+		sourceColumn: document_manager_guid
+
+		annotation SummarizationSetBy = Automatic
+
+	column deleted_ind
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 7c8747c8-87b0-4355-9ee5-c40b5ad1411f
+		summarizeBy: none
+		sourceColumn: deleted_ind
+
+		annotation SummarizationSetBy = Automatic
+
+	column preamble_title
+		dataType: string
+		lineageTag: eca9c367-e3b7-44e8-9536-84aa4a2f0f26
+		summarizeBy: none
+		sourceColumn: preamble_title
+
+		annotation SummarizationSetBy = Automatic
+
+	column preamble_author
+		dataType: string
+		lineageTag: 1f40fe8a-e1ff-4f15-8bbf-4857a8c9fe85
+		summarizeBy: none
+		sourceColumn: preamble_author
+
+		annotation SummarizationSetBy = Automatic
+
+	column preamble_date
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 8d073e6d-9660-4ec1-99c4-2328454392d2
+		summarizeBy: none
+		sourceColumn: preamble_date
+
+		variation Variation
+			isDefault
+			relationship: 6bc1dddc-3515-4099-85ad-15b22334149b
+			defaultHierarchy: LocalDateTable_256581bc-dbfc-49d5-b2f3-192f38ea8a69.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'public permit_amendment_document' = m
+		mode: import
+		source =
+				let
+				    Source = AzureStorage.Blobs("datarepositorysa"),
+				    postgres1 = Source{[Name="postgres"]}[Data],
+				    #"Filtered Rows" = Table.SelectRows(postgres1, each [Extension] = ".parquet"),
+				    #"https://datarepositorysa blob core windows net/postgres/_tables/parquet/public permit_amendment parquet" = #"Filtered Rows"{[#"Folder Path"="https://datarepositorysa.blob.core.windows.net/postgres/",Name="tables/parquet/public.permit_amendment_document.parquet"]}[Content],
+				    #"Imported Parquet" = Parquet.Document(#"https://datarepositorysa blob core windows net/postgres/_tables/parquet/public permit_amendment parquet")
+				in
+				    #"Imported Parquet"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

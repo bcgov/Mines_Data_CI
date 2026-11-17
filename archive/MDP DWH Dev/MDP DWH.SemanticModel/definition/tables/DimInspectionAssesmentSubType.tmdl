@@ -1,0 +1,49 @@
+table DimInspectionAssesmentSubType
+	lineageTag: 5d6e9486-f73a-419d-9752-19dcea2c7e6b
+
+	column InspectionAssesmentSubType_Key
+		dataType: int64
+		formatString: 0
+		lineageTag: 55f696bb-fd20-4642-8a99-3027cedb6cf1
+		summarizeBy: none
+		sourceColumn: InspectionAssesmentSubType_Key
+
+		annotation SummarizationSetBy = Automatic
+
+	column InspectionAssesmentSubType
+		dataType: string
+		lineageTag: 3bc9243f-0b2f-4814-bde5-84cbf035ae3d
+		summarizeBy: none
+		sourceColumn: InspectionAssesmentSubType
+
+		annotation SummarizationSetBy = Automatic
+
+	column InspectionAssesmentSubTypeDescription
+		dataType: string
+		lineageTag: 05d74282-9df7-4a84-829d-efd41063f860
+		summarizeBy: none
+		sourceColumn: InspectionAssesmentSubTypeDescription
+
+		annotation SummarizationSetBy = Automatic
+
+	column assessment_sub_type_hash
+		dataType: int64
+		formatString: 0
+		lineageTag: f00a0d87-1208-4a51-a2eb-033515139599
+		summarizeBy: none
+		sourceColumn: assessment_sub_type_hash
+
+		annotation SummarizationSetBy = Automatic
+
+	partition DimInspectionAssesmentSubType = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Databases("mdp-sql-server.database.windows.net"),
+				    #"MDP-DWH" = Source{[Name="MDP-DWH"]}[Data],
+				    dbo_DimInspectionAssesmentSubType = #"MDP-DWH"{[Schema="dbo",Item="DimInspectionAssesmentSubType"]}[Data]
+				in
+				    dbo_DimInspectionAssesmentSubType
+
+	annotation PBI_ResultType = Table
+

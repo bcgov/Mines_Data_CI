@@ -1,0 +1,116 @@
+table public-mine_region_code
+	lineageTag: ab47d563-d077-48b6-b12a-5af36d38d9d7
+
+	column mine_region_code
+		dataType: string
+		lineageTag: 67e1dc7d-7687-4a80-b2ba-5d49ddfa2b53
+		summarizeBy: none
+		sourceColumn: mine_region_code
+
+		annotation SummarizationSetBy = Automatic
+
+	column description
+		dataType: string
+		lineageTag: 32fb96a4-767f-4b1c-b923-7a1315e3c968
+		summarizeBy: none
+		sourceColumn: description
+
+		annotation SummarizationSetBy = Automatic
+
+	column display_order
+		dataType: int64
+		formatString: 0
+		lineageTag: 72caa69a-eb45-45ef-9f5a-564d69e8eb90
+		summarizeBy: sum
+		sourceColumn: display_order
+
+		annotation SummarizationSetBy = Automatic
+
+	column create_user
+		dataType: string
+		lineageTag: 958324c2-25e5-4267-846c-f5dff4d93c77
+		summarizeBy: none
+		sourceColumn: create_user
+
+		annotation SummarizationSetBy = Automatic
+
+	column create_timestamp
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 598e3a2b-d26f-43d0-a5a2-12dc19f19cac
+		summarizeBy: none
+		sourceColumn: create_timestamp
+
+		variation Variation
+			isDefault
+			relationship: cda1d6ab-76a1-4473-933e-f915aa9a8ace
+			defaultHierarchy: LocalDateTable_5da3ee28-df57-4a46-8ace-6b6a02a920c4.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column update_user
+		dataType: string
+		lineageTag: ca2de7a6-13ba-4ca4-9b64-2cc91a4fd9e7
+		summarizeBy: none
+		sourceColumn: update_user
+
+		annotation SummarizationSetBy = Automatic
+
+	column update_timestamp
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: a5d5b30d-a8b0-4c17-b280-7fe16cc643bc
+		summarizeBy: none
+		sourceColumn: update_timestamp
+
+		variation Variation
+			isDefault
+			relationship: 8be87359-a061-4864-90fb-9af286af3f78
+			defaultHierarchy: LocalDateTable_780ae665-b494-4b68-ac74-15f7be5e5780.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column effective_date
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 994a7ff6-b29a-4a75-9c5b-022e69937cf2
+		summarizeBy: none
+		sourceColumn: effective_date
+
+		variation Variation
+			isDefault
+			relationship: 363434e6-a326-4e11-b771-7e0023c5ce14
+			defaultHierarchy: LocalDateTable_67d88783-1a9e-4758-86ef-a528788defdc.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column expiry_date
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 01ff09e8-0be3-40c4-8830-b9ece214283e
+		summarizeBy: none
+		sourceColumn: expiry_date
+
+		variation Variation
+			isDefault
+			relationship: c8c0dc5c-25e0-445d-b28b-798a91f838f5
+			defaultHierarchy: LocalDateTable_83543d2b-6746-4f3d-b04d-8599635698fe.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	partition public-mine_region_code = m
+		mode: import
+		source =
+				let
+				    Source = AzureStorage.Blobs("datarepositorysa"),
+				    postgres1 = Source{[Name="postgres"]}[Data],
+				    #"Filtered Rows" = Table.SelectRows(postgres1, each ([Extension] = ".parquet")),
+				    #"https://datarepositorysa blob core windows net/postgres/_tables/parquet/public mine_region_code parquet" = #"Filtered Rows"{[#"Folder Path"="https://datarepositorysa.blob.core.windows.net/postgres/",Name="tables/parquet/public.mine_region_code.parquet"]}[Content],
+				    #"Imported Parquet" = Parquet.Document(#"https://datarepositorysa blob core windows net/postgres/_tables/parquet/public mine_region_code parquet")
+				in
+				    #"Imported Parquet"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

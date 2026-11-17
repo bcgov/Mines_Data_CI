@@ -1,0 +1,214 @@
+table 'public bond'
+	lineageTag: ea81cc13-cd9c-4528-8f2c-cd70927af0d9
+
+	column bond_id
+		dataType: int64
+		formatString: 0
+		lineageTag: ee749666-80b3-48a6-ae60-3fcd7a434d02
+		summarizeBy: none
+		sourceColumn: bond_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column bond_guid
+		dataType: string
+		lineageTag: ba324a5d-94f9-42ef-a59e-e1c6dccb642d
+		summarizeBy: none
+		sourceColumn: bond_guid
+
+		annotation SummarizationSetBy = Automatic
+
+	column amount
+		dataType: double
+		lineageTag: fecfa241-6bcd-409d-bfc3-e48dd1cb1464
+		summarizeBy: sum
+		sourceColumn: amount
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column bond_type_code
+		dataType: string
+		lineageTag: 9cd4f29b-6fd8-4464-aa14-177642fb0ba6
+		summarizeBy: none
+		sourceColumn: bond_type_code
+
+		annotation SummarizationSetBy = Automatic
+
+	column payer_party_guid
+		dataType: string
+		lineageTag: 6a9b1314-bd75-459c-b1d7-455a2259eeaf
+		summarizeBy: none
+		sourceColumn: payer_party_guid
+
+		annotation SummarizationSetBy = Automatic
+
+	column bond_status_code
+		dataType: string
+		lineageTag: cd895f16-7ba8-4d59-9636-d4e2db91e19d
+		summarizeBy: none
+		sourceColumn: bond_status_code
+
+		annotation SummarizationSetBy = Automatic
+
+	column reference_number
+		dataType: string
+		lineageTag: af3de048-6cc2-4bfc-955f-86ab158b86de
+		summarizeBy: none
+		sourceColumn: reference_number
+
+		annotation SummarizationSetBy = Automatic
+
+	column create_user
+		dataType: string
+		lineageTag: d0b45f6f-97e8-4898-af74-f65a616cb927
+		summarizeBy: none
+		sourceColumn: create_user
+
+		annotation SummarizationSetBy = Automatic
+
+	column create_timestamp
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 8b691d44-173d-4e29-95a7-384f23736c75
+		summarizeBy: none
+		sourceColumn: create_timestamp
+
+		variation Variation
+			isDefault
+			relationship: c889fb94-9780-442b-8e57-3ef1d3b397c1
+			defaultHierarchy: LocalDateTable_fa0c0960-a399-48b1-b148-531216188d8d.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column update_user
+		dataType: string
+		lineageTag: dc833db4-bc51-4189-8046-1a6ed67ed7a5
+		summarizeBy: none
+		sourceColumn: update_user
+
+		annotation SummarizationSetBy = Automatic
+
+	column update_timestamp
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 5874030d-b31a-48b1-8d01-f21fdcb2a3c9
+		summarizeBy: none
+		sourceColumn: update_timestamp
+
+		variation Variation
+			isDefault
+			relationship: efe85861-138a-494c-93db-775836b79989
+			defaultHierarchy: LocalDateTable_7706975b-7ca1-4473-83d2-a302d93e14a1.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column institution_name
+		dataType: string
+		lineageTag: 444e043e-c38b-4ac4-b361-2b634d9ce7df
+		summarizeBy: none
+		sourceColumn: institution_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column institution_street
+		dataType: string
+		lineageTag: 5cf6578f-18e2-471b-873e-4c200f8d137d
+		summarizeBy: none
+		sourceColumn: institution_street
+
+		annotation SummarizationSetBy = Automatic
+
+	column institution_city
+		dataType: string
+		lineageTag: 25ab61e9-14b6-4e33-96c2-28019feef067
+		summarizeBy: none
+		sourceColumn: institution_city
+
+		annotation SummarizationSetBy = Automatic
+
+	column institution_province
+		dataType: string
+		lineageTag: ff5ae89c-5c4a-4fcf-b5ff-13f64e243ed0
+		summarizeBy: none
+		sourceColumn: institution_province
+
+		annotation SummarizationSetBy = Automatic
+
+	column institution_postal_code
+		dataType: string
+		lineageTag: 6d34d18f-3581-4b15-8ef5-ad1e2eb9b6f1
+		summarizeBy: none
+		sourceColumn: institution_postal_code
+
+		annotation SummarizationSetBy = Automatic
+
+	column note
+		dataType: string
+		lineageTag: 6fc23f9a-0380-4a4a-9dd4-09b58e2cf773
+		summarizeBy: none
+		sourceColumn: note
+
+		annotation SummarizationSetBy = Automatic
+
+	column issue_date
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 2028018f-a9a8-4609-a55d-91bcaab98731
+		summarizeBy: none
+		sourceColumn: issue_date
+
+		variation Variation
+			isDefault
+			relationship: 88363dea-12d4-4145-a8e2-cf0c64d85199
+			defaultHierarchy: LocalDateTable_76c23baa-decd-4642-9c89-8bab3082ed1a.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column closed_date
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 673b2239-f1cb-41df-92c4-5e7f92fc99ae
+		summarizeBy: none
+		sourceColumn: closed_date
+
+		variation Variation
+			isDefault
+			relationship: cb619c1b-924f-421c-915c-e8c9e97741b1
+			defaultHierarchy: LocalDateTable_cf0e8c3d-4676-4b0d-87ca-c01ae29189f8.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column closed_note
+		dataType: string
+		lineageTag: 1924967f-59ba-4764-9e1c-5a829361b9e2
+		summarizeBy: none
+		sourceColumn: closed_note
+
+		annotation SummarizationSetBy = Automatic
+
+	column mms_sec_cid
+		dataType: string
+		lineageTag: d0afc4a2-ad3b-4a0c-8676-2d2c7c45fbb8
+		summarizeBy: none
+		sourceColumn: mms_sec_cid
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'public bond' = m
+		mode: import
+		source =
+				let
+				    Source = AzureStorage.Blobs("datarepositorysa"),
+				    postgres1 = Source{[Name="postgres"]}[Data],
+				    #"Filtered Rows" = Table.SelectRows(postgres1, each [Extension] = ".parquet"),
+				    #"https://datarepositorysa blob core windows net/postgres/_tables/parquet/public bond parquet" = #"Filtered Rows"{[#"Folder Path"="https://datarepositorysa.blob.core.windows.net/postgres/",Name="tables/parquet/public.bond.parquet"]}[Content],
+				    #"Imported Parquet" = Parquet.Document(#"https://datarepositorysa blob core windows net/postgres/_tables/parquet/public bond parquet")
+				in
+				    #"Imported Parquet"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
