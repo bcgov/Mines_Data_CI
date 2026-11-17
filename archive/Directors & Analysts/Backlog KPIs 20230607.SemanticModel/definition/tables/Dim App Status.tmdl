@@ -1,0 +1,32 @@
+table 'Dim App Status'
+	lineageTag: 2bb31dd3-b4e7-4e86-8305-f76f4bc1eb7c
+
+	column status_code
+		dataType: string
+		lineageTag: a2027d49-7da9-464f-aec8-fe635d3b5d98
+		summarizeBy: none
+		sourceColumn: status_code
+
+		annotation SummarizationSetBy = Automatic
+
+	column status
+		dataType: string
+		lineageTag: 9576a931-e8ec-46dc-a90b-c281dac9a18c
+		summarizeBy: none
+		sourceColumn: status
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'Dim App Status-ba306e49-9aa1-493d-8f59-89b44a41a322' = m
+		mode: import
+		queryGroup: Dimentions
+		source =
+				let
+				    Source = Value.NativeQuery(PostgreSQL.Database("mds-reporting-pg13-live.postgres.database.azure.com", "mds", [CreateNavigationProperties=false]), "select now_application_status_code as status_code, description as status#(lf)from now_application_status #(lf)where active_ind = true ", null, [EnableFolding=false])
+				in
+				    Source
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

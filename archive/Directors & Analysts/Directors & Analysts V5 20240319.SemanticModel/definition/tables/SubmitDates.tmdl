@@ -1,0 +1,23 @@
+table SubmitDates
+	lineageTag: 1fb40f92-fd08-45bc-95b9-45ce782631cc
+
+	column Date
+		formatString: General Date
+		lineageTag: 73d2b776-085e-479c-a3a3-eefae02f338d
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Date]
+
+		variation Variation
+			isDefault
+			relationship: d87c8526-73ce-4145-a723-fbf8b743fb14
+			defaultHierarchy: LocalDateTable_993167da-ed6b-46bf-9010-947671a1192f.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	partition SubmitDates-ce779d85-2b42-4b72-ad29-57f964aa85c8 = calculated
+		mode: import
+		source = CALENDAR(MIN('NoW Applications'[submitted_date]),MAX('NoW Applications'[submitted_date]))
+
+	annotation PBI_Id = 251048afe84c4e22a4d42be599648069
+

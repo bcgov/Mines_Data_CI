@@ -1,0 +1,9 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definitionProperties/2.0.0/schema.json",
+  "version": "4.0",
+  "datasetReference": {
+    "byConnection": {
+      "connectionString": "Data Source=\"powerbi://api.powerbi.com/v1.0/myorg/Directors & Analysts\";initial catalog=\"Report Usage Metrics Model\";integrated security=ClaimsToken;semanticmodelid=180523b4-0d67-435f-ab09-57eb19bb2f1b"
+    }
+  }
+}

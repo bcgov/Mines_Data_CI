@@ -1,0 +1,133 @@
+table Mines
+	lineageTag: bb325514-0229-4f30-a257-917804329ef6
+
+	measure Selected_Region = SELECTEDVALUE(Mines[Mine Region],"All Regions")
+		lineageTag: 63785c52-a18f-429a-bd46-5315761de4f8
+
+	column mine_guid
+		dataType: string
+		sourceProviderType: nchar
+		lineageTag: 33e79d1c-eef6-43bd-9741-f9c45352564b
+		summarizeBy: none
+		sourceColumn: mine_guid
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Mine Name'
+		dataType: string
+		sourceProviderType: nvarchar(60)
+		lineageTag: 5bf4ea2e-2ab9-495e-a172-021e5a9aefee
+		summarizeBy: none
+		sourceColumn: Mine Name
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Mine No'
+		dataType: string
+		sourceProviderType: nvarchar(10)
+		lineageTag: a310735a-e79a-4ee7-95d1-68a4b9ebb714
+		summarizeBy: none
+		sourceColumn: Mine No
+
+		annotation SummarizationSetBy = Automatic
+
+	column description
+		dataType: string
+		sourceProviderType: nvarchar(100)
+		lineageTag: 70d47c36-e894-4477-90b1-f40220e2a920
+		summarizeBy: none
+		sourceColumn: description
+
+		annotation SummarizationSetBy = Automatic
+
+	column latitude
+		dataType: double
+		sourceProviderType: decimal(9, 7)
+		lineageTag: 05c68c01-ff3b-48c4-b421-b3b0cb1ea4b0
+		summarizeBy: sum
+		sourceColumn: latitude
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column longitude
+		dataType: double
+		sourceProviderType: decimal(11, 7)
+		lineageTag: e5a2ecbf-3538-4290-8198-5082dfa153dc
+		summarizeBy: sum
+		sourceColumn: longitude
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Mine_Type
+		dataType: string
+		sourceProviderType: nvarchar(3)
+		lineageTag: 2a124cf8-9f26-48f5-b26d-a5d60f51790f
+		summarizeBy: none
+		sourceColumn: Mine_Type
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Mine Region'
+		dataType: string
+		sourceProviderType: nvarchar(2)
+		lineageTag: 82c9a29d-e9e3-4ec5-bfdc-7877dab1e0c6
+		summarizeBy: none
+		sourceColumn: Mine Region
+
+		annotation SummarizationSetBy = Automatic
+
+	column rn
+		dataType: int64
+		formatString: 0
+		sourceProviderType: bigint
+		lineageTag: b84abec5-e927-4fce-8396-d8f4041d8b87
+		summarizeBy: sum
+		sourceColumn: rn
+
+		annotation SummarizationSetBy = Automatic
+
+	column legacy_mms_mine_status
+		dataType: string
+		sourceProviderType: nvarchar(50)
+		lineageTag: b15257e8-7f92-47d9-8980-284303904479
+		summarizeBy: none
+		sourceColumn: legacy_mms_mine_status
+
+		annotation SummarizationSetBy = Automatic
+
+	column Site_Description
+		dataType: string
+		lineageTag: fcd487ad-6c23-40ca-8629-62e9f9373efd
+		summarizeBy: none
+		sourceColumn: Site_Description
+
+		annotation SummarizationSetBy = Automatic
+
+	column latitude_cleaned
+		dataType: double
+		lineageTag: 44e1bb25-dd35-432b-96a2-7f7466cb8ea8
+		summarizeBy: sum
+		sourceColumn: latitude_cleaned
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition Mines-5d0fd379-bf8a-44de-a93d-4ab6c3be9bdf = m
+		mode: import
+		source =
+				let
+				    Source = Value.NativeQuery(PostgreSQL.Database("mds-reporting-pg13-live.postgres.database.azure.com", "mds", [CreateNavigationProperties=false]), "with cte_mine as #(lf)(select row_number() over (partition by m.mine_guid order by mt.update_timestamp desc) rn,#(lf)m.mine_guid, m.mine_no ,m.mine_name , m.mine_region ,m.latitude ,#(lf)case #(lf)#(tab)when latitude<1 then latitude *100 #(lf)#(tab)when latitude<10 then latitude *10#(lf)#(tab)else latitude #(lf)end as ""latitude_cleaned"",#(lf) m.longitude ,m.legacy_mms_mine_status #(lf),mrc.description,mt.mine_tenure_type_code,mttc.description as ""Site_Description""#(lf)from mine m #(lf)left join public.mine_region_code mrc on m.mine_region =mrc.mine_region_code#(lf)left join mine_type mt on mt.mine_guid=m.mine_guid#(lf)left join mine_tenure_type_code mttc on mttc.mine_tenure_type_code=mt.mine_tenure_type_code#(lf))#(lf)select  * from cte_mine where rn=1  ", null, [EnableFolding=false]),
+				    #"Renamed Columns" = Table.RenameColumns(Source,{{"mine_name", "Mine Name"}, {"mine_region", "Mine Region"}, {"mine_no", "Mine No"}, {"mine_tenure_type_code", "Mine_Type"}}),
+				    #"Calculated Absolute Value" = Table.TransformColumns(#"Renamed Columns",{{"latitude", Number.Abs, type number}, {"longitude", Number.Abs, type number}}),
+				    #"Multiplied Column" = Table.TransformColumns(#"Calculated Absolute Value", {{"longitude", each _ * -1, type number}}),
+				    #"Absolute Value: Latitude_Cleaned" = Table.TransformColumns(#"Multiplied Column",{{"latitude_cleaned", Number.Abs, type number}})
+				in
+				    #"Absolute Value: Latitude_Cleaned"
+
+	annotation PBI_ResultType = Table
+

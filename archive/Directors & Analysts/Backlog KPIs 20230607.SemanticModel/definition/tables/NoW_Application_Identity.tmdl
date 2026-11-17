@@ -1,0 +1,135 @@
+table NoW_Application_Identity
+	lineageTag: ca1b306c-9bf7-4b31-8025-27ac5892f33d
+
+	measure ColorKPI_Appcount =
+			
+			SWITCH(TRUE(),
+			[Total Count]<[Count Last Year],"#e3a82b",
+			[Total Count]>[Count Last Year],"#234075",
+			[Total Count]=[Count Last Year],"#234075"
+			)
+		lineageTag: 98abbcb5-74c0-4b80-8fc6-12419f3822fa
+
+	measure 'KPI Green' = if([Total Count]>[Count Last Year],1,0)
+		formatString: 0
+		lineageTag: 167bd843-30d6-4be7-8353-1e1ce795ed94
+
+	measure 'KPI Red' = if([Total Count]<[Count Last Year],1,0)
+		formatString: 0
+		lineageTag: 3084b85d-a4fd-447b-b851-98597fd068c5
+
+	measure 'total app count' = CALCULATE(DISTINCTCOUNT(NoW_Application_Identity[now_application_guid]),all(Mines[Mine Region]))
+		formatString: 0
+		lineageTag: fb9d30c9-54a5-4441-8ad4-5ed91d52c40b
+
+	column now_application_guid
+		dataType: string
+		sourceProviderType: nchar
+		lineageTag: 5992dd29-4e3b-4528-9a4b-80b1ab813028
+		summarizeBy: none
+		sourceColumn: now_application_guid
+
+		annotation SummarizationSetBy = Automatic
+
+	column now_application_id
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: a3d62525-8bbf-4c77-b321-aa9476b223b0
+		summarizeBy: none
+		sourceColumn: now_application_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column messageid
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: c6b8d34c-e6b6-43d8-8171-a4e742f107da
+		summarizeBy: sum
+		sourceColumn: messageid
+
+		annotation SummarizationSetBy = Automatic
+
+	column mms_cid
+		dataType: int64
+		formatString: 0
+		sourceProviderType: bigint
+		lineageTag: d846fcc2-ef59-4cd2-850d-450eee515090
+		summarizeBy: sum
+		sourceColumn: mms_cid
+
+		annotation SummarizationSetBy = Automatic
+
+	column mine_guid
+		dataType: string
+		sourceProviderType: nchar
+		lineageTag: ddf018bc-8fec-4b65-8ace-68910ded69e3
+		summarizeBy: none
+		sourceColumn: mine_guid
+
+		annotation SummarizationSetBy = Automatic
+
+	column now_number
+		dataType: string
+		sourceProviderType: nvarchar(-1)
+		lineageTag: 8d14c3c0-9c23-4d87-84d2-d5d384fd596c
+		summarizeBy: none
+		sourceColumn: now_number
+
+		annotation SummarizationSetBy = Automatic
+
+	column application_type_code
+		dataType: string
+		sourceProviderType: nvarchar(3)
+		lineageTag: aed17a59-5259-456e-bd59-909467d80057
+		summarizeBy: none
+		sourceColumn: application_type_code
+
+		annotation SummarizationSetBy = Automatic
+
+	column notice_of_work_type_code
+		dataType: string
+		lineageTag: 1924118d-dfe2-47ea-91ec-4d74723e3cc9
+		summarizeBy: none
+		sourceColumn: notice_of_work_type_code
+
+		annotation SummarizationSetBy = Automatic
+
+	column now_application_status_code
+		dataType: string
+		lineageTag: 720538e9-06a5-4cb0-a98d-8e6288d9ba46
+		summarizeBy: none
+		sourceColumn: now_application_status_code
+
+		annotation SummarizationSetBy = Automatic
+
+	column application_permit_type_code
+		dataType: string
+		lineageTag: f23f0771-5be7-4137-a4cd-ded8a77decaa
+		summarizeBy: none
+		sourceColumn: application_permit_type_code
+
+		annotation SummarizationSetBy = Automatic
+
+	column type_of_application
+		dataType: string
+		lineageTag: a15e8c76-3e99-4f1d-8dde-7fc460690c18
+		summarizeBy: none
+		sourceColumn: type_of_application
+
+		annotation SummarizationSetBy = Automatic
+
+	partition NoW_Application_Identity-b9221ccf-9dd3-4a95-b9ed-a97c89110286 = m
+		mode: import
+		queryGroup: Dimentions
+		source =
+				let
+				    Source = Value.NativeQuery(PostgreSQL.Database("mds-reporting-pg13-live.postgres.database.azure.com", "mds"), "select nai.now_application_guid, nai.now_application_id, nai.messageid, mms_cid,mine_guid, nai.now_number,application_type_code#(lf)#(tab)  ,na.notice_of_work_type_code, na.now_application_status_code, na.application_permit_type_code, na.type_of_application#(lf)from now_application_identity nai#(lf)left join now_application na on na.now_application_id = nai.now_application_id ", null, [EnableFolding=false])
+				in
+				    Source
+
+	annotation PBI_ResultType = Table
+
+	annotation PBI_NavigationStepName = Navigation
+

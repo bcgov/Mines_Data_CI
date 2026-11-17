@@ -1,0 +1,134 @@
+table 'NoW Applications'
+	lineageTag: b8fdda4f-7529-497b-8b90-05d9acd5adcc
+
+	column now_application_id
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: c1b1b8d5-1375-4179-acc9-324749d44fec
+		summarizeBy: sum
+		sourceColumn: now_application_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column submitted_date
+		dataType: dateTime
+		formatString: Long Date
+		sourceProviderType: date
+		lineageTag: 4adf6fba-4a27-4299-8e10-8fcf8406f3db
+		summarizeBy: none
+		sourceColumn: submitted_date
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column received_date
+		dataType: dateTime
+		formatString: Long Date
+		sourceProviderType: date
+		lineageTag: 90c1b2d9-b0e1-4708-8972-2b555524024d
+		summarizeBy: none
+		sourceColumn: received_date
+
+		variation Variation
+			isDefault
+			relationship: 7959ca66-7e58-4aab-95c1-23a44fec837f
+			defaultHierarchy: LocalDateTable_dba9ccd7-a99a-4cb5-b533-3ed64058a953.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column proposed_start_date
+		dataType: dateTime
+		formatString: Long Date
+		sourceProviderType: date
+		lineageTag: 81c23bb8-6a0e-4302-9c5d-955f38bd9b5a
+		summarizeBy: none
+		sourceColumn: proposed_start_date
+
+		variation Variation
+			isDefault
+			relationship: e5b1ca3f-9ce1-486b-a348-3a280ce13d4b
+			defaultHierarchy: LocalDateTable_6c750b74-3abd-4350-a134-610874d6c3fc.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column proposed_end_date
+		dataType: dateTime
+		formatString: Long Date
+		sourceProviderType: date
+		lineageTag: 4fa12bfc-4feb-4c86-bb87-f5384c82135d
+		summarizeBy: none
+		sourceColumn: proposed_end_date
+
+		variation Variation
+			isDefault
+			relationship: 92ec4c9e-d814-4781-b4b2-44867e2caffb
+			defaultHierarchy: LocalDateTable_7522ab9f-a7e6-41b7-a979-b4cf3ce38512.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column lead_inspector_party_guid
+		dataType: string
+		sourceProviderType: nchar
+		lineageTag: e1290a61-f8e2-4fe2-b3b8-f6c429b37ff9
+		summarizeBy: none
+		sourceColumn: lead_inspector_party_guid
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Application Type'
+		dataType: string
+		sourceProviderType: nvarchar(-1)
+		lineageTag: 51367036-b885-458b-8956-db140e7bd1bd
+		summarizeBy: none
+		sourceColumn: Application Type
+
+		annotation SummarizationSetBy = Automatic
+
+	column issuing_inspector_party_guid
+		dataType: string
+		sourceProviderType: nchar
+		lineageTag: 8ceacc77-c7cd-4811-aad1-b1fa8bfc34c3
+		summarizeBy: none
+		sourceColumn: issuing_inspector_party_guid
+
+		annotation SummarizationSetBy = Automatic
+
+	column relationship_to_applicant
+		dataType: string
+		sourceProviderType: nvarchar(-1)
+		lineageTag: 6a8b2809-f58d-4a9e-be39-b3cf147e16b3
+		summarizeBy: none
+		sourceColumn: relationship_to_applicant
+
+		annotation SummarizationSetBy = Automatic
+
+	column notice_of_work_type_code
+		dataType: string
+		lineageTag: 2bfba27d-7168-4960-a29a-bb4b5b3f154a
+		summarizeBy: none
+		sourceColumn: notice_of_work_type_code
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'NoW Applications-688a6f55-68ab-4fd1-ab89-1cbbe03b7614' = m
+		mode: import
+		source =
+				let
+				    Source = Value.NativeQuery(PostgreSQL.Database("mds-reporting-pg13-live.postgres.database.azure.com", "mds", [CreateNavigationProperties=false]), "select#(lf)#(tab)--nai.now_number,#(lf)#(tab)--nai.messageid,#(lf)#(tab)--nai.now_application_guid,#(lf)#(tab)--nai.mine_guid,#(lf)#(tab)na.now_application_id,#(lf)#(tab)--nowt.notice_of_work_type_code,#(lf)#(tab)--nowt.description ""NoW Type"",#(lf)#(tab)--nas.description ""Application Status"",#(lf)#(tab)na.submitted_date,#(lf)#(tab)na.received_date,#(lf)#(tab)na.proposed_start_date,#(lf)#(tab)na.proposed_end_date,#(lf)#(tab)na.lead_inspector_party_guid,#(lf)#(tab)na.type_of_application,#(lf)        na.notice_of_work_type_code,#(lf)#(tab)na.issuing_inspector_party_guid,#(lf)#(tab)na.relationship_to_applicant#(lf)#(tab)--,nap.application_progress_status_code,#(lf)#(tab)--nap.start_date /*""Application_Progress_Status_Start_Date""*/,#(lf)#(tab)--nap.end_date /*""Application_Progress_Status_Start_Date""*/#(lf)from#(lf)#(tab)public.now_application na#(lf)/*left join public.now_application_identity nai on#(lf)#(tab)na.now_application_id = nai.now_application_id#(lf)left join public.notice_of_work_type nowt on#(lf)#(tab)na.notice_of_work_type_code = nowt.notice_of_work_type_code#(lf)left join public.now_application_status nas on#(lf)#(tab)na.now_application_status_code = nas.now_application_status_code#(lf)left join public.now_application_progress nap on#(lf)na.now_application_id = nap.now_application_id*/ ", null, [EnableFolding=false]),
+				    #"Renamed Columns" = Table.RenameColumns(Source,{{"type_of_application", "Application Type"}}),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Renamed Columns",{{"submitted_date", type date}, {"received_date", type date}, {"proposed_start_date", type date}, {"proposed_end_date", type date}})
+				in
+				    #"Changed Type"
+
+	annotation PBI_ResultType = Table
+
+	annotation PBI_NavigationStepName = Navigation
+
