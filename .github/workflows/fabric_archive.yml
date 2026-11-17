@@ -1,0 +1,113 @@
+name: Fabric Workspace Archive
+ 
+# ─────────────────────────────────────────────────────────────────────────────
+# Exports every item definition from the listed Fabric workspaces into
+# archive/<workspace>/<item>.<Type>/ at the root of the repo, then commits it.
+#
+# Layout matches Fabric git integration / fabric-cicd, so anything archived
+# here can be re-published later. Each run replaces the workspace's folder,
+# so items deleted in Fabric drop out of the archive (git history keeps them).
+# archive/<workspace>/manifest.json lists exported / skipped / failed items.
+#
+# Identity: the same service principal as fabric.yml — ARM_TENANT_ID,
+# ARM_CLIENT_ID (vars) and ARM_CLIENT_SECRET (secret), read from the chosen
+# GitHub Environment. The SP must be a member (Viewer or higher; Contributor
+# for some item types) of every workspace listed.
+#
+# Run it manually: Actions → Fabric Workspace Archive → Run workflow.
+# ─────────────────────────────────────────────────────────────────────────────
+ 
+on:
+  workflow_dispatch:
+    inputs:
+      workspaces:
+        description: 'Workspaces to archive: names or IDs, comma-separated'
+        required: true
+        type: string
+      environment:
+        description: 'GitHub Environment to take the ARM_* identity from'
+        type: choice
+        options: [dev, test, prod]
+        default: dev
+      open_pull_request:
+        description: 'Commit to a new branch and open a PR (untick to push straight to the branch this runs from)'
+        type: boolean
+        default: true
+ 
+permissions:
+  contents: write
+  pull-requests: write
+ 
+concurrency:
+  group: fabric-archive-${{ github.ref_name }}
+  cancel-in-progress: false
+ 
+jobs:
+  archive:
+    name: Archive Fabric workspaces (${{ inputs.environment }})
+    runs-on: ubuntu-latest
+    # Same GitHub Environment model as fabric.yml: env-scoped vars/secrets and,
+    # for test/prod, the required-reviewer gate.
+    environment: ${{ inputs.environment }}
+ 
+    env:
+      ARCHIVE_DIR: archive
+ 
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+ 
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+ 
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install azure-identity requests
+ 
+      - name: Export workspace items
+        env:
+          AZURE_TENANT_ID:     ${{ vars.ARM_TENANT_ID }}
+          AZURE_CLIENT_ID:     ${{ vars.ARM_CLIENT_ID }}
+          AZURE_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
+          # Passed via env (not inlined into the script) so the free-text
+          # input can't inject shell.
+          FABRIC_WORKSPACES:   ${{ inputs.workspaces }}
+        run: python fabric/archive.py
+ 
+      - name: Commit archive
+        env:
+          GH_TOKEN:    ${{ github.token }}
+          OPEN_PR:     ${{ inputs.open_pull_request }}
+          BASE_BRANCH: ${{ github.ref_name }}
+          WORKSPACES:  ${{ inputs.workspaces }}
+          RUN_URL:     ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+ 
+          git add -A "$ARCHIVE_DIR"
+          if git diff --cached --quiet; then
+            echo "Archive unchanged — nothing to commit."
+            exit 0
+          fi
+ 
+          STAMP=$(date -u +%Y%m%d-%H%M%S)
+          MSG="chore(archive): export Fabric workspaces ${STAMP}"
+ 
+          if [[ "$OPEN_PR" == "true" ]]; then
+            BRANCH="archive/fabric-${STAMP}"
+            git switch -c "$BRANCH"
+            git commit -m "$MSG"
+            git push origin "$BRANCH"
+            gh pr create \
+              --base "$BASE_BRANCH" \
+              --head "$BRANCH" \
+              --title "$MSG" \
+              --body "$(printf 'Fabric item definitions exported from: %s\n\nRun: %s\n\nPer-workspace details are in `%s/<workspace>/manifest.json`.' "$WORKSPACES" "$RUN_URL" "$ARCHIVE_DIR")"
+          else
+            git commit -m "$MSG"
+            git push origin "HEAD:${BASE_BRANCH}"
+          fi
