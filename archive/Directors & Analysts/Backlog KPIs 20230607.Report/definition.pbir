@@ -1,0 +1,9 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definitionProperties/2.0.0/schema.json",
+  "version": "4.0",
+  "datasetReference": {
+    "byConnection": {
+      "connectionString": "Data Source=\"powerbi://api.powerbi.com/v1.0/myorg/Directors & Analysts\";initial catalog=\"Backlog KPIs 20230607\";integrated security=ClaimsToken;semanticmodelid=c57ff7b3-0caf-49a0-8e52-83090aee26c0"
+    }
+  }
+}

@@ -1,0 +1,36 @@
+table Process_Stage_Sort
+	lineageTag: 4429c88f-d676-4e3c-a58b-e6c09cc9e4e7
+
+	column Process_Stage
+		dataType: string
+		lineageTag: 512f91fd-5bad-4f8d-9901-dd1447134a05
+		summarizeBy: none
+		sourceColumn: Process_Stage
+
+		annotation SummarizationSetBy = Automatic
+
+	column Sort
+		dataType: int64
+		lineageTag: 037cb063-15c6-4ce6-a5f8-bb797a5a1ab0
+		summarizeBy: none
+		sourceColumn: Sort
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition Process_Stage_Sort-36f765e5-bdd7-4427-8500-16f00e569bbc = m
+		mode: import
+		source =
+				let
+				    Source = Value.NativeQuery(PostgreSQL.Database("mds-reporting-live.postgres.database.azure.com", "mds"), "SELECT 'TechReview' Process_Stage, '1' Sort#(lf)union#(lf)SELECT 'Referral', '2'#(lf)union#(lf)SELECT 'Consultation', '3'#(lf)union#(lf)SELECT 'PublicComment', '4'#(lf)union#(lf)SELECT 'Draft/Decision', '5' ", null, [EnableFolding=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(Source,{{"sort", Int64.Type}}),
+				    #"Sorted Rows" = Table.Sort(#"Changed Type",{{"sort", Order.Ascending}}),
+				    #"Renamed Columns" = Table.RenameColumns(#"Sorted Rows",{{"process_stage", "Process_Stage"}, {"sort", "Sort"}})
+				in
+				    #"Renamed Columns"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

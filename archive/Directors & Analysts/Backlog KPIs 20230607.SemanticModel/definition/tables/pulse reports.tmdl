@@ -1,0 +1,300 @@
+table 'pulse reports'
+	lineageTag: 9dadbf08-dfb6-4729-a9ec-9458c27139e4
+
+	column mine_no
+		dataType: string
+		lineageTag: f85c06cc-058b-454e-ae16-9a8a58da2da5
+		summarizeBy: none
+		sourceColumn: mine_no
+
+		annotation SummarizationSetBy = Automatic
+
+	column mine_name
+		dataType: string
+		lineageTag: 35a17ab7-5247-453c-9bf0-2e96bbe10644
+		summarizeBy: none
+		sourceColumn: mine_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column exemption_fee_status_code
+		dataType: string
+		lineageTag: 49c67a93-abea-4697-85de-0323e5177b46
+		summarizeBy: none
+		sourceColumn: exemption_fee_status_code
+
+		annotation SummarizationSetBy = Automatic
+
+	column exemption_fee_status_note
+		dataType: string
+		lineageTag: 314f0ce4-246e-4a81-9515-0e844270c20e
+		summarizeBy: none
+		sourceColumn: exemption_fee_status_note
+
+		annotation SummarizationSetBy = Automatic
+
+	column latitude
+		dataType: double
+		lineageTag: e8a2765f-ab5c-4ce9-b584-316b8d09f06b
+		summarizeBy: sum
+		sourceColumn: latitude
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column legacy_mms_mine_status
+		dataType: string
+		lineageTag: 42d99779-4aa1-4c89-b871-11be55125df2
+		summarizeBy: none
+		sourceColumn: legacy_mms_mine_status
+
+		annotation SummarizationSetBy = Automatic
+
+	column longitude
+		dataType: double
+		lineageTag: 852e6cbe-c172-4edf-ae34-5c1886a2bfcc
+		summarizeBy: sum
+		sourceColumn: longitude
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column mine_region
+		dataType: string
+		lineageTag: 4f280fa4-c395-402f-a532-f6662446e452
+		summarizeBy: none
+		sourceColumn: mine_region
+
+		annotation SummarizationSetBy = Automatic
+
+	column mine_guid
+		dataType: string
+		lineageTag: 30e33166-06c0-446c-9dcf-0ada1c4eb540
+		summarizeBy: none
+		sourceColumn: mine_guid
+
+		annotation SummarizationSetBy = Automatic
+
+	column mine_location_description
+		dataType: string
+		lineageTag: d68eebb9-423b-4e76-8da2-7993d63af56f
+		summarizeBy: none
+		sourceColumn: mine_location_description
+
+		annotation SummarizationSetBy = Automatic
+
+	column mine_note
+		dataType: string
+		lineageTag: bc334277-7fba-4761-a076-067e4ca591c2
+		summarizeBy: none
+		sourceColumn: mine_note
+
+		annotation SummarizationSetBy = Automatic
+
+	column mms_alias
+		dataType: string
+		lineageTag: 7feb1705-34b1-4490-87ed-2faa268319fe
+		summarizeBy: none
+		sourceColumn: mms_alias
+
+		annotation SummarizationSetBy = Automatic
+
+	column permit_no
+		dataType: string
+		lineageTag: 087ab58f-8203-499a-ae24-80243a06d80b
+		summarizeBy: none
+		sourceColumn: permit_no
+
+		annotation SummarizationSetBy = Automatic
+
+	column issue_date
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 250bf722-b7c0-4fdb-bedd-78f9eb8a92b9
+		summarizeBy: none
+		sourceColumn: issue_date
+
+		variation Variation
+			isDefault
+			relationship: ff63d4f4-4b9a-47b1-b3f2-4104b9c59feb
+			defaultHierarchy: LocalDateTable_97e69712-a23d-49a2-b06c-0754a4d8dffe.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column authorization_end_date
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 5d355513-0019-4a77-a24d-761d665a6ed6
+		summarizeBy: none
+		sourceColumn: authorization_end_date
+
+		variation Variation
+			isDefault
+			relationship: d5ff1c6c-6648-4693-885b-43fbde2b30c3
+			defaultHierarchy: LocalDateTable_9cde5af0-0be0-452d-8605-bc640a56fb7a.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column create_user
+		dataType: string
+		lineageTag: 1ea79921-19ca-4feb-addf-74230bdbfc21
+		summarizeBy: none
+		sourceColumn: create_user
+
+		annotation SummarizationSetBy = Automatic
+
+	column permit_amendment_type_code
+		dataType: string
+		lineageTag: 40a37dee-7611-4404-9215-53245ca67bde
+		summarizeBy: none
+		sourceColumn: permit_amendment_type_code
+
+		annotation SummarizationSetBy = Automatic
+
+	column description
+		dataType: string
+		lineageTag: 38c227bb-995c-41df-b962-a12fce35b168
+		summarizeBy: none
+		sourceColumn: description
+
+		annotation SummarizationSetBy = Automatic
+
+	column received_date
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 1a9b595a-8fa0-4180-8f28-098e8067382b
+		summarizeBy: none
+		sourceColumn: received_date
+
+		variation Variation
+			isDefault
+			relationship: 555cffeb-eef5-4d62-8dd6-ee65853e6f42
+			defaultHierarchy: LocalDateTable_d1542773-1c47-4186-bc3e-04028f6e5b77.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column update_timestamp
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: a9ec439e-d9f1-495b-9457-ff50a3b34e2c
+		summarizeBy: none
+		sourceColumn: update_timestamp
+
+		variation Variation
+			isDefault
+			relationship: b0ed6811-d390-4625-881f-788536b7c866
+			defaultHierarchy: LocalDateTable_bc7ce262-b694-4ae8-bae5-572cf16da26e.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column update_user
+		dataType: string
+		lineageTag: 205fa343-527d-442d-813e-cf139ddf3521
+		summarizeBy: none
+		sourceColumn: update_user
+
+		annotation SummarizationSetBy = Automatic
+
+	column liability_adjustment
+		dataType: double
+		lineageTag: d58909ac-eb8a-4e39-8704-678119ae9bcd
+		summarizeBy: sum
+		sourceColumn: liability_adjustment
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column issuing_inspector_title
+		dataType: string
+		lineageTag: f280b809-8227-41e9-9e28-2349146b4369
+		summarizeBy: none
+		sourceColumn: issuing_inspector_title
+
+		annotation SummarizationSetBy = Automatic
+
+	column regional_office
+		dataType: string
+		lineageTag: 590d3866-bd8a-4ae1-a789-07b401d0ca1f
+		summarizeBy: none
+		sourceColumn: regional_office
+
+		annotation SummarizationSetBy = Automatic
+
+	column security_received_date
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: e40240c0-30ec-4b2c-bd07-eebf8a3f5129
+		summarizeBy: none
+		sourceColumn: security_received_date
+
+		variation Variation
+			isDefault
+			relationship: 924d8b96-71bb-4f0e-ac39-e127f0809d59
+			defaultHierarchy: LocalDateTable_f536b3b7-a2e8-4c25-a6f5-21b657d9815d.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column security_not_required
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: a46a0223-39e6-4047-ad3f-ea6eda4c7309
+		summarizeBy: none
+		sourceColumn: security_not_required
+
+		annotation SummarizationSetBy = Automatic
+
+	column deleted_ind
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 5c52c08e-3120-4673-9f08-30bdfb59a6fe
+		summarizeBy: none
+		sourceColumn: deleted_ind
+
+		annotation SummarizationSetBy = Automatic
+
+	column security_not_required_reason
+		dataType: string
+		lineageTag: 7c5c9fe7-e86f-4acc-ba48-a132e0ce88c9
+		summarizeBy: none
+		sourceColumn: security_not_required_reason
+
+		annotation SummarizationSetBy = Automatic
+
+	column permit_conditions_last_updated_by
+		dataType: string
+		lineageTag: 098c3791-ec07-40a4-9328-d0e798a33f8c
+		summarizeBy: none
+		sourceColumn: permit_conditions_last_updated_by
+
+		annotation SummarizationSetBy = Automatic
+
+	column permit_conditions_last_updated_date
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 06c5601b-5cbd-4f20-9b22-cadb43df3dfa
+		summarizeBy: none
+		sourceColumn: permit_conditions_last_updated_date
+
+		variation Variation
+			isDefault
+			relationship: 8e7610df-48c4-4140-9c11-b0507cbc2fb6
+			defaultHierarchy: LocalDateTable_25c32845-4320-450b-8483-5f5529939397.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'pulse reports-c1647f42-ac03-446f-a237-b16d7d40857d' = m
+		mode: import
+		queryGroup: Facts
+		source =
+				let
+				    Source = Value.NativeQuery(PostgreSQL.Database("mds-reporting-pg13-live.postgres.database.azure.com", "mds", [CreateNavigationProperties=false]), "select #(lf) p.permit_no#(lf),pamd.issue_date ,pamd.authorization_end_date ,pamd.create_user ,pamd.permit_amendment_type_code ,pamd.description ,pamd.received_date ,pamd.update_timestamp ,pamd.update_user ,pamd.liability_adjustment ,pamd.issuing_inspector_title ,pamd.regional_office ,pamd.security_received_date ,pamd.security_not_required ,pamd.deleted_ind ,pamd.security_not_required_reason ,pamd.permit_conditions_last_updated_by ,pamd.permit_conditions_last_updated_date#(lf),m.mine_no,m.mine_name,/*m.create_user, m.deleted_ind,*/m.exemption_fee_status_code,m.exemption_fee_status_note,/*m.geom,*/m.latitude,m.legacy_mms_mine_status,m.longitude,m.mine_region,m.mine_guid,m.mine_location_description,m.mine_note,m.mms_alias#(lf)from mine m#(lf)left join permit_amendment pamd on pamd.mine_guid = m.mine_guid#(lf)left join permit p on p.permit_id = pamd.permit_id ", null, [EnableFolding=false])
+				in
+				    Source
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

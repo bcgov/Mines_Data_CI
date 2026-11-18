@@ -1,0 +1,107 @@
+model Model
+	culture: en-CA
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: en-US
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+queryGroup Dimentions
+
+	annotation PBI_QueryGroupOrder = 0
+
+queryGroup Facts
+
+	annotation PBI_QueryGroupOrder = 1
+
+queryGroup Target
+
+	annotation PBI_QueryGroupOrder = 2
+
+annotation PBIDesktopVersion = 2.111.590.0 (22.11)
+
+annotation PBI_QueryOrder = ["Processing Dates","_DATE","Process_Stage_Sort-old","In Progress Appication Target-old","Turnaround Target-old","NoW Applications","NoW_Application_Identity - backup","Party","NoW Application Delay","pulse reports","NoW Appointment","NoW Files","NoW All","tblParty_Mine","MMS_NoW","Permit_Amendment","Measures_Table","NoW_Application_Document","Dim Region Code","NoW_Application_Identity","Mines","NoW Type","NoW Application Delay - NEW (2)","NoW Applications NEW","Dim App Status","Process_Stage_Sort","In Progress Appication Target","Turnaround Target"]
+
+annotation __PBI_TimeIntelligenceEnabled = 1
+
+ref table 'NoW Applications'
+ref table Mines
+ref table 'Processing Dates'
+ref table Party
+ref table DateTableTemplate_deee4b59-64ae-4527-9df9-9b1be65e6928
+ref table 'NoW Application Delay'
+ref table 'NoW Appointment'
+ref table 'NoW Files'
+ref table 'NoW All'
+ref table Calendar
+ref table tblParty_Mine
+ref table NoW_Application_Identity
+ref table MMS_NoW
+ref table LocalDateTable_dba9ccd7-a99a-4cb5-b533-3ed64058a953
+ref table LocalDateTable_6c750b74-3abd-4350-a134-610874d6c3fc
+ref table LocalDateTable_7522ab9f-a7e6-41b7-a979-b4cf3ce38512
+ref table LocalDateTable_0b81cf1e-c031-4422-ad4f-32ba0989398d
+ref table LocalDateTable_2de03d32-c587-4c18-8369-44040e034d42
+ref table LocalDateTable_0d2d4a04-4dfa-4779-afeb-26ff1fac8471
+ref table LocalDateTable_7760264b-86e9-48ec-a099-f258ee67436d
+ref table LocalDateTable_f849eac9-b675-4fa2-a7b3-da26619e80ee
+ref table LocalDateTable_1720b231-8631-4a23-ab6a-3a903e478205
+ref table LocalDateTable_7d90f966-d3e0-4b7f-a9cc-a9d5355dec1e
+ref table LocalDateTable_3d54e70e-4d6d-40b5-8d2b-2987d7fdbe52
+ref table LocalDateTable_ecac3da0-f896-4aab-9cd1-6e76cdfc12f7
+ref table LocalDateTable_bcb38f5c-fa65-4bbd-a2b1-e31e7b473a44
+ref table LocalDateTable_8c57c71d-49a3-491e-a97c-5808aeae0b8e
+ref table LocalDateTable_b520e33a-9c6c-4efb-a3ad-0a4a29b54812
+ref table LocalDateTable_bacaed9c-9fb8-4924-99e8-e9077978090c
+ref table LocalDateTable_3d2e74fb-7df7-41ac-a731-53d3767455bd
+ref table LocalDateTable_92982500-d915-4a92-8497-6c4f88076059
+ref table LocalDateTable_33bf7624-13e9-4d48-86f0-1ac6c67ffbe3
+ref table LocalDateTable_1a8c569b-5879-400e-ac46-64c4e7d4990c
+ref table LocalDateTable_8d2cf8d0-b03a-4f59-b23f-f8986d1820f3
+ref table LocalDateTable_b1910fbd-db7f-4e7c-8c71-a4e1dff47072
+ref table LocalDateTable_b06abefd-505f-460f-889b-45495d5c9db6
+ref table Permit_Amendment
+ref table LocalDateTable_d97659b3-6301-4bf6-b54f-aef0c9f85aeb
+ref table LocalDateTable_fa88438a-4e2f-4702-9ebc-1b51d88cc585
+ref table LocalDateTable_f0909e9e-f174-4cc2-9617-d2bb381df869
+ref table LocalDateTable_7a37ce68-95ab-4faa-b809-08fc579b757b
+ref table LocalDateTable_975035e4-8314-4dbb-911f-d666b953c36b
+ref table SubmitDates
+ref table LocalDateTable_993167da-ed6b-46bf-9010-947671a1192f
+ref table Process_Stage_Sort-old
+ref table Measures_Table
+ref table 'NoW Type'
+ref table NoW_Application_Document
+ref table 'Dim Region Code'
+ref table 'pulse reports'
+ref table LocalDateTable_97e69712-a23d-49a2-b06c-0754a4d8dffe
+ref table LocalDateTable_9cde5af0-0be0-452d-8605-bc640a56fb7a
+ref table LocalDateTable_d1542773-1c47-4186-bc3e-04028f6e5b77
+ref table LocalDateTable_bc7ce262-b694-4ae8-bae5-572cf16da26e
+ref table LocalDateTable_f536b3b7-a2e8-4c25-a6f5-21b657d9815d
+ref table LocalDateTable_25c32845-4320-450b-8483-5f5529939397
+ref table LocalDateTable_c45b2906-cd79-4641-bc2f-c30c2bc60d45
+ref table LocalDateTable_bb07b1de-dc10-4f8e-9e95-5ca7198c7ac5
+ref table 'In Progress Appication Target-old'
+ref table 'NoW Applications NEW'
+ref table LocalDateTable_564c03c3-3b9e-4615-8eaf-3f9bc6615959
+ref table 'Dim App Status'
+ref table 'Turnaround Target-old'
+ref table LocalDateTable_69b95516-bf40-405d-a3c9-d10d3f4e7ca7
+ref table LocalDateTable_5e78fd4b-66a3-42d3-bf2e-e5ee969e25b0
+ref table LocalDateTable_8016d0d6-94c5-4ca7-a373-4b142d3a26a3
+ref table _DATE
+ref table LocalDateTable_51068980-3220-441f-8d0c-2cfdb79f9888
+ref table LocalDateTable_9e5c5575-adfe-4e16-b3fd-077731613824
+ref table LocalDateTable_5e71e8fc-9c9d-442e-8a55-e3072fc128e2
+ref table LocalDateTable_0123daff-0186-4f8d-93b9-23fc46cfba21
+ref table LocalDateTable_7f4e34fb-44c7-4390-b31b-0afc2d1b8efb
+ref table Process_Stage_Sort
+ref table 'In Progress Appication Target'
+ref table 'Turnaround Target'
+
+ref role NE
+ref role NW
+
+ref cultureInfo en-CA
+

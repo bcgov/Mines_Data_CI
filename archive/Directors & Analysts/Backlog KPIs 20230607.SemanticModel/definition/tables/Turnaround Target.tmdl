@@ -1,0 +1,54 @@
+table 'Turnaround Target'
+	lineageTag: 29575d9c-3ca3-4723-b6c5-2127d324d4ba
+
+	column Year
+		dataType: int64
+		formatString: 0
+		lineageTag: 4d7f5fb0-9a2a-476e-9618-f17abe5dc46d
+		summarizeBy: sum
+		sourceColumn: Year
+
+		annotation SummarizationSetBy = Automatic
+
+	column Target
+		dataType: int64
+		formatString: 0
+		lineageTag: 3334ac30-2c9e-4b9e-ada4-9ae10c6c6849
+		summarizeBy: sum
+		sourceColumn: Target
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'App Type'
+		dataType: string
+		lineageTag: 56d267a3-470a-4185-ae17-bdec4466cbd5
+		summarizeBy: none
+		sourceColumn: App Type
+
+		annotation SummarizationSetBy = Automatic
+
+	column Region
+		dataType: string
+		lineageTag: 0c43b85b-eabe-485f-9f59-45b7f3dc289e
+		summarizeBy: none
+		sourceColumn: Region
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'Turnaround Target-f6017815-717f-4de3-b546-80df23294ad9' = m
+		mode: import
+		queryGroup: Target
+		source =
+				let
+				    Source = Value.NativeQuery(PostgreSQL.Database("mds-reporting-pg13-live.postgres.database.azure.com", "mds"), "SELECT '2022' date_year, '160' target, 'QCA' app_type, 'NE' region#(lf)union#(lf)SELECT '2022', '160', 'QCA', 'NW'#(lf)union#(lf)SELECT '2022', '160', 'QCA', 'SC'#(lf)union#(lf)SELECT '2022', '160', 'QCA', 'SE'#(lf)union#(lf)SELECT '2022', '160', 'QCA', 'SW'#(lf)union#(lf)SELECT '2022', '160', 'COL', 'NE'#(lf)union#(lf)SELECT '2022', '160', 'COL', 'NW'#(lf)union#(lf)SELECT '2022', '160', 'COL', 'SC'#(lf)union#(lf)SELECT '2022', '160', 'COL', 'SE'#(lf)union#(lf)SELECT '2022', '160', 'COL', 'SW'#(lf)union#(lf)SELECT '2022', '160', 'PLA', 'NE'#(lf)union#(lf)SELECT '2022', '160', 'PLA', 'NW'#(lf)union#(lf)SELECT '2022', '160', 'PLA', 'SC'#(lf)union#(lf)SELECT '2022', '160', 'PLA', 'SE'#(lf)union#(lf)SELECT '2022', '160', 'PLA', 'SW'#(lf)union#(lf)SELECT '2022', '160', 'MIN', 'NE'#(lf)union#(lf)SELECT '2022', '160', 'MIN', 'NW'#(lf)union#(lf)SELECT '2022', '160', 'MIN', 'SC'#(lf)union#(lf)SELECT '2022', '160', 'MIN', 'SE'#(lf)union#(lf)SELECT '2022', '160', 'MIN', 'SW'#(lf)union#(lf)SELECT '2022', '160', 'SAG', 'NE'#(lf)union#(lf)SELECT '2022', '160', 'SAG', 'NW'#(lf)union#(lf)SELECT '2022', '160', 'SAG', 'SC'#(lf)union#(lf)SELECT '2022', '160', 'SAG', 'SE'#(lf)union#(lf)SELECT '2022', '160', 'SAG', 'SW'#(lf)union#(lf)SELECT '2022', '160', 'QIM', 'NE'#(lf)union#(lf)SELECT '2022', '160', 'QIM', 'NW'#(lf)union#(lf)SELECT '2022', '160', 'QIM', 'SC'#(lf)union#(lf)SELECT '2022', '160', 'QIM', 'SE'#(lf)union#(lf)SELECT '2022', '160', 'QIM', 'SW'#(lf)union#(lf)SELECT '2023', '150', 'QCA', 'NE'#(lf)union#(lf)SELECT '2023', '150', 'QCA', 'NW'#(lf)union#(lf)SELECT '2023', '150', 'QCA', 'SC'#(lf)union#(lf)SELECT '2023', '150', 'QCA', 'SE'#(lf)union#(lf)SELECT '2023', '150', 'QCA', 'SW'#(lf)union#(lf)SELECT '2023', '150', 'COL', 'NE'#(lf)union#(lf)SELECT '2023', '150', 'COL', 'NW'#(lf)union#(lf)SELECT '2023', '150', 'COL', 'SC'#(lf)union#(lf)SELECT '2023', '150', 'COL', 'SE'#(lf)union#(lf)SELECT '2023', '150', 'COL', 'SW'#(lf)union#(lf)SELECT '2023', '150', 'PLA', 'NE'#(lf)union#(lf)SELECT '2023', '150', 'PLA', 'NW'#(lf)union#(lf)SELECT '2023', '150', 'PLA', 'SC'#(lf)union#(lf)SELECT '2023', '150', 'PLA', 'SE'#(lf)union#(lf)SELECT '2023', '150', 'PLA', 'SW'#(lf)union#(lf)SELECT '2023', '150', 'MIN', 'NE'#(lf)union#(lf)SELECT '2023', '150', 'MIN', 'NW'#(lf)union#(lf)SELECT '2023', '150', 'MIN', 'SC'#(lf)union#(lf)SELECT '2023', '150', 'MIN', 'SE'#(lf)union#(lf)SELECT '2023', '150', 'MIN', 'SW'#(lf)union#(lf)SELECT '2023', '150', 'SAG', 'NE'#(lf)union#(lf)SELECT '2023', '150', 'SAG', 'NW'#(lf)union#(lf)SELECT '2023', '150', 'SAG', 'SC'#(lf)union#(lf)SELECT '2023', '150', 'SAG', 'SE'#(lf)union#(lf)SELECT '2023', '150', 'SAG', 'SW'#(lf)union#(lf)SELECT '2023', '150', 'QIM', 'NE'#(lf)union#(lf)SELECT '2023', '150', 'QIM', 'NW'#(lf)union#(lf)SELECT '2023', '150', 'QIM', 'SC'#(lf)union#(lf)SELECT '2023', '150', 'QIM', 'SE'#(lf)union#(lf)SELECT '2023', '150', 'QIM', 'SW'#(lf)union#(lf)SELECT '2024', '140', 'QCA', 'NE'#(lf)union#(lf)SELECT '2024', '140', 'QCA', 'NW'#(lf)union#(lf)SELECT '2024', '140', 'QCA', 'SC'#(lf)union#(lf)SELECT '2024', '140', 'QCA', 'SE'#(lf)union#(lf)SELECT '2024', '140', 'QCA', 'SW'#(lf)union#(lf)SELECT '2024', '140', 'COL', 'NE'#(lf)union#(lf)SELECT '2024', '140', 'COL', 'NW'#(lf)union#(lf)SELECT '2024', '140', 'COL', 'SC'#(lf)union#(lf)SELECT '2024', '140', 'COL', 'SE'#(lf)union#(lf)SELECT '2024', '140', 'COL', 'SW'#(lf)union#(lf)SELECT '2024', '140', 'PLA', 'NE'#(lf)union#(lf)SELECT '2024', '140', 'PLA', 'NW'#(lf)union#(lf)SELECT '2024', '140', 'PLA', 'SC'#(lf)union#(lf)SELECT '2024', '140', 'PLA', 'SE'#(lf)union#(lf)SELECT '2024', '140', 'PLA', 'SW'#(lf)union#(lf)SELECT '2024', '140', 'MIN', 'NE'#(lf)union#(lf)SELECT '2024', '140', 'MIN', 'NW'#(lf)union#(lf)SELECT '2024', '140', 'MIN', 'SC'#(lf)union#(lf)SELECT '2024', '140', 'MIN', 'SE'#(lf)union#(lf)SELECT '2024', '140', 'MIN', 'SW'#(lf)union#(lf)SELECT '2024', '140', 'SAG', 'NE'#(lf)union#(lf)SELECT '2024', '140', 'SAG', 'NW'#(lf)union#(lf)SELECT '2024', '140', 'SAG', 'SC'#(lf)union#(lf)SELECT '2024', '140', 'SAG', 'SE'#(lf)union#(lf)SELECT '2024', '140', 'SAG', 'SW'#(lf)union#(lf)SELECT '2024', '140', 'QIM', 'NE'#(lf)union#(lf)SELECT '2024', '140', 'QIM', 'NW'#(lf)union#(lf)SELECT '2024', '140', 'QIM', 'SC'#(lf)union#(lf)SELECT '2024', '140', 'QIM', 'SE'#(lf)union#(lf)SELECT '2024', '140', 'QIM', 'SW' ", null, [EnableFolding=false]),
+				    #"Changed Type" = Table.TransformColumnTypes(Source,{{"date_year", Int64.Type}, {"target", Int64.Type}}),
+				    #"Renamed Columns" = Table.RenameColumns(#"Changed Type",{{"date_year", "Year"}, {"target", "Target"}, {"app_type", "App Type"}, {"region", "Region"}}),
+				    #"Filtered Rows" = Table.SelectRows(#"Renamed Columns", each true),
+				    #"Sorted Rows" = Table.Sort(#"Filtered Rows",{{"Year", Order.Ascending}, {"App Type", Order.Ascending}, {"Region", Order.Ascending}})
+				in
+				    #"Sorted Rows"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

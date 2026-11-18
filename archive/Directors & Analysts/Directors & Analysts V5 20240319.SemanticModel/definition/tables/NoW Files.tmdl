@@ -1,0 +1,42 @@
+table 'NoW Files'
+	lineageTag: 19b8fb99-33b7-4545-b116-a70c47254cbe
+
+	column now_application_id
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 2769234c-4958-4e72-b8df-244e6d8df2fa
+		summarizeBy: none
+		sourceColumn: now_application_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column nowfiles
+		dataType: string
+		sourceProviderType: nvarchar(-1)
+		lineageTag: f39a2cb1-15fe-4c72-ab71-705ae79f3da0
+		summarizeBy: none
+		sourceColumn: nowfiles
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'File Count'
+		dataType: int64
+		formatString: 0
+		sourceProviderType: bigint
+		lineageTag: 4e2cce8a-a617-45d3-843f-2afa50671f07
+		summarizeBy: sum
+		sourceColumn: File Count
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'NoW Files-10e024a7-e771-416e-8a8e-02719e46f78d' = m
+		mode: import
+		source =
+				let
+				    Source = Value.NativeQuery(PostgreSQL.Database("mds-reporting-pg13-live.postgres.database.azure.com", "mds"), "select na.now_application_id,string_agg(filename,', ') as NoWFiles, case when  string_agg(filename,', ') is null then 0 else count(*)  end as ""File Count""#(lf)#(tab)from public.now_application na #(lf)#(tab)left join  public.now_application_document_identity_xref d #(lf)#(tab)on na.now_application_id = d.now_application_id#(lf)#(tab)left join public.now_application_identity nai on nai.now_application_id =na.now_application_id #(lf)#(tab)group by na.now_application_id#(lf)#(tab)order by na.now_application_id asc ", null, [EnableFolding=false])
+				in
+				    Source
+
+	annotation PBI_ResultType = Table
+

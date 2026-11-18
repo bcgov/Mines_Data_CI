@@ -1,0 +1,7 @@
+role NE
+	modelPermission: read
+
+	tablePermission 'Dim Region Code' = [mine_region_code] = "NE"
+
+	annotation PBI_Id = 399c846a975348109d9cd54dbd31dab2
+

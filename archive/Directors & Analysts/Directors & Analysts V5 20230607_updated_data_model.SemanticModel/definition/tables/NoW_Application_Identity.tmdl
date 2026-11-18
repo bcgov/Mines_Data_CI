@@ -1,0 +1,102 @@
+table NoW_Application_Identity
+	lineageTag: ca1b306c-9bf7-4b31-8025-27ac5892f33d
+
+	measure ColorKPI_Appcount =
+			
+			SWITCH(TRUE(),
+			[Total Count]<[Count Last Year],"#e3a82b",
+			[Total Count]>[Count Last Year],"#234075",
+			[Total Count]=[Count Last Year],"#234075"
+			)
+		lineageTag: 98abbcb5-74c0-4b80-8fc6-12419f3822fa
+
+	measure 'KPI Green' = if([Total Count]>[Count Last Year],1,0)
+		formatString: 0
+		lineageTag: 167bd843-30d6-4be7-8353-1e1ce795ed94
+
+	measure 'KPI Red' = if([Total Count]<[Count Last Year],1,0)
+		formatString: 0
+		lineageTag: 3084b85d-a4fd-447b-b851-98597fd068c5
+
+	measure 'total app count' = CALCULATE(DISTINCTCOUNT(NoW_Application_Identity[now_application_guid]),all(Mines[Mine Region))))
+		lineageTag: fb9d30c9-54a5-4441-8ad4-5ed91d52c40b
+
+	column now_application_guid
+		dataType: string
+		sourceProviderType: nchar
+		lineageTag: 5992dd29-4e3b-4528-9a4b-80b1ab813028
+		summarizeBy: none
+		sourceColumn: now_application_guid
+
+		annotation SummarizationSetBy = Automatic
+
+	column now_application_id
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: a3d62525-8bbf-4c77-b321-aa9476b223b0
+		summarizeBy: sum
+		sourceColumn: now_application_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column messageid
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: c6b8d34c-e6b6-43d8-8171-a4e742f107da
+		summarizeBy: sum
+		sourceColumn: messageid
+
+		annotation SummarizationSetBy = Automatic
+
+	column mms_cid
+		dataType: int64
+		formatString: 0
+		sourceProviderType: bigint
+		lineageTag: d846fcc2-ef59-4cd2-850d-450eee515090
+		summarizeBy: sum
+		sourceColumn: mms_cid
+
+		annotation SummarizationSetBy = Automatic
+
+	column mine_guid
+		dataType: string
+		sourceProviderType: nchar
+		lineageTag: ddf018bc-8fec-4b65-8ace-68910ded69e3
+		summarizeBy: none
+		sourceColumn: mine_guid
+
+		annotation SummarizationSetBy = Automatic
+
+	column now_number
+		dataType: string
+		sourceProviderType: nvarchar(-1)
+		lineageTag: 8d14c3c0-9c23-4d87-84d2-d5d384fd596c
+		summarizeBy: none
+		sourceColumn: now_number
+
+		annotation SummarizationSetBy = Automatic
+
+	column application_type_code
+		dataType: string
+		sourceProviderType: nvarchar(3)
+		lineageTag: aed17a59-5259-456e-bd59-909467d80057
+		summarizeBy: none
+		sourceColumn: application_type_code
+
+		annotation SummarizationSetBy = Automatic
+
+	partition NoW_Application_Identity-b9221ccf-9dd3-4a95-b9ed-a97c89110286 = m
+		mode: import
+		source =
+				let
+				    Source = Value.NativeQuery(PostgreSQL.Database("mds-reporting-pg13-live.postgres.database.azure.com", "mds"), "select now_application_guid ,now_application_id,messageid,mms_cid,mine_guid,now_number,application_type_code #(lf)#(tab)from now_application_identity nai --where nai.mms_cid in (select mms_cid from mms_now_submissions.application)", null, [EnableFolding=false]),
+				    #"Filtered Rows" = Table.SelectRows(Source, each [mms_cid] <> 101085202002 and [mms_cid] <> 200174199303 and [mms_cid] <> 300043198201 and [mms_cid] <> 300177199201 and [mms_cid] <> 400443200201 and [mms_cid] <> 400449199301 and [mms_cid] <> 500009199001 and [mms_cid] <> 500016199001 and [mms_cid] <> 600078202001 and [mms_cid] <> 800210201901 and [mms_cid] <> 1000525199201 and [mms_cid] <> 1000525199402 and [mms_cid] <> 1000629199101 and [mms_cid] <> 1000808199401 and [mms_cid] <> 1100669199102 and [mms_cid] <> 1100829199101 and [mms_cid] <> 1100837199101 and [mms_cid] <> 1101045199301 and [mms_cid] <> 1101084199201 and [mms_cid] <> 1101208199202 and [mms_cid] <> 1101462199501 and [mms_cid] <> 1101645199501 and [mms_cid] <> 1101645199701 and [mms_cid] <> 1101662199501 and [mms_cid] <> 1102121200001 and [mms_cid] <> 1500288198801 and [mms_cid] <> 1500297199201 and [mms_cid] <> 1610766202002 and [mms_cid] <> 1630181201901 and [mms_cid] <> 1640537201602 and [mms_cid] <> 1650030201601 and [mms_cid] <> 1650040201801 and [mms_cid] <> 1650092200101 and [mms_cid] <> 1650131201601 and [mms_cid] <> 1650131201701 and [mms_cid] <> 1650131201801 and [mms_cid] <> 1650131201802 and [mms_cid] <> 1650132201501 and [mms_cid] <> 1650149201901 and [mms_cid] <> 1650162202001 and [mms_cid] <> 1650183200902 and [mms_cid] <> 1650306201901 and [mms_cid] <> 1650746201601 and [mms_cid] <> 1650746201901 and [mms_cid] <> 1651063202001)
+				in
+				    #"Filtered Rows"
+
+	annotation PBI_ResultType = Table
+
+	annotation PBI_NavigationStepName = Navigation
+

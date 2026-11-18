@@ -1,0 +1,52 @@
+table _DATE
+	lineageTag: 298cbc9d-35ed-4d91-bc40-8fac25c59d8c
+
+	column CurrentDate
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: eab2042e-f0e2-4236-890e-9349728b0f76
+		summarizeBy: none
+		sourceColumn: CurrentDate
+
+		variation Variation
+			isDefault
+			relationship: 4129cebc-c040-473f-a2ae-e15b492aa232
+			defaultHierarchy: LocalDateTable_2990ba7c-0f64-4248-8bd1-fe31f18b60c0.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column LastMonth
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 054a4147-01aa-4138-8892-574be49c896d
+		summarizeBy: none
+		sourceColumn: LastMonth
+
+		variation Variation
+			isDefault
+			relationship: 9fa5d10f-adf1-49c1-923c-655bb36d3655
+			defaultHierarchy: LocalDateTable_3b370c59-8ec0-4ce7-a58e-f695850cfe08.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	partition _DATE = m
+		mode: import
+		source =
+				let
+				    Source = DateTime.LocalNow(),
+				    #"Extracted Date" = Date.From(Source),
+				    #"Converted to Table" = #table(1, {{#"Extracted Date"}}),
+				    #"Renamed Columns" = Table.RenameColumns(#"Converted to Table",{{"Column1", "CurrentDate"}}),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Renamed Columns",{{"CurrentDate", type date}}),
+				    #"Added Custom" = Table.AddColumn(#"Changed Type", "LastMonth", each Date.AddMonths([CurrentDate], -1), type date)
+				in
+				    #"Added Custom"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

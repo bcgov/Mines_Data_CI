@@ -1,0 +1,32 @@
+table 'Dim Region Code'
+	lineageTag: 62f2e2c3-76e2-449a-b828-0d62cd94c340
+
+	column mine_region_code
+		dataType: string
+		lineageTag: 4c472284-8b01-4a43-8413-6ff0d6fc1579
+		summarizeBy: none
+		sourceColumn: mine_region_code
+
+		annotation SummarizationSetBy = Automatic
+
+	column description
+		dataType: string
+		lineageTag: babd25f5-608e-4e14-b25c-f045f3700a54
+		summarizeBy: none
+		sourceColumn: description
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'Dim Region Code-384895ad-0ae9-4349-ac34-debf338d8013' = m
+		mode: import
+		queryGroup: Dimentions
+		source =
+				let
+				    Source = Value.NativeQuery(PostgreSQL.Database("mds-reporting-pg13-live.postgres.database.azure.com", "mds", [CreateNavigationProperties=false]), "select mine_region_code, description from mine_region_code ", null, [EnableFolding=false])
+				in
+				    Source
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

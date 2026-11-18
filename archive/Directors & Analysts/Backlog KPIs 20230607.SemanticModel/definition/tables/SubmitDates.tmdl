@@ -1,0 +1,50 @@
+table SubmitDates
+	lineageTag: 1fb40f92-fd08-45bc-95b9-45ce782631cc
+
+	column Date
+		formatString: Short Date
+		lineageTag: 73d2b776-085e-479c-a3a3-eefae02f338d
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Date]
+
+		variation Variation
+			isDefault
+			relationship: 7f7f631b-1332-4aea-a604-c291891530b8
+			defaultHierarchy: LocalDateTable_993167da-ed6b-46bf-9010-947671a1192f.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+		annotation PBI_ChangedProperties = ["DataType"]
+
+	column Year = YEAR(SubmitDates[Date])
+		formatString: 0
+		lineageTag: 732e0ce2-c1b7-4e11-8c8c-28245bc056d3
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	column WeekStartDate = SubmitDates[Date]  - WEEKDAY(SubmitDates[Date], 2) +1
+		formatString: Long Date
+		lineageTag: cb265388-c2ec-4f57-ba2a-8d8fe1019168
+		summarizeBy: none
+
+		variation Variation
+			isDefault
+			relationship: 9c68710a-5951-426f-ad79-a43e1efbc540
+			defaultHierarchy: LocalDateTable_69b95516-bf40-405d-a3c9-d10d3f4e7ca7.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+		annotation PBI_ChangedProperties = ["DataType"]
+
+	partition SubmitDates-ce779d85-2b42-4b72-ad29-57f964aa85c8 = calculated
+		mode: import
+		source = CALENDAR(MIN(MMS_NoW[submitteddate]),MAX('NoW Applications'[submitted_date]))
+
+	annotation PBI_Id = 251048afe84c4e22a4d42be599648069
+
