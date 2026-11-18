@@ -1,0 +1,146 @@
+table 'NoW Applications NEW'
+	lineageTag: 6e5a4578-bddf-4877-8f3e-d7c6c9d47aa2
+
+	column now_number
+		dataType: string
+		lineageTag: bce455f7-b6ed-4678-968b-46c5a0fee6f0
+		summarizeBy: none
+		sourceColumn: now_number
+
+		annotation SummarizationSetBy = Automatic
+
+	column now_application_guid
+		dataType: string
+		lineageTag: 0ea3cc39-e90c-45de-841d-eff2cf481033
+		summarizeBy: none
+		sourceColumn: now_application_guid
+
+		annotation SummarizationSetBy = Automatic
+
+	column application_type
+		dataType: string
+		lineageTag: b8aab4d5-d1d5-417f-81c3-48c8131466c7
+		summarizeBy: none
+		sourceColumn: application_type
+
+		annotation SummarizationSetBy = Automatic
+
+	column submitted_date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 3eb13db8-d7fb-42f7-beb7-23edaea0e27a
+		summarizeBy: none
+		sourceColumn: submitted_date
+
+		variation Variation
+			isDefault
+			relationship: e7984d59-1a10-46e6-8f65-f99036acb258
+			defaultHierarchy: LocalDateTable_19d9d737-7b20-4cbf-a86f-7298f528bc9b.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column received_date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 73769bfd-18bd-4f6f-bace-d5a44b9e26d3
+		summarizeBy: none
+		sourceColumn: received_date
+
+		variation Variation
+			isDefault
+			relationship: 576a0ef1-7299-4eeb-bd7f-8fa94030ff5f
+			defaultHierarchy: LocalDateTable_f309dbef-c889-4b1d-8809-e13d5f55e45e.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column work_plan
+		dataType: string
+		lineageTag: fea42dd3-0137-4ca4-94a1-98196e48c798
+		summarizeBy: none
+		sourceColumn: work_plan
+
+		annotation SummarizationSetBy = Automatic
+
+	column inspector
+		dataType: string
+		lineageTag: 9a786b0b-420e-44ff-9a41-d2e18b7ef36f
+		summarizeBy: none
+		sourceColumn: inspector
+
+		annotation SummarizationSetBy = Automatic
+
+	column now_application_status_code
+		dataType: string
+		lineageTag: 69afd500-7295-4f0a-b403-47035f1469e3
+		summarizeBy: none
+		sourceColumn: now_application_status_code
+
+		annotation SummarizationSetBy = Automatic
+
+	column status_updated_date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 5b97466f-5de5-4f8d-a114-5a4c427e84ea
+		summarizeBy: none
+		sourceColumn: status_updated_date
+
+		variation Variation
+			isDefault
+			relationship: d7d8ba7f-9a0f-43d9-b2fb-4742dfe0f83b
+			defaultHierarchy: LocalDateTable_4e449f4f-4ef2-4678-893c-baa62ddf3530.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column status_reason
+		dataType: string
+		lineageTag: 2b7b14c5-4bee-4c43-ab7a-054db9015466
+		summarizeBy: none
+		sourceColumn: status_reason
+
+		annotation SummarizationSetBy = Automatic
+
+	column Turnaround = ```
+			
+			VAR DecisionMade = 'NoW Applications NEW'[now_application_status_code] in {"REJ", "NPR", "AIA", "WDN"} 
+			VAR EndDate = IF(DecisionMade, 'NoW Applications NEW'[status_updated_date], TODAY())
+			VAR RESULT = DATEDIFF('NoW Applications NEW'[submitted_date], EndDate, DAY)
+			RETURN RESULT
+			```
+		formatString: 0
+		lineageTag: ae703be3-cb6b-4f03-a7e9-68d19b29df49
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Turnaround Lastmonth' =
+			
+			VAR DecisionMade = 'NoW Applications NEW'[now_application_status_code] in {"REJ", "NPR", "AIA", "WDN"}
+			VAR LM = MAX(_DATE[LastMonth])
+			VAR EndDate = IF(DecisionMade && LM >= 'NoW Applications NEW'[status_updated_date], 'NoW Applications NEW'[status_updated_date], LM)
+			VAR RESULT = DATEDIFF('NoW Applications NEW'[submitted_date], EndDate, DAY)
+			RETURN RESULT
+		lineageTag: c94467d7-a59a-48c1-a799-008380f849dd
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'NoW Applications NEW' = m
+		mode: import
+		source =
+				let
+				    Source = Value.NativeQuery(PostgreSQL.Database("mds-reporting-pg13-live.postgres.database.azure.com", "mds"), "select naid.now_number, naid.now_application_guid#(lf), wt.description as application_type#(lf), na.submitted_date, na.received_date, na.work_plan#(lf), CONCAT(p.first_name, ' ', p.party_name) as inspector#(lf),na.now_application_status_code#(lf)--,apps.description as application_status#(lf), status_updated_date,status_reason#(lf)from now_application_identity naid#(lf)left join now_application na on na.now_application_id = naid.now_application_id#(lf)left join notice_of_work_type wt on wt.notice_of_work_type_code = na.notice_of_work_type_code#(lf)--left join now_application_status apps on apps.now_application_status_code = na.now_application_status_code#(lf)left join party p on p.party_guid = na.lead_inspector_party_guid ", null, [EnableFolding=false]),
+				    #"Changed Type" = Table.TransformColumnTypes(Source,{{"submitted_date", type date}, {"received_date", type date}, {"status_updated_date", type date}}),
+				    #"Filtered Rows" = Table.SelectRows(#"Changed Type", each ([now_application_status_code] <> null))
+				in
+				    #"Filtered Rows"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

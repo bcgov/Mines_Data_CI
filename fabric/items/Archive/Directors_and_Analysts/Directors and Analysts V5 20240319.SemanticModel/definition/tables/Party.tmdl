@@ -1,0 +1,69 @@
+table Party
+	lineageTag: 7171a8d4-3755-4b3d-8c39-a9bce60b3870
+
+	measure 'Selected Name' = SELECTEDVALUE(Party[permittee],"All")
+		displayFolder: Titles
+		lineageTag: d9d4af31-82e5-40b2-b4ee-1537085e1dc0
+
+	measure SupervisorReportTitle = COMBINEVALUES(" ",[Supervisor Name],"  ",[Selected Region])
+		lineageTag: 0719c038-19e4-40f2-88d8-843d38906faa
+
+	measure 'Selected Region' = SELECTEDVALUE('SupervisorRegion-old'[ mine_region_code])
+		lineageTag: 803bf8cf-bdee-41b4-9c13-561f64a76ecc
+
+	measure 'Supervisor Name' = SELECTEDVALUE('SupervisorRegion-old'[ full_name])
+		lineageTag: fbaa00e8-00c7-4c8d-9b57-90f93f7a71d9
+
+	column party_guid
+		dataType: string
+		sourceProviderType: nchar
+		lineageTag: ab7c9256-9aee-4047-9679-c89ad1d1b073
+		summarizeBy: none
+		sourceColumn: party_guid
+
+		annotation SummarizationSetBy = Automatic
+
+	column first_name
+		dataType: string
+		sourceProviderType: nvarchar(100)
+		lineageTag: 34fb8ddb-6112-4e2b-837a-c6f3f6381195
+		summarizeBy: none
+		sourceColumn: first_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column party_type_code
+		dataType: string
+		sourceProviderType: nvarchar(3)
+		lineageTag: ac8fab1b-cccb-491e-8bae-84f4ba707c6d
+		summarizeBy: none
+		sourceColumn: party_type_code
+
+		annotation SummarizationSetBy = Automatic
+
+	column party_name
+		dataType: string
+		lineageTag: e3c1e02c-d732-4cea-8f12-ace56740e898
+		summarizeBy: none
+		sourceColumn: party_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column permittee
+		dataType: string
+		lineageTag: 4a177990-661d-4499-b76c-d24f2c150aa5
+		summarizeBy: none
+		sourceColumn: permittee
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Party-212f2e14-a0d9-4bee-88d2-005d7f876aa2 = m
+		mode: import
+		source =
+				let
+				    Source = Value.NativeQuery(PostgreSQL.Database("mds-reporting-pg13-live.postgres.database.azure.com", "mds"), "select p.party_guid , p.first_name, p.party_name,concat_ws(' '::text, p.first_name, p.party_name) as ""permittee"",p.party_type_code from public.party p #(lf)#(tab)left join public.party_type_code ptc on p.party_type_code = ptc.party_type_code #(lf)#(tab)   ", null, [EnableFolding=false])
+				in
+				    Source
+
+	annotation PBI_ResultType = Table
+

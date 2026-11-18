@@ -1,0 +1,24 @@
+expression 'Errors in Processing Dates' =
+		let
+		Source = #"Processing Dates",
+		  #"Detected Type Mismatches" = let
+		    tableWithOnlyPrimitiveTypes = Table.SelectColumns(Source, Table.ColumnsOfType(Source, {type nullable number, type nullable text, type nullable logical, type nullable date, type nullable datetime, type nullable datetimezone, type nullable time, type nullable duration})),
+		    recordTypeFields = Type.RecordFields(Type.TableRow(Value.Type(tableWithOnlyPrimitiveTypes))),
+		    fieldNames = Record.FieldNames(recordTypeFields),
+		    fieldTypes = List.Transform(Record.ToList(recordTypeFields), each [Type]),
+		    pairs = List.Transform(List.Positions(fieldNames), (i) => {fieldNames{i}, (v) => if v = null or Value.Is(v, fieldTypes{i}) then v else error [Message = "The type of the value does not match the type of the column.", Detail = v], fieldTypes{i}})
+		in
+		    Table.TransformColumns(Source, pairs),
+		  #"Added Index" = Table.AddIndexColumn(#"Detected Type Mismatches", "Row Number" ,1),
+		  #"Kept Errors" = Table.SelectRowsWithErrors(#"Added Index", {"now_application_guid", "now_number", "rnum", "create_timestamp", "mine_name", "permittee", "type", "typeofapplication", "party_guid", "inspector", "status", "Submit Date", "in_progress_duration", "vfcbctomem", "techreview", "techreviewcomplete", "referral", "referralresponse", "referralcomplete", "consultationstart", "consultationcomplete", "publiccomment", "publiccommentcomplete", "draftpermit", "draftpermitcomplete", "consultationduration_num", "techreviewduration_num", "draftpermitduration_num", "Consultation_target", "Tech Review_status", "techreviewduration", "referralduration", "consultationduration", "publiccommentduration", "draftpermitduration", "Process_Stage", "techreviewdurationnum", "referraldurationnum", "draftpermitdurationnum", "publiccommentdurationnum"}),
+		  #"Reordered Columns" = Table.ReorderColumns(#"Kept Errors", {"Row Number", "now_application_guid", "now_number", "rnum", "create_timestamp", "mine_name", "permittee", "type", "typeofapplication", "party_guid", "inspector", "status", "Submit Date", "in_progress_duration", "vfcbctomem", "techreview", "techreviewcomplete", "referral", "referralresponse", "referralcomplete", "consultationstart", "consultationcomplete", "publiccomment", "publiccommentcomplete", "draftpermit", "draftpermitcomplete", "consultationduration_num", "techreviewduration_num", "draftpermitduration_num", "Consultation_target", "Tech Review_status", "techreviewduration", "referralduration", "consultationduration", "publiccommentduration", "draftpermitduration", "Process_Stage", "techreviewdurationnum", "referraldurationnum", "draftpermitdurationnum", "publiccommentdurationnum"}),
+		    now_application_guid = #"Reordered Columns"{0}[now_application_guid]
+		in
+		    now_application_guid
+	lineageTag: b13b8907-12ad-4793-b9b5-0c2fce20a233
+	queryGroup: 'Query Errors - 2023-06-07 11:46:26 AM'
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Exception
+
