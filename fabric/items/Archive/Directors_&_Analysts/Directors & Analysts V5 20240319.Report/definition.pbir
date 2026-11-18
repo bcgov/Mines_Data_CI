@@ -1,9 +1,0 @@
-{
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definitionProperties/2.0.0/schema.json",
-  "version": "4.0",
-  "datasetReference": {
-    "byConnection": {
-      "connectionString": "Data Source=\"powerbi://api.powerbi.com/v1.0/myorg/Directors & Analysts\";initial catalog=\"Directors & Analysts V5 20240319\";integrated security=ClaimsToken;semanticmodelid=553d1dc1-3122-4bfd-a69f-e35cbda6d9ac"
-    }
-  }
-}
