@@ -1,0 +1,41 @@
+table DimOrderStopStatus
+	lineageTag: e49fb819-99c9-4144-a69a-22a0c6073fad
+
+	column OrderStopStatus_Key
+		dataType: int64
+		formatString: 0
+		lineageTag: d0bed113-dbca-4522-9dd4-b6da40ba67ca
+		summarizeBy: none
+		sourceColumn: OrderStopStatus_Key
+
+		annotation SummarizationSetBy = Automatic
+
+	column StopStatus
+		dataType: string
+		lineageTag: c1dc18b2-12e1-4f41-9f43-569058495a54
+		summarizeBy: none
+		sourceColumn: StopStatus
+
+		annotation SummarizationSetBy = Automatic
+
+	column StopStatus_Hash
+		dataType: int64
+		formatString: 0
+		lineageTag: f1688ef7-65d4-4c57-bfba-a1e905eaad74
+		summarizeBy: none
+		sourceColumn: StopStatus_Hash
+
+		annotation SummarizationSetBy = Automatic
+
+	partition DimOrderStopStatus = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Databases("mdp-sql-server.database.windows.net"),
+				    #"MDP-DWH" = Source{[Name="MDP-DWH"]}[Data],
+				    dbo_DimOrderStopStatus = #"MDP-DWH"{[Schema="dbo",Item="DimOrderStopStatus"]}[Data]
+				in
+				    dbo_DimOrderStopStatus
+
+	annotation PBI_ResultType = Table
+

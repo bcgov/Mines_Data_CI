@@ -1,0 +1,287 @@
+table DimMineExt
+	lineageTag: b604c154-aaf5-4cbb-aa5a-ab4e4b3e3314
+
+	column MineExt_Key
+		dataType: int64
+		formatString: 0
+		lineageTag: 172fca45-a083-43f8-b772-b1941e0d6378
+		summarizeBy: none
+		sourceColumn: MineExt_Key
+
+		annotation SummarizationSetBy = Automatic
+
+	column MineGuid
+		dataType: string
+		lineageTag: be97e887-373a-4274-a75f-87423f6261e0
+		summarizeBy: none
+		sourceColumn: MineGuid
+
+		annotation SummarizationSetBy = Automatic
+
+	column MineName
+		dataType: string
+		lineageTag: 313ad1e0-226c-4dde-a211-84f9a2878469
+		summarizeBy: none
+		sourceColumn: MineName
+
+		annotation SummarizationSetBy = Automatic
+
+	column MineNumber
+		dataType: string
+		lineageTag: c4b15b2b-73f5-47a5-8196-6286a4343fc7
+		summarizeBy: none
+		sourceColumn: MineNumber
+
+		annotation SummarizationSetBy = Automatic
+
+	column MineLatitude
+		dataType: double
+		lineageTag: 097bbf0d-51ad-43c2-91d8-772a1742afbe
+		summarizeBy: sum
+		sourceColumn: MineLatitude
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column MineLongitude
+		dataType: double
+		lineageTag: 4acd8a17-1871-4686-82a1-99ab1741e8ea
+		summarizeBy: sum
+		sourceColumn: MineLongitude
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column GovernmentAgencyTypeCode
+		dataType: string
+		lineageTag: 583b5cb7-e91e-464c-aad0-439255e0088c
+		summarizeBy: none
+		sourceColumn: GovernmentAgencyTypeCode
+
+		annotation SummarizationSetBy = Automatic
+
+	column GovernmentAgencyTypeD
+		dataType: string
+		lineageTag: d2668b33-42fa-417a-998c-e989720667b5
+		summarizeBy: none
+		sourceColumn: GovernmentAgencyTypeD
+
+		annotation SummarizationSetBy = Automatic
+
+	column MineExemptionFeeStatusNote
+		dataType: string
+		lineageTag: d9b67653-09e2-406f-be01-d982fea62a7b
+		summarizeBy: none
+		sourceColumn: MineExemptionFeeStatusNote
+
+		annotation SummarizationSetBy = Automatic
+
+	column MineExemptionFeeStatusCode
+		dataType: string
+		lineageTag: 12285a4b-c792-4a14-a6c8-5a7777abc43f
+		summarizeBy: none
+		sourceColumn: MineExemptionFeeStatusCode
+
+		annotation SummarizationSetBy = Automatic
+
+	column MineExemptionFeeStatusD
+		dataType: string
+		lineageTag: 99a0d683-734e-4c31-8377-689d32840b6e
+		summarizeBy: none
+		sourceColumn: MineExemptionFeeStatusD
+
+		annotation SummarizationSetBy = Automatic
+
+	column OperationStatus
+		dataType: string
+		lineageTag: efaa9013-3f91-41f3-826e-8154e80afdbd
+		summarizeBy: none
+		sourceColumn: OperationStatus
+
+		annotation SummarizationSetBy = Automatic
+
+	column OperationStatusCode
+		dataType: string
+		lineageTag: 15402e6f-5386-4f4d-91fb-4a1c74bc1bc2
+		summarizeBy: none
+		sourceColumn: OperationStatusCode
+
+		annotation SummarizationSetBy = Automatic
+
+	column MineOperationStatusCode
+		dataType: string
+		lineageTag: 5d087518-2290-4bfe-ae0c-2689b94db9ff
+		summarizeBy: none
+		sourceColumn: MineOperationStatusCode
+
+		annotation SummarizationSetBy = Automatic
+
+	column MineOperationStatusReasonCode
+		dataType: string
+		lineageTag: 0688db13-6396-46f0-9f5d-4b2f915a87b6
+		summarizeBy: none
+		sourceColumn: MineOperationStatusReasonCode
+
+		annotation SummarizationSetBy = Automatic
+
+	column MineOperationStatusSubReasonCode
+		dataType: string
+		lineageTag: 6d8811b8-1d78-41ee-96cf-eece430c3b0c
+		summarizeBy: none
+		sourceColumn: MineOperationStatusSubReasonCode
+
+		annotation SummarizationSetBy = Automatic
+
+	column MineOperationStatusD
+		dataType: string
+		lineageTag: 0ce134ef-40e3-4546-a1f6-b15ea7c87a80
+		summarizeBy: none
+		sourceColumn: MineOperationStatusD
+
+		annotation SummarizationSetBy = Automatic
+
+	column MineOperationStatusReasonD
+		dataType: string
+		lineageTag: 3a072bf1-ee9d-4f4d-ae40-590b7aca06cb
+		summarizeBy: none
+		sourceColumn: MineOperationStatusReasonD
+
+		annotation SummarizationSetBy = Automatic
+
+	column MineOperationStatusSubReasonD
+		dataType: string
+		lineageTag: 4d33a953-d6c2-4117-9086-61bb3bb9e500
+		summarizeBy: none
+		sourceColumn: MineOperationStatusSubReasonD
+
+		annotation SummarizationSetBy = Automatic
+
+	column MineDate
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 19fc9e15-4213-4358-88ec-01f9b4579a64
+		summarizeBy: none
+		sourceColumn: MineDate
+
+		variation Variation
+			isDefault
+			relationship: 9ee1da6d-5dcd-4c97-8abc-b4c62cc3767a
+			defaultHierarchy: LocalDateTable_b56a68f8-2b32-41bc-b066-95ad9cde7a16.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column StatusDate
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 11b32d24-16fd-4d5c-bb4c-a6bb6b94496c
+		summarizeBy: none
+		sourceColumn: StatusDate
+
+		variation Variation
+			isDefault
+			relationship: d7d179df-be52-4e7b-a29a-6711e1649dbc
+			defaultHierarchy: LocalDateTable_1baa2967-3995-491e-a09b-b03b0cce94f8.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column MineTenure
+		dataType: string
+		lineageTag: 64a2eebf-a834-4902-9737-5edca6b0605e
+		summarizeBy: none
+		sourceColumn: MineTenure
+
+		annotation SummarizationSetBy = Automatic
+
+	column MineTenureTypeCode
+		dataType: string
+		lineageTag: 83eedd1c-f344-4b11-a400-26f4890cffb5
+		summarizeBy: none
+		sourceColumn: MineTenureTypeCode
+
+		annotation SummarizationSetBy = Automatic
+
+	column MineCommodity
+		dataType: string
+		lineageTag: c97978fd-2e96-48da-8544-7966f394fb2b
+		summarizeBy: none
+		sourceColumn: MineCommodity
+
+		annotation SummarizationSetBy = Automatic
+
+	column MineCommodityTypeCode
+		dataType: string
+		lineageTag: a8a92668-5183-4eae-8b12-89ccfc837e61
+		summarizeBy: none
+		sourceColumn: MineCommodityTypeCode
+
+		annotation SummarizationSetBy = Automatic
+
+	column MineDisturbance
+		dataType: string
+		lineageTag: f6372e8c-247b-4546-95b4-71dcb3208b86
+		summarizeBy: none
+		sourceColumn: MineDisturbance
+
+		annotation SummarizationSetBy = Automatic
+
+	column MineDisturbanceTypeCode
+		dataType: string
+		lineageTag: 2b9b3814-fdc6-4bb8-9619-c97d28c46900
+		summarizeBy: none
+		sourceColumn: MineDisturbanceTypeCode
+
+		annotation SummarizationSetBy = Automatic
+
+	column MineRegion
+		dataType: string
+		lineageTag: e42c1c01-ee51-4073-b808-070850749241
+		summarizeBy: none
+		sourceColumn: MineRegion
+
+		annotation SummarizationSetBy = Automatic
+
+	column MajorMineInd
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: d57c562f-eacc-4175-9045-2cb5273be9ec
+		summarizeBy: none
+		sourceColumn: MajorMineInd
+
+		annotation SummarizationSetBy = Automatic
+
+	column BCMIUrl
+		dataType: string
+		lineageTag: 45751b5f-4f08-4ee7-9c4d-70d1ef1c4027
+		summarizeBy: none
+		sourceColumn: BCMIUrl
+
+		annotation SummarizationSetBy = Automatic
+
+	column MajorMineD
+		dataType: string
+		lineageTag: 9ee4aad6-c8cb-4184-9aaf-5eca9f07b736
+		summarizeBy: none
+		sourceColumn: MajorMineD
+
+		annotation SummarizationSetBy = Automatic
+
+	partition DimMineExt = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Databases("mdp-sql-server.database.windows.net"),
+				    #"MDP-DWH" = Source{[Name="MDP-DWH"]}[Data],
+				    dbo_DimMineExt = #"MDP-DWH"{[Schema="dbo",Item="DimMineExt"]}[Data]
+				in
+				    dbo_DimMineExt
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

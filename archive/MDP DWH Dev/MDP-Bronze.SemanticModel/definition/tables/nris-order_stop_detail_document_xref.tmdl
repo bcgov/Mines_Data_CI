@@ -1,0 +1,128 @@
+table nris-order_stop_detail_document_xref
+	lineageTag: e9ba0be3-d41d-488e-9432-2cbdbec60698
+
+	column order_stop_detail_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 0310d674-eb64-4218-8979-99ce66d95fb3
+		summarizeBy: sum
+		sourceColumn: order_stop_detail_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column inspected_location_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 462b51ad-2173-4011-a82c-fae28d184656
+		summarizeBy: none
+		sourceColumn: inspected_location_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column detail
+		dataType: string
+		lineageTag: 63a980e6-1bb4-4514-8873-73282dcd2607
+		summarizeBy: none
+		sourceColumn: detail
+
+		annotation SummarizationSetBy = Automatic
+
+	column stop_type
+		dataType: string
+		lineageTag: 3ad2a6b1-0217-46cf-a233-4acd7aefe243
+		summarizeBy: none
+		sourceColumn: stop_type
+
+		annotation SummarizationSetBy = Automatic
+
+	column response_status
+		dataType: string
+		lineageTag: c111cbad-68cc-48be-ad6d-0e7890f5572e
+		summarizeBy: none
+		sourceColumn: response_status
+
+		annotation SummarizationSetBy = Automatic
+
+	column stop_status
+		dataType: string
+		lineageTag: 21b4f4bb-7601-4a4a-aa42-60aa694d0ffd
+		summarizeBy: none
+		sourceColumn: stop_status
+
+		annotation SummarizationSetBy = Automatic
+
+	column observation
+		dataType: string
+		lineageTag: c9fdc92c-bfe0-45fe-b889-f60fa69a2fd8
+		summarizeBy: none
+		sourceColumn: observation
+
+		annotation SummarizationSetBy = Automatic
+
+	column response
+		dataType: string
+		lineageTag: 8fffd640-10c4-4697-97db-46943f719b6d
+		summarizeBy: none
+		sourceColumn: response
+
+		annotation SummarizationSetBy = Automatic
+
+	column response_received
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: e0c57b45-cc7b-453d-aff9-8a866e738963
+		summarizeBy: none
+		sourceColumn: response_received
+
+		variation Variation
+			isDefault
+			relationship: 9659a430-253f-4cb7-a2f1-52e87a4b591c
+			defaultHierarchy: LocalDateTable_5ea09399-3fda-4d7f-8813-5d20aa246f9a.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column completion_date
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 9da1f712-a267-40cf-a78a-73a833fc16f3
+		summarizeBy: none
+		sourceColumn: completion_date
+
+		variation Variation
+			isDefault
+			relationship: 05dc94b9-41e7-472c-881a-c4422e06b0fb
+			defaultHierarchy: LocalDateTable_a92996a4-37cb-401d-9da2-b61d07401120.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column authority_act
+		dataType: string
+		lineageTag: 13ac7af7-3571-480e-ace5-1f36c21c8bb1
+		summarizeBy: none
+		sourceColumn: authority_act
+
+		annotation SummarizationSetBy = Automatic
+
+	column authority_act_section
+		dataType: string
+		lineageTag: dd812f00-8444-4437-9fc8-2c6d2bebde05
+		summarizeBy: none
+		sourceColumn: authority_act_section
+
+		annotation SummarizationSetBy = Automatic
+
+	partition nris-order_stop_detail_document_xref = m
+		mode: import
+		source =
+				let
+				    Source = AzureStorage.Blobs("datarepositorysa"),
+				    postgres = Source{[Name="postgres"]}[Data],
+				    #"https://datarepositorysa blob core windows net/postgres/_tables/parquet/nris order_stop_detail parquet" = postgres{[#"Folder Path"="https://datarepositorysa.blob.core.windows.net/postgres/",Name="tables/parquet/nris.order_stop_detail.parquet"]}[Content],
+				    #"Imported Parquet" = Parquet.Document(#"https://datarepositorysa blob core windows net/postgres/_tables/parquet/nris order_stop_detail parquet")
+				in
+				    #"Imported Parquet"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

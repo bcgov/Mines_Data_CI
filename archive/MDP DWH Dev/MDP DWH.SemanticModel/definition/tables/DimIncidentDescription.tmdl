@@ -1,0 +1,43 @@
+table DimIncidentDescription
+	lineageTag: eaca0fde-7ed6-4c67-88be-d9281ea5e6b3
+
+	column IncidentDescription_Key
+		dataType: int64
+		formatString: 0
+		lineageTag: dfe213c4-9cce-4f59-b969-def5a3485385
+		summarizeBy: none
+		sourceColumn: IncidentDescription_Key
+
+		annotation SummarizationSetBy = Automatic
+
+	column IncidentDescription
+		dataType: string
+		lineageTag: 0eeaf4fa-770d-4d0a-8a84-f602e1e71b68
+		summarizeBy: none
+		sourceColumn: IncidentDescription
+
+		annotation SummarizationSetBy = Automatic
+
+	column mine_incident_id
+		dataType: int64
+		formatString: 0
+		lineageTag: b8a6a1a5-0b8c-4fa9-9175-2d4c5f88fc90
+		summarizeBy: none
+		sourceColumn: mine_incident_id
+
+		annotation SummarizationSetBy = Automatic
+
+	partition DimIncidentDescription = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Databases("mdp-sql-server.database.windows.net"),
+				    #"MDP-DWH" = Source{[Name="MDP-DWH"]}[Data],
+				    dbo_DimIncidentDescription = #"MDP-DWH"{[Schema="dbo",Item="DimIncidentDescription"]}[Data]
+				in
+				    dbo_DimIncidentDescription
+
+	annotation PBI_ResultType = Table
+
+	annotation PBI_NavigationStepName = Navigation
+

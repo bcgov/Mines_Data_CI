@@ -1,0 +1,251 @@
+table DimIncidentDate
+	lineageTag: 6e15b67d-5f37-4206-9746-1d071dd61620
+	dataCategory: Time
+
+	column Date_Key
+		dataType: int64
+		formatString: 0
+		lineageTag: 0b8d012c-413e-4ed0-b6f6-4de9ada1505d
+		summarizeBy: none
+		sourceColumn: Date_Key
+
+		annotation SummarizationSetBy = Automatic
+
+	column Date
+		dataType: dateTime
+		isKey
+		formatString: Long Date
+		lineageTag: fd140628-5db7-4760-ba13-f931ebbfa2d8
+		summarizeBy: none
+		sourceColumn: Date
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column Day
+		dataType: int64
+		formatString: 0
+		lineageTag: d6406207-8c8b-4a2d-8fe1-ca256c453d5e
+		summarizeBy: none
+		sourceColumn: Day
+
+		annotation SummarizationSetBy = Automatic
+
+	column Month
+		dataType: int64
+		formatString: 0
+		lineageTag: 43701613-327c-40f1-a302-5a25b5ac0fdf
+		summarizeBy: none
+		sourceColumn: Month
+
+		annotation SummarizationSetBy = Automatic
+
+	column Quarter
+		dataType: int64
+		formatString: 0
+		lineageTag: 1e35f36a-5501-4fd5-8f77-8da288b54bba
+		summarizeBy: none
+		sourceColumn: Quarter
+
+		annotation SummarizationSetBy = Automatic
+
+	column Year
+		dataType: int64
+		formatString: 0
+		lineageTag: 8fa11a8d-13ad-4e3d-85f7-fe5e3f705453
+		summarizeBy: none
+		sourceColumn: Year
+
+		annotation SummarizationSetBy = Automatic
+
+	column DaySuffix
+		dataType: string
+		lineageTag: ccd18fed-293f-4867-a642-7bc584abe4bd
+		summarizeBy: none
+		sourceColumn: DaySuffix
+
+		annotation SummarizationSetBy = Automatic
+
+	column Weekday
+		dataType: int64
+		formatString: 0
+		lineageTag: 6478500a-5997-46f1-8bf9-147f325188f9
+		summarizeBy: none
+		sourceColumn: Weekday
+
+		annotation SummarizationSetBy = Automatic
+
+	column WeekDayName
+		dataType: string
+		lineageTag: accfa314-49e2-4db4-a076-2947ea45ed45
+		summarizeBy: none
+		sourceColumn: WeekDayName
+
+		annotation SummarizationSetBy = Automatic
+
+	column WeekDayName_Short
+		dataType: string
+		lineageTag: 136e0bd7-a24d-4317-b232-01b6c39989cd
+		summarizeBy: none
+		sourceColumn: WeekDayName_Short
+
+		annotation SummarizationSetBy = Automatic
+
+	column WeekDayName_FirstLetter
+		dataType: string
+		lineageTag: ff63fd6f-bbb9-4176-a6f2-5fbb750b3384
+		summarizeBy: none
+		sourceColumn: WeekDayName_FirstLetter
+
+		annotation SummarizationSetBy = Automatic
+
+	column DOWInMonth
+		dataType: int64
+		formatString: 0
+		lineageTag: d9694a22-8533-4859-9faa-3dfd614407f2
+		summarizeBy: none
+		sourceColumn: DOWInMonth
+
+		annotation SummarizationSetBy = Automatic
+
+	column DayOfYear
+		dataType: int64
+		formatString: 0
+		lineageTag: 46ffd293-cda3-4cc4-9f1e-96a87a64c106
+		summarizeBy: none
+		sourceColumn: DayOfYear
+
+		annotation SummarizationSetBy = Automatic
+
+	column WeekOfMonth
+		dataType: int64
+		formatString: 0
+		lineageTag: 25062798-4f66-4791-af19-a4f27b20a466
+		summarizeBy: none
+		sourceColumn: WeekOfMonth
+
+		annotation SummarizationSetBy = Automatic
+
+	column WeekOfYear
+		dataType: int64
+		formatString: 0
+		lineageTag: 1f31d8a9-9fc8-4609-bb91-b7ed96f330de
+		summarizeBy: none
+		sourceColumn: WeekOfYear
+
+		annotation SummarizationSetBy = Automatic
+
+	column MonthName
+		dataType: string
+		lineageTag: 95956cf2-4e2d-421b-8b94-bf3584dcb3ed
+		summarizeBy: none
+		sourceColumn: MonthName
+
+		annotation SummarizationSetBy = Automatic
+
+	column MonthName_Short
+		dataType: string
+		lineageTag: c4fa8867-372d-455d-894e-aa09e327bcd4
+		summarizeBy: none
+		sourceColumn: MonthName_Short
+
+		annotation SummarizationSetBy = Automatic
+
+	column MonthName_FirstLetter
+		dataType: string
+		lineageTag: 499a0545-419f-4471-a9c2-9a78ada200ef
+		summarizeBy: none
+		sourceColumn: MonthName_FirstLetter
+
+		annotation SummarizationSetBy = Automatic
+
+	column QuarterName
+		dataType: string
+		lineageTag: d38ab633-e665-488e-a567-7c712a5bc4ef
+		summarizeBy: none
+		sourceColumn: QuarterName
+
+		annotation SummarizationSetBy = Automatic
+
+	column MMYYYY
+		dataType: string
+		lineageTag: 6aca2181-f4fc-4bef-b008-4b2c1d461e18
+		summarizeBy: none
+		sourceColumn: MMYYYY
+
+		annotation SummarizationSetBy = Automatic
+
+	column MonthYear
+		dataType: string
+		lineageTag: 66f34519-bfb5-449a-967b-01eb9d8e2d47
+		summarizeBy: none
+		sourceColumn: MonthYear
+
+		annotation SummarizationSetBy = Automatic
+
+	column IsWeekend
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: ed9d655f-c562-4853-9405-acb807035a73
+		summarizeBy: none
+		sourceColumn: IsWeekend
+
+		annotation SummarizationSetBy = Automatic
+
+	column IsHoliday
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 9b4014ad-5622-46db-b181-27956c73fea3
+		summarizeBy: none
+		sourceColumn: IsHoliday
+
+		annotation SummarizationSetBy = Automatic
+
+	column FiscalYear
+		dataType: int64
+		formatString: 0
+		lineageTag: c339b3b4-2b5e-41be-9d68-e075c5614cad
+		summarizeBy: none
+		sourceColumn: FiscalYear
+
+		annotation SummarizationSetBy = Automatic
+
+	column FiscalQuarter
+		dataType: int64
+		formatString: 0
+		lineageTag: a59a1bd4-fdaf-4bb9-bbda-9d63845802b5
+		summarizeBy: none
+		sourceColumn: FiscalQuarter
+
+		annotation SummarizationSetBy = Automatic
+
+	column FiscalMonth
+		dataType: int64
+		formatString: 0
+		lineageTag: bfaa03b4-2bc7-4250-8b47-9aeb7239218b
+		summarizeBy: none
+		sourceColumn: FiscalMonth
+
+		annotation SummarizationSetBy = Automatic
+
+	column Season
+		dataType: string
+		lineageTag: 2eed608a-4a8a-41b0-90f8-65e7950e431e
+		summarizeBy: none
+		sourceColumn: Season
+
+		annotation SummarizationSetBy = Automatic
+
+	partition DimIncidentDate = m
+		mode: import
+		source =
+				let
+				    Source = DimDate
+				in
+				    Source
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

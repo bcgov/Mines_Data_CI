@@ -1,0 +1,44 @@
+table nris-order_advisory_detail
+	lineageTag: abde3139-ebe9-44ce-9a87-6cdcb7e7c0e4
+
+	column order_advisory_detail_id
+		dataType: int64
+		formatString: 0
+		lineageTag: d3021da5-d07c-4db9-bedb-1f00a0fce592
+		summarizeBy: sum
+		sourceColumn: order_advisory_detail_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column inspected_locations_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 8e830746-4b19-41d8-a94c-5c41fd9871e3
+		summarizeBy: sum
+		sourceColumn: inspected_locations_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column detail
+		dataType: string
+		lineageTag: 1b300905-b40f-46ce-ae8a-62b9a69cac9d
+		summarizeBy: none
+		sourceColumn: detail
+
+		annotation SummarizationSetBy = Automatic
+
+	partition nris-order_advisory_detail = m
+		mode: import
+		source =
+				let
+				    Source = AzureStorage.Blobs("datarepositorysa"),
+				    postgres = Source{[Name="postgres"]}[Data],
+				    #"https://datarepositorysa blob core windows net/postgres/_tables/parquet/nris order_advisory_detail parquet" = postgres{[#"Folder Path"="https://datarepositorysa.blob.core.windows.net/postgres/",Name="tables/parquet/nris.order_advisory_detail.parquet"]}[Content],
+				    #"Imported Parquet" = Parquet.Document(#"https://datarepositorysa blob core windows net/postgres/_tables/parquet/nris order_advisory_detail parquet")
+				in
+				    #"Imported Parquet"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

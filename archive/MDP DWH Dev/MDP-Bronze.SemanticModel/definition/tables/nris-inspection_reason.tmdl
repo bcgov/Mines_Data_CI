@@ -1,0 +1,44 @@
+table nris-inspection_reason
+	lineageTag: 36405937-8692-4e9c-b58a-8281ae1bb9ac
+
+	column inspection_reason_id
+		dataType: int64
+		formatString: 0
+		lineageTag: e366cbf4-96a6-40de-ba2f-115445c408b2
+		summarizeBy: sum
+		sourceColumn: inspection_reason_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column inspection_reason_code
+		dataType: string
+		lineageTag: ee60099c-9db9-4bf7-985b-81a2ca289bb7
+		summarizeBy: none
+		sourceColumn: inspection_reason_code
+
+		annotation SummarizationSetBy = Automatic
+
+	column inspection_reason_description
+		dataType: string
+		lineageTag: 17be7a4c-c94e-43ab-9643-fef7052ef587
+		summarizeBy: none
+		sourceColumn: inspection_reason_description
+
+		annotation SummarizationSetBy = Automatic
+
+	partition nris-inspection_reason = m
+		mode: import
+		source =
+				let
+				    Source = AzureStorage.Blobs("datarepositorysa"),
+				    postgres1 = Source{[Name="postgres"]}[Data],
+				    #"Filtered Rows" = Table.SelectRows(postgres1, each ([Extension] = ".parquet")),
+				    #"https://datarepositorysa blob core windows net/postgres/_tables/parquet/nris inspection_reason parquet" = #"Filtered Rows"{[#"Folder Path"="https://datarepositorysa.blob.core.windows.net/postgres/",Name="tables/parquet/nris.inspection_reason.parquet"]}[Content],
+				    #"Imported Parquet" = Parquet.Document(#"https://datarepositorysa blob core windows net/postgres/_tables/parquet/nris inspection_reason parquet")
+				in
+				    #"Imported Parquet"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

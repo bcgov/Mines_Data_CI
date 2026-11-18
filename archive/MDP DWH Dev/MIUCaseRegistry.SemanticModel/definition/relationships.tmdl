@@ -1,0 +1,5 @@
+relationship 4dd4b1c0-32fb-4ac9-aab4-4097c8e1b286
+	joinOnDateBehavior: datePartOnly
+	fromColumn: table.'Incident Date'
+	toColumn: LocalDateTable_6e5196d2-cfc0-4bb5-be8b-60cc0049f086.Date
+

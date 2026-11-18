@@ -1,0 +1,139 @@
+table DimInspectedLocation
+	lineageTag: 71ec827c-b237-48d7-92ec-f2a9433c17d7
+
+	column InspectedLocation_Key
+		dataType: int64
+		formatString: 0
+		lineageTag: 42b951f8-cf40-4b94-a373-f23a967929f7
+		summarizeBy: none
+		sourceColumn: InspectedLocation_Key
+
+		annotation SummarizationSetBy = Automatic
+
+	column location_id
+		dataType: int64
+		formatString: 0
+		lineageTag: b7f02b47-90d3-4891-8393-dc006b32397f
+		summarizeBy: sum
+		sourceColumn: location_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column inspection_id
+		dataType: int64
+		formatString: 0
+		lineageTag: f73ae20a-c382-417e-b653-5608ec9d90bc
+		summarizeBy: sum
+		sourceColumn: inspection_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column LocationDescription
+		dataType: string
+		lineageTag: a25099d7-fe6d-4291-bfd1-f1d08fcc7258
+		summarizeBy: none
+		sourceColumn: LocationDescription
+
+		annotation SummarizationSetBy = Automatic
+
+	column LocationNotes
+		dataType: string
+		lineageTag: 2618b08b-4c0d-49ab-b85d-c7e9b6fd04e4
+		summarizeBy: none
+		sourceColumn: LocationNotes
+
+		annotation SummarizationSetBy = Automatic
+
+	column Latitude
+		dataType: double
+		lineageTag: 27853f71-f6c2-4e13-9cbc-afb70fadb10c
+		summarizeBy: sum
+		sourceColumn: Latitude
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Longitude
+		dataType: double
+		lineageTag: 11be4c09-4806-4f0b-86fb-4fa429f15f26
+		summarizeBy: sum
+		sourceColumn: Longitude
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column UtmEasting
+		dataType: double
+		lineageTag: 9db8b045-1cd6-4797-a82d-24f9a11e54c1
+		summarizeBy: sum
+		sourceColumn: UtmEasting
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column UtmNorthing
+		dataType: double
+		lineageTag: a16110e2-f303-45b7-bd5f-e13805232c80
+		summarizeBy: sum
+		sourceColumn: UtmNorthing
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column ZoneNumber
+		dataType: int64
+		formatString: 0
+		lineageTag: 31e5459e-5f9a-4390-83e4-df2830f53739
+		summarizeBy: sum
+		sourceColumn: ZoneNumber
+
+		annotation SummarizationSetBy = Automatic
+
+	column ZoneLetter
+		dataType: string
+		lineageTag: 6f682f65-ace2-4f61-9e73-1645c404cd47
+		summarizeBy: none
+		sourceColumn: ZoneLetter
+
+		annotation SummarizationSetBy = Automatic
+
+	column InspectedLocationType
+		dataType: string
+		lineageTag: 01881a04-9175-4803-91c7-4bd8c6933c11
+		summarizeBy: none
+		sourceColumn: InspectedLocationType
+
+		annotation SummarizationSetBy = Automatic
+
+	column LastUpdatedDate
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: e57fdfc0-4292-491a-a15f-5f35f5b6dc9c
+		summarizeBy: none
+		sourceColumn: LastUpdatedDate
+
+		variation Variation
+			isDefault
+			relationship: 3fec6ad8-ea75-44c1-a415-ce2a06b9aa8f
+			defaultHierarchy: LocalDateTable_694e4d3a-6134-49cd-b253-2150acd69b99.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	partition DimInspectedLocation = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Databases("mdp-sql-server.database.windows.net"),
+				    #"MDP-DWH" = Source{[Name="MDP-DWH"]}[Data],
+				    dbo_DimInspectedLocation = #"MDP-DWH"{[Schema="dbo",Item="DimInspectedLocation"]}[Data]
+				in
+				    dbo_DimInspectedLocation
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

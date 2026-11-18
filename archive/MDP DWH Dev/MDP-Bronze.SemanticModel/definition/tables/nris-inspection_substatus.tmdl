@@ -1,0 +1,44 @@
+table nris-inspection_substatus
+	lineageTag: 20761b37-9f54-4981-9fb9-6f9ea8a0424e
+
+	column inspection_substatus_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 198b3440-ffc1-47a0-a60b-3c551f0a84f6
+		summarizeBy: sum
+		sourceColumn: inspection_substatus_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column inspection_substatus_code
+		dataType: string
+		lineageTag: d2ab1277-e519-4377-8e8c-3a222a296179
+		summarizeBy: none
+		sourceColumn: inspection_substatus_code
+
+		annotation SummarizationSetBy = Automatic
+
+	column inspection_substatus_description
+		dataType: string
+		lineageTag: c10e30f5-523d-4215-b7a1-ca5324ebac81
+		summarizeBy: none
+		sourceColumn: inspection_substatus_description
+
+		annotation SummarizationSetBy = Automatic
+
+	partition nris-inspection_substatus = m
+		mode: import
+		source =
+				let
+				    Source = AzureStorage.Blobs("datarepositorysa"),
+				    postgres1 = Source{[Name="postgres"]}[Data],
+				    #"Filtered Rows" = Table.SelectRows(postgres1, each ([Extension] = ".parquet")),
+				    #"https://datarepositorysa blob core windows net/postgres/_tables/parquet/nris inspection_substatus parquet" = #"Filtered Rows"{[#"Folder Path"="https://datarepositorysa.blob.core.windows.net/postgres/",Name="tables/parquet/nris.inspection_substatus.parquet"]}[Content],
+				    #"Imported Parquet" = Parquet.Document(#"https://datarepositorysa blob core windows net/postgres/_tables/parquet/nris inspection_substatus parquet")
+				in
+				    #"Imported Parquet"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

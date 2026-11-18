@@ -1,0 +1,41 @@
+table DimOrderStopAuthorityActSection
+	lineageTag: 04a72d4c-de17-420c-89fa-eddd72e2bb4e
+
+	column OrderStopAuthorityActSection_Key
+		dataType: int64
+		formatString: 0
+		lineageTag: 854528fb-8600-46aa-9cc4-dfb5dbbc7a4b
+		summarizeBy: none
+		sourceColumn: OrderStopAuthorityActSection_Key
+
+		annotation SummarizationSetBy = Automatic
+
+	column AuthorityActSection
+		dataType: string
+		lineageTag: 3f09a381-84d8-4c7e-ad97-9a6fce631797
+		summarizeBy: none
+		sourceColumn: AuthorityActSection
+
+		annotation SummarizationSetBy = Automatic
+
+	column AuthorityActSection_Hash
+		dataType: int64
+		formatString: 0
+		lineageTag: 4173bed8-668e-453e-84fa-dc88029fb5ef
+		summarizeBy: none
+		sourceColumn: AuthorityActSection_Hash
+
+		annotation SummarizationSetBy = Automatic
+
+	partition DimOrderStopAuthorityActSection = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Databases("mdp-sql-server.database.windows.net"),
+				    #"MDP-DWH" = Source{[Name="MDP-DWH"]}[Data],
+				    dbo_DimOrderStopAuthorityActSection = #"MDP-DWH"{[Schema="dbo",Item="DimOrderStopAuthorityActSection"]}[Data]
+				in
+				    dbo_DimOrderStopAuthorityActSection
+
+	annotation PBI_ResultType = Table
+

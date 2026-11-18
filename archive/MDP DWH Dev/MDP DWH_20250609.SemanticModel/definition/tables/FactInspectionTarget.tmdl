@@ -1,0 +1,108 @@
+table FactInspectionTarget
+	lineageTag: a1eff69a-3985-4f57-80f4-724643dce874
+
+	/// Calculates the total inspection target for the fiscal year. This measure sums the overall inspection target across all dates, ensuring it is not affected by date filters. Formula: _FY_Inspection_Target_Overall = CALCULATE(SUM(FactInspectionTarget[TargetOverall]), ALL(DimDate))
+	measure _FY_Inspection_Target_Overall =
+			CALCULATE(
+			    SUM(FactInspectionTarget[TargetOverall]),
+			    ALL(DimDate)  // This line may not be necessary depending on other context filters.
+			)
+		formatString: #,0
+		lineageTag: 8daefdd9-02b9-491c-a3eb-fcdb5a9bf007
+
+	/// Calculates the percentage of fiscal year-to-date inspections achieved relative to the overall fiscal year target. This measure helps track progress toward annual inspection goals. Formula: _FY_Inspection_Percentage_Achieved = DIVIDE(FactInspection[_FYTD_Inspections], FactInspectionTarget[_FY_Inspection_Target_Overall], 0)
+	measure _FY_Inspection_Percentage_Achieved = ```
+			DIVIDE(
+			    FactInspection[_FYTD_Inspections],
+			 FactInspectionTarget[_FY_Inspection_Target_Overall],    0
+			) 
+			```
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: ac2a060c-46fe-4ed5-8c9d-fa5aa2033609
+
+	/// Calculates the variance between actual and targeted inspections for the fiscal year. This measure shows the difference between completed inspections and the overall fiscal year target. Formula: _FY_Inspection_Variance_Overall = FactInspection[_FY_Inspection_Count] - FactInspectionTarget[_FY_Inspection_Target_Overall]
+	measure _FY_Inspection_Variance_Overall = ```
+			FactInspection[_FY_Inspection_Count] - FActInspectionTarget[_FY_Inspection_Target_Overall]
+			
+			```
+		formatString: #,0
+		lineageTag: de703aa5-dc1b-448d-9330-e489efb23b10
+
+	/// Calculates the percentage variance between actual and targeted inspections for the fiscal year. This measure shows the percentage difference between completed inspections and the overall fiscal year target. Formula: _FY_Inspection_Variance_Percentage = DIVIDE(FactInspection[_FY_Inspection_Count] - FactInspectionTarget[_FY_Inspection_Target_Overall], FactInspectionTarget[_FY_Inspection_Target_Overall], 0)
+	measure _FY_Inspection_Variance_Percentage =
+			DIVIDE(
+			    FactInspection[_FY_Inspection_Count] - FactInspectionTarget[_FY_Inspection_Target_Overall],
+			    FactInspectionTarget[_FY_Inspection_Target_Overall],
+			    0
+			)
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 076fafb2-d1d2-42ba-afb7-45ab3bd150e2
+
+	column InspectionTargetPK
+		dataType: int64
+		formatString: 0
+		lineageTag: 8c93e1f3-8892-496f-9557-a8c21f727f82
+		summarizeBy: sum
+		sourceColumn: InspectionTargetPK
+
+		annotation SummarizationSetBy = Automatic
+
+	column TargetOverall
+		dataType: int64
+		formatString: 0
+		lineageTag: 4c10bf0e-fc1c-4e92-a2fc-b4e6d2d31194
+		summarizeBy: sum
+		sourceColumn: TargetOverall
+
+		annotation SummarizationSetBy = Automatic
+
+	column TargetMajors
+		dataType: int64
+		formatString: 0
+		lineageTag: 64d13e9a-1845-4c46-be8e-9d117fa979e0
+		summarizeBy: sum
+		sourceColumn: TargetMajors
+
+		annotation SummarizationSetBy = Automatic
+
+	column TargetRegionals
+		dataType: int64
+		formatString: 0
+		lineageTag: ade57e1c-d8f1-4bde-9681-819a4f44a920
+		summarizeBy: sum
+		sourceColumn: TargetRegionals
+
+		annotation SummarizationSetBy = Automatic
+
+	column MineRegion_Key
+		dataType: int64
+		formatString: 0
+		lineageTag: 61ce5d78-8ea0-45ef-bf38-c177043e8a34
+		summarizeBy: none
+		sourceColumn: MineRegion_Key
+
+		annotation SummarizationSetBy = Automatic
+
+	column Date_Key
+		dataType: int64
+		formatString: 0
+		lineageTag: ef08258b-1ab7-495b-87d6-d04b6755b913
+		summarizeBy: none
+		sourceColumn: Date_Key
+
+		annotation SummarizationSetBy = Automatic
+
+	partition FactInspectionTarget = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Databases("mdp-sql-server.database.windows.net"),
+				    #"MDP-DWH" = Source{[Name="MDP-DWH"]}[Data],
+				    dbo_InspectionTarget = #"MDP-DWH"{[Schema="dbo",Item="FactInspectionTarget"]}[Data]
+				in
+				    dbo_InspectionTarget
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

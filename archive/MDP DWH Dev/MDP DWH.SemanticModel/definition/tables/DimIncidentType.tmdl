@@ -1,0 +1,49 @@
+table DimIncidentType
+	lineageTag: a24be857-216a-435a-809c-93ee4d572f3f
+
+	column IncidentType_Key
+		dataType: int64
+		formatString: 0
+		lineageTag: de9ef737-c630-4d14-aebc-5f7d3e0f20ac
+		summarizeBy: none
+		sourceColumn: IncidentType_Key
+
+		annotation SummarizationSetBy = Automatic
+
+	column Incident_Type_Code
+		dataType: string
+		lineageTag: 711d3be3-50e9-441b-a3ec-c64228d9f47a
+		summarizeBy: none
+		sourceColumn: Incident_Type_Code
+
+		annotation SummarizationSetBy = Automatic
+
+	column Incident_Type_Description
+		dataType: string
+		lineageTag: 785e1fc4-a33a-47ac-8627-40d69476334d
+		summarizeBy: none
+		sourceColumn: Incident_Type_Description
+
+		annotation SummarizationSetBy = Automatic
+
+	column Incident_Type_Code_hash
+		dataType: int64
+		formatString: 0
+		lineageTag: e66291a6-c9d3-47d2-8c23-7c67b2a6e51d
+		summarizeBy: none
+		sourceColumn: Incident_Type_Code_hash
+
+		annotation SummarizationSetBy = Automatic
+
+	partition DimIncidentType = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Databases("mdp-sql-server.database.windows.net"),
+				    #"MDP-DWH" = Source{[Name="MDP-DWH"]}[Data],
+				    dbo_DimIncidentType = #"MDP-DWH"{[Schema="dbo",Item="DimIncidentType"]}[Data]
+				in
+				    dbo_DimIncidentType
+
+	annotation PBI_ResultType = Table
+

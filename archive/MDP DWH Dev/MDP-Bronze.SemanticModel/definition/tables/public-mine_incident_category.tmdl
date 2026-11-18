@@ -1,0 +1,471 @@
+table public-mine_incident_category
+	lineageTag: 6563994c-31d9-47d1-96f5-399535ba5c7d
+
+	column mine_incident_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 85117a98-d4d6-4869-b2d2-572b06dca58d
+		summarizeBy: sum
+		sourceColumn: mine_incident_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column mine_incident_id_year
+		dataType: int64
+		formatString: 0
+		lineageTag: 492c0730-ad76-40bc-be90-82f2d47df91a
+		summarizeBy: sum
+		sourceColumn: mine_incident_id_year
+
+		annotation SummarizationSetBy = Automatic
+
+	column mine_incident_guid
+		dataType: string
+		lineageTag: 93868565-3519-4293-a5ff-612b7c260e98
+		summarizeBy: none
+		sourceColumn: mine_incident_guid
+
+		annotation SummarizationSetBy = Automatic
+
+	column mine_guid
+		dataType: string
+		lineageTag: 38f9758a-e05b-4627-a1ff-93e8a6c0e2f0
+		summarizeBy: none
+		sourceColumn: mine_guid
+
+		annotation SummarizationSetBy = Automatic
+
+	column incident_timestamp
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: aadf7aee-67ca-416d-a48b-a648118a9b6f
+		summarizeBy: none
+		sourceColumn: incident_timestamp
+
+		variation Variation
+			isDefault
+			relationship: 2f94f22e-e3b3-4771-9a5a-ecfe50003487
+			defaultHierarchy: LocalDateTable_559b9599-136d-4f3b-8eed-801334357621.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column incident_description
+		dataType: string
+		lineageTag: 5a049075-4097-4b8f-819d-28ef7a880648
+		summarizeBy: none
+		sourceColumn: incident_description
+
+		annotation SummarizationSetBy = Automatic
+
+	column reported_timestamp
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 066a4453-f0bc-4554-9f5d-e33dd1479b55
+		summarizeBy: none
+		sourceColumn: reported_timestamp
+
+		variation Variation
+			isDefault
+			relationship: 25e997b8-722b-4f30-b76d-43abb5afea15
+			defaultHierarchy: LocalDateTable_9a59d976-d8b1-430e-a3af-e89bbd1a9454.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column create_user
+		dataType: string
+		lineageTag: 46103e2c-2658-4c46-b893-c5759b8ac6f8
+		summarizeBy: none
+		sourceColumn: create_user
+
+		annotation SummarizationSetBy = Automatic
+
+	column create_timestamp
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 01575ecf-57ee-440f-8ab5-31b055292ea5
+		summarizeBy: none
+		sourceColumn: create_timestamp
+
+		variation Variation
+			isDefault
+			relationship: acfaf060-a242-4958-b8df-4988b1bfa5d8
+			defaultHierarchy: LocalDateTable_e0bbfab1-7791-4bb2-ae72-ed9288849eee.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column update_user
+		dataType: string
+		lineageTag: 11695fd7-b9be-454e-9783-7d3c780e6289
+		summarizeBy: none
+		sourceColumn: update_user
+
+		annotation SummarizationSetBy = Automatic
+
+	column update_timestamp
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: b35d9e28-da47-46d1-b387-08d5cd600982
+		summarizeBy: none
+		sourceColumn: update_timestamp
+
+		variation Variation
+			isDefault
+			relationship: 514beda7-94f6-4b6a-a8b9-25281d287ab7
+			defaultHierarchy: LocalDateTable_301a035b-3d91-4d2e-a347-728d65e71640.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column determination_type_code
+		dataType: string
+		lineageTag: 25136a12-d540-4b64-93c8-1f28d19dc3da
+		summarizeBy: none
+		sourceColumn: determination_type_code
+
+		annotation SummarizationSetBy = Automatic
+
+	column status_code
+		dataType: string
+		lineageTag: e6a12f9f-517c-4bac-9ce1-faea7e650cb6
+		summarizeBy: none
+		sourceColumn: status_code
+
+		annotation SummarizationSetBy = Automatic
+
+	column reported_by_name
+		dataType: string
+		lineageTag: 316f4636-fefe-4d74-935d-b815e6d741aa
+		summarizeBy: none
+		sourceColumn: reported_by_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column reported_by_phone_no
+		dataType: string
+		lineageTag: 82213e81-f1c3-4db8-9cac-01637c4b8dee
+		summarizeBy: none
+		sourceColumn: reported_by_phone_no
+
+		annotation SummarizationSetBy = Automatic
+
+	column reported_by_phone_ext
+		dataType: string
+		lineageTag: c42aaeb8-8d01-4167-b15b-923e8ff0f9cb
+		summarizeBy: none
+		sourceColumn: reported_by_phone_ext
+
+		annotation SummarizationSetBy = Automatic
+
+	column reported_by_email
+		dataType: string
+		lineageTag: 354a7279-c30a-4c02-b483-cc536ae40d9d
+		summarizeBy: none
+		sourceColumn: reported_by_email
+
+		annotation SummarizationSetBy = Automatic
+
+	column reported_to_inspector_party_guid
+		dataType: string
+		lineageTag: d09e937a-2b67-43d4-9435-6e93f466a5d5
+		summarizeBy: none
+		sourceColumn: reported_to_inspector_party_guid
+
+		annotation SummarizationSetBy = Automatic
+
+	column responsible_inspector_party_guid
+		dataType: string
+		lineageTag: 3fdb3685-2e02-45a4-9abe-5c41b5ed157b
+		summarizeBy: none
+		sourceColumn: responsible_inspector_party_guid
+
+		annotation SummarizationSetBy = Automatic
+
+	column determination_inspector_party_guid
+		dataType: string
+		lineageTag: e67165f0-40f1-4ce1-beac-542eebd9e997
+		summarizeBy: none
+		sourceColumn: determination_inspector_party_guid
+
+		annotation SummarizationSetBy = Automatic
+
+	column number_of_fatalities
+		dataType: int64
+		formatString: 0
+		lineageTag: e8047a81-f701-44af-9daa-608d4ef1b39f
+		summarizeBy: sum
+		sourceColumn: number_of_fatalities
+
+		annotation SummarizationSetBy = Automatic
+
+	column number_of_injuries
+		dataType: int64
+		formatString: 0
+		lineageTag: 0ac87aa1-c03e-4b38-b412-87b3e2ccaa47
+		summarizeBy: sum
+		sourceColumn: number_of_injuries
+
+		annotation SummarizationSetBy = Automatic
+
+	column emergency_services_called
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: bf04d4b8-5d7a-4a7b-b9c4-e909edda0f3d
+		summarizeBy: none
+		sourceColumn: emergency_services_called
+
+		annotation SummarizationSetBy = Automatic
+
+	column followup_inspection
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 4f61e00b-a28a-46c9-8ab1-d5ea80f02122
+		summarizeBy: none
+		sourceColumn: followup_inspection
+
+		annotation SummarizationSetBy = Automatic
+
+	column followup_investigation_type_code
+		dataType: string
+		lineageTag: d3c62c2c-16c8-4022-b224-371aa38eae65
+		summarizeBy: none
+		sourceColumn: followup_investigation_type_code
+
+		annotation SummarizationSetBy = Automatic
+
+	column followup_inspection_date
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 16d8709b-ef5b-47e2-8d2f-f9f6a16f3dc3
+		summarizeBy: none
+		sourceColumn: followup_inspection_date
+
+		variation Variation
+			isDefault
+			relationship: 573bcdc2-cad2-4b46-bd65-19be0fa5f847
+			defaultHierarchy: LocalDateTable_2d0f39f0-8c60-4b05-a3d2-95edab0a0f4d.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column mine_incident_no
+		dataType: string
+		lineageTag: c021bf8c-30d2-4fb7-885b-0c7768f6b28f
+		summarizeBy: none
+		sourceColumn: mine_incident_no
+
+		annotation SummarizationSetBy = Automatic
+
+	column mms_insp_cd
+		dataType: string
+		lineageTag: 17a13c2c-3718-49a0-a0fa-8b673436f00e
+		summarizeBy: none
+		sourceColumn: mms_insp_cd
+
+		annotation SummarizationSetBy = Automatic
+
+	column proponent_incident_no
+		dataType: string
+		lineageTag: dd2d351e-0bea-4d27-bd36-8251c8b17ad8
+		summarizeBy: none
+		sourceColumn: proponent_incident_no
+
+		annotation SummarizationSetBy = Automatic
+
+	column mine_determination_representative
+		dataType: string
+		lineageTag: 8adce975-a78b-491c-8585-51486992c655
+		summarizeBy: none
+		sourceColumn: mine_determination_representative
+
+		annotation SummarizationSetBy = Automatic
+
+	column mine_determination_type_code
+		dataType: string
+		lineageTag: e9d8ea0a-0685-42e3-8803-a5af287d5ae9
+		summarizeBy: none
+		sourceColumn: mine_determination_type_code
+
+		annotation SummarizationSetBy = Automatic
+
+	column deleted_ind
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 6df6cbd3-8ec6-455e-b71d-f36f367f748e
+		summarizeBy: none
+		sourceColumn: deleted_ind
+
+		annotation SummarizationSetBy = Automatic
+
+	column immediate_measures_taken
+		dataType: string
+		lineageTag: c23b01d6-9cb2-4097-859c-ab6bfb9c79b8
+		summarizeBy: none
+		sourceColumn: immediate_measures_taken
+
+		annotation SummarizationSetBy = Automatic
+
+	column injuries_description
+		dataType: string
+		lineageTag: 1b537c3f-cfa3-4146-8b9b-4f0d233ed085
+		summarizeBy: none
+		sourceColumn: injuries_description
+
+		annotation SummarizationSetBy = Automatic
+
+	column johsc_worker_rep_name
+		dataType: string
+		lineageTag: fe9f5a1d-510f-491b-8c28-a225a2e3ad3e
+		summarizeBy: none
+		sourceColumn: johsc_worker_rep_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column johsc_worker_rep_contacted
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 62d991f0-a908-4d58-9f98-8c8356fd9279
+		summarizeBy: none
+		sourceColumn: johsc_worker_rep_contacted
+
+		annotation SummarizationSetBy = Automatic
+
+	column johsc_management_rep_name
+		dataType: string
+		lineageTag: 0d182cda-ed66-45fc-8ac6-5e8715a83729
+		summarizeBy: none
+		sourceColumn: johsc_management_rep_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column johsc_management_rep_contacted
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: a9d47ded-5f00-43ef-ae76-2eb5c6ed832f
+		summarizeBy: none
+		sourceColumn: johsc_management_rep_contacted
+
+		annotation SummarizationSetBy = Automatic
+
+	column johsc_worker_rep_contact_method
+		dataType: string
+		lineageTag: 2c573f1e-6b92-4dc6-a103-cfd6bf9aa1ac
+		summarizeBy: none
+		sourceColumn: johsc_worker_rep_contact_method
+
+		annotation SummarizationSetBy = Automatic
+
+	column johsc_worker_rep_contact_timestamp
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 5b0d1e38-1876-44b2-8078-866641d27144
+		summarizeBy: none
+		sourceColumn: johsc_worker_rep_contact_timestamp
+
+		variation Variation
+			isDefault
+			relationship: 04257806-1cc5-44ff-abb8-ba89f8b125f0
+			defaultHierarchy: LocalDateTable_199fc7b7-2677-4101-a57d-411b3639588b.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column johsc_management_rep_contact_method
+		dataType: string
+		lineageTag: 2c38b926-8275-4ff8-929f-4605202880ea
+		summarizeBy: none
+		sourceColumn: johsc_management_rep_contact_method
+
+		annotation SummarizationSetBy = Automatic
+
+	column johsc_management_rep_contact_timestamp
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 284d742e-bbb7-4bad-b9fd-5a41a56f2384
+		summarizeBy: none
+		sourceColumn: johsc_management_rep_contact_timestamp
+
+		variation Variation
+			isDefault
+			relationship: 8ac03cc0-afb2-49a9-975a-c3311d10177f
+			defaultHierarchy: LocalDateTable_c8c39e86-2a27-42ea-9ed2-dec8a8bc7353.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column reported_to_inspector_contacted
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: a4e2f8cf-381a-4377-875a-a3a136db8776
+		summarizeBy: none
+		sourceColumn: reported_to_inspector_contacted
+
+		annotation SummarizationSetBy = Automatic
+
+	column reported_to_inspector_contact_method
+		dataType: string
+		lineageTag: 16b09bf8-d86b-40fc-bbfb-82c629382c95
+		summarizeBy: none
+		sourceColumn: reported_to_inspector_contact_method
+
+		annotation SummarizationSetBy = Automatic
+
+	column verbal_notification_provided
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 84e841a0-ea1d-4a97-99ee-b16b90ad0d1a
+		summarizeBy: none
+		sourceColumn: verbal_notification_provided
+
+		annotation SummarizationSetBy = Automatic
+
+	column verbal_notification_timestamp
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: c29d1ecf-e651-4f99-80c1-2161936f2e71
+		summarizeBy: none
+		sourceColumn: verbal_notification_timestamp
+
+		variation Variation
+			isDefault
+			relationship: 6925bafb-ee33-4675-9e30-c07683e48d4d
+			defaultHierarchy: LocalDateTable_df7b5779-9a81-4458-b1f1-1d2f52c213c3.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column incident_location
+		dataType: string
+		lineageTag: dc456e3c-7f65-4a44-b0da-16fd65c47e9d
+		summarizeBy: none
+		sourceColumn: incident_location
+
+		annotation SummarizationSetBy = Automatic
+
+	column incident_timezone
+		dataType: string
+		lineageTag: 3fbae94d-08e2-4556-aeab-a95f911257cb
+		summarizeBy: none
+		sourceColumn: incident_timezone
+
+		annotation SummarizationSetBy = Automatic
+
+	column tz_legacy
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 0701c8ba-b4dc-486b-8703-a8c280a03925
+		summarizeBy: none
+		sourceColumn: tz_legacy
+
+		annotation SummarizationSetBy = Automatic
+
+	partition public-mine_incident_category = m
+		mode: import
+		source =
+				let
+				    Source = AzureStorage.Blobs("datarepositorysa"),
+				    postgres1 = Source{[Name="postgres"]}[Data],
+				    #"Filtered Rows" = Table.SelectRows(postgres1, each ([Extension] = ".parquet")),
+				    #"https://datarepositorysa blob core windows net/postgres/_tables/parquet/public mine_incident parquet" = #"Filtered Rows"{[#"Folder Path"="https://datarepositorysa.blob.core.windows.net/postgres/",Name="tables/parquet/public.mine_incident.parquet"]}[Content],
+				    #"Imported Parquet" = Parquet.Document(#"https://datarepositorysa blob core windows net/postgres/_tables/parquet/public mine_incident parquet")
+				in
+				    #"Imported Parquet"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

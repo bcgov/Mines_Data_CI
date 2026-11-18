@@ -1,0 +1,41 @@
+table DimAppSecurityNotRequiredReason
+	lineageTag: b1cb95a0-86af-46f6-a706-6c28ee4ee048
+
+	column AppSecurityNotRequiredReason_Key
+		dataType: int64
+		formatString: 0
+		lineageTag: dc1d4605-72bf-4137-b74e-ff9c8f2fa83c
+		summarizeBy: none
+		sourceColumn: AppSecurityNotRequiredReason_Key
+
+		annotation SummarizationSetBy = Automatic
+
+	column Reason
+		dataType: string
+		lineageTag: 2ad24896-0eac-446a-b292-3e6cfb7a9f39
+		summarizeBy: none
+		sourceColumn: Reason
+
+		annotation SummarizationSetBy = Automatic
+
+	column Reason_Hash
+		dataType: int64
+		formatString: 0
+		lineageTag: fe7b5794-cf3f-4528-aea0-c65704244720
+		summarizeBy: none
+		sourceColumn: Reason_Hash
+
+		annotation SummarizationSetBy = Automatic
+
+	partition DimAppSecurityNotRequiredReason = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Databases("mdp-sql-server.database.windows.net"),
+				    #"MDP-DWH" = Source{[Name="MDP-DWH"]}[Data],
+				    dbo_DimAppSecurityNotRequiredReason = #"MDP-DWH"{[Schema="dbo",Item="DimAppSecurityNotRequiredReason"]}[Data]
+				in
+				    dbo_DimAppSecurityNotRequiredReason
+
+	annotation PBI_ResultType = Table
+

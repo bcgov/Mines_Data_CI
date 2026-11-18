@@ -1,0 +1,114 @@
+table DimIncidentReporter
+	lineageTag: a7821471-b4f9-40b3-87f2-4cad1eb4137c
+
+	column IncidentReporter_Key
+		dataType: int64
+		formatString: 0
+		lineageTag: 618d3c22-e126-4143-9ae8-00ecde1b88ef
+		summarizeBy: none
+		sourceColumn: IncidentReporter_Key
+
+		annotation SummarizationSetBy = Automatic
+
+	column IncidentReporterName
+		dataType: string
+		lineageTag: e215bdad-077e-49d7-8983-2d98d654aa48
+		summarizeBy: none
+		sourceColumn: IncidentReporterName
+
+		annotation SummarizationSetBy = Automatic
+
+	column IncidentReporterPhoneNo
+		dataType: string
+		lineageTag: 4d46165d-bd47-4785-aa81-0ecf4239dca2
+		summarizeBy: none
+		sourceColumn: IncidentReporterPhoneNo
+
+		annotation SummarizationSetBy = Automatic
+
+	column IncidentReporterPhoneExt
+		dataType: string
+		lineageTag: 30ea8d6c-afd8-4369-961b-fb3c0cc808fe
+		summarizeBy: none
+		sourceColumn: IncidentReporterPhoneExt
+
+		annotation SummarizationSetBy = Automatic
+
+	column IncidentReporterEmail
+		dataType: string
+		lineageTag: 6e7d0730-6182-41ec-925e-19540577e141
+		summarizeBy: none
+		sourceColumn: IncidentReporterEmail
+
+		annotation SummarizationSetBy = Automatic
+
+	column VerbalNotificationProvided
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: c2d7eb57-f702-4e74-9e60-36b19553d937
+		summarizeBy: none
+		sourceColumn: VerbalNotificationProvided
+
+		annotation SummarizationSetBy = Automatic
+
+	column VerbalNotificationTimestamp
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 59b76eab-e937-4f9e-b661-3a4ff697dbdc
+		summarizeBy: none
+		sourceColumn: VerbalNotificationTimestamp
+
+		variation Variation
+			isDefault
+			relationship: 1858b95c-34c0-4bab-83c5-ec008a356019
+			defaultHierarchy: LocalDateTable_9264f1ce-9fc2-4d7e-b7d3-270db2d43c9c.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column ContactMethod
+		dataType: string
+		lineageTag: db848cb8-fb9c-45f2-a5a7-d736a81dcd24
+		summarizeBy: none
+		sourceColumn: ContactMethod
+
+		annotation SummarizationSetBy = Automatic
+
+	column ReportedToInspector
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 202f912d-a45f-46c1-8379-850b8eb020cf
+		summarizeBy: none
+		sourceColumn: ReportedToInspector
+
+		annotation SummarizationSetBy = Automatic
+
+	column EmergencyServiceCalled
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 7099d432-92c9-4871-b946-129517a0cc3b
+		summarizeBy: none
+		sourceColumn: EmergencyServiceCalled
+
+		annotation SummarizationSetBy = Automatic
+
+	column mine_incident_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 92219e1f-441a-44b0-8f11-1066b86003e0
+		summarizeBy: sum
+		sourceColumn: mine_incident_id
+
+		annotation SummarizationSetBy = Automatic
+
+	partition DimIncidentReporter = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Databases("mdp-sql-server.database.windows.net"),
+				    #"MDP-DWH" = Source{[Name="MDP-DWH"]}[Data],
+				    dbo_DimIncidentReporter = #"MDP-DWH"{[Schema="dbo",Item="DimIncidentReporter"]}[Data]
+				in
+				    dbo_DimIncidentReporter
+
+	annotation PBI_ResultType = Table
+

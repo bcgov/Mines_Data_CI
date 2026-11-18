@@ -1,0 +1,338 @@
+table public-sand_gravel_quarry_operation
+	lineageTag: 1adedba3-84fd-43da-aeb7-baa762d8e606
+
+	column activity_summary_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 3a34f331-b973-4d67-872c-3b0634945ef3
+		summarizeBy: sum
+		sourceColumn: activity_summary_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column average_overburden_depth
+		dataType: double
+		lineageTag: 02f76d89-7ad5-4f88-b1aa-926a84362f13
+		summarizeBy: sum
+		sourceColumn: average_overburden_depth
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column average_top_soil_depth
+		dataType: double
+		lineageTag: b3ffcb74-64bc-4cd7-b0b9-dd9c20819a8b
+		summarizeBy: sum
+		sourceColumn: average_top_soil_depth
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column stability_measures_description
+		dataType: string
+		lineageTag: 5ab8cecf-4605-430b-918d-e7c1a46c6bc5
+		summarizeBy: none
+		sourceColumn: stability_measures_description
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_agricultural_land_reserve
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 5a1e7116-851a-4c32-87a4-75c83635d3d1
+		summarizeBy: none
+		sourceColumn: is_agricultural_land_reserve
+
+		annotation SummarizationSetBy = Automatic
+
+	column agri_lnd_rsrv_permit_application_number
+		dataType: string
+		lineageTag: f3df15da-7a46-42fe-97c3-4291b8096776
+		summarizeBy: none
+		sourceColumn: agri_lnd_rsrv_permit_application_number
+
+		annotation SummarizationSetBy = Automatic
+
+	column has_local_soil_removal_bylaw
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: c366b314-6900-4143-aff3-75e5f6a19bd9
+		summarizeBy: none
+		sourceColumn: has_local_soil_removal_bylaw
+
+		annotation SummarizationSetBy = Automatic
+
+	column community_plan
+		dataType: string
+		lineageTag: 118c89c8-1164-4707-871b-ead71f716d71
+		summarizeBy: none
+		sourceColumn: community_plan
+
+		annotation SummarizationSetBy = Automatic
+
+	column land_use_zoning
+		dataType: string
+		lineageTag: f5c18ca4-f46f-4b9b-a9cc-9c18609da528
+		summarizeBy: none
+		sourceColumn: land_use_zoning
+
+		annotation SummarizationSetBy = Automatic
+
+	column proposed_land_use
+		dataType: string
+		lineageTag: 31128222-e638-440a-85aa-9054248f9ccb
+		summarizeBy: none
+		sourceColumn: proposed_land_use
+
+		annotation SummarizationSetBy = Automatic
+
+	column total_mineable_reserves
+		dataType: double
+		lineageTag: 0053815c-d562-415a-9dac-dff1ae2a08ad
+		summarizeBy: sum
+		sourceColumn: total_mineable_reserves
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column total_mineable_reserves_unit_type_code
+		dataType: string
+		lineageTag: 53007bde-7497-43d1-b8e6-4a0de417d599
+		summarizeBy: none
+		sourceColumn: total_mineable_reserves_unit_type_code
+
+		annotation SummarizationSetBy = Automatic
+
+	column total_annual_extraction
+		dataType: double
+		lineageTag: 142151db-b33b-4755-b0f8-8eaf90dcf895
+		summarizeBy: sum
+		sourceColumn: total_annual_extraction
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column total_annual_extraction_unit_type_code
+		dataType: string
+		lineageTag: bdcc5b90-4077-4fdb-aa5b-7d536ed2943d
+		summarizeBy: none
+		sourceColumn: total_annual_extraction_unit_type_code
+
+		annotation SummarizationSetBy = Automatic
+
+	column reclamation_backfill_detail
+		dataType: string
+		lineageTag: 82c4b569-e98f-4f43-88fa-0ba8af463f1d
+		summarizeBy: none
+		sourceColumn: reclamation_backfill_detail
+
+		annotation SummarizationSetBy = Automatic
+
+	column average_groundwater_depth
+		dataType: double
+		lineageTag: a8ba89ce-bb4c-435f-b128-9115cd55e361
+		summarizeBy: sum
+		sourceColumn: average_groundwater_depth
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column has_groundwater_from_existing_area
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 80933fa6-14de-46de-88ab-62b478678c31
+		summarizeBy: none
+		sourceColumn: has_groundwater_from_existing_area
+
+		annotation SummarizationSetBy = Automatic
+
+	column has_groundwater_from_test_pits
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 47ac9f45-1ee8-40f0-b1e6-a94367214d71
+		summarizeBy: none
+		sourceColumn: has_groundwater_from_test_pits
+
+		annotation SummarizationSetBy = Automatic
+
+	column has_groundwater_from_test_wells
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 9319c10c-75e4-482a-b34d-c9aae8270b25
+		summarizeBy: none
+		sourceColumn: has_groundwater_from_test_wells
+
+		annotation SummarizationSetBy = Automatic
+
+	column groundwater_from_other_description
+		dataType: string
+		lineageTag: 6eaad57d-3d63-4af1-a0e0-b2dfebf7c1c7
+		summarizeBy: none
+		sourceColumn: groundwater_from_other_description
+
+		annotation SummarizationSetBy = Automatic
+
+	column groundwater_protection_plan
+		dataType: string
+		lineageTag: 033fda15-209e-4fe7-9b31-44f473b4414d
+		summarizeBy: none
+		sourceColumn: groundwater_protection_plan
+
+		annotation SummarizationSetBy = Automatic
+
+	column nearest_residence_distance
+		dataType: double
+		lineageTag: bb272f81-8728-44a4-a57b-abdfe1e37901
+		summarizeBy: sum
+		sourceColumn: nearest_residence_distance
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column nearest_residence_distance_unit_type_code
+		dataType: string
+		lineageTag: ec378af8-6fc1-48b9-8f66-b2b502317a72
+		summarizeBy: none
+		sourceColumn: nearest_residence_distance_unit_type_code
+
+		annotation SummarizationSetBy = Automatic
+
+	column nearest_water_source_distance
+		dataType: double
+		lineageTag: b72a265d-6f8f-4219-86e0-6dbe6f96901f
+		summarizeBy: sum
+		sourceColumn: nearest_water_source_distance
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column nearest_water_source_distance_unit_type_code
+		dataType: string
+		lineageTag: cade65a1-387e-4f16-9495-4c84fdb85e77
+		summarizeBy: none
+		sourceColumn: nearest_water_source_distance_unit_type_code
+
+		annotation SummarizationSetBy = Automatic
+
+	column noise_impact_plan
+		dataType: string
+		lineageTag: 2e741737-3a5d-4b82-bb01-7d52419a15f5
+		summarizeBy: none
+		sourceColumn: noise_impact_plan
+
+		annotation SummarizationSetBy = Automatic
+
+	column secure_access_plan
+		dataType: string
+		lineageTag: e276cd2f-2599-4a35-99b1-25c3423bc0fc
+		summarizeBy: none
+		sourceColumn: secure_access_plan
+
+		annotation SummarizationSetBy = Automatic
+
+	column dust_impact_plan
+		dataType: string
+		lineageTag: 880fd435-3b7c-4d2d-b251-05fc2f3ea714
+		summarizeBy: none
+		sourceColumn: dust_impact_plan
+
+		annotation SummarizationSetBy = Automatic
+
+	column visual_impact_plan
+		dataType: string
+		lineageTag: f61fa089-ca96-4ec0-9a88-e612643e7633
+		summarizeBy: none
+		sourceColumn: visual_impact_plan
+
+		annotation SummarizationSetBy = Automatic
+
+	column average_overburden_depth_unit_type_code
+		dataType: string
+		lineageTag: efba97ae-199c-4e41-8e8a-dbb76ae409a4
+		summarizeBy: none
+		sourceColumn: average_overburden_depth_unit_type_code
+
+		annotation SummarizationSetBy = Automatic
+
+	column average_top_soil_depth_unit_type_code
+		dataType: string
+		lineageTag: a3b327f3-c4e3-45fc-96d2-7e8611b72a08
+		summarizeBy: none
+		sourceColumn: average_top_soil_depth_unit_type_code
+
+		annotation SummarizationSetBy = Automatic
+
+	column progressive_reclamation
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 4bbb6727-6c72-47f2-b7d8-072dcd9bfedf
+		summarizeBy: none
+		sourceColumn: progressive_reclamation
+
+		annotation SummarizationSetBy = Automatic
+
+	column max_unreclaimed
+		dataType: double
+		lineageTag: b5af5a0f-31df-4e8b-8c22-85e5b74b18d3
+		summarizeBy: sum
+		sourceColumn: max_unreclaimed
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column max_unreclaimed_unit_type_code
+		dataType: string
+		lineageTag: 2fe32d50-d9f5-4ac9-a1bc-66b3ab1fa201
+		summarizeBy: none
+		sourceColumn: max_unreclaimed_unit_type_code
+
+		annotation SummarizationSetBy = Automatic
+
+	column work_year_info
+		dataType: string
+		lineageTag: eaa2f818-db51-4514-9cb8-46d50acde4f9
+		summarizeBy: none
+		sourceColumn: work_year_info
+
+		annotation SummarizationSetBy = Automatic
+
+	column proposed_activity_description
+		dataType: string
+		lineageTag: 9336eaa2-4a53-49f0-94ce-f2a8a8b327d6
+		summarizeBy: none
+		sourceColumn: proposed_activity_description
+
+		annotation SummarizationSetBy = Automatic
+
+	column average_groundwater_depth_unit_type_code
+		dataType: string
+		lineageTag: fb116b84-4c12-4624-b939-bb11ac95de59
+		summarizeBy: none
+		sourceColumn: average_groundwater_depth_unit_type_code
+
+		annotation SummarizationSetBy = Automatic
+
+	partition public-sand_gravel_quarry_operation = m
+		mode: import
+		source =
+				let
+				    Source = AzureStorage.Blobs("datarepositorysa"),
+				    postgres1 = Source{[Name="postgres"]}[Data],
+				    #"Filtered Rows" = Table.SelectRows(postgres1, each ([Extension] = ".parquet")),
+				    #"https://datarepositorysa blob core windows net/postgres/_tables/parquet/public sand_gravel_quarry_operation parquet" = #"Filtered Rows"{[#"Folder Path"="https://datarepositorysa.blob.core.windows.net/postgres/",Name="tables/parquet/public.sand_gravel_quarry_operation.parquet"]}[Content],
+				    #"Imported Parquet" = Parquet.Document(#"https://datarepositorysa blob core windows net/postgres/_tables/parquet/public sand_gravel_quarry_operation parquet")
+				in
+				    #"Imported Parquet"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

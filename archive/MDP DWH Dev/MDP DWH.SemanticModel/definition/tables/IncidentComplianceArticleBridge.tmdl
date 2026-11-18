@@ -1,0 +1,39 @@
+table IncidentComplianceArticleBridge
+	lineageTag: 813c5273-4959-4849-bfc1-c9c651add625
+
+	column mine_incident_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 42b108c9-f7fc-4046-b1ef-cdc3ade6b652
+		summarizeBy: none
+		sourceColumn: mine_incident_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column compliance_article_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 9c25f08d-d2ec-4cbe-9bb8-4e25fed3dbb8
+		summarizeBy: sum
+		sourceColumn: compliance_article_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column ComplianceArticle_Key
+		dataType: int64
+		formatString: 0
+		lineageTag: 57b58bee-7d6d-4235-8837-f955a371d5f0
+		summarizeBy: none
+		sourceColumn: ComplianceArticle_Key
+
+		annotation SummarizationSetBy = Automatic
+
+	partition IncidentComplianceArticleBridge = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Database("mdp-sql-server.database.windows.net", "MDP-DWH"),
+				    dbo_v_IncidentComplianceArticleBridge = Source{[Schema="dbo",Item="v_IncidentComplianceArticleBridge"]}[Data]
+				in
+				    dbo_v_IncidentComplianceArticleBridge
+

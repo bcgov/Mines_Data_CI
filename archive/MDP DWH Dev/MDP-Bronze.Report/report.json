@@ -1,0 +1,81 @@
+{
+  "config": "{\"version\":\"5.59\",\"themeCollection\":{\"baseTheme\":{\"name\":\"CY24SU10\",\"version\":\"5.59\",\"type\":2}},\"activeSectionIndex\":1,\"defaultDrillFilterOtherVisuals\":true,\"linguisticSchemaSyncVersion\":2,\"settings\":{\"useNewFilterPaneExperience\":true,\"allowChangeFilterTypes\":true,\"useStylableVisualContainerHeader\":true,\"queryLimitOption\":6,\"useEnhancedTooltips\":true,\"exportDataMode\":1,\"useDefaultAggregateDisplayName\":true},\"objects\":{\"section\":[{\"properties\":{\"verticalAlignment\":{\"expr\":{\"Literal\":{\"Value\":\"'Top'\"}}}}}],\"outspacePane\":[{\"properties\":{\"expanded\":{\"expr\":{\"Literal\":{\"Value\":\"false\"}}}}}]}}",
+  "layoutOptimization": 0,
+  "resourcePackages": [
+    {
+      "resourcePackage": {
+        "disabled": false,
+        "items": [
+          {
+            "name": "CY24SU10",
+            "path": "BaseThemes/CY24SU10.json",
+            "type": 202
+          }
+        ],
+        "name": "SharedResources",
+        "type": 2
+      }
+    }
+  ],
+  "sections": [
+    {
+      "config": "{}",
+      "displayName": "Page 1",
+      "displayOption": 1,
+      "filters": "[]",
+      "height": 720.00,
+      "name": "11082197102901e6e117",
+      "visualContainers": [
+        {
+          "config": "{\"name\":\"0105dfdc7ce5d96b65a6\",\"layouts\":[{\"id\":0,\"position\":{\"x\":799.1534391534391,\"y\":10.158730158730158,\"z\":0,\"width\":456.0141093474427,\"height\":279.9294532627866,\"tabOrder\":0}}],\"singleVisual\":{\"visualType\":\"tableEx\",\"projections\":{\"Values\":[{\"queryRef\":\"public permit_amendment.mine_guid\"},{\"queryRef\":\"Sum(public permit_amendment.permit_id)\"}]},\"prototypeQuery\":{\"Version\":2,\"From\":[{\"Name\":\"p\",\"Entity\":\"public permit_amendment\",\"Type\":0}],\"Select\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"p\"}},\"Property\":\"mine_guid\"},\"Name\":\"public permit_amendment.mine_guid\",\"NativeReferenceName\":\"mine_guid\"},{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"p\"}},\"Property\":\"permit_id\"},\"Name\":\"Sum(public permit_amendment.permit_id)\",\"NativeReferenceName\":\"permit_id\"}],\"OrderBy\":[{\"Direction\":1,\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"p\"}},\"Property\":\"mine_guid\"}}}]},\"drillFilterOtherVisuals\":true,\"objects\":{}}}",
+          "filters": "[]",
+          "height": 279.93,
+          "width": 456.01,
+          "x": 799.15,
+          "y": 10.16,
+          "z": 0.00
+        },
+        {
+          "config": "{\"name\":\"83b37360ce15e0c4c078\",\"layouts\":[{\"id\":0,\"position\":{\"x\":13.544973544973544,\"y\":411.99294532627863,\"z\":1000,\"width\":183.98589065255732,\"height\":279.9294532627866,\"tabOrder\":1000}}],\"singleVisual\":{\"visualType\":\"slicer\",\"projections\":{\"Values\":[{\"queryRef\":\"_public permit_amendment grouped by Permit.permit_id\",\"active\":true}]},\"prototypeQuery\":{\"Version\":2,\"From\":[{\"Name\":\"_\",\"Entity\":\"_public permit_amendment grouped by Permit\",\"Type\":0}],\"Select\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"_\"}},\"Property\":\"permit_id\"},\"Name\":\"_public permit_amendment grouped by Permit.permit_id\",\"NativeReferenceName\":\"permit_id\"}]},\"drillFilterOtherVisuals\":true,\"objects\":{\"data\":[{\"properties\":{\"mode\":{\"expr\":{\"Literal\":{\"Value\":\"'Basic'\"}}}}}],\"general\":[{\"properties\":{\"orientation\":{\"expr\":{\"Literal\":{\"Value\":\"0D\"}}},\"filter\":{\"filter\":{\"Version\":2,\"From\":[{\"Name\":\"_\",\"Entity\":\"_public permit_amendment grouped by Permit\",\"Type\":0}],\"Where\":[{\"Condition\":{\"In\":{\"Expressions\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"_\"}},\"Property\":\"permit_id\"}}],\"Values\":[[{\"Literal\":{\"Value\":\"30629L\"}}]]}}}]}}}}],\"selection\":[{\"properties\":{\"selectAllCheckboxEnabled\":{\"expr\":{\"Literal\":{\"Value\":\"true\"}}}}}]}}}",
+          "filters": "[]",
+          "height": 279.93,
+          "width": 183.99,
+          "x": 13.54,
+          "y": 411.99,
+          "z": 1000.00
+        },
+        {
+          "config": "{\"name\":\"e9097ed440a80113497c\",\"layouts\":[{\"id\":0,\"position\":{\"x\":0,\"y\":0,\"z\":2000,\"width\":788.994708994709,\"height\":367.97178130511463,\"tabOrder\":2000}}],\"singleVisual\":{\"visualType\":\"tableEx\",\"projections\":{\"Values\":[{\"queryRef\":\"public permit_amendment.permit_id\"},{\"queryRef\":\"public permit_amendment.issue_date\"},{\"queryRef\":\"Sum(public permit_amendment.permit_amendment_id)\"}]},\"prototypeQuery\":{\"Version\":2,\"From\":[{\"Name\":\"p\",\"Entity\":\"public permit_amendment\",\"Type\":0}],\"Select\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"p\"}},\"Property\":\"issue_date\"},\"Name\":\"public permit_amendment.issue_date\",\"NativeReferenceName\":\"issue_date\"},{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"p\"}},\"Property\":\"permit_id\"},\"Name\":\"public permit_amendment.permit_id\",\"NativeReferenceName\":\"permit_id\"},{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"p\"}},\"Property\":\"permit_amendment_id\"},\"Name\":\"Sum(public permit_amendment.permit_amendment_id)\",\"NativeReferenceName\":\"permit_amendment_id\"}],\"OrderBy\":[{\"Direction\":2,\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"p\"}},\"Property\":\"issue_date\"}}}]},\"drillFilterOtherVisuals\":true}}",
+          "filters": "[]",
+          "height": 367.97,
+          "width": 788.99,
+          "x": 0.00,
+          "y": 0.00,
+          "z": 2000.00
+        }
+      ],
+      "width": 1280.00
+    },
+    {
+      "config": "{}",
+      "displayName": "Page 2",
+      "displayOption": 1,
+      "filters": "[]",
+      "height": 720.00,
+      "name": "9428c39505589adaab97",
+      "ordinal": 1,
+      "visualContainers": [
+        {
+          "config": "{\"name\":\"cfae068b71342e5db303\",\"layouts\":[{\"id\":0,\"position\":{\"x\":10,\"y\":0,\"width\":280,\"height\":280,\"z\":0,\"tabOrder\":0}}],\"singleVisual\":{\"visualType\":\"tableEx\",\"drillFilterOtherVisuals\":true}}",
+          "filters": "[]",
+          "height": 280.00,
+          "width": 280.00,
+          "x": 10.00,
+          "y": 0.00,
+          "z": 0.00
+        }
+      ],
+      "width": 1280.00
+    }
+  ]
+}

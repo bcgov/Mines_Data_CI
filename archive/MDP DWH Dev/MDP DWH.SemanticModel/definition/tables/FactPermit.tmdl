@@ -1,0 +1,151 @@
+table FactPermit
+	lineageTag: 5d553031-4886-469b-b010-9e16e23693ee
+
+	column PermitPK
+		dataType: int64
+		formatString: 0
+		lineageTag: 41e5abe8-0be4-4cba-bf92-b97fd40fa2c4
+		summarizeBy: sum
+		sourceColumn: PermitPK
+
+		annotation SummarizationSetBy = Automatic
+
+	column MineExt_Key
+		dataType: int64
+		formatString: 0
+		lineageTag: fc92c381-9793-42a4-bc3d-545a606d3ce2
+		summarizeBy: none
+		sourceColumn: MineExt_Key
+
+		annotation SummarizationSetBy = Automatic
+
+	column PermitDetail_Key
+		dataType: int64
+		formatString: 0
+		lineageTag: e41a6d1c-7a39-454b-837b-74b8fc1d1b98
+		summarizeBy: none
+		sourceColumn: PermitDetail_Key
+
+		annotation SummarizationSetBy = Automatic
+
+	column Create_Timestamp
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: ce5e8383-1fa2-4ef2-8f92-71a81280aafc
+		summarizeBy: none
+		sourceColumn: Create_Timestamp
+
+		variation Variation
+			isDefault
+			relationship: df959eef-189e-4239-8a06-fd3d3c0cfd67
+			defaultHierarchy: LocalDateTable_78eb6eee-a1df-4972-b1bd-914f69349f0f.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column Permit_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 318b89be-bcbc-4e63-ba7c-e14acb92d32b
+		summarizeBy: sum
+		sourceColumn: Permit_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column ETL_LastModified
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 0c49f1bb-d899-467a-9455-ec16d002ad7b
+		summarizeBy: none
+		sourceColumn: ETL_LastModified
+
+		variation Variation
+			isDefault
+			relationship: c6ea4c4b-7a69-43d2-bfca-439f8cd2b02c
+			defaultHierarchy: LocalDateTable_bfe7df66-4b58-45fa-9f4a-6bc6ca12bcab.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column FirstIssue_Date_Key
+		dataType: int64
+		formatString: 0
+		lineageTag: 760f570c-d37f-4c57-9a42-b07b61b4c09e
+		summarizeBy: none
+		sourceColumn: FirstIssue_Date_Key
+
+		annotation SummarizationSetBy = Automatic
+
+	column LastIssue_Date_Key
+		dataType: int64
+		formatString: 0
+		lineageTag: 73ce8dde-b7b0-4462-9fd4-0045c4974118
+		summarizeBy: none
+		sourceColumn: LastIssue_Date_Key
+
+		annotation SummarizationSetBy = Automatic
+
+	column FirstIssueDate
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: fa684604-9994-4818-bd18-e3dcf21e8334
+		summarizeBy: none
+		sourceColumn: FirstIssueDate
+
+		variation Variation
+			isDefault
+			relationship: aff096b3-fe79-455b-a850-37c04069848c
+			defaultHierarchy: LocalDateTable_3546528d-1af6-497b-b92d-2de2409dc6e8.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column LastIssueDate
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: a3abd41b-2577-4d23-bba6-6f804ec79f76
+		summarizeBy: none
+		sourceColumn: LastIssueDate
+
+		variation Variation
+			isDefault
+			relationship: e2b237f1-88b3-42a4-8a80-f0e0f269de3d
+			defaultHierarchy: LocalDateTable_5e005b2d-c05d-4a2a-8f9e-db106f46827d.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column AmendmentNumber
+		dataType: int64
+		formatString: 0
+		lineageTag: 4840fc1b-8f92-4466-be71-be9d0b90eb29
+		summarizeBy: sum
+		sourceColumn: AmendmentNumber
+
+		annotation SummarizationSetBy = Automatic
+
+	column BondAmount
+		dataType: decimal
+		formatString: \$#,0.###############;(\$#,0.###############);\$#,0.###############
+		lineageTag: c5bee517-a324-4f13-9cbc-168ebf294d46
+		summarizeBy: sum
+		sourceColumn: BondAmount
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-US"}
+
+	partition FactPermit = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Databases("mdp-sql-server.database.windows.net"),
+				    #"MDP-DWH" = Source{[Name="MDP-DWH"]}[Data],
+				    dbo_FactPermit = #"MDP-DWH"{[Schema="dbo",Item="FactPermit"]}[Data]
+				in
+				    dbo_FactPermit
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

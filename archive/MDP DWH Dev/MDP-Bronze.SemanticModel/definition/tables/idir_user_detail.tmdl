@@ -1,0 +1,121 @@
+table idir_user_detail
+	lineageTag: faa7fc37-9d91-46e1-9bfe-dcd3056f331c
+
+	column idir_user_detail_id
+		dataType: int64
+		formatString: 0
+		lineageTag: c64173fa-3d60-480f-ab5f-91f516e8849d
+		summarizeBy: sum
+		sourceColumn: idir_user_detail_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column core_user_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 33cb2e91-5ce6-48dd-9590-28820dd25aa0
+		summarizeBy: sum
+		sourceColumn: core_user_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column bcgov_guid
+		dataType: string
+		lineageTag: a86f6d23-7825-4a6c-8708-8ed143ec7a11
+		summarizeBy: none
+		sourceColumn: bcgov_guid
+
+		annotation SummarizationSetBy = Automatic
+
+	column username
+		dataType: string
+		lineageTag: 1911c464-bef0-461c-9ab0-02688ddbb3a0
+		summarizeBy: none
+		sourceColumn: username
+
+		annotation SummarizationSetBy = Automatic
+
+	column title
+		dataType: string
+		lineageTag: 68865106-257b-4a71-99b7-eef776799034
+		summarizeBy: none
+		sourceColumn: title
+
+		annotation SummarizationSetBy = Automatic
+
+	column city
+		dataType: string
+		lineageTag: 1292fdfe-b1e4-45fd-b104-713a8a9419ec
+		summarizeBy: none
+		sourceColumn: city
+
+		annotation SummarizationSetBy = Automatic
+
+	column department
+		dataType: string
+		lineageTag: 17b3de04-a591-4d0e-98b7-925e3f3bcd44
+		summarizeBy: none
+		sourceColumn: department
+
+		annotation SummarizationSetBy = Automatic
+
+	column create_user
+		dataType: string
+		lineageTag: 3a6fb420-d9eb-43ec-b8dc-fca0af028dcd
+		summarizeBy: none
+		sourceColumn: create_user
+
+		annotation SummarizationSetBy = Automatic
+
+	column create_timestamp
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 2d1f9092-08aa-4193-9780-e3a2921bb1d4
+		summarizeBy: none
+		sourceColumn: create_timestamp
+
+		variation Variation
+			isDefault
+			relationship: 75986543-3c7d-4707-96f3-5b6627f31d15
+			defaultHierarchy: LocalDateTable_ac7153f9-3ec4-4047-a40a-f665670b01b6.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column update_user
+		dataType: string
+		lineageTag: c0b848a4-a567-46fc-bb30-abf4f1032245
+		summarizeBy: none
+		sourceColumn: update_user
+
+		annotation SummarizationSetBy = Automatic
+
+	column update_timestamp
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 096ae3f2-980a-4cbf-8f9d-bbd8c703d780
+		summarizeBy: none
+		sourceColumn: update_timestamp
+
+		variation Variation
+			isDefault
+			relationship: 8d238aed-d5e1-4fa9-b25d-f32fcfad906f
+			defaultHierarchy: LocalDateTable_5c788172-38ad-44f9-af1d-63770fb274f5.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	partition idir_user_detail = m
+		mode: import
+		source =
+				let
+				    Source = AzureStorage.Blobs("datarepositorysa"),
+				    postgres1 = Source{[Name="postgres"]}[Data],
+				    #"Filtered Rows" = Table.SelectRows(postgres1, each ([Extension] = ".parquet")),
+				    #"https://datarepositorysa blob core windows net/postgres/_tables/parquet/public idir_user_detail parquet" = #"Filtered Rows"{[#"Folder Path"="https://datarepositorysa.blob.core.windows.net/postgres/",Name="tables/parquet/public.idir_user_detail.parquet"]}[Content],
+				    #"Imported Parquet" = Parquet.Document(#"https://datarepositorysa blob core windows net/postgres/_tables/parquet/public idir_user_detail parquet")
+				in
+				    #"Imported Parquet"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

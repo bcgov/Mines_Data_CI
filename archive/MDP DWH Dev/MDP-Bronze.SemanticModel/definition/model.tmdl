@@ -1,0 +1,180 @@
+model Model
+	culture: en-CA
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: en-CA
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+annotation PBI_QueryOrder = ["nris-inspected_location","nris-inspection","nris-inspection_reason","nris-inspection_status","nris-inspection_substatus","nris-inspection_type","nris-legislation_act_section","nris-order_stop_detail","idir_user_detail","public-mine_incident","public-mine_incident_category","public-mine_region_code","public-mine_report","public-mine_report_category","public-mine_status","public-mine_type","public-permit_status_code","public-regions","public-sand_gravel_quarry_operation","public-variance","public-mine","public mine_summary_view","nris-nris_raw_data","public mine_summary_view - duplicates","public permit_amendment","public permit_amendment_document","public permit_amendment_status_code","public permit_amendment_type_code","public permit_condition_category","public permit_condition_type","_public permit_amendment grouped by Permit","public permit","public bond","public bond_permit_xref","public bond_type","public bond_status","public bond_view","nris-location","nris-order_advisory_detail","nris-order_request_detail","nris-order_warning_detail","nris-order_stop_detail_document_xref","public-now_application","public-applications_view"]
+
+annotation __PBI_TimeIntelligenceEnabled = 1
+
+annotation PBIDesktopVersion = 2.138.1452.0 (24.11)
+
+ref table nris-inspected_location
+ref table nris-inspection
+ref table DateTableTemplate_3b37ec60-30f6-439a-84a9-c0556c269ed6
+ref table LocalDateTable_292e3d62-c4dd-4522-8702-0b5c52056f20
+ref table LocalDateTable_5db42a0e-6129-466d-8c9f-23faadbe9102
+ref table LocalDateTable_e2fad461-8ef4-4976-a811-2c13dfba6bfa
+ref table LocalDateTable_7be0fbee-6911-4d87-847a-774545b69b38
+ref table LocalDateTable_62e811e8-5c2d-432b-826a-e90cfabb3ffb
+ref table nris-inspection_reason
+ref table nris-inspection_status
+ref table nris-inspection_substatus
+ref table nris-inspection_type
+ref table nris-legislation_act_section
+ref table nris-order_stop_detail
+ref table LocalDateTable_ab628d35-4645-4cab-872f-2737efa612ee
+ref table LocalDateTable_d10e0526-7764-4862-b9e9-37744ea6a6af
+ref table idir_user_detail
+ref table LocalDateTable_ac7153f9-3ec4-4047-a40a-f665670b01b6
+ref table LocalDateTable_5c788172-38ad-44f9-af1d-63770fb274f5
+ref table public-mine_incident
+ref table LocalDateTable_e593c88b-2449-4ba6-b0a8-9ec66f484383
+ref table LocalDateTable_103aff60-d17d-4e83-a8cc-b3475abca428
+ref table LocalDateTable_1f49b1c3-03af-49f6-bccd-027d3c425555
+ref table LocalDateTable_bc7d55ac-e5b1-4c71-a45e-4332a917788d
+ref table LocalDateTable_a4001bf5-0c7e-4598-9efa-238d8f13eb9a
+ref table LocalDateTable_3fda8c8a-d8ed-4bad-b8f9-7d8740f5ed71
+ref table LocalDateTable_05634fb5-6222-49b9-a9b1-256077d485fd
+ref table LocalDateTable_d78ed72a-61a2-46a1-8cbc-257281adf15d
+ref table public-mine_incident_category
+ref table LocalDateTable_559b9599-136d-4f3b-8eed-801334357621
+ref table LocalDateTable_9a59d976-d8b1-430e-a3af-e89bbd1a9454
+ref table LocalDateTable_e0bbfab1-7791-4bb2-ae72-ed9288849eee
+ref table LocalDateTable_301a035b-3d91-4d2e-a347-728d65e71640
+ref table LocalDateTable_2d0f39f0-8c60-4b05-a3d2-95edab0a0f4d
+ref table LocalDateTable_199fc7b7-2677-4101-a57d-411b3639588b
+ref table LocalDateTable_c8c39e86-2a27-42ea-9ed2-dec8a8bc7353
+ref table LocalDateTable_df7b5779-9a81-4458-b1f1-1d2f52c213c3
+ref table public-mine_region_code
+ref table LocalDateTable_5da3ee28-df57-4a46-8ace-6b6a02a920c4
+ref table LocalDateTable_780ae665-b494-4b68-ac74-15f7be5e5780
+ref table LocalDateTable_67d88783-1a9e-4758-86ef-a528788defdc
+ref table LocalDateTable_83543d2b-6746-4f3d-b04d-8599635698fe
+ref table public-mine_report
+ref table LocalDateTable_52d00f22-c9cb-497f-9802-845451571e51
+ref table LocalDateTable_b2f71eaf-90a6-4b45-a067-05ce7da6c104
+ref table LocalDateTable_c73eabe9-2b0b-4a39-bde7-e867c83d9a76
+ref table LocalDateTable_2583b286-783c-44ec-aeb4-e23087e384b6
+ref table public-mine_report_category
+ref table LocalDateTable_54df91e7-d883-43be-8898-864f49ba461e
+ref table LocalDateTable_25594cd8-0121-4674-82ef-403f8a61edd1
+ref table public-mine_status
+ref table public-mine_type
+ref table public-permit_status_code
+ref table public-regions
+ref table public-sand_gravel_quarry_operation
+ref table public-variance
+ref table LocalDateTable_bac0dd1f-d159-4c89-be72-9cf0e2624a2a
+ref table LocalDateTable_9c6dfe52-1b73-4285-9ab3-b59cc6852e0f
+ref table LocalDateTable_5ffcfb12-ca83-41f6-9132-5fb57691d804
+ref table LocalDateTable_cc2af8af-8983-4997-af30-44d1ca76c8bf
+ref table LocalDateTable_0b004e7c-fab0-4fc3-b026-90d227708cc4
+ref table LocalDateTable_b28906e5-2440-44b8-9e15-0ed715837db7
+ref table LocalDateTable_7af286e6-9a6b-424a-bb06-e4d9cf315df3
+ref table LocalDateTable_42f3a072-7a72-45d5-bde7-acae9ff1cdc2
+ref table LocalDateTable_6bfae9b0-a490-4fed-934c-6e706889c6b2
+ref table LocalDateTable_8d20b24c-fb45-4f5c-8f68-9223d92cca03
+ref table LocalDateTable_bb0f7e66-1404-48dd-b1fc-ade1b2e44fce
+ref table LocalDateTable_f8552c35-3626-4d87-a86b-b8a2361c8a69
+ref table LocalDateTable_a4b2574c-8be4-4f9b-8318-59defefc633c
+ref table LocalDateTable_e164e6fb-691f-419f-94e3-6a46a22a36ce
+ref table LocalDateTable_558c6c57-6775-48de-98e7-7cbea21084cc
+ref table LocalDateTable_69002925-367f-4caa-ae46-3ccd1e9af7ac
+ref table LocalDateTable_da60a36c-e0ff-4f13-99d9-d330f81d5a9f
+ref table LocalDateTable_15f3ad80-bdc6-457a-92fb-5cc923d80a9b
+ref table LocalDateTable_fb2937b1-d65c-4046-812e-bea230a8c08b
+ref table LocalDateTable_bc52a38e-45e7-4394-ade0-ceb52e51397f
+ref table public-mine
+ref table LocalDateTable_00b104ca-4a81-4d17-9b13-538c30062610
+ref table LocalDateTable_88e66d4b-323e-4d74-acc6-dae7140dfcc8
+ref table 'public mine_summary_view'
+ref table LocalDateTable_2b770500-bd69-4521-966e-e4e5a5f0df82
+ref table LocalDateTable_f802abe3-e08f-40d4-8672-432925c47750
+ref table nris-nris_raw_data
+ref table LocalDateTable_8a240a7b-5a55-421d-bdc2-0f9c1a73f80e
+ref table LocalDateTable_40883bd4-c73c-422c-912c-243e5f732e28
+ref table 'public mine_summary_view - duplicates'
+ref table 'public permit_amendment'
+ref table LocalDateTable_cd8f66fe-86ba-447d-a2de-54bcf04c4497
+ref table LocalDateTable_1e0502ff-d7e8-405d-a2aa-d395009e0148
+ref table LocalDateTable_4c2ee675-6d04-4197-9004-eb91109b0e75
+ref table LocalDateTable_182939ad-bbc0-42e3-ad92-4c2ebbd23abd
+ref table LocalDateTable_030731d6-1cea-418a-8c13-d055a94c4fdf
+ref table LocalDateTable_c4a3d764-9fea-4b3f-b0e5-3f031eea88fe
+ref table LocalDateTable_603ed0d6-7ca1-421e-b38b-e73a533204cc
+ref table 'public permit_amendment_document'
+ref table LocalDateTable_2e2cbb93-6579-456c-a3cc-94c7fa63040d
+ref table LocalDateTable_d07417f1-e1c8-4fcb-b069-6ada8603d8bc
+ref table LocalDateTable_256581bc-dbfc-49d5-b2f3-192f38ea8a69
+ref table 'public permit_amendment_status_code'
+ref table LocalDateTable_ef7afad3-9585-415d-9f84-71d41127912b
+ref table LocalDateTable_868dbdca-c23b-483b-abdd-d13642886833
+ref table 'public permit_amendment_type_code'
+ref table LocalDateTable_4c4bc940-0d38-44c5-a62b-4448049a37af
+ref table LocalDateTable_ce51c76d-de4d-456d-9ab2-41c10f33e1c7
+ref table 'public permit_condition_category'
+ref table LocalDateTable_02f5a1c3-5511-4197-bfc2-5c028ca1ba74
+ref table LocalDateTable_a9eb7902-3307-4050-af1d-d0eb4abafaf4
+ref table 'public permit_condition_type'
+ref table LocalDateTable_fac5da37-e93a-4f12-9430-b2363ada2f44
+ref table LocalDateTable_99c6fad6-30e1-4e2b-842a-ebf29df99b1a
+ref table '_public permit_amendment grouped by Permit'
+ref table 'public permit'
+ref table LocalDateTable_7c77f9f3-4590-4472-806d-1e59ff7e1a44
+ref table LocalDateTable_08c41eec-51f2-4c47-9d26-88053ff5d3cf
+ref table LocalDateTable_d6c50ad8-fbb6-4456-a52a-4425c64f8219
+ref table 'public bond'
+ref table LocalDateTable_fa0c0960-a399-48b1-b148-531216188d8d
+ref table LocalDateTable_7706975b-7ca1-4473-83d2-a302d93e14a1
+ref table LocalDateTable_76c23baa-decd-4642-9c89-8bab3082ed1a
+ref table LocalDateTable_cf0e8c3d-4676-4b0d-87ca-c01ae29189f8
+ref table 'public bond_permit_xref'
+ref table 'public bond_type'
+ref table LocalDateTable_dd10925d-7c88-4c50-b4ca-c8ff83037b8a
+ref table LocalDateTable_d686050b-3772-424a-b85d-963005d9ed3f
+ref table 'public bond_status'
+ref table LocalDateTable_3b026336-b878-49a2-b48d-abd6bdc2d264
+ref table LocalDateTable_6d2f33e7-37a1-4b31-8db3-d02199982a56
+ref table 'public bond_view'
+ref table LocalDateTable_1cfc96e7-a35f-45c1-8f82-a8d954485d0f
+ref table LocalDateTable_abc53eb0-7245-4471-99f7-a574e2982feb
+ref table LocalDateTable_80d80306-3274-4f3e-ab99-7339ac6e69fb
+ref table nris-location
+ref table nris-order_advisory_detail
+ref table nris-order_request_detail
+ref table LocalDateTable_f2c0c2d8-ffde-4636-b91d-b30a3f98faa8
+ref table nris-order_warning_detail
+ref table LocalDateTable_6714bf9c-6f83-4f8c-82c6-a6f2ea6fad48
+ref table LocalDateTable_4aa014c4-72a8-4028-bf62-69c69cc9c0d2
+ref table nris-order_stop_detail_document_xref
+ref table LocalDateTable_5ea09399-3fda-4d7f-8813-5d20aa246f9a
+ref table LocalDateTable_a92996a4-37cb-401d-9da2-b61d07401120
+ref table public-now_application
+ref table LocalDateTable_b941c670-824a-48f3-9e33-4d60a1ce9c71
+ref table LocalDateTable_3d7f1768-8505-433b-90f6-112278cd59ca
+ref table LocalDateTable_422e4d44-c255-4dfb-b7a1-11a3ae0839ff
+ref table LocalDateTable_f7475a68-b696-4774-a3f6-18567dcd63a7
+ref table LocalDateTable_0a18e3fd-a0af-4253-ad28-4887542319ed
+ref table LocalDateTable_f67a4e60-bd7b-4319-b189-f3d02b2b8dd7
+ref table LocalDateTable_9a45a291-6e43-4b25-9526-6893ab3c3e91
+ref table LocalDateTable_bffe876e-2fa5-4fd3-a2a0-36efe06799f0
+ref table LocalDateTable_34c07816-70cb-4e81-86f9-9d2a26104bca
+ref table LocalDateTable_50b84819-0ee3-46db-853f-b5ce808e9064
+ref table LocalDateTable_8f5542cd-1f51-4e5c-b180-f9442aa68481
+ref table LocalDateTable_28346bf1-c685-48e3-917f-3e008c081217
+ref table LocalDateTable_01aaaebf-29c9-426d-80a0-ab17f9913efd
+ref table LocalDateTable_f9c4d47b-d57e-4af9-a1da-a62a1f3d9cf3
+ref table public-applications_view
+ref table LocalDateTable_38441861-1af4-423f-a687-502fa900f107
+ref table LocalDateTable_d02027ab-5b40-4724-bf0a-ff63dd1da24c
+ref table LocalDateTable_82f39faa-a6e9-4329-95b0-fce2c4c1fab8
+ref table LocalDateTable_22050fde-48a7-45ca-8851-ef49a61395f7
+ref table LocalDateTable_8782188f-8dbf-43b6-93c9-2e138a7d6efd
+ref table LocalDateTable_8448e303-2f7e-4a21-8283-445c1676e2bb
+
+ref cultureInfo en-CA
+

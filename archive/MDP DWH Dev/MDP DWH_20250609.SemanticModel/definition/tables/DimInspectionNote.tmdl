@@ -1,0 +1,65 @@
+table DimInspectionNote
+	lineageTag: 3a6dfef8-6c06-40fc-8f5c-db2a21f93cd9
+
+	column InspectionNote_Key
+		dataType: int64
+		formatString: 0
+		lineageTag: 8a7f6a7c-2307-45b4-a3a9-23814679b14e
+		summarizeBy: none
+		sourceColumn: InspectionNote_Key
+
+		annotation SummarizationSetBy = Automatic
+
+	column InspectionIntroduction
+		dataType: string
+		lineageTag: 1b9446a1-0330-4a97-9704-bac9266afbf4
+		summarizeBy: none
+		sourceColumn: InspectionIntroduction
+
+		annotation SummarizationSetBy = Automatic
+
+	column InspectionPreamble
+		dataType: string
+		lineageTag: dac732d8-f91b-4440-9615-a15d6c2be375
+		summarizeBy: none
+		sourceColumn: InspectionPreamble
+
+		annotation SummarizationSetBy = Automatic
+
+	column InspectionClosing
+		dataType: string
+		lineageTag: 3c4b3fad-efd5-47e0-b859-0af99a2433a9
+		summarizeBy: none
+		sourceColumn: InspectionClosing
+
+		annotation SummarizationSetBy = Automatic
+
+	column InspectionOficerNote
+		dataType: string
+		lineageTag: f1d0eca9-0a29-4bde-9073-9a054965d5d3
+		summarizeBy: none
+		sourceColumn: InspectionOficerNote
+
+		annotation SummarizationSetBy = Automatic
+
+	column inspection_id
+		dataType: int64
+		formatString: 0
+		lineageTag: cf12f2c3-a68b-4d92-a3fa-3da2e04b2928
+		summarizeBy: none
+		sourceColumn: inspection_id
+
+		annotation SummarizationSetBy = Automatic
+
+	partition DimInspectionNote = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Databases("mdp-sql-server.database.windows.net"),
+				    #"MDP-DWH" = Source{[Name="MDP-DWH"]}[Data],
+				    dbo_DimInspectionNote = #"MDP-DWH"{[Schema="dbo",Item="DimInspectionNote"]}[Data]
+				in
+				    dbo_DimInspectionNote
+
+	annotation PBI_ResultType = Table
+

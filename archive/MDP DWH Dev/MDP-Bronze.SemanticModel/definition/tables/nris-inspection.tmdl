@@ -1,0 +1,239 @@
+table nris-inspection
+	lineageTag: add80e2d-fc14-4cd9-a483-1c03d1fddba1
+
+	column inspection_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 2b708f58-8545-4b10-98a3-96d0ccd16b3a
+		summarizeBy: sum
+		sourceColumn: inspection_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column external_id
+		dataType: int64
+		formatString: 0
+		lineageTag: b43b8335-e912-4396-97e4-b2881e485b59
+		summarizeBy: sum
+		sourceColumn: external_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column inspection_date
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 7c2b4fbd-8a35-4f96-b188-3246325ad32c
+		summarizeBy: none
+		sourceColumn: inspection_date
+
+		variation Variation
+			isDefault
+			relationship: 51299a9d-17d0-4d1a-8119-57c26af350d9
+			defaultHierarchy: LocalDateTable_292e3d62-c4dd-4522-8702-0b5c52056f20.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column completed_date
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 904dc976-b2bc-4bf5-92c8-65faffc2133a
+		summarizeBy: none
+		sourceColumn: completed_date
+
+		variation Variation
+			isDefault
+			relationship: 1c9945a7-ca5c-47eb-b9ae-5b4e3d761987
+			defaultHierarchy: LocalDateTable_5db42a0e-6129-466d-8c9f-23faadbe9102.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column inspection_status_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 10ff3b75-a9ba-4f84-a952-f944d0d79af9
+		summarizeBy: sum
+		sourceColumn: inspection_status_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column business_area
+		dataType: string
+		lineageTag: 400aa4e1-c425-447d-bdc2-38fe690d83a9
+		summarizeBy: none
+		sourceColumn: business_area
+
+		annotation SummarizationSetBy = Automatic
+
+	column mine_no
+		dataType: string
+		lineageTag: d370c1e6-c821-4414-81b4-184dc8a136b9
+		summarizeBy: none
+		sourceColumn: mine_no
+
+		annotation SummarizationSetBy = Automatic
+
+	column inspector_idir
+		dataType: string
+		lineageTag: 860c8013-673c-493e-8ecb-3c2603a0f1c2
+		summarizeBy: none
+		sourceColumn: inspector_idir
+
+		annotation SummarizationSetBy = Automatic
+
+	column inspection_introduction
+		dataType: string
+		lineageTag: 98e99713-2357-401e-b0ea-9347b8a2af8b
+		summarizeBy: none
+		sourceColumn: inspection_introduction
+
+		annotation SummarizationSetBy = Automatic
+
+	column inspection_preamble
+		dataType: string
+		lineageTag: 304a9319-71fb-4ddc-a7aa-f6d4340a2059
+		summarizeBy: none
+		sourceColumn: inspection_preamble
+
+		annotation SummarizationSetBy = Automatic
+
+	column inspection_closing
+		dataType: string
+		lineageTag: dfcc6153-cf59-4614-94f9-a1a553a188f9
+		summarizeBy: none
+		sourceColumn: inspection_closing
+
+		annotation SummarizationSetBy = Automatic
+
+	column officer_notes
+		dataType: string
+		lineageTag: d38502c1-46a3-4906-b9b7-a7bebb4cfcb1
+		summarizeBy: none
+		sourceColumn: officer_notes
+
+		annotation SummarizationSetBy = Automatic
+
+	column inspection_report_sent_date
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 51b51e6c-803e-487c-a358-4b25053ed39a
+		summarizeBy: none
+		sourceColumn: inspection_report_sent_date
+
+		variation Variation
+			isDefault
+			relationship: d68b5d28-b1a9-4a4a-a36f-66d1ef3bb343
+			defaultHierarchy: LocalDateTable_e2fad461-8ef4-4976-a811-2c13dfba6bfa.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column inspection_type_id
+		dataType: int64
+		formatString: 0
+		lineageTag: dacf8b13-4a3e-4116-b06c-ec0f01d6761d
+		summarizeBy: sum
+		sourceColumn: inspection_type_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column inspection_from_date
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 0b3afe90-a59d-4193-8149-6e37281f1eef
+		summarizeBy: none
+		sourceColumn: inspection_from_date
+
+		variation Variation
+			isDefault
+			relationship: 468ab6b9-d70e-42df-9c4b-07ead76cba27
+			defaultHierarchy: LocalDateTable_7be0fbee-6911-4d87-847a-774545b69b38.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column inspection_to_date
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 71d100b9-f15e-4ff6-a7c0-36e32a4dc8e4
+		summarizeBy: none
+		sourceColumn: inspection_to_date
+
+		variation Variation
+			isDefault
+			relationship: d63a4bc5-27f5-4178-aba8-e57e815172c1
+			defaultHierarchy: LocalDateTable_62e811e8-5c2d-432b-826a-e90cfabb3ffb.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column inspection_auth_source_application
+		dataType: string
+		lineageTag: 8fe0e94f-da7b-43cc-87b2-eabe0034812e
+		summarizeBy: none
+		sourceColumn: inspection_auth_source_application
+
+		annotation SummarizationSetBy = Automatic
+
+	column inspection_auth_source_id
+		dataType: string
+		lineageTag: 0a50a646-c932-48c4-84ec-7164b9dd52f3
+		summarizeBy: none
+		sourceColumn: inspection_auth_source_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column inspection_auth_status
+		dataType: string
+		lineageTag: 463bad9a-ebae-434b-90fd-1e6af71ed110
+		summarizeBy: none
+		sourceColumn: inspection_auth_status
+
+		annotation SummarizationSetBy = Automatic
+
+	column inspection_auth_type
+		dataType: string
+		lineageTag: 5a129de0-57d0-4b9d-9cbb-4d7f72fe2cbb
+		summarizeBy: none
+		sourceColumn: inspection_auth_type
+
+		annotation SummarizationSetBy = Automatic
+
+	column inspection_reason_id
+		dataType: int64
+		formatString: 0
+		lineageTag: ab9ccacb-a90b-49e9-aeb8-f44d1d85a353
+		summarizeBy: sum
+		sourceColumn: inspection_reason_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column inspection_substatus_id
+		dataType: int64
+		formatString: 0
+		lineageTag: f303950f-3299-4420-9b52-84a22a93686e
+		summarizeBy: sum
+		sourceColumn: inspection_substatus_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column assessment_sub_type
+		dataType: string
+		lineageTag: 582f8193-1599-469c-af69-aeb9e4e56d24
+		summarizeBy: none
+		sourceColumn: assessment_sub_type
+
+		annotation SummarizationSetBy = Automatic
+
+	partition nris-inspection = m
+		mode: import
+		source =
+				let
+				    Source = AzureStorage.Blobs("datarepositorysa"),
+				    postgres1 = Source{[Name="postgres"]}[Data],
+				    #"Filtered Rows" = Table.SelectRows(postgres1, each ([Extension] = ".parquet")),
+				    #"https://datarepositorysa blob core windows net/postgres/_tables/parquet/nris inspected_location parquet" = #"Filtered Rows"{[#"Folder Path"="https://datarepositorysa.blob.core.windows.net/postgres/",Name="tables/parquet/nris.inspection.parquet"]}[Content],
+				    #"Imported Parquet" = Parquet.Document(#"https://datarepositorysa blob core windows net/postgres/_tables/parquet/nris inspected_location parquet")
+				in
+				    #"Imported Parquet"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

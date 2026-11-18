@@ -1,0 +1,128 @@
+table DimInspector
+	lineageTag: c0c3c83c-30d6-48f5-a119-2358c0032ad3
+
+	column User_Key
+		dataType: int64
+		formatString: 0
+		lineageTag: c8f8eaf0-5bfb-400b-aff8-95432068ae68
+		summarizeBy: none
+		sourceColumn: User_Key
+
+		annotation SummarizationSetBy = Automatic
+
+	column idir_user_detail_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 848aa79d-919a-4914-9948-e048a2b2d0ad
+		summarizeBy: sum
+		sourceColumn: idir_user_detail_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column core_user_id
+		dataType: int64
+		formatString: 0
+		lineageTag: aeb8a2ef-ddf0-45f7-96c4-8d00c14f98ea
+		summarizeBy: sum
+		sourceColumn: core_user_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column bcgov_guid
+		dataType: string
+		lineageTag: 6b6051b9-9ded-4948-88a7-1dcad2f66923
+		summarizeBy: none
+		sourceColumn: bcgov_guid
+
+		annotation SummarizationSetBy = Automatic
+
+	column Title
+		dataType: string
+		lineageTag: 198e0356-c33b-4d1a-bdb9-da78b1c7dd02
+		summarizeBy: none
+		sourceColumn: Title
+
+		annotation SummarizationSetBy = Automatic
+
+	column City
+		dataType: string
+		lineageTag: f1f34a45-633b-4f8d-a90c-76ac5624fbb5
+		summarizeBy: none
+		sourceColumn: City
+
+		annotation SummarizationSetBy = Automatic
+
+	column Department
+		dataType: string
+		lineageTag: 07219230-5666-4db3-87d4-e3b96f8078e3
+		summarizeBy: none
+		sourceColumn: Department
+
+		annotation SummarizationSetBy = Automatic
+
+	column create_user
+		dataType: string
+		lineageTag: aae57957-e4a4-4ae7-8381-03d0f5ed6d97
+		summarizeBy: none
+		sourceColumn: create_user
+
+		annotation SummarizationSetBy = Automatic
+
+	column create_timestamp
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 94d4ca35-0d57-486d-a9cb-8a31aace9660
+		summarizeBy: none
+		sourceColumn: create_timestamp
+
+		variation Variation
+			isDefault
+			relationship: 34cdb5e8-f7e9-4c04-a0c1-3495306b055a
+			defaultHierarchy: LocalDateTable_30ea7608-2e40-47a7-aa90-f533e293388a.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column update_user
+		dataType: string
+		lineageTag: f63f2d56-0ec5-4eb2-8da4-2044a33fde29
+		summarizeBy: none
+		sourceColumn: update_user
+
+		annotation SummarizationSetBy = Automatic
+
+	column update_timestamp
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 5f79287b-fd6f-46ec-b5ea-093524a21e4c
+		summarizeBy: none
+		sourceColumn: update_timestamp
+
+		variation Variation
+			isDefault
+			relationship: ee6f3d4e-7e5a-4440-92d4-98411717ad2f
+			defaultHierarchy: LocalDateTable_7a226c14-fb7a-4b73-a8f5-2e889cbe287b.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column Username
+		dataType: string
+		lineageTag: ca2b4229-93a7-4f24-827f-ac1763fddc23
+		summarizeBy: none
+		sourceColumn: Username
+
+		annotation SummarizationSetBy = Automatic
+
+	partition DimInspector = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Databases("mdp-sql-server.database.windows.net"),
+				    #"MDP-DWH" = Source{[Name="MDP-DWH"]}[Data],
+				    dbo_DimInspector = #"MDP-DWH"{[Schema="dbo",Item="DimInspector"]}[Data]
+				in
+				    dbo_DimInspector
+
+	annotation PBI_ResultType = Table
+
+	annotation PBI_NavigationStepName = Navigation
+

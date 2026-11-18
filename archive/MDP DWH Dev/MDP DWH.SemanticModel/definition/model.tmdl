@@ -1,0 +1,121 @@
+model Model
+	culture: en-US
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: en-US
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+annotation PBI_QueryOrder = ["FactInspection","DimDate","DimInspectionAuthStatus","DimInspectionAuthType","DimInspectionNote","DimInspectionStatus","DimInspectionSubStatus","DimInspectionType","DimMine","DimInspector","DimInspectionAssesmentSubType","DimInspectionAuthSource","DimIncidentDescription","DimIncidentInjuriesDescription","DimIncidentJohsc","DimIncidentLocation","DimIncidentReporter","DimIncidentStatus","DimIncidentType","FactIncident","DimIncidentFollowupDate","DimMineExt","FactPermit","DimPermitFirstIssueDate","DimPermitDetail","DimIncidentDate","DimPermitLastIssueDate","DimInspectedLocation","FactOrderStopDetail","DimOrderStopAuthorityAct","DimOrderStopAuthorityActSection","DimOrderStopDetail","DimOrderStopResponseStatus","DimOrderStopStatus","DimOrderStopType","FactApplication","DimApplicationStatus","DimApplicationType","DimAppSecurityNotRequiredReason","DimNoticeOfWorkType","DimIncidentCategory","IncidentCategoryBridge","FactInspectionTarget","DimMineRegion","IncidentComplianceArticleBridge","DimComplianceArticle","ApplicationDelayBridge","DimApplicationDelay","NonCompliancePermitBridge","DimNonCompliancePermit","DimNonComplianceLegislation","NonComplianceLegislationBridge","InspectionLocationBridge","DimInspectedLocationDetail","OrderStopLocationDetailBridge"]
+
+annotation __PBI_TimeIntelligenceEnabled = 1
+
+annotation PBIDesktopVersion = 2.146.1026.0 (25.08)+fb98ab832373de81dccd5c01cd96306a48477556
+
+annotation PBI_RemovedChildren = [{"remoteItemId":{"foreignKeyRelationship":{"fromTableLocalLineageTag":"27050a08-2900-4636-902b-66bd2992e840","fromColumnLocalLineageTag":"10559b79-165b-495c-829a-ca188b715910","toTableLocalLineageTag":"71ec827c-b237-48d7-92ec-f2a9433c17d7","toColumnLocalLineageTag":"42b951f8-cf40-4b94-a373-f23a967929f7"}},"objectType":"Relationship"}]
+
+ref table FactInspection
+ref table DimDate
+ref table DateTableTemplate_cdd83a0c-6d0c-46e6-92e5-7450440c9aed
+ref table DimInspectionAuthStatus
+ref table DimInspectionAuthType
+ref table DimInspectionNote
+ref table DimInspectionStatus
+ref table DimInspectionSubStatus
+ref table DimInspectionType
+ref table DimMine
+ref table LocalDateTable_4f1b2d6a-9ede-4452-88c5-5552b26830b6
+ref table LocalDateTable_515ff686-1025-45d3-9169-4265899d1552
+ref table DimInspector
+ref table LocalDateTable_30ea7608-2e40-47a7-aa90-f533e293388a
+ref table LocalDateTable_7a226c14-fb7a-4b73-a8f5-2e889cbe287b
+ref table DimInspectionAssesmentSubType
+ref table DimInspectionAuthSource
+ref table LocalDateTable_19e5ca9b-81f4-45e4-b3df-34f483e130f9
+ref table LocalDateTable_2ee02d71-d7fa-4336-ba88-30e648ff3df1
+ref table LocalDateTable_88f23245-7c74-4c85-a5d0-24f2bbe6c628
+ref table LocalDateTable_df5a25e0-3e3f-4f0c-857f-afcd7911560f
+ref table LocalDateTable_6a2a4260-15e0-450a-8545-0ff6b58f6e92
+ref table LocalDateTable_a332fcf7-5965-4bd3-87c6-a6a0798f4783
+ref table DimIncidentDescription
+ref table DimIncidentInjuriesDescription
+ref table DimIncidentJohsc
+ref table LocalDateTable_da0e8697-9217-4ce9-9a2a-552db7fdea4c
+ref table LocalDateTable_83ff131e-ed9a-42c7-bfb1-5e0a27d4364e
+ref table DimIncidentLocation
+ref table DimIncidentReporter
+ref table LocalDateTable_9264f1ce-9fc2-4d7e-b7d3-270db2d43c9c
+ref table DimIncidentStatus
+ref table DimIncidentType
+ref table FactIncident
+ref table LocalDateTable_d09d0188-2475-4e9b-be51-fb5a847e623b
+ref table LocalDateTable_0f25a448-25de-4ea6-adb9-2dad3ac47096
+ref table LocalDateTable_3608d906-8a30-4ed6-8322-1f262e654cc8
+ref table LocalDateTable_f031efad-4835-4fcb-ab1f-1efb1f252b70
+ref table LocalDateTable_c9b0788d-2922-4672-8638-f18ed2e1068b
+ref table LocalDateTable_abf70579-d9d3-440e-80ea-5ed8230b7197
+ref table DimIncidentFollowupDate
+ref table LocalDateTable_41a99d93-d8fa-4d14-8eba-4c44f9d52736
+ref table DimMineExt
+ref table LocalDateTable_b56a68f8-2b32-41bc-b066-95ad9cde7a16
+ref table LocalDateTable_1baa2967-3995-491e-a09b-b03b0cce94f8
+ref table FactPermit
+ref table LocalDateTable_bfe7df66-4b58-45fa-9f4a-6bc6ca12bcab
+ref table LocalDateTable_78eb6eee-a1df-4972-b1bd-914f69349f0f
+ref table DimPermitFirstIssueDate
+ref table DimPermitDetail
+ref table LocalDateTable_4189e34b-5327-454a-911d-d187fcdb358d
+ref table LocalDateTable_3546528d-1af6-497b-b92d-2de2409dc6e8
+ref table LocalDateTable_5e005b2d-c05d-4a2a-8f9e-db106f46827d
+ref table DimIncidentDate
+ref table DimPermitLastIssueDate
+ref table DimInspectedLocation
+ref table LocalDateTable_694e4d3a-6134-49cd-b253-2150acd69b99
+ref table FactOrderStopDetail
+ref table LocalDateTable_94eed000-7f6c-4ab3-8a46-d9787b4d3281
+ref table LocalDateTable_c851e053-ef68-458c-b7d8-656bc63ea2f6
+ref table LocalDateTable_2e0cad1e-208b-4d0e-bfab-9d017018facc
+ref table DimOrderStopAuthorityAct
+ref table DimOrderStopAuthorityActSection
+ref table DimOrderStopDetail
+ref table DimOrderStopResponseStatus
+ref table DimOrderStopStatus
+ref table DimOrderStopType
+ref table FactApplication
+ref table LocalDateTable_639b6575-ca78-469a-9950-a9f71cc4844f
+ref table LocalDateTable_18a27f53-f7be-416d-b02f-b2dc3fe1d721
+ref table LocalDateTable_bc54fc01-5a58-450f-a2ad-d2f9749c1609
+ref table LocalDateTable_adce5720-2ed6-4fb9-8d98-7c4526f5670c
+ref table LocalDateTable_205665d4-1f9d-490b-834d-4afa6e87a700
+ref table LocalDateTable_e7df0d4e-428e-40d7-be08-a5f80a67fba7
+ref table LocalDateTable_21dc8973-a7aa-4673-bfc1-ec3a7e6b0861
+ref table DimApplicationStatus
+ref table DimApplicationType
+ref table DimAppSecurityNotRequiredReason
+ref table DimNoticeOfWorkType
+ref table DimIncidentCategory
+ref table IncidentCategoryBridge
+ref table FactInspectionTarget
+ref table DimMineRegion
+ref table IncidentComplianceArticleBridge
+ref table DimComplianceArticle
+ref table LocalDateTable_e7f1be24-29b3-41ed-b9ef-4ee3ae104fbc
+ref table LocalDateTable_6dc8efe8-6cc6-4e63-a32b-bafe7fd29cb5
+ref table ApplicationDelayBridge
+ref table DimApplicationDelay
+ref table LocalDateTable_0ac5133b-c462-4c2a-bfd4-70ef68817c60
+ref table LocalDateTable_f7cd02d6-d9e3-4e42-9545-3d70fafa2c67
+ref table NonCompliancePermitBridge
+ref table DimNonCompliancePermit
+ref table DimNonComplianceLegislation
+ref table LocalDateTable_781d9544-49c0-4f61-97f9-494c11346800
+ref table NonComplianceLegislationBridge
+ref table LocalDateTable_ed688308-e0e3-4929-a992-e38d1eb46675
+ref table InspectionLocationBridge
+ref table DimInspectedLocationDetail
+ref table LocalDateTable_5218ee18-d390-4046-9001-3705b6abd33c
+ref table OrderStopLocationDetailBridge
+ref table DimInspection
+
+ref cultureInfo en-US
+

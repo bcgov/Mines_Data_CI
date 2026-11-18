@@ -1,0 +1,138 @@
+table public-mine_status
+	lineageTag: f604d9ac-f0ff-4758-9887-517a6eb06618
+
+	column mine_status_guid
+		dataType: string
+		lineageTag: 81ce3496-eed6-463c-a60f-980862e34f51
+		summarizeBy: none
+		sourceColumn: mine_status_guid
+
+		annotation SummarizationSetBy = Automatic
+
+	column mine_guid
+		dataType: string
+		lineageTag: e27d8ed4-f26d-40f3-af52-e929f16851e9
+		summarizeBy: none
+		sourceColumn: mine_guid
+
+		annotation SummarizationSetBy = Automatic
+
+	column mine_status_xref_guid
+		dataType: string
+		lineageTag: 3367d690-bba7-4f33-8e52-0fabd6874400
+		summarizeBy: none
+		sourceColumn: mine_status_xref_guid
+
+		annotation SummarizationSetBy = Automatic
+
+	column effective_date
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 3998b760-13c7-43d5-b00d-a64bc2a61cb5
+		summarizeBy: none
+		sourceColumn: effective_date
+
+		variation Variation
+			isDefault
+			relationship: d1a377f0-6d6f-478a-9b1e-21cb9708197b
+			defaultHierarchy: LocalDateTable_bac0dd1f-d159-4c89-be72-9cf0e2624a2a.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column expiry_date
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 23f07ecc-a2ca-4ff1-ab0d-8d63616ac01f
+		summarizeBy: none
+		sourceColumn: expiry_date
+
+		variation Variation
+			isDefault
+			relationship: b738cc6d-0ae7-442c-9ae9-e3bf72feec3d
+			defaultHierarchy: LocalDateTable_9c6dfe52-1b73-4285-9ab3-b59cc6852e0f.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column create_user
+		dataType: string
+		lineageTag: 242e6c42-7fbb-44df-bd83-79543a8a750d
+		summarizeBy: none
+		sourceColumn: create_user
+
+		annotation SummarizationSetBy = Automatic
+
+	column create_timestamp
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: a45c7c51-1501-4d57-8219-fea1ff937de2
+		summarizeBy: none
+		sourceColumn: create_timestamp
+
+		variation Variation
+			isDefault
+			relationship: f3ba6a78-8935-48fe-912a-9d33ca1d8394
+			defaultHierarchy: LocalDateTable_5ffcfb12-ca83-41f6-9132-5fb57691d804.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column update_user
+		dataType: string
+		lineageTag: 829e0bd1-1ac1-4318-b8e6-30797dcde49a
+		summarizeBy: none
+		sourceColumn: update_user
+
+		annotation SummarizationSetBy = Automatic
+
+	column update_timestamp
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: cb6db80d-0760-4a76-a9db-73337c74fda9
+		summarizeBy: none
+		sourceColumn: update_timestamp
+
+		variation Variation
+			isDefault
+			relationship: e4cecf14-f749-4eef-96b3-838500fd512a
+			defaultHierarchy: LocalDateTable_cc2af8af-8983-4997-af30-44d1ca76c8bf.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column active_ind
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 0cf6b382-4d89-4ee9-bda9-2f9b3567724d
+		summarizeBy: none
+		sourceColumn: active_ind
+
+		annotation SummarizationSetBy = Automatic
+
+	column status_date
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 362121ef-ceca-4904-8780-4bca48b6fd0c
+		summarizeBy: none
+		sourceColumn: status_date
+
+		variation Variation
+			isDefault
+			relationship: 678ff9f0-0e65-4d06-9c17-088902e13ecc
+			defaultHierarchy: LocalDateTable_0b004e7c-fab0-4fc3-b026-90d227708cc4.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	partition public-mine_status = m
+		mode: import
+		source =
+				let
+				    Source = AzureStorage.Blobs("datarepositorysa"),
+				    postgres1 = Source{[Name="postgres"]}[Data],
+				    #"Filtered Rows" = Table.SelectRows(postgres1, each ([Extension] = ".parquet")),
+				    #"https://datarepositorysa blob core windows net/postgres/_tables/parquet/public mine_status parquet" = #"Filtered Rows"{[#"Folder Path"="https://datarepositorysa.blob.core.windows.net/postgres/",Name="tables/parquet/public.mine_status.parquet"]}[Content],
+				    #"Imported Parquet" = Parquet.Document(#"https://datarepositorysa blob core windows net/postgres/_tables/parquet/public mine_status parquet")
+				in
+				    #"Imported Parquet"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

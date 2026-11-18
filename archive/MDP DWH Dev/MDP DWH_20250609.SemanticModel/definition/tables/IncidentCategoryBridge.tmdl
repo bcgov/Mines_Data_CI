@@ -1,0 +1,43 @@
+table IncidentCategoryBridge
+	lineageTag: c26aea6e-4ff0-4582-9639-ff995c9fd7cb
+
+	column mine_incident_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 85f0986f-76e9-48f4-8998-3aea68a65df3
+		summarizeBy: none
+		sourceColumn: mine_incident_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column mine_incident_category_code
+		dataType: string
+		lineageTag: 9c74af8c-7af6-4a91-b10f-c0ee00ee0436
+		summarizeBy: none
+		sourceColumn: mine_incident_category_code
+
+		annotation SummarizationSetBy = Automatic
+
+	column IncidentCategory_Key
+		dataType: int64
+		formatString: 0
+		lineageTag: 3759c70c-6fa0-465b-9ba3-30ec080cb611
+		summarizeBy: none
+		sourceColumn: IncidentCategory_Key
+
+		annotation SummarizationSetBy = Automatic
+
+	partition IncidentCategoryBridge = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Databases("mdp-sql-server.database.windows.net"),
+				    #"MDP-DWH" = Source{[Name="MDP-DWH"]}[Data],
+				    dbo_v_IncidentCategoryBridge = #"MDP-DWH"{[Schema="dbo",Item="v_IncidentCategoryBridge"]}[Data]
+				in
+				    dbo_v_IncidentCategoryBridge
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

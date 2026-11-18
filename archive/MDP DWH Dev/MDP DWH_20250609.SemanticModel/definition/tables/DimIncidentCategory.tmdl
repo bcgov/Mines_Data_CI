@@ -1,0 +1,123 @@
+table DimIncidentCategory
+	lineageTag: 2e4be205-6a7a-4082-abb6-a145bd4eecff
+
+	column IncidentCategory_Key
+		dataType: int64
+		formatString: 0
+		lineageTag: 72ffc35b-f2bf-4e52-817b-6d37fcd7b64b
+		summarizeBy: none
+		sourceColumn: IncidentCategory_Key
+
+		annotation SummarizationSetBy = Automatic
+
+	column CategoryCode
+		dataType: string
+		lineageTag: bceb35ae-585c-4315-ad10-4cc4965c0bf8
+		summarizeBy: none
+		sourceColumn: CategoryCode
+
+		annotation SummarizationSetBy = Automatic
+
+	column Description
+		dataType: string
+		lineageTag: a8c97281-07fe-4e32-80e5-daa7bf879bd0
+		summarizeBy: none
+		sourceColumn: Description
+
+		annotation SummarizationSetBy = Automatic
+
+	column ParentCategoryCode
+		dataType: string
+		lineageTag: 370d4c41-de93-426f-9d1f-85cdcc653a6a
+		summarizeBy: none
+		sourceColumn: ParentCategoryCode
+
+		annotation SummarizationSetBy = Automatic
+
+	column DisplayOrder
+		dataType: int64
+		formatString: 0
+		lineageTag: 455ff3bc-c3e7-47f1-9f65-2f09f7a92077
+		summarizeBy: none
+		sourceColumn: DisplayOrder
+
+		annotation SummarizationSetBy = Automatic
+
+	column Path = PATH(DimIncidentCategory[CategoryCode],DimIncidentCategory[ParentCategoryCode])
+		lineageTag: dc4bf7c7-4c04-4f31-aeff-bbdc784f54ca
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column Level1 = PATHITEM([Path], 1, TEXT)
+		lineageTag: 0adc9d6a-d7f8-4b3d-b7f2-5bd4e1081476
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column Level2 = PATHITEM([Path], 2, TEXT)
+		lineageTag: 8b5a3267-4f1f-4736-aada-f3f48dd56061
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column SortOrder = RANKX(ALL(DimIncidentCategory), [DisplayOrder], , ASC)
+		formatString: 0
+		lineageTag: 26d57553-7fa7-4b4f-805f-28c627983ad1
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column Level1_CodeDesc = ```
+			
+			VAR Level1Code = PATHITEM([Path], 1, TEXT)
+			RETURN 
+			    Level1Code & " - " & LOOKUPVALUE(DimIncidentCategory[Description], [CategoryCode], Level1Code)
+			```
+		lineageTag: 46f0ea3b-1161-45b1-b925-2bf5079738f3
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column Level2_CodeDesc = VAR Level2Code = PATHITEM([Path], 2, TEXT) RETURN     IF(         ISBLANK(Level2Code),         BLANK(),         Level2Code & " - " & LOOKUPVALUE(DimIncidentCategory[Description], [CategoryCode], Level2Code)     )
+		lineageTag: acb0a16f-47fb-4dea-89d3-33016df70a1a
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	hierarchy 'Category Hierarchy'
+		lineageTag: dbe6029c-3a8d-4915-b89d-adb83d8f9f04
+
+		level Level1
+			lineageTag: 2636ccce-6c0f-4263-8404-ad3d4dc16ef8
+			column: Level1
+
+		level Level2
+			lineageTag: eb753303-f702-460c-b2c4-128350850a4e
+			column: Level2
+
+	hierarchy 'CodeDesc Hierarchy'
+		lineageTag: 43baa7fa-beea-4e0b-aef0-bb0a0b250e5e
+
+		level Level1_CodeDesc
+			lineageTag: 07868112-251d-4119-957c-0ae7c2abdb62
+			column: Level1_CodeDesc
+
+		level Level2_CodeDesc
+			lineageTag: 743a1aa6-91ef-4589-bbd5-c07d206b24e6
+			column: Level2_CodeDesc
+
+	partition DimIncidentCategory = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Databases("mdp-sql-server.database.windows.net"),
+				    #"MDP-DWH" = Source{[Name="MDP-DWH"]}[Data],
+				    dbo_DimIncidentCategory = #"MDP-DWH"{[Schema="dbo",Item="DimIncidentCategory"]}[Data]
+				in
+				    dbo_DimIncidentCategory
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

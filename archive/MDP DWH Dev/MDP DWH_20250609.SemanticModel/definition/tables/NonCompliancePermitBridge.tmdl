@@ -1,0 +1,31 @@
+table NonCompliancePermitBridge
+	lineageTag: bdb572a6-13e9-4165-a45e-40985a4c63b9
+
+	column order_stop_detail_id
+		dataType: int64
+		formatString: 0
+		lineageTag: a759f5df-b19d-4d00-a8e2-cacf72153808
+		summarizeBy: none
+		sourceColumn: order_stop_detail_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column NonCompliancePermit_Key
+		dataType: int64
+		formatString: 0
+		lineageTag: 7ee9e8a1-e94a-44fe-af4d-d596764873f6
+		summarizeBy: none
+		sourceColumn: NonCompliancePermit_Key
+
+		annotation SummarizationSetBy = Automatic
+
+	partition NonCompliancePermitBridge = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Databases("mdp-sql-server.database.windows.net"),
+				    #"MDP-DWH" = Source{[Name="MDP-DWH"]}[Data],
+				    dbo_v_NonCompliancePermitBridge = #"MDP-DWH"{[Schema="dbo",Item="v_NonCompliancePermitBridge"]}[Data]
+				in
+				    dbo_v_NonCompliancePermitBridge
+

@@ -1,0 +1,45 @@
+table nris-legislation_act_section
+	lineageTag: 8fb23b50-51b8-45ab-bd69-150dc898dc8d
+
+	column legislation_act_section_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 2e90b615-daaf-442c-a9e9-c173fae22135
+		summarizeBy: sum
+		sourceColumn: legislation_act_section_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column legislation_act_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 6f61ede9-6ed8-470f-925e-208ced0ceb77
+		summarizeBy: sum
+		sourceColumn: legislation_act_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column section
+		dataType: string
+		lineageTag: 4000b919-4297-4e58-a640-1903b2e84a89
+		summarizeBy: none
+		sourceColumn: section
+
+		annotation SummarizationSetBy = Automatic
+
+	partition nris-legislation_act_section = m
+		mode: import
+		source =
+				let
+				    Source = AzureStorage.Blobs("datarepositorysa"),
+				    postgres1 = Source{[Name="postgres"]}[Data],
+				    #"Filtered Rows" = Table.SelectRows(postgres1, each ([Extension] = ".parquet")),
+				    #"https://datarepositorysa blob core windows net/postgres/_tables/parquet/nris legislation_act_section parquet" = #"Filtered Rows"{[#"Folder Path"="https://datarepositorysa.blob.core.windows.net/postgres/",Name="tables/parquet/nris.legislation_act_section.parquet"]}[Content],
+				    #"Imported Parquet" = Parquet.Document(#"https://datarepositorysa blob core windows net/postgres/_tables/parquet/nris legislation_act_section parquet")
+				in
+				    #"Imported Parquet"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

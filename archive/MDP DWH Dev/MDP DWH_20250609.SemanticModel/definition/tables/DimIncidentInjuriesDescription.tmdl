@@ -1,0 +1,41 @@
+table DimIncidentInjuriesDescription
+	lineageTag: 4304355c-2d0c-4318-8b23-6e648195be29
+
+	column IncidentInjuriesDescription_Key
+		dataType: int64
+		formatString: 0
+		lineageTag: 623337f9-8292-4b07-8fbb-f59dd8765154
+		summarizeBy: none
+		sourceColumn: IncidentInjuriesDescription_Key
+
+		annotation SummarizationSetBy = Automatic
+
+	column IncidentInjuriesDescription
+		dataType: string
+		lineageTag: 5725e98b-ab25-4c5a-87c5-09f71e2dd8fb
+		summarizeBy: none
+		sourceColumn: IncidentInjuriesDescription
+
+		annotation SummarizationSetBy = Automatic
+
+	column injuries_description_hash
+		dataType: int64
+		formatString: 0
+		lineageTag: f0ecb333-feab-4c59-a3a3-106a1384dc85
+		summarizeBy: none
+		sourceColumn: injuries_description_hash
+
+		annotation SummarizationSetBy = Automatic
+
+	partition DimIncidentInjuriesDescription = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Databases("mdp-sql-server.database.windows.net"),
+				    #"MDP-DWH" = Source{[Name="MDP-DWH"]}[Data],
+				    dbo_DimIncidentInjuriesDescription = #"MDP-DWH"{[Schema="dbo",Item="DimIncidentInjuriesDescription"]}[Data]
+				in
+				    dbo_DimIncidentInjuriesDescription
+
+	annotation PBI_ResultType = Table
+

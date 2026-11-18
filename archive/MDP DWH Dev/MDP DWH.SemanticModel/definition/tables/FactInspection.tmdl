@@ -1,0 +1,455 @@
+table FactInspection
+	lineageTag: 08851f76-163c-4ee7-9b4a-de1dd28adc5a
+
+	/// Calculates the total number of inspections conducted since the beginning of the calendar year up to today. This measure offers a cumulative snapshot of inspection activity for the current year. Formula: _YTD_Inspections = TOTALYTD(COUNTROWS(FactInspection), DimDate[Date])
+	measure _YTD_Inspections = ```
+			TOTALYTD(
+			    COUNTROWS(FactInspection),
+			    DimDate[Date]
+			)
+			
+			```
+		formatString: #,0
+		lineageTag: 65ca6e57-ad08-4535-b94b-6a0e4d978dd9
+
+	/// Calculates the total inspections conducted Month-To-Date. This measure provides a snapshot of inspection activity from the start of the current month up to today's date. Formula: _MTD_Inspections = TOTALMTD(COUNTROWS(FactInspection), DimDate[Date])
+	measure _MTD_Inspections = ```
+			TOTALMTD(
+			    COUNTROWS(FactInspection),
+			    DimDate[Date]
+			)
+			
+			```
+		formatString: #,0
+		lineageTag: 0007b0c0-f385-4a90-90af-4724f6b8dc5c
+
+	/// Calculates Year-To-Date inspections for the previous calendar year. This measure provides a cumulative count of inspections from January 1st to the same date last year. Formula: _YTD_Inspections_Last_Year = CALCULATE(TOTALYTD(COUNTROWS(FactInspection), DimDate[Date]), SAMEPERIODLASTYEAR(DimDate[Date]))
+	measure _YTD_Inspections_Last_Year =
+			CALCULATE(
+			    TOTALYTD(
+			        COUNTROWS(FactInspection),
+			        DimDate[Date]
+			    ),
+			    SAMEPERIODLASTYEAR(DimDate[Date])
+			)
+		formatString: #,0
+		lineageTag: ee003b79-852a-4279-b42c-a861a7eadba3
+
+	/// Calculates the total inspections conducted Month-To-Date for the previous month. This measure reflects inspection activity from the start of the last month up to the end of that month, adjusted daily. Formula: _MTD_Inspections_Last_Month = CALCULATE(TOTALMTD(COUNTROWS(FactInspection), DimDate[Date]), DATEADD(DimDate[Date], -1, MONTH))
+	measure _MTD_Inspections_Last_Month =
+			CALCULATE(
+			    TOTALMTD(
+			        COUNTROWS(FactInspection),
+			        DimDate[Date]
+			    ),
+			    DATEADD(DimDate[Date], -1, MONTH)
+			)
+		formatString: #,0
+		lineageTag: 852163b8-1910-4c4e-bd53-9e19057418ba
+
+	measure _YTD_Percentage_Change =
+			DIVIDE(
+			    [_YTD_Inspections] - [_YTD_Inspections_Last_Year],
+			    [_YTD_Inspections_Last_Year],
+			    0
+			)
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: eb3e2066-ed7f-4f0a-95ac-193dfe7b9749
+
+	/// Calculates the percentage change in inspections from the current month to the previous month. This measure offers insights into monthly trends and variations in inspection activity. Formula: _MTD_Percentage_Change = DIVIDE([_MTD_Inspections] - [_MTD_Inspections_Last_Month], [_MTD_Inspections_Last_Month], 0)
+	measure _MTD_Percentage_Change =
+			DIVIDE(
+			    [_MTD_Inspections] - [_MTD_Inspections_Last_Month],
+			    [_MTD_Inspections_Last_Month],
+			    0
+			)
+		formatString: #,0.00
+		lineageTag: c8452132-fad7-47da-b291-902b984437e9
+
+	/// Calculates the current year's inspections YTD starting from April 1. This measure totals all inspections recorded from the beginning of the fiscal year up to today's date, providing a snapshot of inspection activity. Formula: _FYTD_Inspections = TOTALYTD(COUNTROWS(FactInspection), DimDate[Date], '4/1')
+	/// 
+	measure _FYTD_Inspections =
+			TOTALYTD(
+			    COUNTROWS(FactInspection),
+			    DimDate[Date],
+			    "4/1"  // Adjust this date to match the start of your fiscal year
+			)
+		formatString: #,0
+		lineageTag: 40054947-58a4-4fb0-aa57-ade373d6c251
+
+	/// Calculates last year's inspections YTD from April 1. This measure counts inspections from the start of the previous fiscal year up to the same date last year, starting each fiscal year on April 1st. Formula: _FYTD_Inspections_Last_Year = CALCULATE(TOTALYTD(COUNTROWS(FactInspection), DimDate[Date], "4/1"), DATEADD(DimDate[Date], -1, YEAR))
+	/// 
+	measure _FYTD_Inspections_Last_Year = ```
+			CALCULATE(
+			    TOTALYTD(
+			        COUNTROWS(FactInspection),
+			        DimDate[Date],
+			        "4/1"  // Start of the fiscal year
+			    ),
+			    DATEADD(DimDate[Date], -1, YEAR)  // Shift to the last fiscal year
+			)
+			
+			```
+		formatString: #,0
+		lineageTag: a0566e2a-73eb-4e40-b36f-ab6a59d998c3
+
+	/// Calculates the percentage change in fiscal year-to-date inspections compared to the previous year. This measure helps assess trends in inspection activity over time. Formula: _FYTD_Percentage_Change = DIVIDE([_FYTD_Inspections] - [_FYTD_Inspections_Last_Year], [_FYTD_Inspections_Last_Year], 0)
+	/// 
+	/// 
+	measure _FYTD_Percentage_Change = ```
+			DIVIDE(
+			    [_FYTD_Inspections] - [_FYTD_Inspections_Last_Year],
+			    [_FYTD_Inspections_Last_Year],
+			    0
+			)
+			
+			```
+		formatString: #,0.00%;-#,0.00%;#,0.00%
+		lineageTag: 99e1915f-c30f-493c-ad3e-bcd253c03ab7
+
+	/// Counts fiscal annual inspections. Formula: _FY_Inspection_Count = CALCULATE(COUNTROWS(FactInspection))
+	measure _FY_Inspection_Count =
+			CALCULATE(
+			    COUNTROWS(FactInspection))
+		formatString: #,0
+		lineageTag: 57d6ed8b-26d9-43f1-b3bf-c4cc559fab69
+
+	measure '# Inspections' =
+			
+			COUNTROWS(FactInspection)
+		formatString: #,0
+		lineageTag: e43108cb-1891-4b0f-bbfd-8ba243015de3
+
+	/// Counts the number of inspections in the same date range from the previous year.
+	/// Uses the currently selected period in DimDate[Date] (from slicers or filters), shifts it back one year using DATEADD, and counts distinct rows in FactInspection.
+	/// Formula:
+	/// _PP_Inspections_Prev_Year = 
+	/// CALCULATE (
+	///     COUNTROWS ( FactInspection ),
+	///     DATEADD ( DimDate[Date], -1, YEAR )
+	/// )
+	/// 
+	measure _PP_Inspections_Prev_Year =
+			
+			CALCULATE (
+			    COUNTROWS ( FactInspection ),
+			    DATEADD ( DimDate[Date], -1, YEAR )
+			)
+		formatString: #,0
+		lineageTag: 57853fcb-0839-4b7c-8340-77f02118d3ae
+
+	/// Calculates the absolute difference in the number of inspections compared to the same period in the previous year.
+	/// Positive values indicate an increase in inspections, negative values indicate a decrease. 
+	/// Formula:
+	/// Calculates the percentage change in the number of inspections compared to the same period in the previous year.
+	/// Uses # Inspections for the current selected period and _PP_Inspections_Prev_Year for the equivalent period last year. Returns 0 if the previous year value is blank or zero. Format as a percentage.
+	/// Formula:
+	/// _PP_Inspections_Percentage_Change_Prev_Year = 
+	/// DIVIDE (
+	///     [# Inspections] - [_PP_Inspections_Prev_Year],
+	///     [_PP_Inspections_Prev_Year],
+	///     0
+	/// )
+	measure _PP_Inspections_Percentage_Change_Prev_Year = ```
+			
+			DIVIDE (
+			    [# Inspections] - [_PP_Inspections_Prev_Year],
+			    [_PP_Inspections_Prev_Year],
+			    0
+			)
+			
+			```
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 4b16c371-731c-42de-aea8-d3a94912359c
+
+	/// Calculates the absolute difference in the number of inspections compared to the same period in the previous year.
+	/// Positive values indicate an increase in inspections, negative values indicate a decrease. Formula:
+	/// _PP_Inspections_Change_Prev_Year =
+	/// [# Inspections] - [_PP_Inspections_Prev_Year]
+	/// 
+	measure _PP_Inspections_Change_Prev_Year =
+			
+			[# Inspections] - [_PP_Inspections_Prev_Year]
+		formatString: #,0
+		lineageTag: d19477f8-06df-44f1-a6bd-f45148fdff31
+
+	column InspectionPK
+		dataType: int64
+		formatString: #,0
+		lineageTag: cc08c663-54ad-441e-964a-675378356265
+		summarizeBy: count
+		sourceColumn: InspectionPK
+
+		annotation SummarizationSetBy = User
+
+	column InspectionStatus_Key
+		dataType: int64
+		formatString: 0
+		lineageTag: 5eed744c-b958-4165-9432-9e7f9f546584
+		summarizeBy: none
+		sourceColumn: InspectionStatus_Key
+
+		annotation SummarizationSetBy = Automatic
+
+	column InspectionSubStatus_Key
+		dataType: int64
+		formatString: 0
+		lineageTag: 690a3a96-0947-4ffc-9dcd-c599198a0ea7
+		summarizeBy: none
+		sourceColumn: InspectionSubStatus_Key
+
+		annotation SummarizationSetBy = Automatic
+
+	column InspectionType_Key
+		dataType: int64
+		formatString: 0
+		lineageTag: 0c940da2-d95c-4a12-b0d1-718208acfb74
+		summarizeBy: none
+		sourceColumn: InspectionType_Key
+
+		annotation SummarizationSetBy = Automatic
+
+	column User_Key
+		dataType: int64
+		formatString: 0
+		lineageTag: 56d69b8d-4961-40e2-8f86-41d7e50d2bfe
+		summarizeBy: none
+		sourceColumn: User_Key
+
+		annotation SummarizationSetBy = Automatic
+
+	column InspectionDate_Key
+		dataType: int64
+		formatString: 0
+		lineageTag: c7d4183d-94c8-49ca-91bc-a489a4436e95
+		summarizeBy: none
+		sourceColumn: InspectionDate_Key
+
+		annotation SummarizationSetBy = Automatic
+
+	column CompleetedDate_Key
+		dataType: int64
+		formatString: 0
+		lineageTag: 147e4671-b3a5-44e6-9f8d-4ed28e486d7e
+		summarizeBy: count
+		sourceColumn: CompleetedDate_Key
+
+		annotation SummarizationSetBy = Automatic
+
+	column InspectionReportSentDate_Key
+		dataType: int64
+		formatString: 0
+		lineageTag: 1ea5a2bc-9998-404d-b2de-60391fa6a33f
+		summarizeBy: count
+		sourceColumn: InspectionReportSentDate_Key
+
+		annotation SummarizationSetBy = Automatic
+
+	column InspectionFromDate_Key
+		dataType: int64
+		formatString: 0
+		lineageTag: cad2412c-f66f-4b7e-a0af-99b066bb145a
+		summarizeBy: count
+		sourceColumn: InspectionFromDate_Key
+
+		annotation SummarizationSetBy = Automatic
+
+	column InspectionAuthStatus_Key
+		dataType: int64
+		formatString: 0
+		lineageTag: d5e36474-85e2-45c3-bf50-6fc357476b78
+		summarizeBy: none
+		sourceColumn: InspectionAuthStatus_Key
+
+		annotation SummarizationSetBy = Automatic
+
+	column InspectionAuthType_Key
+		dataType: int64
+		formatString: 0
+		lineageTag: 1540c61b-121a-4c2c-b76a-6e5e128b6460
+		summarizeBy: none
+		sourceColumn: InspectionAuthType_Key
+
+		annotation SummarizationSetBy = Automatic
+
+	column InspectionNote_Key
+		dataType: int64
+		formatString: 0
+		lineageTag: dcaadfc1-6d4c-4483-bf33-50bc8e7d9aa1
+		summarizeBy: none
+		sourceColumn: InspectionNote_Key
+
+		annotation SummarizationSetBy = Automatic
+
+	column inspection_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 3cede0bb-0c3c-4a5e-aa08-b373cfa2d42c
+		summarizeBy: sum
+		sourceColumn: inspection_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column InspectionToDate_Key
+		dataType: int64
+		formatString: 0
+		lineageTag: 63a80bf7-481d-4841-b3e1-fef6e35dff73
+		summarizeBy: count
+		sourceColumn: InspectionToDate_Key
+
+		annotation SummarizationSetBy = Automatic
+
+	column InspectionAssesmentSubTyp_Key
+		dataType: int64
+		formatString: 0
+		lineageTag: b09b000b-c24b-4d99-902a-a0af3f42b1f7
+		summarizeBy: none
+		sourceColumn: InspectionAssesmentSubTyp_Key
+
+		annotation SummarizationSetBy = Automatic
+
+	column InspectionAuthSource_Key
+		dataType: int64
+		formatString: 0
+		lineageTag: d74e94a8-3843-429b-a1cf-b39fd5669ab4
+		summarizeBy: none
+		sourceColumn: InspectionAuthSource_Key
+
+		annotation SummarizationSetBy = Automatic
+
+	column InspectionDate
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: bd4ad02a-18cd-4e5e-914b-63f2b65b3463
+		summarizeBy: none
+		sourceColumn: InspectionDate
+
+		variation Variation
+			isDefault
+			relationship: 67559b8d-f810-4134-9d63-c244881ac644
+			defaultHierarchy: LocalDateTable_19e5ca9b-81f4-45e4-b3df-34f483e130f9.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column CompleetedDate
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: ab5b910a-b600-484b-ad25-0130985b4206
+		summarizeBy: none
+		sourceColumn: CompleetedDate
+
+		variation Variation
+			isDefault
+			relationship: 0959a484-9d9a-44c5-ae00-69120665f1f2
+			defaultHierarchy: LocalDateTable_2ee02d71-d7fa-4336-ba88-30e648ff3df1.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column InspectionReportSentDate
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: ed72f5a3-6704-4c31-9adf-3bf18b8a9dfd
+		summarizeBy: none
+		sourceColumn: InspectionReportSentDate
+
+		variation Variation
+			isDefault
+			relationship: 7f4c5190-8932-46a3-be74-13b9478aeffe
+			defaultHierarchy: LocalDateTable_88f23245-7c74-4c85-a5d0-24f2bbe6c628.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column InspectionFromDate
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: aa1eabd5-28e1-4102-9bcf-74d1014689c9
+		summarizeBy: none
+		sourceColumn: InspectionFromDate
+
+		variation Variation
+			isDefault
+			relationship: df3cfbfc-5f8a-49f9-9d70-0e724c2e9909
+			defaultHierarchy: LocalDateTable_df5a25e0-3e3f-4f0c-857f-afcd7911560f.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column InspectionToDate
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 0632501f-c9cd-4f08-ae0f-0932f071c7ab
+		summarizeBy: none
+		sourceColumn: InspectionToDate
+
+		variation Variation
+			isDefault
+			relationship: 3b3a3569-dcd8-4990-9b39-88d5668b8179
+			defaultHierarchy: LocalDateTable_6a2a4260-15e0-450a-8545-0ff6b58f6e92.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column ETL_LastModified
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: ff234c4f-fccb-4c44-a4bc-ff70c80ef423
+		summarizeBy: none
+		sourceColumn: ETL_LastModified
+
+		variation Variation
+			isDefault
+			relationship: be972c2f-0089-4ee0-b3d0-4b00aa633277
+			defaultHierarchy: LocalDateTable_a332fcf7-5965-4bd3-87c6-a6a0798f4783.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column MineExt_Key
+		dataType: int64
+		formatString: 0
+		lineageTag: ccc75f9e-b7e1-4030-af68-e0f3bbd9227a
+		summarizeBy: none
+		sourceColumn: MineExt_Key
+
+		annotation SummarizationSetBy = Automatic
+
+	column InspectedLocation_Key
+		dataType: int64
+		formatString: 0
+		lineageTag: 3ff45074-8249-44e9-be98-f8d75b34a2fc
+		summarizeBy: none
+		sourceColumn: InspectedLocation_Key
+
+		annotation SummarizationSetBy = Automatic
+
+	column external_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 434dc59a-1aad-42e9-97af-551e102f41e6
+		summarizeBy: sum
+		sourceColumn: external_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column MineRegion_Key
+		dataType: int64
+		formatString: 0
+		lineageTag: a6927a80-8309-4ad7-a149-7d57ae7bad4c
+		summarizeBy: none
+		sourceColumn: MineRegion_Key
+
+		annotation SummarizationSetBy = Automatic
+
+	partition FactInspection = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Databases("mdp-sql-server.database.windows.net"),
+				    #"MDP-DWH" = Source{[Name="MDP-DWH"]}[Data],
+				    dbo_FactInspection = #"MDP-DWH"{[Schema="dbo",Item="FactInspection"]}[Data],
+				    #"Sorted Rows" = Table.Sort(dbo_FactInspection,{{"InspectionDate", Order.Descending}}),
+				    #"Filtered Rows" = Table.SelectRows(#"Sorted Rows", each true)
+				in
+				    #"Filtered Rows"
+
+	annotation PBI_ResultType = Table
+
+	annotation PBI_NavigationStepName = Navigation
+

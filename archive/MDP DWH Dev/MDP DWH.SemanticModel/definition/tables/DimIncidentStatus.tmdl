@@ -1,0 +1,58 @@
+table DimIncidentStatus
+	lineageTag: 10be159a-846e-4030-a3a8-c7f61d453229
+
+	column IncidentStatus_Key
+		dataType: int64
+		formatString: 0
+		lineageTag: 3cfb2c61-d12b-49d5-a547-edff58c42aaf
+		summarizeBy: none
+		sourceColumn: IncidentStatus_Key
+
+		annotation SummarizationSetBy = Automatic
+
+	column Incident_Status_Code
+		dataType: string
+		lineageTag: 9ab38b19-5035-4981-ae50-5d2a0626e0fa
+		summarizeBy: none
+		sourceColumn: Incident_Status_Code
+
+		annotation SummarizationSetBy = Automatic
+
+	column Incident_Status_Description
+		dataType: string
+		lineageTag: 4b2b3f80-3119-404b-a18f-45ff560035d6
+		summarizeBy: none
+		sourceColumn: Incident_Status_Description
+
+		annotation SummarizationSetBy = Automatic
+
+	column status_code_hash
+		dataType: int64
+		formatString: 0
+		lineageTag: 6dbd510b-e559-485e-a815-849db4d8ed05
+		summarizeBy: none
+		sourceColumn: status_code_hash
+
+		annotation SummarizationSetBy = Automatic
+
+	column Display_Order
+		dataType: int64
+		formatString: 0
+		lineageTag: 8f15e315-332e-4e00-a9a3-3d574c3b1bfc
+		summarizeBy: none
+		sourceColumn: Display_Order
+
+		annotation SummarizationSetBy = Automatic
+
+	partition DimIncidentStatus = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Databases("mdp-sql-server.database.windows.net"),
+				    #"MDP-DWH" = Source{[Name="MDP-DWH"]}[Data],
+				    dbo_DimIncidentStatus = #"MDP-DWH"{[Schema="dbo",Item="DimIncidentStatus"]}[Data]
+				in
+				    dbo_DimIncidentStatus
+
+	annotation PBI_ResultType = Table
+

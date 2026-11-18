@@ -1,0 +1,62 @@
+table InspectionLocationBridge
+	lineageTag: 2c33d3d0-fb28-4b88-a0fa-a6a13cc1b05a
+
+	column BridgeKey
+		dataType: int64
+		formatString: 0
+		lineageTag: 07f0a437-8f94-4a26-bfb8-424211a8bdee
+		summarizeBy: count
+		sourceColumn: BridgeKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column FactInspectionKey
+		dataType: int64
+		formatString: 0
+		lineageTag: 0bb34775-6397-4f69-9e04-6337242eda41
+		summarizeBy: none
+		sourceColumn: FactInspectionKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column InspectedLocationKey
+		dataType: int64
+		formatString: 0
+		lineageTag: 937be079-1847-4924-99ed-3fba33914c3c
+		summarizeBy: none
+		sourceColumn: InspectedLocationKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column SourceInspectionID
+		dataType: int64
+		formatString: 0
+		lineageTag: a2f3a8b7-42dc-45cf-9340-a18315d8701d
+		summarizeBy: count
+		sourceColumn: SourceInspectionID
+
+		annotation SummarizationSetBy = Automatic
+
+	column SourceLocationID
+		dataType: int64
+		formatString: 0
+		lineageTag: 713a3f7d-a1c9-44bd-913f-44dc6363c423
+		summarizeBy: count
+		sourceColumn: SourceLocationID
+
+		annotation SummarizationSetBy = Automatic
+
+	partition InspectionLocationBridge = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Databases("mdp-sql-server.database.windows.net"),
+				    #"MDP-DWH" = Source{[Name="MDP-DWH"]}[Data],
+				    dbo_v_IncidentCategoryBridge = #"MDP-DWH"{[Schema="dbo",Item="v_InspectionLocationBridge"]}[Data]
+				in
+				    dbo_v_IncidentCategoryBridge
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

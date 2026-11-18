@@ -1,0 +1,449 @@
+table FactOrderStopDetail
+	lineageTag: 27050a08-2900-4636-902b-66bd2992e840
+
+	/// # Closed Orders: Counts the total number of orders with a "Closed" status in the DimOrderStopStatus table.
+	/// # Closed_Orders = CALCULATE(     COUNTROWS(FactOrderStopDetail), DimOrderStopStatus[StopStatus] = "Closed" )
+	measure '# Closed_Orders' = CALCULATE(     COUNTROWS(FactOrderStopDetail), DimOrderStopStatus[StopStatus] = "Closed" )
+		formatString: #,0
+		lineageTag: 8c9e7214-f867-4d20-bd38-a4b86449b63e
+
+	/// # Open Orders: Counts the total number of orders with an "Open" status in the DimOrderStopStatus table.
+	/// # Open_Orders = 
+	/// CALCULATE(
+	///     COUNTROWS(FactOrderStopDetail),
+	///     DimOrderStopStatus[StopStatus] = "Open"
+	/// )
+	measure '# Open_Orders' =
+			
+			CALCULATE(
+			    COUNTROWS(FactOrderStopDetail),
+			    DimOrderStopStatus[StopStatus] = "Open"
+			)
+		formatString: #,0
+		lineageTag: 11871b20-0dc7-4e20-9911-7a62c98ab781
+
+	/// # Escalated Orders: Counts the total number of orders with an "Escalated" status in the DimOrderStopStatus table.
+	/// # Escalated_Orders = 
+	/// CALCULATE(
+	///     COUNTROWS(FactOrderStopDetail),
+	///     DimOrderStopStatus[StopStatus] = "Escalated")
+	measure '# Escalated_Orders' =
+			
+			CALCULATE(
+			    COUNTROWS(FactOrderStopDetail),
+			    DimOrderStopStatus[StopStatus] = "Escalated")
+		formatString: #,0
+		lineageTag: fda9b3e2-54cc-43db-a1a7-618d06579da7
+
+	/// # Overdue Orders: Counts the total number of orders that are "Open" and have a CompletionDateTime earlier than the current date and time, indicating they are overdue.
+	/// # Overdue_Orders = 
+	/// CALCULATE(
+	///     COUNTROWS(FactOrderStopDetail),
+	///     DimOrderStopStatus[StopStatus] = "Open",
+	///     FactOrderStopDetail[CompletionDateTime] < NOW()
+	/// )
+	measure '# Overdue_Orders' =
+			
+			CALCULATE(
+			    COUNTROWS(FactOrderStopDetail),
+			    DimOrderStopStatus[StopStatus] = "Open",
+			    FactOrderStopDetail[CompletionDateTime] < NOW()
+			)
+		formatString: #,0
+		lineageTag: dd1f6aab-3f89-48ab-bef5-45006091cbf2
+
+	/// # Orders: Counts the total number of all orders in the FactOrderStopDetail table, regardless of status.
+	/// # Orders = 
+	/// COUNTROWS(FactOrderStopDetail)
+	measure '# Orders' =
+			
+			DISTINCTCOUNT(FactOrderStopDetail[order_stop_detail_id])
+		formatString: #,0
+		lineageTag: 34dfe30e-a8f6-4095-a051-bc2aa3f76dec
+
+	/// # Unknown Orders: Counts the total number of orders with an "Unknown" status in the DimOrderStopStatus table.
+	/// # Unknown_Orders = 
+	/// CALCULATE(
+	///     COUNTROWS(FactOrderStopDetail),
+	///     DimOrderStopStatus[StopStatus] = "Unknown"
+	/// )
+	measure '# Unknown_Orders' = ```
+			
+			CALCULATE(
+			    COUNTROWS(FactOrderStopDetail),
+			    DimOrderStopStatus[StopStatus] = "Unknown"
+			)
+			
+			```
+		formatString: #,0
+		lineageTag: 64fa391a-b05a-41cf-a6cf-b74a1b7f9dc9
+
+	/// % Closed Orders: Calculates the percentage of closed orders relative to the total number of orders, returned as a decimal.
+	/// % Closed Orders = 
+	/// DIVIDE(FactOrderStopDetail[# Closed_Orders], [# Orders], 0)
+	measure '% Closed Orders' =
+			
+			DIVIDE(FactOrderStopDetail[# Closed_Orders], [# Orders], 0)
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 4fc64c90-71ff-4db7-8a21-9ae492e908b7
+
+	/// % Escalated Orders: Calculates the percentage of escalated orders relative to the total number of orders, returned as a decimal.
+	/// % Escalated Orders = 
+	/// DIVIDE(FactOrderStopDetail[# Escalated_Orders], [# Orders], 0)
+	measure '% Escalated Orders' =
+			
+			DIVIDE(FactOrderStopDetail[# Escalated_Orders], [# Orders], 0)
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 813377b7-8072-433e-b7ff-5c72bde99b13
+
+	/// % Open Orders: Calculates the percentage of open orders relative to the total number of orders, returned as a decimal.
+	/// % Open Orders = 
+	/// DIVIDE(FactOrderStopDetail[# Open_Orders], [# Orders], 0)
+	measure '% Open Orders' =
+			
+			DIVIDE(FactOrderStopDetail[# Open_Orders], [# Orders], 0)
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 9399865b-01f9-4b15-bf91-3e37b28e4b56
+
+	/// % Overdue Orders: Calculates the percentage of overdue orders relative to the total number of orders, returned as a decimal.
+	/// % Overdue Orders = 
+	/// DIVIDE(FactOrderStopDetail[# Overdue_Orders], [# Orders], 0)
+	measure '% Overdue Orders' =
+			
+			DIVIDE(FactOrderStopDetail[# Overdue_Orders], [# Orders], 0)
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: f015bc71-29b1-404f-bf09-82306e70df09
+
+	/// % Unknown Orders: Calculates the percentage of unknown orders relative to the total number of orders, returned as a decimal.
+	/// % Unknown Orders = 
+	/// DIVIDE(FactOrderStopDetail[# Unknown_Orders], [# Orders], 0)
+	measure '% Unknown Orders' =
+			
+			DIVIDE(FactOrderStopDetail[# Unknown_Orders], [# Orders], 0)
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: bcb22cef-1f45-4051-b1c1-7bd8bd42ef2f
+
+	///  Fiscal Year-to-Date (FYTD)
+	/// CALCULATE(
+	///     [# Orders],
+	///     FILTER(
+	///         ALL(DimDate),
+	///         DimDate[FiscalYear] = MAX(DimDate[FiscalYear]) &&
+	///         DimDate[Date] <= MAX(DimDate[Date])
+	///     )
+	/// )
+	measure '# Orders FYTD' =
+			CALCULATE(
+			    [# Orders],
+			    FILTER(
+			        ALL(DimDate),
+			        DimDate[FiscalYear] = MAX(DimDate[FiscalYear]) &&
+			        DimDate[Date] <= MAX(DimDate[Date])
+			    )
+			)
+		formatString: #,0
+		lineageTag: 314357b2-d6e6-41cf-bf73-42cf4b93f483
+
+	///  Fiscal MTD 
+	///  Fiscal MTD 
+	/// 
+	measure '# Orders FMTD' =
+			
+			CALCULATE(
+			    [# Orders],
+			    FILTER(
+			        ALL(DimDate),
+			        DimDate[FiscalYear] = MAX(DimDate[FiscalYear]) &&
+			        DimDate[FiscalMonth] = MAX(DimDate[FiscalMonth])
+			    )
+			)
+		formatString: #,0
+		lineageTag: 4961836b-821d-4ccb-bb54-b691c021052f
+
+	/// Fiscal YTD % Change
+	/// DIVIDE([# Orders FYTD] - [# Orders FLYTD], [# Orders FLYTD])
+	measure '% Orders FYTD Change' =
+			
+			DIVIDE([# Orders FYTD] - [# Orders FLYTD], [# Orders FLYTD])
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: b497354a-5e2d-4575-9561-47df764b6e79
+
+	/// Fiscal Last Year-to-Date (FLYTD)
+	/// # Orders FLYTD = 
+	/// CALCULATE(
+	///     [# Orders],
+	///     FILTER(
+	///         ALL(DimDate),
+	///         DimDate[FiscalYear] = MAX(DimDate[FiscalYear]) - 1 &&
+	///         DimDate[Date] <= EDATE(MAX(DimDate[Date]), -12)
+	///     )
+	/// )
+	measure '# Orders FLYTD' =
+			
+			CALCULATE(
+			    [# Orders],
+			    FILTER(
+			        ALL(DimDate),
+			        DimDate[FiscalYear] = MAX(DimDate[FiscalYear]) - 1 &&
+			        DimDate[Date] <= EDATE(MAX(DimDate[Date]), -12)
+			    )
+			)
+		formatString: #,0
+		lineageTag: 29a4fa8c-c031-4628-9510-29255a35ea26
+
+	measure 'Filter by Selected Inspection' = ```
+			
+			VAR sel = SELECTEDVALUE( DimInspection[inspection_id] )
+			RETURN
+			IF (
+			    ISBLANK(sel),
+			    1,
+			    CALCULATE (
+			        1,
+			        USERELATIONSHIP(
+			            DimInspection[inspection_id],
+			            FactOrderStopDetail[inspection_id]
+			        ),
+			        KEEPFILTERS( DimInspection[inspection_id] = sel )
+			    )
+			)
+			
+			```
+		formatString: 0
+		lineageTag: ab580113-1be9-43b3-932d-5f21988c9a4b
+
+	measure 'Keep Selected Inspection' = ```
+			
+			VAR SelectedId = SELECTEDVALUE( DimInspection[inspection_id] )
+			VAR RowId      = SELECTEDVALUE( FactOrderStopDetail[inspection_id] )
+			RETURN
+			IF (
+			    ISBLANK(SelectedId),
+			    1,                 -- page opened directly (no drill) → show all
+			    IF ( RowId = SelectedId, 1, 0 )
+			)
+			
+			```
+		formatString: 0
+		lineageTag: 044f568b-435d-4408-b103-d61f4fda74ca
+
+	measure '# Orders (by Inspection only)' = ```
+			
+			VAR _selInsp =
+			    VALUES ( DimInspection[inspection_id] )   -- what the drill-through provides
+			RETURN
+			CALCULATE (
+			    DISTINCTCOUNT ( FactOrderStopDetail[order_stop_detail_id] ),
+			    TREATAS ( _selInsp, FactOrderStopDetail[inspection_id] )  -- force filter to the fact
+			)
+			
+			
+			```
+		formatString: 0
+		lineageTag: e7548f01-36dd-4bc2-8ada-9372b15a5c01
+
+	column FactOrderStopDetail_PK
+		dataType: int64
+		formatString: 0
+		lineageTag: f4319829-fc71-4677-8c96-79f1aedc7574
+		summarizeBy: none
+		sourceColumn: FactOrderStopDetail_PK
+
+		annotation SummarizationSetBy = Automatic
+
+	column OrderStopDetail_Key
+		dataType: int64
+		formatString: 0
+		lineageTag: b544d8b3-11e2-481a-be9e-6498b8e09a72
+		summarizeBy: none
+		sourceColumn: OrderStopDetail_Key
+
+		annotation SummarizationSetBy = Automatic
+
+	column InspectedLocation_Key
+		dataType: int64
+		formatString: 0
+		lineageTag: 10559b79-165b-495c-829a-ca188b715910
+		summarizeBy: count
+		sourceColumn: InspectedLocation_Key
+
+		annotation SummarizationSetBy = Automatic
+
+	column OrderStopType_Key
+		dataType: int64
+		formatString: 0
+		lineageTag: 85ba14a8-7091-462e-9975-54fc7501a0b7
+		summarizeBy: none
+		sourceColumn: OrderStopType_Key
+
+		annotation SummarizationSetBy = Automatic
+
+	column OrderStopStatus_Key
+		dataType: int64
+		formatString: 0
+		lineageTag: f82729e6-bf6f-49e0-8fcf-bad0083b05e7
+		summarizeBy: none
+		sourceColumn: OrderStopStatus_Key
+
+		annotation SummarizationSetBy = Automatic
+
+	column OrderStopAuthorityActSection_Key
+		dataType: int64
+		formatString: 0
+		lineageTag: 500ed714-ecf7-4cd6-9dc5-8056758c8fcd
+		summarizeBy: count
+		sourceColumn: OrderStopAuthorityActSection_Key
+
+		annotation SummarizationSetBy = Automatic
+
+	column OrderStopAuthorityAct_Key
+		dataType: int64
+		formatString: 0
+		lineageTag: 19440ab5-7d20-424d-acc2-e70c80c73c36
+		summarizeBy: none
+		sourceColumn: OrderStopAuthorityAct_Key
+
+		annotation SummarizationSetBy = Automatic
+
+	column OrderStopResponseStatus_Key
+		dataType: int64
+		formatString: 0
+		lineageTag: 48414d57-f207-48aa-856c-cfa07fa29a80
+		summarizeBy: none
+		sourceColumn: OrderStopResponseStatus_Key
+
+		annotation SummarizationSetBy = Automatic
+
+	column CompletionDate_Key
+		dataType: int64
+		formatString: 0
+		lineageTag: 076dd905-e5e4-4a15-825d-5ed80ede42e8
+		summarizeBy: none
+		sourceColumn: CompletionDate_Key
+
+		annotation SummarizationSetBy = Automatic
+
+	column ResponseReceivedDate_Key
+		dataType: int64
+		formatString: 0
+		lineageTag: e88d0ac9-55d3-46c6-a570-816fa1bfa386
+		summarizeBy: count
+		sourceColumn: ResponseReceivedDate_Key
+
+		annotation SummarizationSetBy = Automatic
+
+	column ResponseReceivedDateTime
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 498cc1fa-5213-4214-9b46-b20f765e46b3
+		summarizeBy: none
+		sourceColumn: ResponseReceivedDateTime
+
+		variation Variation
+			isDefault
+			relationship: 59d9423b-1ff8-46b2-9890-6a5b3fb60f52
+			defaultHierarchy: LocalDateTable_94eed000-7f6c-4ab3-8a46-d9787b4d3281.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column CompletionDateTime
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 4cbf36b0-c5d0-49aa-a1ca-8b2395a88146
+		summarizeBy: none
+		sourceColumn: CompletionDateTime
+
+		variation Variation
+			isDefault
+			relationship: 09fe9d58-bff1-426f-a017-6f7f79445969
+			defaultHierarchy: LocalDateTable_c851e053-ef68-458c-b7d8-656bc63ea2f6.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column ETL_LastModified
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: a812528a-e4dd-4ec3-a47d-2b83a46e1757
+		summarizeBy: none
+		sourceColumn: ETL_LastModified
+
+		variation Variation
+			isDefault
+			relationship: 16adb5fc-f6d5-46d6-926b-5b95a6096b14
+			defaultHierarchy: LocalDateTable_2e0cad1e-208b-4d0e-bfab-9d017018facc.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column order_stop_detail_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 16ad3965-d0c4-4053-994d-ae0b9aa4f075
+		summarizeBy: none
+		sourceColumn: order_stop_detail_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column MineExt_Key
+		dataType: int64
+		formatString: 0
+		lineageTag: a13bc3a9-4728-41bc-9707-83d2bcd11728
+		summarizeBy: none
+		sourceColumn: MineExt_Key
+
+		annotation SummarizationSetBy = Automatic
+
+	column inspection_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 6ce422d4-2622-45ab-bd9b-d32947b14f09
+		summarizeBy: sum
+		sourceColumn: inspection_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column inspection_ext_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 5293beaf-d4cf-4a6c-a497-00480b178112
+		summarizeBy: sum
+		sourceColumn: inspection_ext_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column inspection_date
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: a69fa385-a5df-405f-88a9-58a5b744060e
+		summarizeBy: none
+		sourceColumn: inspection_date
+
+		variation Variation
+			isDefault
+			relationship: afd6a926-d93d-4ed5-8562-5f5e78637061
+			defaultHierarchy: LocalDateTable_ed688308-e0e3-4929-a992-e38d1eb46675.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column User_Key
+		dataType: int64
+		formatString: 0
+		lineageTag: 9a8dcc0f-850b-4f92-87b5-43379ff076a3
+		summarizeBy: none
+		sourceColumn: User_Key
+
+		annotation SummarizationSetBy = Automatic
+
+	partition FactOrderStopDetail = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Databases("mdp-sql-server.database.windows.net"),
+				    #"MDP-DWH" = Source{[Name="MDP-DWH"]}[Data],
+				    dbo_FactOrderStopDetail = #"MDP-DWH"{[Schema="dbo",Item="FactOrderStopDetail"]}[Data]
+				in
+				    dbo_FactOrderStopDetail
+
+	annotation PBI_ResultType = Table
+
+	annotation PBI_NavigationStepName = Navigation
+

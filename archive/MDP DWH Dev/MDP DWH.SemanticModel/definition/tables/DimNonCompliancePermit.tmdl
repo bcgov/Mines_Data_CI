@@ -1,0 +1,55 @@
+table DimNonCompliancePermit
+	lineageTag: 64402efe-68b5-4e4e-9114-61b05e10fddd
+
+	column NonCompliancePermit_Key
+		dataType: int64
+		formatString: 0
+		lineageTag: 3327f2d8-de6f-4efd-8255-ee09ae80df1b
+		summarizeBy: none
+		sourceColumn: NonCompliancePermit_Key
+
+		annotation SummarizationSetBy = Automatic
+
+	column order_stop_detail_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 6b373591-0a79-4725-9338-d47b6f62c102
+		summarizeBy: none
+		sourceColumn: order_stop_detail_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column SectionNumber
+		dataType: string
+		lineageTag: 275fe2f9-27a1-4f20-9194-2b324666279f
+		summarizeBy: none
+		sourceColumn: SectionNumber
+
+		annotation SummarizationSetBy = Automatic
+
+	column SectionTitle
+		dataType: string
+		lineageTag: 06551db9-9294-42b3-a679-56f61c61a22c
+		summarizeBy: none
+		sourceColumn: SectionTitle
+
+		annotation SummarizationSetBy = Automatic
+
+	column SectionText
+		dataType: string
+		lineageTag: 5f060b6f-ca08-410e-8b75-bf232277b84e
+		summarizeBy: none
+		sourceColumn: SectionText
+
+		annotation SummarizationSetBy = Automatic
+
+	partition DimNonCompliancePermit = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Databases("mdp-sql-server.database.windows.net"),
+				    #"MDP-DWH" = Source{[Name="MDP-DWH"]}[Data],
+				    dbo_DimNonCompliancePermit = #"MDP-DWH"{[Schema="dbo",Item="DimNonCompliancePermit"]}[Data]
+				in
+				    dbo_DimNonCompliancePermit
+

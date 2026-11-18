@@ -1,0 +1,82 @@
+table DimApplicationDelay
+	lineageTag: 4edf359b-33d7-47ec-885a-908c855659c8
+
+	column ApplicationDelay_Key
+		dataType: int64
+		formatString: 0
+		lineageTag: 7d31246e-6e7f-4dd9-976b-74537e9c3744
+		summarizeBy: none
+		sourceColumn: ApplicationDelay_Key
+
+		annotation SummarizationSetBy = Automatic
+
+	column now_application_delay_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 5c68521d-7dc5-4426-80ab-06ae06e482bc
+		summarizeBy: sum
+		sourceColumn: now_application_delay_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column DelayTypeCode
+		dataType: string
+		lineageTag: 2e715c15-06c7-4805-8668-759bd8f2eb67
+		summarizeBy: none
+		sourceColumn: DelayTypeCode
+
+		annotation SummarizationSetBy = Automatic
+
+	column StartComment
+		dataType: string
+		lineageTag: a4e45bdb-0301-4316-a4d8-41e53a8af542
+		summarizeBy: none
+		sourceColumn: StartComment
+
+		annotation SummarizationSetBy = Automatic
+
+	column StartDate
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 5239b988-f29b-4ead-8dba-71dbd1ec36cb
+		summarizeBy: none
+		sourceColumn: StartDate
+
+		variation Variation
+			isDefault
+			relationship: 6cff8415-979d-4832-a571-51ccbef1452a
+			defaultHierarchy: LocalDateTable_0ac5133b-c462-4c2a-bfd4-70ef68817c60.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column EndComment
+		dataType: string
+		lineageTag: 904179cb-38f3-4274-9015-cb645ef8ee9e
+		summarizeBy: none
+		sourceColumn: EndComment
+
+		annotation SummarizationSetBy = Automatic
+
+	column EndDate
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: be01ad59-c9e5-4c36-b1df-dc1973cb8942
+		summarizeBy: none
+		sourceColumn: EndDate
+
+		variation Variation
+			isDefault
+			relationship: 59d898ed-1084-462f-a565-0145a3adafab
+			defaultHierarchy: LocalDateTable_f7cd02d6-d9e3-4e42-9545-3d70fafa2c67.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	partition DimApplicationDelay = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Database("mdp-sql-server.database.windows.net", "MDP-DWH"),
+				    dbo_DimApplicationDelay = Source{[Schema="dbo",Item="DimApplicationDelay"]}[Data]
+				in
+				    dbo_DimApplicationDelay
+

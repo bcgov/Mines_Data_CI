@@ -1,0 +1,605 @@
+table FactApplication
+	lineageTag: ee0b1585-4b08-4585-ae04-b131f62a1258
+
+	/// Counts the total number of applications in the FactApplication table.
+	/// # Applications = COUNTROWS(FactApplication)
+	measure '# Applications' = COUNTROWS(FactApplication)
+		formatString: #,0
+		lineageTag: a9d820fd-66d5-4f3c-a39f-4954c26a5bca
+
+	/// Counts the total number of applications with the "Approved" status in the DimApplicationStatus table.
+	/// # Approved_Applications = 
+	/// CALCULATE(
+	///    COUNTROWS(FactApplication),
+	///    Counts the total number of applications with the "Approved" status in the DimApplicationStatus table.DimApplicationStatus[ApplicationStatusCode] = "Approved"
+	/// )
+	measure '# Approved_Applications' =
+			
+			CALCULATE(
+			   COUNTROWS(FactApplication),
+			   DimApplicationStatus[ApplicationStatusCode] = "AIA"
+			)
+		formatString: #,0
+		lineageTag: a21a7ad7-0555-42b0-949a-564d83583b26
+
+	/// Counts the total number of applications with the "Pending" status in the DimApplicationStatus table
+	/// # Pending_Applications = 
+	/// CALCULATE(
+	///    COUNTROWS(FactApplication),
+	///    DimApplicationStatus[ApplicationStatusCode] = "Pending"
+	/// )
+	measure '# Pending_Applications' =
+			
+			CALCULATE(
+			   COUNTROWS(FactApplication),
+			   DimApplicationStatus[ApplicationStatusCode] = "PEV"
+			)
+		formatString: #,0
+		lineageTag: 65fbfbc3-cba5-44c3-a7e3-fbe53d55e434
+
+	/// # Rejected_Applications = 
+	/// CALCULATE(
+	///    COUNTROWS(FactApplication),
+	///    Counts the total number of applications with the "Rejected" status in the DimApplicationStatus table
+	/// DimApplicationStatus[ApplicationStatusCode] = "Rejected"
+	/// )
+	measure '# Rejected_Applications' =
+			
+			CALCULATE(
+			   COUNTROWS(FactApplication),
+			   DimApplicationStatus[ApplicationStatusCode] = "REC"
+			)
+		formatString: #,0
+		lineageTag: 09ac266e-d9f5-4df6-8b83-44e198c1e580
+
+	/// Calculates the percentage of applications in progress out of the total number of applications.
+	/// # InProgress_Applications = 
+	/// CALCULATE(
+	///    COUNTROWS(FactApplication),
+	/// Counts the total number of applications with the "InProgress" status in the DimApplicationStatus table
+	///    DimApplicationStatus[ApplicationStatusCode] = "InProgress"
+	/// )
+	measure '# Delayed_Applications' =
+			
+			CALCULATE(
+			   COUNTROWS(FactApplication),
+			   DimApplicationStatus[ApplicationStatusCode] = "CDI"
+			)
+		formatString: #,0
+		lineageTag: 8bf7b340-26f3-4938-87c7-323c3f83a789
+
+	/// Calculates the percentage of approved applications out of the total number of applications.
+	/// % Approved Applications = 
+	/// DIVIDE(
+	///    [# Approved_Applications],
+	///    [# Applications],
+	///    0
+	/// )
+	measure '% Approved Applications' =
+			
+			DIVIDE(
+			   [# Approved_Applications],
+			   [# Applications],
+			   0
+			)
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 6e4d5490-014e-4ead-979c-671d682c51e3
+
+	/// Calculates the percentage of pending applications out of the total number of applications.
+	/// % Pending Applications = 
+	/// DIVIDE(
+	///    [# Pending_Applications],
+	///    [# Applications],
+	///    0
+	/// )
+	measure '% Pending Applications' =
+			
+			DIVIDE(
+			   [# Pending_Applications],
+			   [# Applications],
+			   0
+			)
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 1682c439-429c-4948-8052-35a5eec6ef3d
+
+	/// Calculates the percentage of rejected applications out of the total number of applications
+	/// % Rejected Applications = 
+	/// DIVIDE(
+	///    [# Rejected_Applications],
+	///    [# Applications],
+	///    0
+	/// )
+	/// 
+	measure '% Rejected Applications' =
+			
+			DIVIDE(
+			   [# Rejected_Applications],
+			   [# Applications],
+			   0
+			)
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: ddf966cb-7f9e-4c0d-aa6c-f6ce1a548f55
+
+	/// Calculates the percentage of approved applications within the last 30 days.
+	/// % Applications Approved in Last 30 Days = 
+	/// CALCULATE(
+	///    DIVIDE(
+	///       [# Approved_Applications],
+	///       [# Applications],
+	///       0
+	///    ),
+	///    DimDate[Date] > TODAY() - 30
+	/// )
+	measure '% Applications Approved in Last 30 Days' =
+			
+			CALCULATE(
+			   DIVIDE(
+			      [# Approved_Applications],
+			      [# Applications],
+			      0
+			   ),
+			   DimDate[Date] > TODAY() - 30
+			)
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: e1e31c89-a9f6-4402-b6df-6dbe752c6afd
+
+	/// Counts the total number of approved applications year-to-date.
+	/// # Applications Approved YTD = 
+	/// CALCULATE(
+	///    COUNTROWS(FactApplication),
+	///    DimApplicationStatus[ApplicationStatusCode] = "Approved",
+	///    YEAR(DimDate[Date]) = YEAR(TODAY())
+	/// )
+	measure '# Applications Approved YTD' = ```
+			
+			CALCULATE(
+			    COUNTROWS(FactApplication),
+			    DimApplicationStatus[ApplicationStatusCode] = "AIA",
+			    FILTER(
+			        VALUES(DimDate[Date]),
+			        DimDate[Date] <= TODAY()
+			    )
+			)
+			
+			```
+		formatString: #,0
+		lineageTag: 29019b29-e982-4860-9a85-7540e2554e05
+
+	/// Calculates the percentage of approved applications year-to-date out of the total applications.
+	/// % Applications Approved YTD = 
+	/// DIVIDE(
+	///    [# Applications Approved YTD],
+	///    [# Applications],
+	///    0
+	/// )
+	measure '% Applications Approved YTD' =
+			
+			DIVIDE(
+			   [# Applications Approved YTD],
+			   [# Applications],
+			   0
+			)
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: ba6198db-8b8c-48b5-abeb-e620f35b6994
+
+	/// Calculates the running total of applications submitted up to the current date.
+	/// 
+	/// # Cumulative Applications = 
+	/// CALCULATE(
+	///    COUNTROWS(FactApplication),
+	///    FILTER(
+	///       ALL(DimDate),
+	///       DimDate[Date] <= MAX(DimDate[Date])
+	///    )
+	measure '# Cumulative Applications' =
+			
+			CALCULATE(
+			   COUNTROWS(FactApplication),
+			   FILTER(
+			      ALL(DimDate),
+			      DimDate[Date] <= MAX(DimDate[Date])
+			   )
+			)
+		formatString: #,0
+		lineageTag: 1d940806-57ad-45bf-8843-a66e6eb7bd81
+
+	/// Calculates the percentage of applications in progress out of the total number of applications.
+	/// % InProgress Applications = 
+	/// DIVIDE(
+	///    [# InProgress_Applications],
+	///    [# Applications],
+	///    0
+	/// )
+	measure '% Delayed Applications' = ```
+			
+			DIVIDE(
+			   [# Delayed_Applications],
+			   [# Applications],
+			   0
+			) 
+			```
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 1fa1e1c2-f941-455d-a78a-b21e4ffd09ad
+
+	measure '# Withdrawn_Applications' =
+			
+			CALCULATE(
+			   COUNTROWS(FactApplication),
+			   DimApplicationStatus[ApplicationStatusCode] = "WDN"
+			)
+		formatString: 0
+		lineageTag: 8670d24f-9306-4070-ba49-44b4aaf99f95
+
+	measure '# Referred_Applications' =
+			
+			CALCULATE(
+			   COUNTROWS(FactApplication),
+			   DimApplicationStatus[ApplicationStatusCode] = "REF"
+			)
+		formatString: 0
+		lineageTag: 572cfe5d-2d90-4751-84e7-ec3b440b9ad5
+
+	measure '# Gov.ActionRequired_Applications' =
+			
+			CALCULATE(
+			   COUNTROWS(FactApplication),
+			   DimApplicationStatus[ApplicationStatusCode] = "GVD"
+			)
+		formatString: 0
+		lineageTag: 61d624c3-a0b9-41a2-8f0b-1fce8dada111
+
+	measure '# Referral Complete_Applications' =
+			
+			CALCULATE(
+			   COUNTROWS(FactApplication),
+			   DimApplicationStatus[ApplicationStatusCode] = "RCO"
+			)
+		formatString: 0
+		lineageTag: dc3ed71f-bdbd-42d2-aefb-1151490a48a0
+
+	measure '# NoPermit Required_Applications' =
+			
+			CALCULATE(
+			   COUNTROWS(FactApplication),
+			   DimApplicationStatus[ApplicationStatusCode] = "NPR"
+			)
+		formatString: 0
+		lineageTag: d5b9fee1-306c-44e8-8a58-315e8ee35190
+
+	/// Fiscal Year-to-Date (FYTD)
+	/// CALCULATE(
+	///     [# Applications],
+	///     FILTER(
+	///         ALL(DimDate),
+	///         DimDate[FiscalYear] = MAX(DimDate[FiscalYear]) &&
+	///         DimDate[Date] <= MAX(DimDate[Date])
+	///     )
+	/// )
+	measure '# Applications FYTD' =
+			
+			CALCULATE(
+			    [# Applications],
+			    FILTER(
+			        ALL(DimDate),
+			        DimDate[FiscalYear] = MAX(DimDate[FiscalYear]) &&
+			        DimDate[Date] <= MAX(DimDate[Date])
+			    )
+			)
+		formatString: #,0
+		lineageTag: a2a3de86-4111-4068-91ae-ac7b3194b5cf
+
+	/// Fiscal Last Year-to-Date (FLYTD)
+	/// CALCULATE(
+	///     [# Applications],
+	///     FILTER(
+	///         ALL(DimDate),
+	///         DimDate[FiscalYear] = MAX(DimDate[FiscalYear]) - 1 &&
+	///         DimDate[Date] <= EDATE(MAX(DimDate[Date]), -12)
+	///     )
+	/// )
+	measure '# Applications FLYTD' = ```
+			
+			CALCULATE(
+			    [# Applications],
+			    FILTER(
+			        ALL(DimDate),
+			        DimDate[FiscalYear] = MAX(DimDate[FiscalYear]) - 1 &&
+			        DimDate[Date] <= EDATE(MAX(DimDate[Date]), -12)
+			    )
+			)
+			
+			```
+		formatString: 0
+		lineageTag: 7f62299d-cb75-433e-b02c-1f1e6d166762
+
+	/// Fiscal MTD
+	/// CALCULATE(
+	///     [# Applications],
+	///     FILTER(
+	///         ALL(DimDate),
+	///         DimDate[FiscalYear] = MAX(DimDate[FiscalYear]) &&
+	///         DimDate[FiscalMonth] = MAX(DimDate[FiscalMonth])
+	///     )
+	/// )
+	measure '# Applications FMTD' = ```
+			
+			CALCULATE(
+			    [# Applications],
+			    FILTER(
+			        ALL(DimDate),
+			        DimDate[FiscalYear] = MAX(DimDate[FiscalYear]) &&
+			        DimDate[FiscalMonth] = MAX(DimDate[FiscalMonth])
+			    )
+			)
+			
+			```
+		formatString: 0
+		lineageTag: f17e2e24-e6ae-4c8c-9808-5782587941d8
+
+	///  Fiscal YTD % Change
+	/// DIVIDE([# Applications FYTD] - [# Applications FLYTD], [# Applications FLYTD])
+	measure '% Applications FYTD Change' = ```
+			
+			DIVIDE([# Applications FYTD] - [# Applications FLYTD], [# Applications FLYTD])
+			
+			```
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: f864f79c-fdc6-4500-b4b1-3144344d699e
+
+	column ApplicationPK
+		dataType: int64
+		formatString: 0
+		lineageTag: c1608d3d-f83e-4aec-af3c-78b8315ca94d
+		summarizeBy: sum
+		sourceColumn: ApplicationPK
+
+		annotation SummarizationSetBy = Automatic
+
+	column now_application_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 46afce76-f50f-495c-b402-492d3f10d0b8
+		summarizeBy: none
+		sourceColumn: now_application_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column DateSubmitted_Key
+		dataType: int64
+		formatString: 0
+		lineageTag: ce744220-d033-445b-986e-9408c334528c
+		summarizeBy: none
+		sourceColumn: DateSubmitted_Key
+
+		annotation SummarizationSetBy = Automatic
+
+	column DateReceived_Key
+		dataType: int64
+		formatString: 0
+		lineageTag: 186275e1-780e-458f-b6fa-bbaa2867731e
+		summarizeBy: count
+		sourceColumn: DateReceived_Key
+
+		annotation SummarizationSetBy = Automatic
+
+	column AppType_Key
+		dataType: int64
+		formatString: 0
+		lineageTag: baaf00ff-ff45-4a4d-84cf-166750a1da29
+		summarizeBy: none
+		sourceColumn: AppType_Key
+
+		annotation SummarizationSetBy = Automatic
+
+	column AppStatus_Key
+		dataType: int64
+		formatString: 0
+		lineageTag: 99a9ad33-4775-4831-90d9-b5a70032c19e
+		summarizeBy: none
+		sourceColumn: AppStatus_Key
+
+		annotation SummarizationSetBy = Automatic
+
+	column MineExt_Key
+		dataType: int64
+		formatString: 0
+		lineageTag: 61e13d41-842d-4399-a92a-a2c507257dc3
+		summarizeBy: none
+		sourceColumn: MineExt_Key
+
+		annotation SummarizationSetBy = Automatic
+
+	column NoticeOfWorkType_Key
+		dataType: int64
+		formatString: 0
+		lineageTag: 387f5258-9ac9-45c9-9ba5-680976e751b9
+		summarizeBy: none
+		sourceColumn: NoticeOfWorkType_Key
+
+		annotation SummarizationSetBy = Automatic
+
+	column AppSecurityNotRequiredReason_Key
+		dataType: int64
+		formatString: 0
+		lineageTag: ce32f7a9-8da3-42e7-8677-43bd20dab92b
+		summarizeBy: none
+		sourceColumn: AppSecurityNotRequiredReason_Key
+
+		annotation SummarizationSetBy = Automatic
+
+	column LiabilityAdjustment
+		dataType: decimal
+		formatString: \$#,0.###############;(\$#,0.###############);\$#,0.###############
+		lineageTag: 4af9736e-0c90-4ddd-b426-8d2441ff9374
+		summarizeBy: sum
+		sourceColumn: LiabilityAdjustment
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-US"}
+
+	column ProposedAnnualMaximumTonnage
+		dataType: int64
+		formatString: 0
+		lineageTag: 32c4c7ee-64fa-4d27-9298-3e39055263ca
+		summarizeBy: sum
+		sourceColumn: ProposedAnnualMaximumTonnage
+
+		annotation SummarizationSetBy = Automatic
+
+	column AdjustedAnnualMaximumTonnage
+		dataType: int64
+		formatString: 0
+		lineageTag: a2a5fe7e-a960-4a76-ae6c-9c0627f2a36f
+		summarizeBy: sum
+		sourceColumn: AdjustedAnnualMaximumTonnage
+
+		annotation SummarizationSetBy = Automatic
+
+	column MerchantableTimberVolume
+		dataType: int64
+		formatString: 0
+		lineageTag: 48010e7f-c223-4cd7-845a-83fb6bce5e78
+		summarizeBy: sum
+		sourceColumn: MerchantableTimberVolume
+
+		annotation SummarizationSetBy = Automatic
+
+	column TermOfApplication
+		dataType: int64
+		formatString: 0
+		lineageTag: 53f90305-4fbe-427b-a6bc-c1299820102f
+		summarizeBy: sum
+		sourceColumn: TermOfApplication
+
+		annotation SummarizationSetBy = Automatic
+
+	column SubmittedDate
+		dataType: dateTime
+		formatString: Short Date
+		lineageTag: 075af4f7-58e4-49a6-8bc5-f04213789316
+		summarizeBy: none
+		sourceColumn: SubmittedDate
+
+		variation Variation
+			isDefault
+			relationship: 58fade4c-d25e-44a4-8e38-08b1d8ad1023
+			defaultHierarchy: LocalDateTable_639b6575-ca78-469a-9950-a9f71cc4844f.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column ReceivedDate
+		dataType: dateTime
+		formatString: Short Date
+		lineageTag: 2c3701a5-d14a-4a97-a23c-1ec32bd6b5a5
+		summarizeBy: none
+		sourceColumn: ReceivedDate
+
+		variation Variation
+			isDefault
+			relationship: 77506a0c-da9b-464c-8f84-8bb75971d6c3
+			defaultHierarchy: LocalDateTable_18a27f53-f7be-416d-b02f-b2dc3fe1d721.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column DecisionDate
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 231192c8-ab2d-43cf-baff-ef5c554d49c9
+		summarizeBy: none
+		sourceColumn: DecisionDate
+
+		variation Variation
+			isDefault
+			relationship: f4358ad9-a00f-4a4e-8020-7c48d0715da5
+			defaultHierarchy: LocalDateTable_bc54fc01-5a58-450f-a2ad-d2f9749c1609.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column ProposedStartDate
+		dataType: dateTime
+		formatString: Short Date
+		lineageTag: f0b68145-c4ce-4de5-a8ff-769c89af3aa2
+		summarizeBy: none
+		sourceColumn: ProposedStartDate
+
+		variation Variation
+			isDefault
+			relationship: 0aa06eb6-6c4c-447b-8a5d-9ff735e3ce02
+			defaultHierarchy: LocalDateTable_adce5720-2ed6-4fb9-8d98-7c4526f5670c.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column ProposedEndDate
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: cfc7b78a-7b64-4c2b-8f6d-3280d60af3a8
+		summarizeBy: none
+		sourceColumn: ProposedEndDate
+
+		variation Variation
+			isDefault
+			relationship: 8cdc3f26-3720-46a2-b82f-daf039192473
+			defaultHierarchy: LocalDateTable_205665d4-1f9d-490b-834d-4afa6e87a700.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column SecurityReceivedDate
+		dataType: dateTime
+		formatString: Short Date
+		lineageTag: b5af019e-7742-448d-a7c2-2dab3fb6046d
+		summarizeBy: none
+		sourceColumn: SecurityReceivedDate
+
+		variation Variation
+			isDefault
+			relationship: 4b98ed6f-ff6a-417b-a809-4c430bc2624a
+			defaultHierarchy: LocalDateTable_e7df0d4e-428e-40d7-be08-a5f80a67fba7.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column ETL_LastModified
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 3d5d3261-db8c-4196-b184-abeae4f9a98c
+		summarizeBy: none
+		sourceColumn: ETL_LastModified
+
+		variation Variation
+			isDefault
+			relationship: 1cfcec97-98fd-4829-b95f-23cbfe8d1af6
+			defaultHierarchy: LocalDateTable_21dc8973-a7aa-4673-bfc1-ec3a7e6b0861.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column TrackingNumber
+		dataType: int64
+		formatString: 0
+		lineageTag: 47ca1bc9-51a3-4547-8108-fbf6b0582b9d
+		summarizeBy: sum
+		sourceColumn: TrackingNumber
+
+		annotation SummarizationSetBy = Automatic
+
+	partition FactApplication = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Databases("mdp-sql-server.database.windows.net"),
+				    #"MDP-DWH" = Source{[Name="MDP-DWH"]}[Data],
+				    dbo_FactApplication = #"MDP-DWH"{[Schema="dbo",Item="FactApplication"]}[Data]
+				in
+				    dbo_FactApplication
+
+	annotation PBI_ResultType = Table
+

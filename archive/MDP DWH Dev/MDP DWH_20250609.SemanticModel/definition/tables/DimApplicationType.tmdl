@@ -1,0 +1,41 @@
+table DimApplicationType
+	lineageTag: bc147026-cf45-4377-8468-f278d522cc07
+
+	column ApplicationType_Key
+		dataType: int64
+		formatString: 0
+		lineageTag: 25b47f6e-a6b9-4aab-b352-ad6175616820
+		summarizeBy: none
+		sourceColumn: ApplicationType_Key
+
+		annotation SummarizationSetBy = Automatic
+
+	column ApplicationType
+		dataType: string
+		lineageTag: 3b7bad8d-cbca-4686-a8a7-b78a89f32581
+		summarizeBy: none
+		sourceColumn: ApplicationType
+
+		annotation SummarizationSetBy = Automatic
+
+	column ApplicationType_Hash
+		dataType: int64
+		formatString: 0
+		lineageTag: 5094d787-9d3c-4b06-85c5-873c323d1203
+		summarizeBy: none
+		sourceColumn: ApplicationType_Hash
+
+		annotation SummarizationSetBy = Automatic
+
+	partition DimApplicationType = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Databases("mdp-sql-server.database.windows.net"),
+				    #"MDP-DWH" = Source{[Name="MDP-DWH"]}[Data],
+				    dbo_DimApplicationType = #"MDP-DWH"{[Schema="dbo",Item="DimApplicationType"]}[Data]
+				in
+				    dbo_DimApplicationType
+
+	annotation PBI_ResultType = Table
+

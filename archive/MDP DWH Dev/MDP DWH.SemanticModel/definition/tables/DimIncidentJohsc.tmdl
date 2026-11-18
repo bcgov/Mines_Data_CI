@@ -1,0 +1,111 @@
+table DimIncidentJohsc
+	lineageTag: bbeb99ae-cc91-4a22-b7b7-b3d89e590e33
+
+	column IncidentJohsc_Key
+		dataType: int64
+		formatString: 0
+		lineageTag: d9e46afb-e28a-423f-bcb2-25242fc5e482
+		summarizeBy: none
+		sourceColumn: IncidentJohsc_Key
+
+		annotation SummarizationSetBy = Automatic
+
+	column JohscWorkerRepName
+		dataType: string
+		lineageTag: 10920260-71ed-412c-96b1-e420729722e3
+		summarizeBy: none
+		sourceColumn: JohscWorkerRepName
+
+		annotation SummarizationSetBy = Automatic
+
+	column JohscWorkerRepContacted
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: f7cc4997-271d-4b08-9625-0da006fc5fb5
+		summarizeBy: none
+		sourceColumn: JohscWorkerRepContacted
+
+		annotation SummarizationSetBy = Automatic
+
+	column JohscManagementRepName
+		dataType: string
+		lineageTag: f2fb4140-05b1-46ef-90e1-62998b32315e
+		summarizeBy: none
+		sourceColumn: JohscManagementRepName
+
+		annotation SummarizationSetBy = Automatic
+
+	column JohscManagementRepContacted
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 019145c7-bc4d-4534-86f1-69ee99a17291
+		summarizeBy: none
+		sourceColumn: JohscManagementRepContacted
+
+		annotation SummarizationSetBy = Automatic
+
+	column JohscWorkerRepContactMethod
+		dataType: string
+		lineageTag: 6c150550-bfa9-4ba8-b03c-64cb43658355
+		summarizeBy: none
+		sourceColumn: JohscWorkerRepContactMethod
+
+		annotation SummarizationSetBy = Automatic
+
+	column JobhscWorkerRepContactTimestamp
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: d9789f4f-d958-4f8d-889e-26f33085558b
+		summarizeBy: none
+		sourceColumn: JobhscWorkerRepContactTimestamp
+
+		variation Variation
+			isDefault
+			relationship: 9572b754-6c37-4d01-be46-91a94b21652d
+			defaultHierarchy: LocalDateTable_da0e8697-9217-4ce9-9a2a-552db7fdea4c.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column JohscManagementRepContactMethod
+		dataType: string
+		lineageTag: 504e60c7-610c-49cc-ac1f-dac28fdef2b7
+		summarizeBy: none
+		sourceColumn: JohscManagementRepContactMethod
+
+		annotation SummarizationSetBy = Automatic
+
+	column JobhscManagementRepContactTimestamp
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 9e3152a8-afd1-4ae5-8fc7-964d3914eb14
+		summarizeBy: none
+		sourceColumn: JobhscManagementRepContactTimestamp
+
+		variation Variation
+			isDefault
+			relationship: 468c5562-dfac-4081-9049-6b3e1d7410a6
+			defaultHierarchy: LocalDateTable_83ff131e-ed9a-42c7-bfb1-5e0a27d4364e.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column mine_incident_id
+		dataType: int64
+		formatString: 0
+		lineageTag: bb629a4a-4b89-42f2-8052-8fa55172e9ad
+		summarizeBy: sum
+		sourceColumn: mine_incident_id
+
+		annotation SummarizationSetBy = Automatic
+
+	partition DimIncidentJohsc = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Databases("mdp-sql-server.database.windows.net"),
+				    #"MDP-DWH" = Source{[Name="MDP-DWH"]}[Data],
+				    dbo_DimIncidentJohsc = #"MDP-DWH"{[Schema="dbo",Item="DimIncidentJohsc"]}[Data]
+				in
+				    dbo_DimIncidentJohsc
+
+	annotation PBI_ResultType = Table
+
