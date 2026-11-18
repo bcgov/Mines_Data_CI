@@ -1,0 +1,219 @@
+table MMS_NoW
+	lineageTag: 7cc47b9d-1bb3-4f9e-92c5-d46e833cd964
+
+	column id
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 741c9990-f861-4fce-861f-c44e0849cb93
+		summarizeBy: sum
+		sourceColumn: id
+
+		annotation SummarizationSetBy = Automatic
+
+	column application_guid
+		dataType: string
+		sourceProviderType: nchar
+		lineageTag: 33884325-8975-4eca-b453-3a4adf2e6795
+		summarizeBy: none
+		sourceColumn: application_guid
+
+		annotation SummarizationSetBy = Automatic
+
+	column messageid
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 9e485c1f-cb80-4bbb-bd41-9c253b1c8cd0
+		summarizeBy: sum
+		sourceColumn: messageid
+
+		annotation SummarizationSetBy = Automatic
+
+	column mms_cid
+		dataType: int64
+		formatString: 0
+		sourceProviderType: bigint
+		lineageTag: 13f894c0-f0c6-4311-b70e-04b26438ed5f
+		summarizeBy: sum
+		sourceColumn: mms_cid
+
+		annotation SummarizationSetBy = Automatic
+
+	column minenumber
+		dataType: string
+		sourceProviderType: nvarchar(-1)
+		lineageTag: ac3f4dab-4f76-4652-82b8-5d934624ba7d
+		summarizeBy: none
+		sourceColumn: minenumber
+
+		annotation SummarizationSetBy = Automatic
+
+	column mmsnownumber
+		dataType: string
+		sourceProviderType: nvarchar(-1)
+		lineageTag: f005a276-5dbb-4482-b55d-b90108d6ed3b
+		summarizeBy: none
+		sourceColumn: mmsnownumber
+
+		annotation SummarizationSetBy = Automatic
+
+	column submitteddate
+		dataType: dateTime
+		formatString: m/d/yyyy
+		sourceProviderType: datetime2
+		lineageTag: 018a2f69-f6ce-4979-99b1-893379816ad2
+		summarizeBy: none
+		sourceColumn: submitteddate
+
+		variation Variation
+			isDefault
+			relationship: c51f5250-1ead-41d6-9a2b-3b89b1770568
+			defaultHierarchy: LocalDateTable_3068e8c5-621e-4d1f-b492-6c447ae91b00.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+		annotation PBI_FormatHint = {"isDateTimeCustom":true}
+
+	column receiveddate
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: b3399778-b5ed-4773-a70b-17f1aeb87fee
+		summarizeBy: none
+		sourceColumn: receiveddate
+
+		variation Variation
+			isDefault
+			relationship: 4da75ecd-6f3a-4732-8826-6209a48b89cc
+			defaultHierarchy: LocalDateTable_8d2cf8d0-b03a-4f59-b23f-f8986d1820f3.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column proposedstartdate
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: e9389ed8-94b2-44a2-87d6-c0344b899c41
+		summarizeBy: none
+		sourceColumn: proposedstartdate
+
+		variation Variation
+			isDefault
+			relationship: bbf73b02-2519-4f2f-aad3-8d8e51b3b412
+			defaultHierarchy: LocalDateTable_b1910fbd-db7f-4e7c-8c71-a4e1dff47072.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column proposedenddate
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 111d7067-c8e0-4fc6-b644-adf36083f043
+		summarizeBy: none
+		sourceColumn: proposedenddate
+
+		variation Variation
+			isDefault
+			relationship: 58349666-8ea3-4310-8cbe-6d83a3eda54c
+			defaultHierarchy: LocalDateTable_b06abefd-505f-460f-889b-45495d5c9db6.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column typeofapplication
+		dataType: string
+		sourceProviderType: nvarchar(-1)
+		lineageTag: fe9b7615-c097-49a9-a9d0-fb37870f87dc
+		summarizeBy: none
+		sourceColumn: typeofapplication
+
+		annotation SummarizationSetBy = Automatic
+
+	column status
+		dataType: string
+		sourceProviderType: nvarchar(-1)
+		lineageTag: c01287c5-222b-4c2b-b423-b4b55b665816
+		summarizeBy: none
+		sourceColumn: status
+
+		annotation SummarizationSetBy = Automatic
+
+	column latitude
+		dataType: double
+		sourceProviderType: decimal(9, 7)
+		lineageTag: cebb9ed9-bc3f-4785-afe6-3bb37c22f6a3
+		summarizeBy: sum
+		sourceColumn: latitude
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column longitude
+		dataType: double
+		sourceProviderType: decimal(11, 7)
+		lineageTag: 93490b38-4033-4185-9d82-8e39909fa405
+		summarizeBy: sum
+		sourceColumn: longitude
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column sources
+		dataType: string
+		sourceProviderType: nvarchar(-1)
+		lineageTag: 33e3dae2-ac3c-43ff-bec5-8dfbfd2aae7b
+		summarizeBy: none
+		sourceColumn: sources
+
+		annotation SummarizationSetBy = Automatic
+
+	column Source = "MMS"
+		lineageTag: 7c257bc6-ab72-4a11-8c8b-7ffaf38a938e
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column noticeofworktype
+		dataType: string
+		lineageTag: 09ee46ba-90bc-4875-855f-4f7410f9943c
+		summarizeBy: none
+		sourceColumn: noticeofworktype
+
+		annotation SummarizationSetBy = Automatic
+
+	column permit_prefix
+		dataType: string
+		lineageTag: 5cfb8c78-6945-4689-8a3b-7abac98bc1f6
+		summarizeBy: none
+		sourceColumn: permit_prefix
+
+		annotation SummarizationSetBy = Automatic
+
+	column noticeofworktypecode
+		dataType: string
+		lineageTag: c7498f64-412f-436f-a4b5-71b35c011bf6
+		summarizeBy: none
+		sourceColumn: noticeofworktypecode
+
+		annotation SummarizationSetBy = Automatic
+
+	partition MMS_NoW-a6f4c031-c305-4b00-898b-edca30035e25 = m
+		mode: import
+		source =
+				let
+				    Source = Value.NativeQuery(PostgreSQL.Database("mds-reporting-pg13-live.postgres.database.azure.com", "mds", [CreateNavigationProperties=false]), "select id,application_guid ,messageid ,mms_cid ,minenumber ,noticeofworktype , #(lf)(select case #(lf)#(tab)when noticeofworktype = 'Mineral' then 'M' #(lf)#(tab)when noticeofworktype = 'Sand & Gravel' then 'G'#(tab)#(lf)#(tab)when noticeofworktype = 'Placer Operations' then 'P' end) as permit_prefix,#(lf)#(tab)(select case #(lf)#(tab)when noticeofworktype = 'Mineral' then 'MIN' #(lf)#(tab)when noticeofworktype = 'Sand & Gravel' then 'SAG'#(tab)#(lf)#(tab)when noticeofworktype = 'Placer Operations' then 'PLA' end) as noticeofworktypecode,#(lf)mmsnownumber,submitteddate , receiveddate,proposedstartdate ,proposedenddate ,typeofapplication,#(lf)status ,latitude, longitude,'MMS' Sources#(lf)from mms_now_submissions.application a#(lf)--where extract(year from submitteddate) >= 2000 ", null, [EnableFolding=false]),
+				    #"Changed Type" = Table.TransformColumnTypes(Source,{{"submitteddate", type date}, {"receiveddate", type date}, {"proposedstartdate", type date}, {"proposedenddate", type date}})
+				in
+				    #"Changed Type"
+
+	annotation PBI_ResultType = Table
+
+	annotation PBI_NavigationStepName = Navigation
+

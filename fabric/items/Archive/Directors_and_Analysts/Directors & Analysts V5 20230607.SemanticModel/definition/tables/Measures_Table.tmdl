@@ -1,0 +1,143 @@
+table Measures_Table
+	lineageTag: b8d2c38b-3e07-4cce-96db-ac5d293059a9
+
+	measure ApplicationCount_NE =
+			CALCULATE(
+			    DISTINCTCOUNT(NoW_Application_Identity[now_application_guid]),Mines[Mine Region]="NE")
+		formatString: 0
+		lineageTag: c8e874a6-a557-47b8-9b88-28537e0eae9b
+
+	measure ApplicationCount_NW =
+			CALCULATE(
+			    DISTINCTCOUNT(NoW_Application_Identity[now_application_guid]),Mines[Mine Region]="NW")
+		formatString: 0
+		lineageTag: 20df3694-fe81-4dc1-92cd-ea6bc1047a42
+
+	measure ApplicationCount_SE =
+			CALCULATE(
+			    DISTINCTCOUNT(NoW_Application_Identity[now_application_guid]),Mines[Mine Region]="SE")
+		formatString: 0
+		lineageTag: bd50888b-3f40-4459-a18a-06f889fec6b9
+
+	measure ApplicationCount_SC =
+			CALCULATE(
+			    DISTINCTCOUNT(NoW_Application_Identity[now_application_guid]),Mines[Mine Region]="SC")
+		formatString: 0
+		lineageTag: 8af9d35d-b9e1-4f3c-840e-dfc08dda94ef
+
+	measure ApplicationCount_SW =
+			CALCULATE(
+			    DISTINCTCOUNT(NoW_Application_Identity[now_application_guid]),Mines[Mine Region]="SW")
+		formatString: 0
+		lineageTag: b43a5485-05e3-449a-ac0c-3b03490dcc5e
+
+	measure 'Count Last Year' = CALCULATE(count(NoW_Application_Identity[now_application_guid]),SAMEPERIODLASTYEAR(SubmitDates[Date].[Date]))
+		formatString: 0
+		lineageTag: 0d10fcc2-ce36-4bca-b5cf-8bb264aa6a3c
+
+	measure 'Total Count' = DISTINCTCOUNT(NoW_Application_Identity[now_application_guid])
+		formatString: 0
+		lineageTag: b5526b12-d824-4c93-8f94-7452131894b2
+
+	measure 'YoY % change' = DIVIDE([Total Count],[Count Last Year],0)-1
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 0a4dccca-b652-4c8f-b323-8fba5724ecc3
+
+	measure 'Report Title' = COMBINEVALUES(" ", "Inspector Report - ", [Selected Name])
+		lineageTag: 94b4e06f-bc26-4173-a997-9c95e0297933
+
+	measure 'Average Consultation Days' = "30-45"
+		lineageTag: d5022e9b-ec8c-4faa-9a9c-ae3232562359
+
+	measure 'Average Technical Days' = "5"
+		lineageTag: 086e406f-f86f-4260-a565-0b2deb5059c8
+
+	measure Decision_Target = 5
+		formatString: 0
+		lineageTag: 7a784b2e-b0a4-4f70-afee-7fe099fd9c1c
+
+	measure Draft_Target = 5
+		formatString: 0
+		lineageTag: 6951569e-23c0-4f31-9f86-626acbf21418
+
+	measure DraftGuage =
+			
+			SWITCH(
+			    TRUE(),
+			    MAX('Processing Dates'[draftpermitdurationnum]) <= 5, "#234075",
+			    MAX('Processing Dates'[draftpermitdurationnum]) > 5, "#e3a82b")
+		lineageTag: 125f15a7-f90b-4788-bac7-2a30abd86347
+
+	measure Intake_Target = 7
+		formatString: 0
+		lineageTag: 9c9229d8-30b9-41eb-b056-15c3431e8c0c
+
+	measure MaxDraftDuration = [Draft_Target] + 90
+		formatString: 0
+		lineageTag: 8582eaf7-7b0c-435d-be83-f8fd549a9c86
+
+	measure MaxRefConsDuration = [RefCons_Target] + 90
+		lineageTag: 4609d9fb-110c-48a9-a37e-a6d874650bf6
+
+	measure MaxTechReviewDuration = [TechReview_Target] + 90
+		lineageTag: aa8c0579-7b65-4cf6-ab2e-8d80d5213478
+
+	measure RefCons_Target = 45
+		formatString: 0
+		lineageTag: f8bb9291-cbc8-475c-a771-7bae3c03b775
+
+	measure RefConsGuage =
+			
+			SWITCH(
+			    TRUE(),
+			    MAX('Processing Dates'[consultationduration_num]) <= 45, "#234075",
+			    MAX('Processing Dates'[consultationduration_num]) > 45, "#e3a82b")
+		lineageTag: 91419cf4-c09a-44c5-b5a1-a617ea23be19
+
+	measure StageCount = ```
+			
+			VAR _SelectedOrder = SELECTEDVALUE('Processing Dates'[now_number])
+			RETURN 
+			IF ( NOT ISBLANK ( _SelectedOrder ),
+			COUNTROWS('Processing Dates'))
+			```
+		formatString: 0
+		lineageTag: c1613d98-5a74-4a72-928b-62c8f3d5b1c4
+
+	measure TechRevGuage =
+			
+			SWITCH(
+			    TRUE(),
+			    MAX('Processing Dates'[techreviewduration_num]) <= 5, "#234075",
+			    MAX('Processing Dates'[techreviewduration_num]) > 5, "#e3a82b")
+		lineageTag: 93cfa47e-a23f-4dc3-bbf5-e9049c9bf041
+
+	measure TechReview_Target = 5
+		formatString: 0
+		lineageTag: 377a0bed-ff3d-47fa-b4af-d43849038e5b
+
+	measure 'Calculated Item' = SELECTEDMEASURE()
+		lineageTag: cd6e8891-ed7e-485d-96b4-23eed2769bae
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure '% of Total' =
+			DIVIDE(
+			    SELECTEDMEASURE(),CALCULATE(
+			        SELECTEDMEASURE()))
+		lineageTag: 81e4e53c-91a0-4e88-8228-144eadf6ee90
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition Measures_Table-5c624e9d-3ab0-4b99-bccf-ae802bdf9ae8 = m
+		mode: import
+		source =
+				let
+				    Source = Table.FromRows(Json.Document(Binary.Decompress(Binary.FromText("i45WMlCKjQUA", BinaryEncoding.Base64), Compression.Deflate)), let _t = ((type nullable text) meta [Serialized.Text = true]) in type table [Column1 = _t]),
+				    #"Changed Type" = Table.TransformColumnTypes(Source,{{"Column1", Int64.Type}}),
+				    #"Removed Columns" = Table.RemoveColumns(#"Changed Type",{"Column1"})
+				in
+				    #"Removed Columns"
+
+	annotation PBI_ResultType = Table
+

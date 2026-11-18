@@ -1,0 +1,36 @@
+table Process_Stage_Sort-old
+	lineageTag: 5ba429c7-37a6-417c-a10d-2e638fa8e77c
+
+	column Process_Stage
+		dataType: string
+		lineageTag: cfcf2a4d-2d05-4457-89bc-d062d971b187
+		summarizeBy: none
+		sourceColumn: Process_Stage
+		sortByColumn: Sort
+
+		annotation SummarizationSetBy = Automatic
+
+	column Sort
+		dataType: int64
+		formatString: 0
+		lineageTag: 6f4eb85d-3627-4e4c-8066-298ed233af56
+		summarizeBy: sum
+		sourceColumn: Sort
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Process_Stage_Sort-old-72ec81a2-21c1-464d-9c9c-90c3766c49a7 = m
+		mode: import
+		source =
+				let
+				    Source = Table.FromRows(Json.Document(Binary.Decompress(Binary.FromText("JcpJCoAgFADQu/y1EE0n0AOEtBMXJl/64AAOdf3Eto+nFJxob4kP4QsMZtBMgUSHORvfYRnAUyzNV1MpxY7rwKNdnixPIWCsXbehIhtXJ4GWyp930PoD", BinaryEncoding.Base64), Compression.Deflate)), let _t = ((type nullable text) meta [Serialized.Text = true]) in type table [Process_Stage = _t, Sort = _t]),
+				    #"Changed Type" = Table.TransformColumnTypes(Source,{{"Process_Stage", type text}, {"Sort", Int64.Type}})
+				in
+				    #"Changed Type"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
+	annotation PBI_ChangedProperties = ["Name"]
+

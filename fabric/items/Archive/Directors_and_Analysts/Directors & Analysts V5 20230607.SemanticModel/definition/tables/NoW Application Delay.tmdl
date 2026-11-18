@@ -1,0 +1,113 @@
+table 'NoW Application Delay'
+	lineageTag: 34e92ede-77c6-4bd5-a4aa-99a921f556ad
+
+	column now_application_guid
+		dataType: string
+		sourceProviderType: nchar
+		lineageTag: e611030b-98f9-4419-b950-b7eeca8b8e10
+		summarizeBy: none
+		sourceColumn: now_application_guid
+
+		annotation SummarizationSetBy = Automatic
+
+	column delay_type_code
+		dataType: string
+		sourceProviderType: nvarchar(-1)
+		lineageTag: 09510a8c-6341-4528-bfad-9cd5413eed7b
+		summarizeBy: none
+		sourceColumn: delay_type_code
+
+		annotation SummarizationSetBy = Automatic
+
+	column description
+		dataType: string
+		sourceProviderType: nvarchar(-1)
+		lineageTag: 5d10b847-5220-4fed-9dca-17d6d36b2fbc
+		summarizeBy: none
+		sourceColumn: description
+
+		annotation SummarizationSetBy = Automatic
+
+	column delay_id
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: e661c74a-2bf4-46d4-9b51-bc6f55b0f45f
+		summarizeBy: sum
+		sourceColumn: delay_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column enddate
+		dataType: dateTime
+		formatString: m/d/yyyy
+		sourceProviderType: date
+		lineageTag: 3e5c3984-50fb-45e4-b72f-71dd3625c6a2
+		summarizeBy: none
+		sourceColumn: enddate
+
+		variation Variation
+			isDefault
+			relationship: 3ade1bc1-4184-47bd-9dc0-c548e4eb27a5
+			defaultHierarchy: LocalDateTable_17c5f12c-d114-44e0-af82-79ce098d1335.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+		annotation PBI_FormatHint = {"isDateTimeCustom":true}
+
+	column startdate
+		dataType: dateTime
+		formatString: m/d/yyyy
+		sourceProviderType: date
+		lineageTag: 1caebc2f-4863-42cb-a8f3-f5629c4d5342
+		summarizeBy: none
+		sourceColumn: startdate
+
+		variation Variation
+			isDefault
+			relationship: c01a9a97-26b3-4a1d-8ec9-9b76faa1efaf
+			defaultHierarchy: LocalDateTable_ecd6ceb2-f754-4b76-a0d6-e25488a328c0.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+		annotation PBI_FormatHint = {"isDateTimeCustom":true}
+
+	column start_comment
+		dataType: string
+		sourceProviderType: nvarchar(-1)
+		lineageTag: 7ba3d0aa-88af-438f-8243-cc0e83ac9498
+		summarizeBy: none
+		sourceColumn: start_comment
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'delay_duration (days)'
+		dataType: double
+		formatString: #,0
+		sourceProviderType: double
+		lineageTag: f779bad7-01b3-40f5-b188-0cd860a30a95
+		summarizeBy: sum
+		sourceColumn: delay_duration (days)
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isDecimal":true}
+
+	partition 'NoW Application Delay-f233effa-a4c0-4978-be5d-e848af101970' = m
+		mode: import
+		source =
+				let
+				    Source = Value.NativeQuery(PostgreSQL.Database("mds-reporting-pg13-live.postgres.database.azure.com", "mds"), "select #(lf)    nad.now_application_guid,#(lf)    delay_id,#(lf)    enddate,#(lf)    startdate,#(lf)    nad.delay_type_code,#(lf)    nadt.description, #(lf)    nad.start_comment,#(lf)    Delay_Duration from (#(lf)select now_application_guid,max(now_application_delay_id) as Delay_id,max(end_date) as EndDate,min(start_date) as StartDate,sum(DATE_PART('day', end_date-start_date)) As Delay_Duration#(lf)from now_application_delay na#(lf)group by now_application_guid#(lf))  nowdelay_metric  left join now_application_delay nad on nad.now_application_delay_id=Delay_id #(lf)left join now_application_delay_type nadt on nadt.delay_type_code=nad.delay_type_code ", null, [EnableFolding=false]),
+				    #"Changed Type" = Table.TransformColumnTypes(Source,{{"enddate", type date}, {"startdate", type date}}),
+				    #"Renamed Columns" = Table.RenameColumns(#"Changed Type",{{"delay_duration", "delay_duration (days)"}})
+				in
+				    #"Renamed Columns"
+
+	annotation PBI_ResultType = Table
+
+	annotation PBI_NavigationStepName = Navigation
+

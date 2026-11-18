@@ -1,0 +1,61 @@
+table tblParty_Mine
+	lineageTag: 0a267a81-57c5-4b68-91a4-a0785e72a5c8
+
+	column mine_party_appt_id
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: d5c45242-4081-4a58-bedd-6fa96a99c0ba
+		summarizeBy: sum
+		sourceColumn: mine_party_appt_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column mine_party_appt_guid
+		dataType: string
+		sourceProviderType: nchar
+		lineageTag: 835cb438-691d-4498-affc-199180c872db
+		summarizeBy: none
+		sourceColumn: mine_party_appt_guid
+
+		annotation SummarizationSetBy = Automatic
+
+	column mine_guid
+		dataType: string
+		sourceProviderType: nchar
+		lineageTag: 6fc088bb-e5c8-43ac-bc88-df1766b7d26e
+		summarizeBy: none
+		sourceColumn: mine_guid
+
+		annotation SummarizationSetBy = Automatic
+
+	column party_guid
+		dataType: string
+		sourceProviderType: nchar
+		lineageTag: 5d2a529e-2944-4ed6-85da-1a4787a59d23
+		summarizeBy: none
+		sourceColumn: party_guid
+
+		annotation SummarizationSetBy = Automatic
+
+	column mine_party_appt_type_code
+		dataType: string
+		sourceProviderType: nvarchar(3)
+		lineageTag: 6062ddb7-8d56-49b9-a195-71c6539824eb
+		summarizeBy: none
+		sourceColumn: mine_party_appt_type_code
+
+		annotation SummarizationSetBy = Automatic
+
+	partition tblParty_Mine-37b3e59a-7a04-4e46-855f-b8080b94a488 = m
+		mode: import
+		source =
+				let
+				    Source = Value.NativeQuery(PostgreSQL.Database("mds-reporting-pg13-live.postgres.database.azure.com", "mds"), " select mine_party_appt_id ,mine_party_appt_guid,mine_guid, party_guid, mine_party_appt_type_code#(lf)     from mine_party_appt mpa ", null, [EnableFolding=false])
+				in
+				    Source
+
+	annotation PBI_ResultType = Table
+
+	annotation PBI_NavigationStepName = Navigation
+
