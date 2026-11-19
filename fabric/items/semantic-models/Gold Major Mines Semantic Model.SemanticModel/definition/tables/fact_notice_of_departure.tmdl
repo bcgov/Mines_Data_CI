@@ -13,8 +13,8 @@ table fact_notice_of_departure
 		displayFolder: Enhanced\Profile
 		lineageTag: 2cc1b9b8-61ac-4629-81ac-61e1e5cb5b5f
 
-	/// Notice profile: median days to decide across decided notices (same filters, all notices).
-	measure 'Enh NF Median Days' = CALCULATE ( [Enh Notices Median Days], REMOVEFILTERS ( fact_notice_of_departure[nod_no], fact_notice_of_departure[nod_guid], fact_notice_of_departure[nod_status_label] ) )
+	/// Notice profile: median days to decide across all decided notices (test records left out).
+	measure 'Enh NF Median Days' = CALCULATE ( [Enh Notices Median Days], REMOVEFILTERS ( fact_notice_of_departure ), REMOVEFILTERS ( dim_mine ), NOT fact_notice_of_departure[nod_title] IN { "Test", "test1", "Mat Test", "Mat Test 2", "Title 2", "Another Project Title", "Test Notice of departure" } )
 		formatString: #,##0
 		displayFolder: Enhanced\Profile
 		lineageTag: 3b87de8a-eb72-46ec-aeea-614187d2cc0f
