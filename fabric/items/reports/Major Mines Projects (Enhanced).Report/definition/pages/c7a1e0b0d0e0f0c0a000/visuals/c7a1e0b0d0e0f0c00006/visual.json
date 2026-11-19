@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
   "name": "c7a1e0b0d0e0f0c00006",
   "position": {
-    "x": 488,
-    "y": 22,
+    "x": 950,
+    "y": 28,
     "z": 6,
-    "width": 420,
-    "height": 86,
+    "width": 160,
+    "height": 28,
     "tabOrder": 6
   },
   "visual": {
@@ -19,40 +19,15 @@
               {
                 "textRuns": [
                   {
-                    "value": "SOURCE",
+                    "value": "Submitted between",
                     "textStyle": {
-                      "fontSize": "8px",
-                      "color": "#605E5C",
-                      "fontFamily": "Segoe UI",
-                      "fontWeight": "bold"
-                    }
-                  }
-                ]
-              },
-              {
-                "textRuns": [
-                  {
-                    "value": "CORE  ·  project, application, notice of departure",
-                    "textStyle": {
-                      "fontSize": "11px",
-                      "color": "#1F2933",
-                      "fontFamily": "Segoe UI",
-                      "fontWeight": "bold"
-                    }
-                  }
-                ]
-              },
-              {
-                "textRuns": [
-                  {
-                    "value": "Built from what Core records today. See the note at the bottom of each page.",
-                    "textStyle": {
-                      "fontSize": "8px",
+                      "fontSize": "9px",
                       "color": "#605E5C",
                       "fontFamily": "Segoe UI"
                     }
                   }
-                ]
+                ],
+                "horizontalTextAlignment": "right"
               }
             ]
           }

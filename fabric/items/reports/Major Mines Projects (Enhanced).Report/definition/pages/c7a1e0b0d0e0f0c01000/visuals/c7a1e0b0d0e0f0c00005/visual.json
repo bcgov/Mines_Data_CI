@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
   "name": "c7a1e0b0d0e0f0c00005",
   "position": {
-    "x": 476,
-    "y": 30,
+    "x": 156,
+    "y": 22,
     "z": 5,
-    "width": 1,
-    "height": 66,
+    "width": 520,
+    "height": 36,
     "tabOrder": 5
   },
   "visual": {
@@ -19,7 +19,29 @@
               {
                 "textRuns": [
                   {
-                    "value": " "
+                    "value": "Mines Data Platform",
+                    "textStyle": {
+                      "fontSize": "12px",
+                      "color": "#605E5C",
+                      "fontFamily": "Segoe UI"
+                    }
+                  },
+                  {
+                    "value": "   /   ",
+                    "textStyle": {
+                      "fontSize": "12px",
+                      "color": "#605E5C",
+                      "fontFamily": "Segoe UI"
+                    }
+                  },
+                  {
+                    "value": "Major Mines Projects",
+                    "textStyle": {
+                      "fontSize": "12px",
+                      "color": "#013366",
+                      "fontFamily": "Segoe UI",
+                      "fontWeight": "bold"
+                    }
                   }
                 ]
               }
@@ -36,25 +58,7 @@
             "show": {
               "expr": {
                 "Literal": {
-                  "Value": "true"
-                }
-              }
-            },
-            "color": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#D8DDE3'"
-                    }
-                  }
-                }
-              }
-            },
-            "transparency": {
-              "expr": {
-                "Literal": {
-                  "Value": "0D"
+                  "Value": "false"
                 }
               }
             }
@@ -68,6 +72,40 @@
               "expr": {
                 "Literal": {
                   "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "padding": [
+        {
+          "properties": {
+            "top": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
+                }
+              }
+            },
+            "bottom": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
+                }
+              }
+            },
+            "left": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
+                }
+              }
+            },
+            "right": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
                 }
               }
             }
