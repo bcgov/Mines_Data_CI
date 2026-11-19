@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
   "name": "c7a1e0b0d0e0f0c00010",
   "position": {
-    "x": 1240,
-    "y": 120,
+    "x": 900,
+    "y": 871,
     "z": 16,
-    "width": 336,
-    "height": 56,
+    "width": 664,
+    "height": 27,
     "tabOrder": 16
   },
   "visual": {
@@ -19,9 +19,15 @@
               {
                 "textRuns": [
                   {
-                    "value": " "
+                    "value": "Something look off? Tell the Major Mines Office or the MDP team.",
+                    "textStyle": {
+                      "fontSize": "8px",
+                      "color": "#FFFFFF",
+                      "fontFamily": "Segoe UI"
+                    }
                   }
-                ]
+                ],
+                "horizontalTextAlignment": "right"
               }
             ]
           }
@@ -36,25 +42,7 @@
             "show": {
               "expr": {
                 "Literal": {
-                  "Value": "true"
-                }
-              }
-            },
-            "color": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#F7F9FB'"
-                    }
-                  }
-                }
-              }
-            },
-            "transparency": {
-              "expr": {
-                "Literal": {
-                  "Value": "0D"
+                  "Value": "false"
                 }
               }
             }
@@ -67,25 +55,41 @@
             "show": {
               "expr": {
                 "Literal": {
-                  "Value": "true"
+                  "Value": "false"
                 }
               }
-            },
-            "color": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#D8DDE3'"
-                    }
-                  }
-                }
-              }
-            },
-            "radius": {
+            }
+          }
+        }
+      ],
+      "padding": [
+        {
+          "properties": {
+            "top": {
               "expr": {
                 "Literal": {
-                  "Value": "6D"
+                  "Value": "0D"
+                }
+              }
+            },
+            "bottom": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
+                }
+              }
+            },
+            "left": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
+                }
+              }
+            },
+            "right": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
                 }
               }
             }

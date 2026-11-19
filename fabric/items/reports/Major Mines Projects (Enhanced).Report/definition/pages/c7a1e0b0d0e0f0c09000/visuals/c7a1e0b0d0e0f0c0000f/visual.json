@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
   "name": "c7a1e0b0d0e0f0c0000f",
   "position": {
-    "x": 24,
-    "y": 148,
+    "x": 36,
+    "y": 871,
     "z": 15,
-    "width": 1200,
-    "height": 30,
+    "width": 700,
+    "height": 27,
     "tabOrder": 15
   },
   "visual": {
@@ -19,10 +19,10 @@
               {
                 "textRuns": [
                   {
-                    "value": "Notices with a determination. Decided date is the last update on the notice, because Core has no decision date.",
+                    "value": "This report is owned by the Major Mines Office.",
                     "textStyle": {
-                      "fontSize": "10px",
-                      "color": "#605E5C",
+                      "fontSize": "8px",
+                      "color": "#FFFFFF",
                       "fontFamily": "Segoe UI"
                     }
                   }

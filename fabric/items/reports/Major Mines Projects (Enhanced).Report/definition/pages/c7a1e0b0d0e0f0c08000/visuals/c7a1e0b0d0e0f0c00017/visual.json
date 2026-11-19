@@ -2,7 +2,7 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
   "name": "c7a1e0b0d0e0f0c00017",
   "position": {
-    "x": 1112,
+    "x": 206,
     "y": 184,
     "z": 23,
     "width": 290,
@@ -20,14 +20,14 @@
                 "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "dim_mine"
+                      "Entity": "fact_major_project"
                     }
                   },
-                  "Property": "mine_name"
+                  "Property": "act_group"
                 }
               },
-              "queryRef": "dim_mine.mine_name",
-              "nativeQueryRef": "mine_name",
+              "queryRef": "fact_major_project.act_group",
+              "nativeQueryRef": "act_group",
               "active": true
             }
           ]
@@ -61,7 +61,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Mine'"
+                  "Value": "'MA or EMA'"
                 }
               }
             },

@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
   "name": "c7a1e0b0d0e0f0c00012",
   "position": {
-    "x": 1372,
-    "y": 128,
+    "x": 24,
+    "y": 148,
     "z": 18,
-    "width": 200,
-    "height": 44,
+    "width": 1200,
+    "height": 30,
     "tabOrder": 18
   },
   "visual": {
@@ -19,21 +19,9 @@
               {
                 "textRuns": [
                   {
-                    "value": "applications",
+                    "value": "Every project whose major mine application is marked complete in Core, all years. This is not a decision date. Right-click a row, then Drill through → Project profile.",
                     "textStyle": {
-                      "fontSize": "9px",
-                      "color": "#605E5C",
-                      "fontFamily": "Segoe UI"
-                    }
-                  }
-                ]
-              },
-              {
-                "textRuns": [
-                  {
-                    "value": "matches the report",
-                    "textStyle": {
-                      "fontSize": "8px",
+                      "fontSize": "10px",
                       "color": "#605E5C",
                       "fontFamily": "Segoe UI"
                     }
