@@ -2,37 +2,18 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
   "name": "c7a1e0b0d0e0f0c0001a",
   "position": {
-    "x": 648,
-    "y": 186,
+    "x": 472,
+    "y": 116,
     "z": 26,
-    "width": 928,
-    "height": 250,
+    "width": 1104,
+    "height": 36,
     "tabOrder": 26
   },
   "visual": {
-    "visualType": "barChart",
+    "visualType": "card",
     "query": {
       "queryState": {
-        "Category": {
-          "projections": [
-            {
-              "field": {
-                "Column": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "fact_major_project"
-                    }
-                  },
-                  "Property": "project_summary_title"
-                }
-              },
-              "queryRef": "fact_major_project.project_summary_title",
-              "nativeQueryRef": "project_summary_title",
-              "displayName": "Project"
-            }
-          ]
-        },
-        "Y": {
+        "Values": {
           "projections": [
             {
               "field": {
@@ -42,27 +23,11 @@
                       "Entity": "fact_major_project"
                     }
                   },
-                  "Property": "Enh PF Pre Days"
+                  "Property": "Enh PF Headline"
                 }
               },
-              "queryRef": "fact_major_project.Enh PF Pre Days",
-              "nativeQueryRef": "Enh PF Pre Days",
-              "displayName": "Submission to application received"
-            },
-            {
-              "field": {
-                "Measure": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "fact_major_project"
-                    }
-                  },
-                  "Property": "Enh PF Review Days"
-                }
-              },
-              "queryRef": "fact_major_project.Enh PF Review Days",
-              "nativeQueryRef": "Enh PF Review Days",
-              "displayName": "Application received to complete (or today)"
+              "queryRef": "fact_major_project.Enh PF Headline",
+              "nativeQueryRef": "Enh PF Headline"
             }
           ]
         }
@@ -70,122 +35,17 @@
     },
     "drillFilterOtherVisuals": true,
     "objects": {
-      "categoryAxis": [
-        {
-          "properties": {
-            "show": {
-              "expr": {
-                "Literal": {
-                  "Value": "false"
-                }
-              }
-            }
-          }
-        }
-      ],
-      "valueAxis": [
-        {
-          "properties": {
-            "show": {
-              "expr": {
-                "Literal": {
-                  "Value": "true"
-                }
-              }
-            },
-            "showAxisTitle": {
-              "expr": {
-                "Literal": {
-                  "Value": "true"
-                }
-              }
-            },
-            "titleText": {
-              "expr": {
-                "Literal": {
-                  "Value": "'Days'"
-                }
-              }
-            },
-            "fontSize": {
-              "expr": {
-                "Literal": {
-                  "Value": "8D"
-                }
-              }
-            }
-          }
-        }
-      ],
-      "legend": [
-        {
-          "properties": {
-            "show": {
-              "expr": {
-                "Literal": {
-                  "Value": "true"
-                }
-              }
-            },
-            "position": {
-              "expr": {
-                "Literal": {
-                  "Value": "'Top'"
-                }
-              }
-            },
-            "fontSize": {
-              "expr": {
-                "Literal": {
-                  "Value": "9D"
-                }
-              }
-            }
-          }
-        }
-      ],
       "labels": [
         {
           "properties": {
-            "show": {
-              "expr": {
-                "Literal": {
-                  "Value": "true"
-                }
-              }
-            },
             "fontSize": {
               "expr": {
                 "Literal": {
-                  "Value": "10D"
+                  "Value": "15D"
                 }
               }
-            }
-          }
-        }
-      ],
-      "dataPoint": [
-        {
-          "properties": {
-            "fill": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#9BB4D3'"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "selector": {
-            "metadata": "fact_major_project.Enh PF Pre Days"
-          }
-        },
-        {
-          "properties": {
-            "fill": {
+            },
+            "color": {
               "solid": {
                 "color": {
                   "expr": {
@@ -193,52 +53,6 @@
                       "Value": "'#013366'"
                     }
                   }
-                }
-              }
-            }
-          },
-          "selector": {
-            "metadata": "fact_major_project.Enh PF Review Days"
-          }
-        }
-      ]
-    },
-    "visualContainerObjects": {
-      "title": [
-        {
-          "properties": {
-            "show": {
-              "expr": {
-                "Literal": {
-                  "Value": "true"
-                }
-              }
-            },
-            "text": {
-              "expr": {
-                "Literal": {
-                  "Value": "'How it has moved so far'"
-                }
-              }
-            },
-            "fontSize": {
-              "expr": {
-                "Literal": {
-                  "Value": "13D"
-                }
-              }
-            },
-            "fontColor": {
-              "expr": {
-                "Literal": {
-                  "Value": "'#1F2933'"
-                }
-              }
-            },
-            "alignment": {
-              "expr": {
-                "Literal": {
-                  "Value": "'left'"
                 }
               }
             },
@@ -252,85 +66,54 @@
           }
         }
       ],
-      "border": [
+      "categoryLabels": [
         {
           "properties": {
             "show": {
               "expr": {
                 "Literal": {
-                  "Value": "true"
-                }
-              }
-            },
-            "color": {
-              "expr": {
-                "Literal": {
-                  "Value": "'#D8DDE3'"
-                }
-              }
-            },
-            "radius": {
-              "expr": {
-                "Literal": {
-                  "Value": "6D"
+                  "Value": "false"
                 }
               }
             }
           }
         }
       ],
+      "wordWrap": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "visualContainerObjects": {
       "background": [
         {
           "properties": {
             "show": {
               "expr": {
                 "Literal": {
-                  "Value": "true"
-                }
-              }
-            },
-            "color": {
-              "expr": {
-                "Literal": {
-                  "Value": "'#FFFFFF'"
+                  "Value": "false"
                 }
               }
             }
           }
         }
       ],
-      "subTitle": [
+      "border": [
         {
           "properties": {
             "show": {
               "expr": {
                 "Literal": {
-                  "Value": "true"
-                }
-              }
-            },
-            "text": {
-              "expr": {
-                "Literal": {
-                  "Value": "'Days in each step Core can date. Core has no stage dates, so this is the rough version.'"
-                }
-              }
-            },
-            "fontSize": {
-              "expr": {
-                "Literal": {
-                  "Value": "9D"
-                }
-              }
-            },
-            "fontColor": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#605E5C'"
-                    }
-                  }
+                  "Value": "false"
                 }
               }
             }

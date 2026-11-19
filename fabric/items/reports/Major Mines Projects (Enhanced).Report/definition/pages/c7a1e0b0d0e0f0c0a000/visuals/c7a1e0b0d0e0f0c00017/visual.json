@@ -2,7 +2,7 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
   "name": "c7a1e0b0d0e0f0c00017",
   "position": {
-    "x": 1112,
+    "x": 206,
     "y": 184,
     "z": 23,
     "width": 290,
@@ -20,14 +20,14 @@
                 "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "dim_mine"
+                      "Entity": "fact_notice_of_departure"
                     }
                   },
-                  "Property": "mine_name"
+                  "Property": "nod_status_label"
                 }
               },
-              "queryRef": "dim_mine.mine_name",
-              "nativeQueryRef": "mine_name",
+              "queryRef": "fact_notice_of_departure.nod_status_label",
+              "nativeQueryRef": "nod_status_label",
               "active": true
             }
           ]
@@ -61,7 +61,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Mine'"
+                  "Value": "'Notice status'"
                 }
               }
             },

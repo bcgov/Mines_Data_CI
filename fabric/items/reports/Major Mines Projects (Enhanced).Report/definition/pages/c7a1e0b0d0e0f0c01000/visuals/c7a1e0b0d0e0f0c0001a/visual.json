@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
   "name": "c7a1e0b0d0e0f0c0001a",
   "position": {
-    "x": 288,
-    "y": 198,
+    "x": 276,
+    "y": 158,
     "z": 26,
-    "width": 292,
-    "height": 34,
+    "width": 1300,
+    "height": 30,
     "tabOrder": 26
   },
   "visual": {
@@ -19,12 +19,11 @@
               {
                 "textRuns": [
                   {
-                    "value": "OPEN PROJECTS",
+                    "value": "Open means not complete and not withdrawn. Complete means the major mine application is marked complete in Core.",
                     "textStyle": {
-                      "fontSize": "8px",
+                      "fontSize": "10px",
                       "color": "#605E5C",
-                      "fontFamily": "Segoe UI",
-                      "fontWeight": "bold"
+                      "fontFamily": "Segoe UI"
                     }
                   }
                 ]
