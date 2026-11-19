@@ -2,47 +2,97 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
   "name": "c7a1e0b0d0e0f0c00031",
   "position": {
-    "x": 288,
-    "y": 312,
+    "x": 1266,
+    "y": 272,
     "z": 49,
-    "width": 1276,
-    "height": 40,
+    "width": 304,
+    "height": 28,
     "tabOrder": 49
   },
   "visual": {
-    "visualType": "textbox",
-    "objects": {
-      "general": [
-        {
-          "properties": {
-            "paragraphs": [
-              {
-                "textRuns": [
-                  {
-                    "value": "Core has no decision date. ",
-                    "textStyle": {
-                      "fontSize": "9px",
-                      "color": "#6B4E00",
-                      "fontFamily": "Segoe UI",
-                      "fontWeight": "bold"
+    "visualType": "card",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fact_major_project"
                     }
                   },
-                  {
-                    "value": "\"Applications complete\" and \"median days to complete\" use the date the application is marked complete in Core, not a decision.",
-                    "textStyle": {
-                      "fontSize": "9px",
-                      "color": "#6B4E00",
-                      "fontFamily": "Segoe UI"
+                  "Property": "Enh Longest Note"
+                }
+              },
+              "queryRef": "fact_major_project.Enh Longest Note",
+              "nativeQueryRef": "Enh Longest Note"
+            }
+          ]
+        }
+      }
+    },
+    "drillFilterOtherVisuals": true,
+    "objects": {
+      "labels": [
+        {
+          "properties": {
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "8D"
+                }
+              }
+            },
+            "color": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#605E5C'"
                     }
                   }
-                ]
+                }
               }
-            ]
+            },
+            "bold": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "categoryLabels": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "wordWrap": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
           }
         }
       ]
     },
-    "drillFilterOtherVisuals": true,
     "visualContainerObjects": {
       "background": [
         {
@@ -64,40 +114,6 @@
               "expr": {
                 "Literal": {
                   "Value": "false"
-                }
-              }
-            }
-          }
-        }
-      ],
-      "padding": [
-        {
-          "properties": {
-            "top": {
-              "expr": {
-                "Literal": {
-                  "Value": "0D"
-                }
-              }
-            },
-            "bottom": {
-              "expr": {
-                "Literal": {
-                  "Value": "0D"
-                }
-              }
-            },
-            "left": {
-              "expr": {
-                "Literal": {
-                  "Value": "0D"
-                }
-              }
-            },
-            "right": {
-              "expr": {
-                "Literal": {
-                  "Value": "0D"
                 }
               }
             }

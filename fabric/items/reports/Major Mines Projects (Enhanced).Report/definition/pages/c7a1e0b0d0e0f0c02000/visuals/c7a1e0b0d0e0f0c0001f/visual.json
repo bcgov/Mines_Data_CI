@@ -2,38 +2,97 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
   "name": "c7a1e0b0d0e0f0c0001f",
   "position": {
-    "x": 288,
-    "y": 844,
+    "x": 1194,
+    "y": 650,
     "z": 31,
-    "width": 1276,
-    "height": 40,
+    "width": 376,
+    "height": 160,
     "tabOrder": 31
   },
   "visual": {
-    "visualType": "textbox",
+    "visualType": "card",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fact_major_project"
+                    }
+                  },
+                  "Property": "Enh Data Gap Note"
+                }
+              },
+              "queryRef": "fact_major_project.Enh Data Gap Note",
+              "nativeQueryRef": "Enh Data Gap Note"
+            }
+          ]
+        }
+      }
+    },
+    "drillFilterOtherVisuals": true,
     "objects": {
-      "general": [
+      "labels": [
         {
           "properties": {
-            "paragraphs": [
-              {
-                "textRuns": [
-                  {
-                    "value": "Not in Core yet, so not shown: decision date, fee level, project director, initiated by, stage dates and review rounds. 'Complete' means the major mine application is marked complete in Core. Days open count from the project's submission date. Data from the MMO SharePoint Excel tracker is not loaded yet. Test records in Core are hidden.",
-                    "textStyle": {
-                      "fontSize": "8px",
-                      "color": "#6B4E00",
-                      "fontFamily": "Segoe UI"
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "10D"
+                }
+              }
+            },
+            "color": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#6B4E00'"
                     }
                   }
-                ]
+                }
               }
-            ]
+            },
+            "bold": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "categoryLabels": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "wordWrap": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
           }
         }
       ]
     },
-    "drillFilterOtherVisuals": true,
     "visualContainerObjects": {
       "background": [
         {
@@ -55,40 +114,6 @@
               "expr": {
                 "Literal": {
                   "Value": "false"
-                }
-              }
-            }
-          }
-        }
-      ],
-      "padding": [
-        {
-          "properties": {
-            "top": {
-              "expr": {
-                "Literal": {
-                  "Value": "0D"
-                }
-              }
-            },
-            "bottom": {
-              "expr": {
-                "Literal": {
-                  "Value": "0D"
-                }
-              }
-            },
-            "left": {
-              "expr": {
-                "Literal": {
-                  "Value": "0D"
-                }
-              }
-            },
-            "right": {
-              "expr": {
-                "Literal": {
-                  "Value": "0D"
                 }
               }
             }

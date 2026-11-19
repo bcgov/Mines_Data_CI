@@ -2,37 +2,18 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
   "name": "c7a1e0b0d0e0f0c00019",
   "position": {
-    "x": 1188,
-    "y": 194,
+    "x": 270,
+    "y": 120,
     "z": 25,
-    "width": 388,
-    "height": 404,
+    "width": 1306,
+    "height": 40,
     "tabOrder": 25
   },
   "visual": {
-    "visualType": "barChart",
+    "visualType": "card",
     "query": {
       "queryState": {
-        "Category": {
-          "projections": [
-            {
-              "field": {
-                "Column": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "fact_major_project"
-                    }
-                  },
-                  "Property": "project_lead_name"
-                }
-              },
-              "queryRef": "fact_major_project.project_lead_name",
-              "nativeQueryRef": "project_lead_name",
-              "displayName": "Lead"
-            }
-          ]
-        },
-        "Y": {
+        "Values": {
           "projections": [
             {
               "field": {
@@ -42,180 +23,36 @@
                       "Entity": "fact_major_project"
                     }
                   },
-                  "Property": "Enh Open Projects"
+                  "Property": "Enh Open Headline"
                 }
               },
-              "queryRef": "fact_major_project.Enh Open Projects",
-              "nativeQueryRef": "Enh Open Projects",
-              "displayName": "Open projects"
-            }
-          ]
-        },
-        "Series": {
-          "projections": [
-            {
-              "field": {
-                "Column": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "fact_major_project"
-                    }
-                  },
-                  "Property": "proxy_stage"
-                }
-              },
-              "queryRef": "fact_major_project.proxy_stage",
-              "nativeQueryRef": "proxy_stage",
-              "displayName": "Stage"
+              "queryRef": "fact_major_project.Enh Open Headline",
+              "nativeQueryRef": "Enh Open Headline"
             }
           ]
         }
-      },
-      "sortDefinition": {
-        "sort": [
-          {
-            "field": {
-              "Measure": {
-                "Expression": {
-                  "SourceRef": {
-                    "Entity": "fact_major_project"
-                  }
-                },
-                "Property": "Enh Open Projects"
-              }
-            },
-            "direction": "Descending"
-          }
-        ],
-        "isDefaultSort": true
       }
     },
     "drillFilterOtherVisuals": true,
     "objects": {
-      "categoryAxis": [
-        {
-          "properties": {
-            "showAxisTitle": {
-              "expr": {
-                "Literal": {
-                  "Value": "false"
-                }
-              }
-            },
-            "fontSize": {
-              "expr": {
-                "Literal": {
-                  "Value": "8D"
-                }
-              }
-            }
-          }
-        }
-      ],
-      "valueAxis": [
-        {
-          "properties": {
-            "show": {
-              "expr": {
-                "Literal": {
-                  "Value": "false"
-                }
-              }
-            },
-            "showAxisTitle": {
-              "expr": {
-                "Literal": {
-                  "Value": "false"
-                }
-              }
-            }
-          }
-        }
-      ],
-      "legend": [
-        {
-          "properties": {
-            "show": {
-              "expr": {
-                "Literal": {
-                  "Value": "true"
-                }
-              }
-            },
-            "position": {
-              "expr": {
-                "Literal": {
-                  "Value": "'Top'"
-                }
-              }
-            },
-            "fontSize": {
-              "expr": {
-                "Literal": {
-                  "Value": "8D"
-                }
-              }
-            }
-          }
-        }
-      ],
       "labels": [
         {
           "properties": {
-            "show": {
-              "expr": {
-                "Literal": {
-                  "Value": "true"
-                }
-              }
-            },
             "fontSize": {
               "expr": {
                 "Literal": {
-                  "Value": "8D"
-                }
-              }
-            }
-          }
-        }
-      ]
-    },
-    "visualContainerObjects": {
-      "title": [
-        {
-          "properties": {
-            "show": {
-              "expr": {
-                "Literal": {
-                  "Value": "true"
+                  "Value": "17D"
                 }
               }
             },
-            "text": {
-              "expr": {
-                "Literal": {
-                  "Value": "'By lead'"
-                }
-              }
-            },
-            "fontSize": {
-              "expr": {
-                "Literal": {
-                  "Value": "13D"
-                }
-              }
-            },
-            "fontColor": {
-              "expr": {
-                "Literal": {
-                  "Value": "'#1F2933'"
-                }
-              }
-            },
-            "alignment": {
-              "expr": {
-                "Literal": {
-                  "Value": "'left'"
+            "color": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#013366'"
+                    }
+                  }
                 }
               }
             },
@@ -229,85 +66,54 @@
           }
         }
       ],
-      "border": [
+      "categoryLabels": [
         {
           "properties": {
             "show": {
               "expr": {
                 "Literal": {
-                  "Value": "true"
-                }
-              }
-            },
-            "color": {
-              "expr": {
-                "Literal": {
-                  "Value": "'#D8DDE3'"
-                }
-              }
-            },
-            "radius": {
-              "expr": {
-                "Literal": {
-                  "Value": "6D"
+                  "Value": "false"
                 }
               }
             }
           }
         }
       ],
+      "wordWrap": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "visualContainerObjects": {
       "background": [
         {
           "properties": {
             "show": {
               "expr": {
                 "Literal": {
-                  "Value": "true"
-                }
-              }
-            },
-            "color": {
-              "expr": {
-                "Literal": {
-                  "Value": "'#FFFFFF'"
+                  "Value": "false"
                 }
               }
             }
           }
         }
       ],
-      "subTitle": [
+      "border": [
         {
           "properties": {
             "show": {
               "expr": {
                 "Literal": {
-                  "Value": "true"
-                }
-              }
-            },
-            "text": {
-              "expr": {
-                "Literal": {
-                  "Value": "'Open projects per lead, by stage. Projects with no lead are in the data gaps note.'"
-                }
-              }
-            },
-            "fontSize": {
-              "expr": {
-                "Literal": {
-                  "Value": "9D"
-                }
-              }
-            },
-            "fontColor": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#605E5C'"
-                    }
-                  }
+                  "Value": "false"
                 }
               }
             }
@@ -315,61 +121,5 @@
         }
       ]
     }
-  },
-  "filterConfig": {
-    "filters": [
-      {
-        "name": "fLeadSet",
-        "field": {
-          "Column": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "fact_major_project"
-              }
-            },
-            "Property": "project_lead_name"
-          }
-        },
-        "type": "Advanced",
-        "filter": {
-          "Version": 2,
-          "From": [
-            {
-              "Name": "f",
-              "Entity": "fact_major_project",
-              "Type": 0
-            }
-          ],
-          "Where": [
-            {
-              "Condition": {
-                "Not": {
-                  "Expression": {
-                    "Comparison": {
-                      "ComparisonKind": 0,
-                      "Left": {
-                        "Column": {
-                          "Expression": {
-                            "SourceRef": {
-                              "Source": "f"
-                            }
-                          },
-                          "Property": "project_lead_name"
-                        }
-                      },
-                      "Right": {
-                        "Literal": {
-                          "Value": "null"
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          ]
-        }
-      }
-    ]
   }
 }

@@ -3,252 +3,16 @@
   "name": "c7a1e0b0d0e0f0c00019",
   "position": {
     "x": 276,
-    "y": 186,
+    "y": 118,
     "z": 25,
-    "width": 360,
-    "height": 632,
+    "width": 190,
+    "height": 30,
     "tabOrder": 25
   },
   "visual": {
-    "visualType": "multiRowCard",
-    "query": {
-      "queryState": {
-        "Values": {
-          "projections": [
-            {
-              "field": {
-                "Column": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "dim_mine"
-                    }
-                  },
-                  "Property": "mine_name"
-                }
-              },
-              "queryRef": "dim_mine.mine_name",
-              "nativeQueryRef": "mine_name",
-              "displayName": "Mine"
-            },
-            {
-              "field": {
-                "Column": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "dim_mine"
-                    }
-                  },
-                  "Property": "mine_region_desc"
-                }
-              },
-              "queryRef": "dim_mine.mine_region_desc",
-              "nativeQueryRef": "mine_region_desc",
-              "displayName": "Region"
-            },
-            {
-              "field": {
-                "Column": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "fact_major_project"
-                    }
-                  },
-                  "Property": "project_summary_title"
-                }
-              },
-              "queryRef": "fact_major_project.project_summary_title",
-              "nativeQueryRef": "project_summary_title",
-              "displayName": "Project"
-            },
-            {
-              "field": {
-                "Column": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "fact_major_project"
-                    }
-                  },
-                  "Property": "act_group"
-                }
-              },
-              "queryRef": "fact_major_project.act_group",
-              "nativeQueryRef": "act_group",
-              "displayName": "MA or EMA"
-            },
-            {
-              "field": {
-                "Column": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "fact_major_project"
-                    }
-                  },
-                  "Property": "proxy_stage"
-                }
-              },
-              "queryRef": "fact_major_project.proxy_stage",
-              "nativeQueryRef": "proxy_stage",
-              "displayName": "Stage"
-            },
-            {
-              "field": {
-                "Column": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "fact_major_project"
-                    }
-                  },
-                  "Property": "submission_date"
-                }
-              },
-              "queryRef": "fact_major_project.submission_date",
-              "nativeQueryRef": "submission_date",
-              "displayName": "Submitted"
-            },
-            {
-              "field": {
-                "Column": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "fact_major_project"
-                    }
-                  },
-                  "Property": "project_lead_name"
-                }
-              },
-              "queryRef": "fact_major_project.project_lead_name",
-              "nativeQueryRef": "project_lead_name",
-              "displayName": "Project lead"
-            },
-            {
-              "field": {
-                "Column": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "fact_major_project"
-                    }
-                  },
-                  "Property": "application_status_code"
-                }
-              },
-              "queryRef": "fact_major_project.application_status_code",
-              "nativeQueryRef": "application_status_code",
-              "displayName": "Application status (Core code)"
-            },
-            {
-              "field": {
-                "Column": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "fact_major_project"
-                    }
-                  },
-                  "Property": "irt_status_code"
-                }
-              },
-              "queryRef": "fact_major_project.irt_status_code",
-              "nativeQueryRef": "irt_status_code",
-              "displayName": "IRT status (Core code)"
-            },
-            {
-              "field": {
-                "Column": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "fact_major_project"
-                    }
-                  },
-                  "Property": "project_summary_id"
-                }
-              },
-              "queryRef": "fact_major_project.project_summary_id",
-              "nativeQueryRef": "project_summary_id",
-              "displayName": "Core project ID"
-            }
-          ]
-        }
-      }
-    },
+    "visualType": "actionButton",
     "objects": {
-      "dataLabels": [
-        {
-          "properties": {
-            "fontSize": {
-              "expr": {
-                "Literal": {
-                  "Value": "11D"
-                }
-              }
-            },
-            "color": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#1F2933'"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      ],
-      "categoryLabels": [
-        {
-          "properties": {
-            "show": {
-              "expr": {
-                "Literal": {
-                  "Value": "true"
-                }
-              }
-            },
-            "fontSize": {
-              "expr": {
-                "Literal": {
-                  "Value": "8D"
-                }
-              }
-            },
-            "color": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#605E5C'"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      ],
-      "card": [
-        {
-          "properties": {
-            "barShow": {
-              "expr": {
-                "Literal": {
-                  "Value": "false"
-                }
-              }
-            },
-            "outline": {
-              "expr": {
-                "Literal": {
-                  "Value": "'None'"
-                }
-              }
-            }
-          }
-        }
-      ]
-    },
-    "drillFilterOtherVisuals": true,
-    "visualContainerObjects": {
-      "title": [
+      "text": [
         {
           "properties": {
             "show": {
@@ -261,28 +25,14 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Project details'"
+                  "Value": "'← Back'"
                 }
               }
             },
             "fontSize": {
               "expr": {
                 "Literal": {
-                  "Value": "13D"
-                }
-              }
-            },
-            "fontColor": {
-              "expr": {
-                "Literal": {
-                  "Value": "'#1F2933'"
-                }
-              }
-            },
-            "alignment": {
-              "expr": {
-                "Literal": {
-                  "Value": "'left'"
+                  "Value": "10D"
                 }
               }
             },
@@ -290,6 +40,150 @@
               "expr": {
                 "Literal": {
                   "Value": "true"
+                }
+              }
+            },
+            "fontColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#013366'"
+                    }
+                  }
+                }
+              }
+            },
+            "horizontalAlignment": {
+              "expr": {
+                "Literal": {
+                  "Value": "'center'"
+                }
+              }
+            }
+          },
+          "selector": {
+            "id": "default"
+          }
+        },
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'← Back'"
+                }
+              }
+            },
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "10D"
+                }
+              }
+            },
+            "bold": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "fontColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#013366'"
+                    }
+                  }
+                }
+              }
+            },
+            "horizontalAlignment": {
+              "expr": {
+                "Literal": {
+                  "Value": "'center'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "fill": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "outline": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "icon": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true,
+    "visualContainerObjects": {
+      "background": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "color": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#FFFFFF'"
+                    }
+                  }
+                }
+              }
+            },
+            "transparency": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
                 }
               }
             }
@@ -307,9 +201,13 @@
               }
             },
             "color": {
-              "expr": {
-                "Literal": {
-                  "Value": "'#D8DDE3'"
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#013366'"
+                    }
+                  }
                 }
               }
             },
@@ -323,27 +221,20 @@
           }
         }
       ],
-      "background": [
+      "title": [
         {
           "properties": {
             "show": {
               "expr": {
                 "Literal": {
-                  "Value": "true"
-                }
-              }
-            },
-            "color": {
-              "expr": {
-                "Literal": {
-                  "Value": "'#FFFFFF'"
+                  "Value": "false"
                 }
               }
             }
           }
         }
       ],
-      "subTitle": [
+      "visualLink": [
         {
           "properties": {
             "show": {
@@ -353,28 +244,10 @@
                 }
               }
             },
-            "text": {
+            "type": {
               "expr": {
                 "Literal": {
-                  "Value": "'Not in Core yet: permit, proponent, application type, fee level, director, analyst, Nations.'"
-                }
-              }
-            },
-            "fontSize": {
-              "expr": {
-                "Literal": {
-                  "Value": "9D"
-                }
-              }
-            },
-            "fontColor": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#605E5C'"
-                    }
-                  }
+                  "Value": "'Back'"
                 }
               }
             }

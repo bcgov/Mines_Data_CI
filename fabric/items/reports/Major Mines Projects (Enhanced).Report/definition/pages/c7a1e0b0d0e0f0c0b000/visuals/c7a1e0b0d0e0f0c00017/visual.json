@@ -2,50 +2,77 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
   "name": "c7a1e0b0d0e0f0c00017",
   "position": {
-    "x": 472,
-    "y": 116,
+    "x": 32,
+    "y": 404,
     "z": 23,
-    "width": 1104,
-    "height": 36,
+    "width": 224,
+    "height": 58,
     "tabOrder": 23
   },
   "visual": {
-    "visualType": "card",
+    "visualType": "slicer",
     "query": {
       "queryState": {
         "Values": {
           "projections": [
             {
               "field": {
-                "Measure": {
+                "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "fact_major_project"
+                      "Entity": "dim_mine"
                     }
                   },
-                  "Property": "Enh PF Headline"
+                  "Property": "mine_name"
                 }
               },
-              "queryRef": "fact_major_project.Enh PF Headline",
-              "nativeQueryRef": "Enh PF Headline"
+              "queryRef": "dim_mine.mine_name",
+              "nativeQueryRef": "mine_name",
+              "active": true
             }
           ]
         }
       }
     },
-    "drillFilterOtherVisuals": true,
     "objects": {
-      "labels": [
+      "data": [
         {
           "properties": {
-            "fontSize": {
+            "mode": {
               "expr": {
                 "Literal": {
-                  "Value": "15D"
+                  "Value": "'Dropdown'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "header": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
                 }
               }
             },
-            "color": {
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Mine'"
+                }
+              }
+            },
+            "textSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "9D"
+                }
+              }
+            },
+            "fontColor": {
               "solid": {
                 "color": {
                   "expr": {
@@ -65,34 +92,9 @@
             }
           }
         }
-      ],
-      "categoryLabels": [
-        {
-          "properties": {
-            "show": {
-              "expr": {
-                "Literal": {
-                  "Value": "false"
-                }
-              }
-            }
-          }
-        }
-      ],
-      "wordWrap": [
-        {
-          "properties": {
-            "show": {
-              "expr": {
-                "Literal": {
-                  "Value": "false"
-                }
-              }
-            }
-          }
-        }
       ]
     },
+    "drillFilterOtherVisuals": true,
     "visualContainerObjects": {
       "background": [
         {

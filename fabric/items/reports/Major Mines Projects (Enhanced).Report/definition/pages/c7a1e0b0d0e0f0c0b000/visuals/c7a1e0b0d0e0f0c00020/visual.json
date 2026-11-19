@@ -3,7 +3,7 @@
   "name": "c7a1e0b0d0e0f0c00020",
   "position": {
     "x": 658,
-    "y": 590,
+    "y": 488,
     "z": 32,
     "width": 540,
     "height": 30,
@@ -23,11 +23,11 @@
                       "Entity": "fact_major_project"
                     }
                   },
-                  "Property": "Enh PF Step 4"
+                  "Property": "Enh PF Step 1"
                 }
               },
-              "queryRef": "fact_major_project.Enh PF Step 4",
-              "nativeQueryRef": "Enh PF Step 4"
+              "queryRef": "fact_major_project.Enh PF Step 1",
+              "nativeQueryRef": "Enh PF Step 1"
             }
           ]
         }
