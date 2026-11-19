@@ -3,7 +3,7 @@
   "name": "c7a1e0b0d0e0f0c00011",
   "position": {
     "x": 32,
-    "y": 388,
+    "y": 206,
     "z": 17,
     "width": 224,
     "height": 58,
@@ -20,14 +20,14 @@
                 "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "dim_mine"
+                      "Entity": "fact_notice_of_departure"
                     }
                   },
-                  "Property": "mine_name"
+                  "Property": "nod_type_label"
                 }
               },
-              "queryRef": "dim_mine.mine_name",
-              "nativeQueryRef": "mine_name",
+              "queryRef": "fact_notice_of_departure.nod_type_label",
+              "nativeQueryRef": "nod_type_label",
               "active": true
             }
           ]
@@ -61,7 +61,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Mine'"
+                  "Value": "'Notice type'"
                 }
               }
             },

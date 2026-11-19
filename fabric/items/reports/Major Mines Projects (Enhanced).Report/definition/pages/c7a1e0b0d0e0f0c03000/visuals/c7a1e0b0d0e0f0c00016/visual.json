@@ -3,10 +3,10 @@
   "name": "c7a1e0b0d0e0f0c00016",
   "position": {
     "x": 276,
-    "y": 194,
+    "y": 120,
     "z": 22,
-    "width": 4,
-    "height": 624,
+    "width": 1300,
+    "height": 40,
     "tabOrder": 22
   },
   "visual": {
@@ -19,7 +19,13 @@
               {
                 "textRuns": [
                   {
-                    "value": " "
+                    "value": "Where the time goes: coming next",
+                    "textStyle": {
+                      "fontSize": "17px",
+                      "color": "#013366",
+                      "fontFamily": "Segoe UI",
+                      "fontWeight": "bold"
+                    }
                   }
                 ]
               }
@@ -36,25 +42,7 @@
             "show": {
               "expr": {
                 "Literal": {
-                  "Value": "true"
-                }
-              }
-            },
-            "color": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#FCBA19'"
-                    }
-                  }
-                }
-              }
-            },
-            "transparency": {
-              "expr": {
-                "Literal": {
-                  "Value": "0D"
+                  "Value": "false"
                 }
               }
             }
@@ -68,6 +56,40 @@
               "expr": {
                 "Literal": {
                   "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "padding": [
+        {
+          "properties": {
+            "top": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
+                }
+              }
+            },
+            "bottom": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
+                }
+              }
+            },
+            "left": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
+                }
+              }
+            },
+            "right": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
                 }
               }
             }

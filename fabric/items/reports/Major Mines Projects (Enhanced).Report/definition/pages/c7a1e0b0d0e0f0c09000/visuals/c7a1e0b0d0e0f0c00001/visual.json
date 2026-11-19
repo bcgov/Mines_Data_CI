@@ -3,10 +3,10 @@
   "name": "c7a1e0b0d0e0f0c00001",
   "position": {
     "x": 24,
-    "y": 16,
+    "y": 12,
     "z": 1,
     "width": 1552,
-    "height": 96,
+    "height": 56,
     "tabOrder": 1
   },
   "visual": {
@@ -67,25 +67,7 @@
             "show": {
               "expr": {
                 "Literal": {
-                  "Value": "true"
-                }
-              }
-            },
-            "color": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#D8DDE3'"
-                    }
-                  }
-                }
-              }
-            },
-            "radius": {
-              "expr": {
-                "Literal": {
-                  "Value": "6D"
+                  "Value": "false"
                 }
               }
             }
