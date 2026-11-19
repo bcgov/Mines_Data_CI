@@ -2,41 +2,46 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
   "name": "c7a1e0b0d0e0f0c00021",
   "position": {
-    "x": 1220,
-    "y": 448,
+    "x": 658,
+    "y": 522,
     "z": 33,
-    "width": 356,
-    "height": 180,
+    "width": 540,
+    "height": 30,
     "tabOrder": 33
   },
   "visual": {
-    "visualType": "textbox",
-    "objects": {
-      "general": [
-        {
-          "properties": {
-            "paragraphs": [
-              {
-                "textRuns": [
-                  {
-                    "value": " "
-                  }
-                ]
-              }
-            ]
-          }
+    "visualType": "card",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fact_major_project"
+                    }
+                  },
+                  "Property": "Enh PF Step 2"
+                }
+              },
+              "queryRef": "fact_major_project.Enh PF Step 2",
+              "nativeQueryRef": "Enh PF Step 2"
+            }
+          ]
         }
-      ]
+      }
     },
     "drillFilterOtherVisuals": true,
-    "visualContainerObjects": {
-      "background": [
+    "objects": {
+      "labels": [
         {
           "properties": {
-            "show": {
+            "fontSize": {
               "expr": {
                 "Literal": {
-                  "Value": "true"
+                  "Value": "10D"
                 }
               }
             },
@@ -45,16 +50,57 @@
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#FFFFFF'"
+                      "Value": "'#1F2933'"
                     }
                   }
                 }
               }
             },
-            "transparency": {
+            "bold": {
               "expr": {
                 "Literal": {
-                  "Value": "0D"
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "categoryLabels": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "wordWrap": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "visualContainerObjects": {
+      "background": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
                 }
               }
             }
@@ -67,25 +113,7 @@
             "show": {
               "expr": {
                 "Literal": {
-                  "Value": "true"
-                }
-              }
-            },
-            "color": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#D8DDE3'"
-                    }
-                  }
-                }
-              }
-            },
-            "radius": {
-              "expr": {
-                "Literal": {
-                  "Value": "6D"
+                  "Value": "false"
                 }
               }
             }

@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
   "name": "c7a1e0b0d0e0f0c00019",
   "position": {
-    "x": 288,
-    "y": 198,
+    "x": 276,
+    "y": 158,
     "z": 25,
-    "width": 292,
-    "height": 34,
+    "width": 1300,
+    "height": 30,
     "tabOrder": 25
   },
   "visual": {
@@ -19,12 +19,11 @@
               {
                 "textRuns": [
                   {
-                    "value": "NOTICES TRACKED",
+                    "value": "Notices received and decided each year, and the ones still open. Decided date is the last update when the status is a determination.",
                     "textStyle": {
-                      "fontSize": "8px",
+                      "fontSize": "10px",
                       "color": "#605E5C",
-                      "fontFamily": "Segoe UI",
-                      "fontWeight": "bold"
+                      "fontFamily": "Segoe UI"
                     }
                   }
                 ]

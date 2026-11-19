@@ -2,77 +2,50 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
   "name": "c7a1e0b0d0e0f0c00014",
   "position": {
-    "x": 206,
-    "y": 184,
+    "x": 1250,
+    "y": 124,
     "z": 20,
-    "width": 290,
-    "height": 58,
+    "width": 120,
+    "height": 48,
     "tabOrder": 20
   },
   "visual": {
-    "visualType": "slicer",
+    "visualType": "card",
     "query": {
       "queryState": {
         "Values": {
           "projections": [
             {
               "field": {
-                "Column": {
+                "Measure": {
                   "Expression": {
                     "SourceRef": {
                       "Entity": "fact_major_project"
                     }
                   },
-                  "Property": "proxy_stage"
+                  "Property": "Total Major Projects"
                 }
               },
-              "queryRef": "fact_major_project.proxy_stage",
-              "nativeQueryRef": "proxy_stage",
-              "active": true
+              "queryRef": "fact_major_project.Total Major Projects",
+              "nativeQueryRef": "Total Major Projects"
             }
           ]
         }
       }
     },
+    "drillFilterOtherVisuals": true,
     "objects": {
-      "data": [
+      "labels": [
         {
           "properties": {
-            "mode": {
+            "fontSize": {
               "expr": {
                 "Literal": {
-                  "Value": "'Dropdown'"
-                }
-              }
-            }
-          }
-        }
-      ],
-      "header": [
-        {
-          "properties": {
-            "show": {
-              "expr": {
-                "Literal": {
-                  "Value": "true"
+                  "Value": "20D"
                 }
               }
             },
-            "text": {
-              "expr": {
-                "Literal": {
-                  "Value": "'Stage'"
-                }
-              }
-            },
-            "textSize": {
-              "expr": {
-                "Literal": {
-                  "Value": "9D"
-                }
-              }
-            },
-            "fontColor": {
+            "color": {
               "solid": {
                 "color": {
                   "expr": {
@@ -92,9 +65,34 @@
             }
           }
         }
+      ],
+      "categoryLabels": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "wordWrap": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
       ]
     },
-    "drillFilterOtherVisuals": true,
     "visualContainerObjects": {
       "background": [
         {

@@ -3,7 +3,7 @@
   "name": "c7a1e0b0d0e0f0c00013",
   "position": {
     "x": 32,
-    "y": 338,
+    "y": 140,
     "z": 19,
     "width": 224,
     "height": 58,
@@ -23,11 +23,11 @@
                       "Entity": "fact_major_project"
                     }
                   },
-                  "Property": "project_lead_name"
+                  "Property": "proxy_stage"
                 }
               },
-              "queryRef": "fact_major_project.project_lead_name",
-              "nativeQueryRef": "project_lead_name",
+              "queryRef": "fact_major_project.proxy_stage",
+              "nativeQueryRef": "proxy_stage",
               "active": true
             }
           ]
@@ -61,7 +61,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Project lead'"
+                  "Value": "'Stage'"
                 }
               }
             },
