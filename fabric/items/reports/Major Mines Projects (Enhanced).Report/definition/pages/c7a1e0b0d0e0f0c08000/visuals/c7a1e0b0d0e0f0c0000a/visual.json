@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
   "name": "c7a1e0b0d0e0f0c0000a",
   "position": {
-    "x": 1452,
-    "y": 14,
+    "x": 24,
+    "y": 78,
     "z": 10,
-    "width": 118,
-    "height": 26,
+    "width": 130,
+    "height": 32,
     "tabOrder": 10
   },
   "visual": {
@@ -25,25 +25,14 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'MDP home ↗'"
+                  "Value": "'1   Overview'"
                 }
               }
             },
             "fontSize": {
               "expr": {
                 "Literal": {
-                  "Value": "8D"
-                }
-              }
-            },
-            "fontColor": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#3470B1'"
-                    }
-                  }
+                  "Value": "10D"
                 }
               }
             },
@@ -54,10 +43,21 @@
                 }
               }
             },
+            "fontColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#FFFFFF'"
+                    }
+                  }
+                }
+              }
+            },
             "horizontalAlignment": {
               "expr": {
                 "Literal": {
-                  "Value": "'right'"
+                  "Value": "'center'"
                 }
               }
             }
@@ -78,25 +78,14 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'MDP home ↗'"
+                  "Value": "'1   Overview'"
                 }
               }
             },
             "fontSize": {
               "expr": {
                 "Literal": {
-                  "Value": "8D"
-                }
-              }
-            },
-            "fontColor": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#3470B1'"
-                    }
-                  }
+                  "Value": "10D"
                 }
               }
             },
@@ -107,10 +96,21 @@
                 }
               }
             },
+            "fontColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#FFFFFF'"
+                    }
+                  }
+                }
+              }
+            },
             "horizontalAlignment": {
               "expr": {
                 "Literal": {
-                  "Value": "'right'"
+                  "Value": "'center'"
                 }
               }
             }
@@ -165,7 +165,25 @@
             "show": {
               "expr": {
                 "Literal": {
-                  "Value": "false"
+                  "Value": "true"
+                }
+              }
+            },
+            "color": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#013366'"
+                    }
+                  }
+                }
+              }
+            },
+            "transparency": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
                 }
               }
             }
@@ -173,6 +191,37 @@
         }
       ],
       "border": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "color": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#013366'"
+                    }
+                  }
+                }
+              }
+            },
+            "radius": {
+              "expr": {
+                "Literal": {
+                  "Value": "16D"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "title": [
         {
           "properties": {
             "show": {
@@ -198,14 +247,14 @@
             "type": {
               "expr": {
                 "Literal": {
-                  "Value": "'WebUrl'"
+                  "Value": "'PageNavigation'"
                 }
               }
             },
-            "webUrl": {
+            "navigationSection": {
               "expr": {
                 "Literal": {
-                  "Value": "'https://app.powerbi.com/groups/e397b5cc-924d-40a5-b101-f6efb41a5423/orgapps/ed8de927-f577-43a6-90e0-d5ecfab02a94?experience=power-bi'"
+                  "Value": "'c7a1e0b0d0e0f0c01000'"
                 }
               }
             }
