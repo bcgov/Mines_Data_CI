@@ -2,6 +2,38 @@ table fact_notice_of_departure
 	lineageTag: 1c6d4aca-20bf-4851-87b3-2b699d5019ae
 	sourceLineageTag: [gold].[fact_notice_of_departure]
 
+	/// Notice profile headline.
+	measure 'Enh NF Headline' = VAR t0 = SELECTEDVALUE ( fact_notice_of_departure[nod_title] ) VAR t = IF ( LEN ( t0 ) > 60, LEFT ( t0, 57 ) & "...", t0 ) VAR r = MAX ( fact_notice_of_departure[submission_date] ) VAR dd = MAX ( fact_notice_of_departure[decision_date] ) VAR o = MAX ( fact_notice_of_departure[is_open] ) VAR dec = MAX ( fact_notice_of_departure[is_decided] ) VAR st = SELECTEDVALUE ( fact_notice_of_departure[nod_status_label] ) VAR dtd = MAX ( fact_notice_of_departure[days_to_decision] ) VAR dop = MAX ( fact_notice_of_departure[days_open] ) RETURN IF ( NOT HASONEVALUE ( fact_notice_of_departure[nod_no] ), "Pick one notice: right-click a row on Notices of Departure, then Drill through > Notice profile.", t & IF ( dec = 1, " was decided: " & LOWER ( st ) & IF ( ISBLANK ( dtd ), ".", ", after " & FORMAT ( dtd, "#,##0" ) & " days." ), IF ( o = 1, " is open (" & LOWER ( st ) & ")" & IF ( ISBLANK ( dop ), ".", ", " & FORMAT ( dop, "#,##0" ) & " days since it was received." ), " was withdrawn." ) ) )
+		displayFolder: Enhanced\Profile
+		lineageTag: aee66c93-81ce-41ab-808e-7da5f7145e06
+
+	/// Notice profile: days to decide, or days open if still open.
+	measure 'Enh NF This Notice Days' = VAR dec = MAX ( fact_notice_of_departure[is_decided] ) RETURN IF ( dec = 1, MAX ( fact_notice_of_departure[days_to_decision] ), MAX ( fact_notice_of_departure[days_open] ) )
+		formatString: #,##0
+		displayFolder: Enhanced\Profile
+		lineageTag: 2cc1b9b8-61ac-4629-81ac-61e1e5cb5b5f
+
+	/// Notice profile: median days to decide across all decided notices (test records left out).
+	measure 'Enh NF Median Days' = CALCULATE ( [Enh Notices Median Days], REMOVEFILTERS ( fact_notice_of_departure ), REMOVEFILTERS ( dim_mine ), NOT fact_notice_of_departure[nod_title] IN { "Test", "test1", "Mat Test", "Mat Test 2", "Title 2", "Another Project Title", "Test Notice of departure" } )
+		formatString: #,##0
+		displayFolder: Enhanced\Profile
+		lineageTag: 3b87de8a-eb72-46ec-aeea-614187d2cc0f
+
+	/// Notice milestone line.
+	measure 'Enh NF Step 1' = VAR r = MAX ( fact_notice_of_departure[submission_date] ) VAR dd = MAX ( fact_notice_of_departure[decision_date] ) VAR o = MAX ( fact_notice_of_departure[is_open] ) VAR dec = MAX ( fact_notice_of_departure[is_decided] ) VAR st = SELECTEDVALUE ( fact_notice_of_departure[nod_status_label] ) RETURN "1.  Received:  " & IF ( ISBLANK ( r ), "not recorded in Core", FORMAT ( r, "d mmm yyyy" ) )
+		displayFolder: Enhanced\Profile
+		lineageTag: 52afb795-5c2c-42ff-8836-fda57bea9adb
+
+	/// Notice milestone line.
+	measure 'Enh NF Step 2' = VAR r = MAX ( fact_notice_of_departure[submission_date] ) VAR dd = MAX ( fact_notice_of_departure[decision_date] ) VAR o = MAX ( fact_notice_of_departure[is_open] ) VAR dec = MAX ( fact_notice_of_departure[is_decided] ) VAR st = SELECTEDVALUE ( fact_notice_of_departure[nod_status_label] ) RETURN "2.  Decided:  " & IF ( dec = 1 && NOT ISBLANK ( dd ), FORMAT ( dd, "d mmm yyyy" ) & IF ( ISBLANK ( r ), "", ",  " & FORMAT ( DATEDIFF ( r, dd, DAY ), "#,##0" ) & " days after it was received" ), "not yet" )
+		displayFolder: Enhanced\Profile
+		lineageTag: 237d5bad-6b70-4c8b-9350-5dd98568b609
+
+	/// Notice milestone line.
+	measure 'Enh NF Step 3' = VAR r = MAX ( fact_notice_of_departure[submission_date] ) VAR dd = MAX ( fact_notice_of_departure[decision_date] ) VAR o = MAX ( fact_notice_of_departure[is_open] ) VAR dec = MAX ( fact_notice_of_departure[is_decided] ) VAR st = SELECTEDVALUE ( fact_notice_of_departure[nod_status_label] ) VAR dop = MAX ( fact_notice_of_departure[days_open] ) RETURN "3.  Today:  " & IF ( o = 1, "open, " & FORMAT ( dop, "#,##0" ) & " days since it was received", IF ( dec = 1, "closed (decided)", "closed (withdrawn)" ) )
+		displayFolder: Enhanced\Profile
+		lineageTag: 03d92eba-c68d-43e5-afda-a0ad20045c14
+
 	/// Row highlight for notices that look like test records in Core. Nhung, 13 Nov 2026: highlight, do not hide.
 	measure 'Enh Notice Test Color' = IF ( LOWER ( TRIM ( SELECTEDVALUE ( fact_notice_of_departure[nod_title] ) ) ) IN { "test", "title 2", "mat test 2" }, "#FCE9A8" )
 		displayFolder: Enhanced

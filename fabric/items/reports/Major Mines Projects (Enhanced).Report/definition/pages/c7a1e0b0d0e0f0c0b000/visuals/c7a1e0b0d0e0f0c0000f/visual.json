@@ -3,10 +3,10 @@
   "name": "c7a1e0b0d0e0f0c0000f",
   "position": {
     "x": 36,
-    "y": 86,
+    "y": 871,
     "z": 15,
-    "width": 220,
-    "height": 52,
+    "width": 700,
+    "height": 27,
     "tabOrder": 15
   },
   "visual": {
@@ -19,23 +19,10 @@
               {
                 "textRuns": [
                   {
-                    "value": "FILTERS",
-                    "textStyle": {
-                      "fontSize": "9px",
-                      "color": "#013366",
-                      "fontFamily": "Segoe UI",
-                      "fontWeight": "bold"
-                    }
-                  }
-                ]
-              },
-              {
-                "textRuns": [
-                  {
-                    "value": "Every visual on the page follows these.",
+                    "value": "This report is owned by the Major Mines Office.",
                     "textStyle": {
                       "fontSize": "8px",
-                      "color": "#605E5C",
+                      "color": "#FFFFFF",
                       "fontFamily": "Segoe UI"
                     }
                   }

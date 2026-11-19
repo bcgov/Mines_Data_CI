@@ -2,7 +2,7 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
   "name": "c7a1e0b0d0e0f0c00017",
   "position": {
-    "x": 1112,
+    "x": 206,
     "y": 184,
     "z": 23,
     "width": 290,
@@ -23,11 +23,11 @@
                       "Entity": "fact_major_project"
                     }
                   },
-                  "Property": "project_lead_name"
+                  "Property": "proxy_stage"
                 }
               },
-              "queryRef": "fact_major_project.project_lead_name",
-              "nativeQueryRef": "project_lead_name",
+              "queryRef": "fact_major_project.proxy_stage",
+              "nativeQueryRef": "proxy_stage",
               "active": true
             }
           ]
@@ -61,7 +61,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Project lead'"
+                  "Value": "'Stage'"
                 }
               }
             },

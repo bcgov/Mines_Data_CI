@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
   "name": "c7a1e0b0d0e0f0c00026",
   "position": {
-    "x": 288,
-    "y": 828,
+    "x": 1236,
+    "y": 458,
     "z": 38,
-    "width": 140,
-    "height": 30,
+    "width": 324,
+    "height": 160,
     "tabOrder": 38
   },
   "visual": {
@@ -19,9 +19,34 @@
               {
                 "textRuns": [
                   {
-                    "value": "NOT IN CORE YET",
+                    "value": "Review rounds",
                     "textStyle": {
-                      "fontSize": "8px",
+                      "fontSize": "13px",
+                      "color": "#1F2933",
+                      "fontFamily": "Segoe UI",
+                      "fontWeight": "bold"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "Who has the file in each round, and for how long. Needs the round dates from the MMO tracker.",
+                    "textStyle": {
+                      "fontSize": "10px",
+                      "color": "#605E5C",
+                      "fontFamily": "Segoe UI"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "Not in the platform yet",
+                    "textStyle": {
+                      "fontSize": "9px",
                       "color": "#6B4E00",
                       "fontFamily": "Segoe UI",
                       "fontWeight": "bold"
